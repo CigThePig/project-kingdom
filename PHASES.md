@@ -12,21 +12,21 @@ Progress tracker for the kingdom management simulation. Built entirely with Clau
 
 ## Phase 0 — Project Bootstrap
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `TECHNICAL.md` — Stack Overview, Vite Configuration, GitHub Pages Deployment
 
-- [ ] Initialize npm project: `npm create vite@latest . -- --template react-ts`
-- [ ] Configure `vite.config.ts` with `base: '/project-kingdom/'`
-- [ ] Configure `tsconfig.json` with strict mode enabled
-- [ ] Create `.eslintrc` / `eslint.config.js` using `typescript-eslint`
-- [ ] Create `.prettierrc` config file
-- [ ] Create `.github/workflows/deploy.yml` (GitHub Actions → gh-pages)
-- [ ] Scaffold folder structure: `src/engine/`, `src/ui/`, `src/data/`, `src/assets/`, `public/`
-- [ ] Create `src/engine/systems/`, `src/engine/resolution/`, `src/engine/events/`
-- [ ] Create `src/ui/screens/`, `src/ui/components/`, `src/ui/hooks/`, `src/ui/styles/`
-- [ ] Create `src/data/events/`, `src/data/storylines/`, `src/data/scenarios/`, `src/data/text/`
-- [ ] Verify `npm run dev` starts without errors
-- [ ] Verify `npm run build` produces clean `dist/`
+- [x] Initialize npm project: `npm create vite@latest . -- --template react-ts`
+- [x] Configure `vite.config.ts` with `base: '/project-kingdom/'`
+- [x] Configure `tsconfig.json` with strict mode enabled
+- [x] Create `.eslintrc` / `eslint.config.js` using `typescript-eslint`
+- [x] Create `.prettierrc` config file
+- [x] Create `.github/workflows/deploy.yml` (GitHub Actions → gh-pages)
+- [x] Scaffold folder structure: `src/engine/`, `src/ui/`, `src/data/`, `src/assets/`, `public/`
+- [x] Create `src/engine/systems/`, `src/engine/resolution/`, `src/engine/events/`
+- [x] Create `src/ui/screens/`, `src/ui/components/`, `src/ui/hooks/`, `src/ui/styles/`
+- [x] Create `src/data/events/`, `src/data/storylines/`, `src/data/scenarios/`, `src/data/text/`
+- [x] Verify `npm run dev` starts without errors
+- [x] Verify `npm run build` produces clean `dist/`
 
 ---
 
