@@ -144,3 +144,17 @@ These are hard constraints. Do not violate them without explicit instruction.
 - **Do not hard-code player-facing text** in component or engine files. All text goes in `src/data/`.
 - **Do not deviate from the visual language** defined in `ui-blueprint.md` §2. Do not introduce colors, typefaces, or animation styles not described there.
 - **Do not skip the blueprint.** Before implementing any feature, locate its specification. If it is not in the blueprints, stop and ask.
+
+---
+
+## Progress Tracking
+
+All implementation progress is tracked in **`PHASES.md`** at the project root.
+
+At the start of every session:
+1. Open `PHASES.md` and identify the current phase (first phase with unchecked items).
+2. Work through checkboxes in order — complete one phase before starting the next.
+3. Check off items as you complete them: change `- [ ]` to `- [x]`.
+4. Each phase lists the exact files to create and the blueprint section to read first.
+
+If a phase is fully checked, move to the next one. Never skip a phase unless its files already exist and have been verified working.
