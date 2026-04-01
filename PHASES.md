@@ -32,11 +32,11 @@ Progress tracker for the kingdom management simulation. Built entirely with Clau
 
 ## Phase 1 — Engine Foundation
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Core Systems, Turn Model, Action Budget
 
-- [ ] Create `src/engine/types.ts` — all shared game state TypeScript interfaces and types
-- [ ] Create `src/engine/constants.ts` — action budget size, thresholds, starting values, all magic numbers
+- [x] Create `src/engine/types.ts` — all shared game state TypeScript interfaces and types
+- [x] Create `src/engine/constants.ts` — action budget size, thresholds, starting values, all magic numbers
 
 ---
 
