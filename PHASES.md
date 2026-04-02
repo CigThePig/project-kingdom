@@ -62,11 +62,11 @@ Each file must import from `src/engine/types.ts` only. No React imports.
 
 ## Phase 3 — Turn Resolution Engine
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Turn Resolution Order, Action Budget System
 
-- [ ] Create `src/engine/resolution/turn-resolution.ts` — turn resolution order and consequence processing
-- [ ] Create `src/engine/resolution/action-budget.ts` — 3-slot budget rules and validation
+- [x] Create `src/engine/resolution/turn-resolution.ts` — turn resolution order and consequence processing
+- [x] Create `src/engine/resolution/action-budget.ts` — 3-slot budget rules and validation
 
 ---
 
