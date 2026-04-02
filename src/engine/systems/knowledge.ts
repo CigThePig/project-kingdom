@@ -102,19 +102,21 @@ export function applyMilestoneUnlock(
 
 /**
  * Applies one turn of research progress to the focused branch in KnowledgeState.
- * If researchFocus is null, returns state unchanged.
+ * researchFocus comes from PolicyState — KnowledgeState does not store it.
+ * If researchFocus is null, returns state with progressPerTurn set to 0.
  * Does NOT apply milestone unlocks — the caller checks checkMilestoneUnlock separately.
  * Returns a new KnowledgeState (immutable update).
  */
 export function applyKnowledgeProgress(
   current: KnowledgeState,
   progressThisTurn: number,
+  researchFocus: KnowledgeBranch | null,
 ): KnowledgeState {
-  if (current.researchFocus === null) {
+  if (researchFocus === null) {
     return { ...current, progressPerTurn: 0 };
   }
 
-  const focusBranch = current.researchFocus;
+  const focusBranch = researchFocus;
   const currentBranch = current.branches[focusBranch];
   const updatedBranch: KnowledgeBranchState = {
     ...currentBranch,
