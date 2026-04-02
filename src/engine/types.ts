@@ -338,6 +338,8 @@ export interface FaithCultureState {
   heterodoxy: number; // 0–100; escalation toward schism threshold
   schismActive: boolean;
   schismDetails: string | null; // internal schism ID used to link events; NOT player-facing text
+  kingdomFaithTraditionId: string; // internal faith tradition ID for alignment checks (e.g. 'orthodox', 'reformed')
+  kingdomCultureIdentityId: string; // internal culture ID for alignment checks (e.g. 'highland', 'coastal')
 }
 
 // --- Diplomacy ---

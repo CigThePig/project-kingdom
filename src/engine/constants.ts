@@ -1,11 +1,16 @@
 import {
   ActionType,
+  DiplomaticPosture,
   FestivalInvestmentLevel,
   IntelligenceFundingLevel,
+  IntelligenceOperationType,
   KnowledgeBranch,
+  MilitaryPosture,
   MilitaryRecruitmentStance,
+  NeighborDisposition,
   PopulationClass,
   RationingLevel,
+  ReligiousTolerance,
   ResourceType,
   Season,
   TaxationLevel,
@@ -301,4 +306,175 @@ export const KNOWLEDGE_BRANCH_STARTING_PROGRESS: Record<KnowledgeBranch, number>
   [KnowledgeBranch.MaritimeTrade]: 0,
   [KnowledgeBranch.CulturalScholarly]: 0,
   [KnowledgeBranch.NaturalPhilosophy]: 0,
+};
+
+// ============================================================
+// Block 15 — System Calibration Constants (gameplay-blueprint.md §4)
+// ============================================================
+
+// --- Treasury ---
+
+// Base taxation income per turn at Moderate level before class cooperation modifiers.
+// Moderate × 1.0 multiplier = 80 gold/turn baseline.
+export const TAXATION_BASE_INCOME = 80;
+
+// Noble cooperation: range of the multiplier applied to taxation income.
+// Noble satisfaction 0 → NOBLE_COOPERATION_MIN; 100 → NOBLE_COOPERATION_MAX.
+export const TREASURY_NOBLE_COOPERATION_MIN = 0.6;
+export const TREASURY_NOBLE_COOPERATION_MAX = 1.2;
+
+// Merchant prosperity: range of the multiplier applied to taxation income.
+// Merchant satisfaction 0 → MERCHANT_PROSPERITY_MIN; 100 → MERCHANT_PROSPERITY_MAX.
+export const TREASURY_MERCHANT_PROSPERITY_MIN = 0.7;
+export const TREASURY_MERCHANT_PROSPERITY_MAX = 1.3;
+
+// Treasury cost per military unit per turn at Standby posture (before posture multiplier).
+export const MILITARY_UPKEEP_COST_PER_SOLDIER = 0.05;
+
+// Posture multiplier applied to both military upkeep cost and readiness/equipment decay.
+export const MILITARY_UPKEEP_POSTURE_MULTIPLIER: Record<MilitaryPosture, number> = {
+  [MilitaryPosture.Defensive]: 0.8,
+  [MilitaryPosture.Standby]: 1.0,
+  [MilitaryPosture.Mobilized]: 1.4,
+  [MilitaryPosture.Aggressive]: 1.8,
+};
+
+// --- Food ---
+
+// Base food consumed per person (all classes combined) per turn before rationing multiplier.
+export const FOOD_BASE_CONSUMPTION_RATE_PER_PERSON = 0.003;
+
+// Base food produced per commoner per turn before season and knowledge modifiers.
+export const FOOD_COMMONER_LABOR_PRODUCTION_RATE = 0.005;
+
+// Additional food consumed per military unit per turn due to provisioning.
+// Applied on top of the standard per-capita rate; further modified by recruitment stance.
+export const FOOD_MILITARY_PROVISIONING_RATE = 0.02;
+
+// --- Population ---
+
+// Maximum absolute satisfaction shift per class per turn.
+// Enforces the "gradual, not instant" rule from §4.4.
+export const SATISFACTION_MAX_DELTA_PER_TURN = 5;
+
+// --- Military ---
+
+// Per-turn readiness decay per posture level when no active training order is in effect.
+export const MILITARY_READINESS_DECAY_BY_POSTURE: Record<MilitaryPosture, number> = {
+  [MilitaryPosture.Defensive]: 1,
+  [MilitaryPosture.Standby]: 2,
+  [MilitaryPosture.Mobilized]: 4,
+  [MilitaryPosture.Aggressive]: 6,
+};
+
+// Per-turn equipment condition decay per posture level.
+export const MILITARY_EQUIPMENT_DECAY_BY_POSTURE: Record<MilitaryPosture, number> = {
+  [MilitaryPosture.Defensive]: 1,
+  [MilitaryPosture.Standby]: 1,
+  [MilitaryPosture.Mobilized]: 3,
+  [MilitaryPosture.Aggressive]: 5,
+};
+
+// --- Regions ---
+
+// Translates developmentLevel (0–100) into a fractional output bonus.
+// A level-50 region gets a +0.5 multiplier bonus on top of the base 0.5 floor.
+export const REGION_DEVELOPMENT_OUTPUT_SCALAR = 0.01;
+
+// --- Trade ---
+
+// Base trade income per turn before policy, merchant, and diplomatic modifiers.
+export const TRADE_BASE_INCOME = 40;
+
+// Flat additive bonus per neighboring kingdom with a relationship score above 70.
+export const TRADE_DIPLOMATIC_BONUS_PER_FRIENDLY_NEIGHBOR = 5;
+
+// Range of the merchant commerce multiplier applied to trade income.
+// Merchant satisfaction 0 → MIN; 100 → MAX.
+export const TRADE_MERCHANT_COMMERCE_MULTIPLIER_MIN = 0.7;
+export const TRADE_MERCHANT_COMMERCE_MULTIPLIER_MAX = 1.4;
+
+// --- Knowledge ---
+
+// Research points gained per unit of treasury balance invested per turn.
+// Example: balance 500 × 0.02 = 10 bonus points/turn.
+export const KNOWLEDGE_TREASURY_INVESTMENT_RATE = 0.02;
+
+// Flat research progress bonus per turn when a Scholarly religious order is active.
+export const KNOWLEDGE_SCHOLARLY_CLERGY_ORDER_BONUS = 3;
+
+// Flat research progress bonus per turn when relevant scholarly infrastructure exists.
+export const KNOWLEDGE_INFRASTRUCTURE_BONUS = 5;
+
+// --- Faith ---
+
+// Faith level delta per turn from festival investment level.
+// None is slightly negative (skipping observances lowers faith per §4.8).
+export const FAITH_FESTIVAL_DELTA_BY_LEVEL: Record<FestivalInvestmentLevel, number> = {
+  [FestivalInvestmentLevel.None]: -1,
+  [FestivalInvestmentLevel.Modest]: 1,
+  [FestivalInvestmentLevel.Standard]: 3,
+  [FestivalInvestmentLevel.Lavish]: 6,
+};
+
+// Per-turn modifier to heterodoxy growth rate based on religious tolerance policy.
+// Enforced suppression drives heterodoxy underground (grows faster); tolerance slows it.
+export const FAITH_TOLERANCE_HETERODOX_MODIFIER: Record<ReligiousTolerance, number> = {
+  [ReligiousTolerance.Enforced]: -3,
+  [ReligiousTolerance.Favored]: -1,
+  [ReligiousTolerance.Tolerated]: 1,
+  [ReligiousTolerance.Suppressed]: 3,
+};
+
+// --- Espionage ---
+
+// Base success probability (0–1) per operation type before network strength modifier.
+export const ESPIONAGE_BASE_SUCCESS_BY_OP_TYPE: Record<IntelligenceOperationType, number> = {
+  [IntelligenceOperationType.Reconnaissance]: 0.7,
+  [IntelligenceOperationType.DiplomaticIntelligence]: 0.65,
+  [IntelligenceOperationType.EconomicIntelligence]: 0.65,
+  [IntelligenceOperationType.Sabotage]: 0.4,
+  [IntelligenceOperationType.InternalSurveillance]: 0.75,
+  [IntelligenceOperationType.CounterEspionageSweep]: 0.6,
+};
+
+// Passive network strength decay per turn when not funded (None level).
+export const ESPIONAGE_NETWORK_DECAY_PER_TURN = 2;
+
+// Net network strength change per turn per funding level (after decay is factored in).
+// None is negative (net decay); Heavy is a strong positive gain.
+export const ESPIONAGE_NETWORK_GROWTH_BY_FUNDING: Record<IntelligenceFundingLevel, number> = {
+  [IntelligenceFundingLevel.None]: -2,
+  [IntelligenceFundingLevel.Minimal]: 1,
+  [IntelligenceFundingLevel.Moderate]: 4,
+  [IntelligenceFundingLevel.Heavy]: 8,
+};
+
+// --- Diplomacy ---
+
+// Flat relationship score bonus when kingdom and neighbor share the same faith tradition.
+export const DIPLOMACY_SHARED_FAITH_BONUS = 10;
+
+// Flat relationship score bonus when kingdom and neighbor share the same cultural identity.
+export const DIPLOMACY_SHARED_CULTURE_BONUS = 8;
+
+// Per-turn AI-driven relationship score drift per neighbor disposition.
+// Negative values represent passive hostile drift (Aggressive neighbors).
+// Positive values represent friendly drift (Mercantile, Cautious neighbors).
+export const DIPLOMACY_AI_DELTA_BY_DISPOSITION: Record<NeighborDisposition, number> = {
+  [NeighborDisposition.Aggressive]: -2,
+  [NeighborDisposition.Opportunistic]: 0,
+  [NeighborDisposition.Cautious]: 1,
+  [NeighborDisposition.Mercantile]: 2,
+  [NeighborDisposition.Isolationist]: 0,
+};
+
+// Relationship score thresholds that define each DiplomaticPosture.
+// A neighbor's posture is the highest label whose threshold their score exceeds.
+export const DIPLOMACY_POSTURE_THRESHOLDS: Record<DiplomaticPosture, number> = {
+  [DiplomaticPosture.War]: 10,
+  [DiplomaticPosture.Hostile]: 30,
+  [DiplomaticPosture.Tense]: 50,
+  [DiplomaticPosture.Neutral]: 70,
+  [DiplomaticPosture.Friendly]: 100,
 };
