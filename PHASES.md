@@ -42,21 +42,21 @@ Progress tracker for the kingdom management simulation. Built entirely with Clau
 
 ## Phase 2 — Engine Systems
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — individual system sections for each file below
 
 Each file must import from `src/engine/types.ts` only. No React imports.
 
-- [ ] Create `src/engine/systems/treasury.ts` — wealth, taxation, trade income, maintenance
-- [ ] Create `src/engine/systems/food.ts` — agricultural supply, reserves, seasonal balance
-- [ ] Create `src/engine/systems/population.ts` — 5 class satisfaction dynamics and labor
-- [ ] Create `src/engine/systems/military.ts` — force size, readiness, morale, equipment
-- [ ] Create `src/engine/systems/faith.ts` — devotion, cultural cohesion, religious orders, schism mechanics
-- [ ] Create `src/engine/systems/espionage.ts` — 6 operation types, intelligence state
-- [ ] Create `src/engine/systems/knowledge.ts` — 6 research branches, progress tracking
-- [ ] Create `src/engine/systems/diplomacy.ts` — neighboring kingdoms, relationship scores, AI behavior
-- [ ] Create `src/engine/systems/trade.ts` — commerce, trade routes, tariffs
-- [ ] Create `src/engine/systems/regions.ts` — sub-territories, regional outputs and conditions
+- [x] Create `src/engine/systems/treasury.ts` — wealth, taxation, trade income, maintenance
+- [x] Create `src/engine/systems/food.ts` — agricultural supply, reserves, seasonal balance
+- [x] Create `src/engine/systems/population.ts` — 5 class satisfaction dynamics and labor
+- [x] Create `src/engine/systems/military.ts` — force size, readiness, morale, equipment
+- [x] Create `src/engine/systems/faith.ts` — devotion, cultural cohesion, religious orders, schism mechanics
+- [x] Create `src/engine/systems/espionage.ts` — 6 operation types, intelligence state
+- [x] Create `src/engine/systems/knowledge.ts` — 6 research branches, progress tracking
+- [x] Create `src/engine/systems/diplomacy.ts` — neighboring kingdoms, relationship scores, AI behavior
+- [x] Create `src/engine/systems/trade.ts` — commerce, trade routes, tariffs
+- [x] Create `src/engine/systems/regions.ts` — sub-territories, regional outputs and conditions
 
 ---
 
