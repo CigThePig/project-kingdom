@@ -1,0 +1,161 @@
+/* ==========================================================================
+   Design Tokens — CSS Custom Properties
+   Source: ui-blueprint.md §2 Visual Language
+   ========================================================================== */
+
+:root {
+  /* ========================================================================
+     Colors — Base Surfaces
+     Dark slate / charcoal / iron-blue palette (§2.3)
+     ======================================================================== */
+  --color-bg-primary: hsl(220, 15%, 10%);
+  --color-bg-secondary: hsl(220, 12%, 14%);
+  --color-bg-tertiary: hsl(215, 14%, 18%);
+  --color-bg-surface: hsl(215, 12%, 20%);
+  --color-bg-surface-raised: hsl(215, 10%, 24%);
+  --color-bg-overlay: hsla(220, 20%, 6%, 0.85);
+  --color-bg-parchment: hsl(38, 15%, 82%);
+
+  /* ========================================================================
+     Colors — Text
+     ======================================================================== */
+  --color-text-primary: hsl(210, 10%, 88%);
+  --color-text-secondary: hsl(210, 8%, 62%);
+  --color-text-tertiary: hsl(210, 6%, 44%);
+  --color-text-inverse: hsl(220, 15%, 12%);
+  --color-text-heading: hsl(210, 12%, 92%);
+
+  /* ========================================================================
+     Colors — Borders and Accents
+     ======================================================================== */
+  --color-border-default: hsl(215, 10%, 22%);
+  --color-border-strong: hsl(215, 10%, 30%);
+  --color-border-storyline: hsl(38, 30%, 45%);
+  --color-accent-metallic: hsl(210, 8%, 55%);
+
+  /* ========================================================================
+     Colors — Status (§2.3)
+     ======================================================================== */
+
+  /* Warning: muted amber */
+  --color-status-warning: hsl(40, 65%, 50%);
+  --color-status-warning-bg: hsla(40, 65%, 50%, 0.12);
+
+  /* Critical: restrained deep red */
+  --color-status-critical: hsl(0, 55%, 45%);
+  --color-status-critical-bg: hsla(0, 55%, 45%, 0.12);
+
+  /* Positive: desaturated green/teal */
+  --color-status-positive: hsl(165, 35%, 45%);
+  --color-status-positive-bg: hsla(165, 35%, 45%, 0.12);
+
+  /* Neutral change: soft blue-gray */
+  --color-status-neutral: hsl(210, 15%, 55%);
+  --color-status-neutral-bg: hsla(210, 15%, 55%, 0.12);
+
+  /* Locked/unavailable: reduced opacity muted overlay */
+  --color-status-locked: hsla(220, 10%, 40%, 0.5);
+
+  /* Covert/intelligence: muted indigo/deep violet */
+  --color-status-covert: hsl(245, 25%, 40%);
+  --color-status-covert-bg: hsla(245, 25%, 40%, 0.10);
+
+  /* Faith/cultural: warm bronze/antique gold */
+  --color-status-faith: hsl(35, 45%, 48%);
+  --color-status-faith-bg: hsla(35, 45%, 48%, 0.12);
+
+  /* ========================================================================
+     Colors — Seasonal Accents (§2.4)
+     Defaults; overridden by seasonal.css body class selectors
+     ======================================================================== */
+  --color-seasonal-accent: hsl(215, 14%, 18%);
+  --color-seasonal-accent-subtle: hsla(215, 14%, 18%, 0.08);
+  --color-seasonal-text: hsl(210, 10%, 88%);
+
+  /* ========================================================================
+     Typography (§2.2)
+     ======================================================================== */
+  --font-family-heading: 'Crimson Pro', Georgia, 'Times New Roman', serif;
+  --font-family-body: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+
+  /* Font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Type scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 1.875rem;
+  --font-size-3xl: 2.25rem;
+
+  /* Line heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.65;
+
+  /* Letter spacing */
+  --letter-spacing-tight: -0.01em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.02em;
+  --letter-spacing-caps: 0.06em;
+
+  /* ========================================================================
+     Spacing Scale (4px base grid)
+     ======================================================================== */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+
+  /* ========================================================================
+     Layout
+     ======================================================================== */
+  --crown-bar-height: 3.5rem;
+  --nav-rail-width: 4.5rem;
+  --nav-rail-width-expanded: 14rem;
+  --intel-panel-width: 22rem;
+  --content-max-width: 72rem;
+
+  /* Border radii */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 0.75rem;
+
+  /* ========================================================================
+     Shadows
+     ======================================================================== */
+  --shadow-sm: 0 1px 2px hsla(220, 20%, 4%, 0.4);
+  --shadow-md: 0 2px 6px hsla(220, 20%, 4%, 0.5);
+  --shadow-lg: 0 4px 12px hsla(220, 20%, 4%, 0.6);
+
+  /* ========================================================================
+     Transitions (§2.8 — minimal, document-like)
+     ======================================================================== */
+  --transition-fast: 120ms ease;
+  --transition-normal: 200ms ease;
+  --transition-slow: 350ms ease-out;
+
+  /* ========================================================================
+     Z-index Scale
+     ======================================================================== */
+  --z-base: 0;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-crown-bar: 500;
+}

@@ -1,0 +1,40 @@
+/* ==========================================================================
+   Seasonal Color Accents
+   Source: ui-blueprint.md §2.4
+
+   Applied to crown bar background, dashboard header, and turn-advance
+   confirmation surfaces. Accents are intentionally subtle — they provide
+   a faint undertone without competing with status colors.
+
+   Class names align with the Season enum in src/engine/types.ts:
+   Spring, Summer, Autumn, Winter → season-spring, etc.
+   Applied to <body> via game state context.
+   ========================================================================== */
+
+/* Spring — faint warm green undertone */
+body.season-spring {
+  --color-seasonal-accent: hsl(130, 25%, 28%);
+  --color-seasonal-accent-subtle: hsla(130, 25%, 28%, 0.08);
+  --color-seasonal-text: hsl(130, 15%, 75%);
+}
+
+/* Summer — faint gold / warm amber undertone */
+body.season-summer {
+  --color-seasonal-accent: hsl(42, 40%, 35%);
+  --color-seasonal-accent-subtle: hsla(42, 40%, 35%, 0.08);
+  --color-seasonal-text: hsl(42, 20%, 78%);
+}
+
+/* Autumn — faint copper / burnt sienna undertone */
+body.season-autumn {
+  --color-seasonal-accent: hsl(20, 40%, 32%);
+  --color-seasonal-accent-subtle: hsla(20, 40%, 32%, 0.08);
+  --color-seasonal-text: hsl(20, 18%, 75%);
+}
+
+/* Winter — faint cool blue / silver undertone */
+body.season-winter {
+  --color-seasonal-accent: hsl(210, 25%, 35%);
+  --color-seasonal-accent-subtle: hsla(210, 25%, 35%, 0.08);
+  --color-seasonal-text: hsl(210, 15%, 78%);
+}
