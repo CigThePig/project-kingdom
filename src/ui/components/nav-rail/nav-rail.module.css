@@ -1,0 +1,165 @@
+/* ==========================================================================
+   Nav Rail — Left Rail (Desktop) / Bottom Bar (Mobile)
+   Source: ui-blueprint.md §3.5, ux-blueprint.md §5
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Desktop: vertical left rail
+   -------------------------------------------------------------------------- */
+.rail {
+  grid-area: nav;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border-default);
+  overflow-y: auto;
+}
+
+.desktopList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: var(--space-2) 0;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-3) var(--space-2);
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  color: var(--color-text-secondary);
+}
+
+.navItem:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.navItem.active {
+  background: var(--color-bg-surface);
+  color: var(--color-seasonal-text);
+  border-left-color: var(--color-seasonal-accent);
+}
+
+.label {
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  line-height: var(--line-height-tight);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile bar hidden on desktop */
+.mobileBar {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile: fixed bottom tab bar
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .rail {
+    border-right: none;
+    border-top: 1px solid var(--color-border-default);
+    overflow: visible;
+  }
+
+  .desktopList {
+    display: none;
+  }
+
+  .mobileBar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 3.5rem;
+    background: var(--color-bg-secondary);
+  }
+
+  .mobileItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: color var(--transition-fast);
+    padding: var(--space-1);
+  }
+
+  .mobileItem:hover,
+  .mobileItem.active {
+    color: var(--color-seasonal-text);
+  }
+
+  .mobileItem.active {
+    border-top: 2px solid var(--color-seasonal-accent);
+  }
+
+  .mobileLabel {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: var(--line-height-tight);
+  }
+
+  /* More menu popup */
+  .moreContainer {
+    position: relative;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .moreMenu {
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    list-style: none;
+    margin: 0;
+    padding: var(--space-2) 0;
+    background: var(--color-bg-surface-raised);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-dropdown);
+    min-width: 10rem;
+  }
+
+  .moreMenuItem {
+    display: block;
+    width: 100%;
+    padding: var(--space-2) var(--space-4);
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    transition: background var(--transition-fast), color var(--transition-fast);
+  }
+
+  .moreMenuItem:hover {
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+  }
+
+  .moreMenuItem.active {
+    color: var(--color-seasonal-text);
+    background: var(--color-seasonal-accent-subtle);
+  }
+}
