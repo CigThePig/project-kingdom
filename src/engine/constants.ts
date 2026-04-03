@@ -216,8 +216,15 @@ export const KNOWLEDGE_MILESTONE_THRESHOLDS: readonly number[] = [50, 120, 220, 
 export const KNOWLEDGE_BASE_PROGRESS_PER_TURN = 2;
 
 // ============================================================
-// Block 11 — Storylines (§8.3)
+// Block 11 — Events & Storylines (§7, §8.3)
 // ============================================================
+
+// Maximum new events surfaced per turn across all severity tiers.
+export const MAX_EVENTS_PER_TURN = 3;
+
+// Per-severity caps within the per-turn budget (§7.3).
+export const MAX_CRITICAL_EVENTS_PER_TURN = 1;
+export const MAX_SERIOUS_EVENTS_PER_TURN = 1;
 
 // Maximum number of storylines that may be active simultaneously.
 export const MAX_ACTIVE_STORYLINES = 2;

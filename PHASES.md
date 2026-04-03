@@ -72,11 +72,11 @@ Each file must import from `src/engine/types.ts` only. No React imports.
 
 ## Phase 4 — Event & Storyline Engines
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Event Framework, Storyline System
 
-- [ ] Create `src/engine/events/event-engine.ts` — severity weighting, event surfacing logic
-- [ ] Create `src/engine/events/storyline-engine.ts` — branching logic, progression, arc tracking
+- [x] Create `src/engine/events/event-engine.ts` — severity weighting, event surfacing logic
+- [x] Create `src/engine/events/storyline-engine.ts` — branching logic, progression, arc tracking
 
 ---
 

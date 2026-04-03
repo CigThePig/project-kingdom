@@ -21,6 +21,12 @@ import {
   TurnState,
 } from '../types';
 import { SEASON_MONTHS } from '../constants';
+import { advanceEventChains, EventDefinition, surfaceEvents } from '../events/event-engine';
+import {
+  advanceStorylines,
+  evaluateStorylinePool,
+  StorylineDefinition,
+} from '../events/storyline-engine';
 import { resetActionBudgetForNextTurn } from './action-budget';
 import { summarizeRegionalOutputs, checkTotalConquest } from '../systems/regions';
 import {
@@ -534,11 +540,48 @@ export function resolveTurn(
     stateAfterActions.stability,
   );
 
-  // ---- Phase 9: Event and Storyline Generation (stub) ----
-  // Event evaluation is handled by the event engine (Phase 4 of the build plan).
-  // Active events and storylines pass through unchanged until that phase is built.
-  const activeEvents = stateAfterActions.activeEvents;
-  const activeStorylines = stateAfterActions.activeStorylines;
+  // ---- Phase 9: Event and Storyline Generation ----
+  // nextTurnNumber is needed here and again in Phase 11.
+  const nextTurnNumber = state.turn.turnNumber + 1;
+
+  // Registries are empty until Phase 5 populates src/data/events/ and src/data/storylines/.
+  // The engines handle empty pools gracefully (no new events/storylines surface).
+  const EVENT_REGISTRY: EventDefinition[] = [];
+  const STORYLINE_REGISTRY: StorylineDefinition[] = [];
+
+  // Advance existing event chains (resolved chain events produce their next-step event).
+  const chainAdvancedEvents = advanceEventChains(
+    stateAfterActions.activeEvents,
+    nextTurnNumber,
+    EVENT_REGISTRY,
+    [], // eventHistory is scoped to SaveFile, not available here; chains work with active set
+  );
+
+  // Surface new standalone events against updated state.
+  const newEvents = surfaceEvents(
+    stateAfterActions,
+    nextTurnNumber,
+    EVENT_REGISTRY,
+    chainAdvancedEvents,
+    [],
+  );
+
+  const activeEvents = [...chainAdvancedEvents, ...newEvents];
+
+  // Decrement dormant turn counters for active storylines.
+  const advancedStorylines = advanceStorylines(stateAfterActions.activeStorylines);
+
+  // Evaluate storyline pool for new activations.
+  const newStorylines = evaluateStorylinePool(
+    stateAfterActions,
+    nextTurnNumber,
+    STORYLINE_REGISTRY,
+    advancedStorylines,
+    [], // resolvedStorylineIds: tracked in SaveFile, not available here
+    0,  // lastActivationTurn: conservative default; tracking added with save layer
+  );
+
+  const activeStorylines = [...advancedStorylines, ...newStorylines];
 
   // ---- Phase 10: Construction Progress ----
   // Decrement turn counters, remove completed projects, and deduct per-turn resource costs.
@@ -577,8 +620,7 @@ export function resolveTurn(
   }
 
   // ---- Phase 11: State Snapshot and Bookkeeping ----
-  // Advance the calendar.
-  const nextTurnNumber = state.turn.turnNumber + 1;
+  // Advance the calendar. (nextTurnNumber hoisted to Phase 9.)
   const nextMonth = state.turn.month === 12 ? 1 : state.turn.month + 1;
   const nextYear = state.turn.month === 12 ? state.turn.year + 1 : state.turn.year;
   const nextSeason = getSeasonForMonth(nextMonth);
