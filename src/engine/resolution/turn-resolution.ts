@@ -10,6 +10,7 @@ import {
   FailureCondition,
   GameState,
   IntelligenceOperationType,
+  IntelligenceReport,
   KnowledgeBranch,
   PopulationClass,
   QueuedAction,
@@ -103,6 +104,9 @@ export interface TurnResolutionResult {
   historyEntry: TurnHistoryEntry;
   newlyUnlockedMilestones: Array<{ branch: KnowledgeBranch; milestoneIndex: number }>;
   triggeredFailureConditions: FailureCondition[];
+  // Intelligence reports generated this turn. The hook layer appends these to
+  // SaveFile.intelligenceReports so the player can review operation outcomes.
+  generatedReports: IntelligenceReport[];
 }
 
 // ============================================================
@@ -373,7 +377,14 @@ export function resolveTurn(
 
   // Intelligence operation resolution.
   // Each IntelligenceOp action in the queue is resolved with a random seed.
+  //
+  // NOTE: Math.random() is called per operation. resolveTurn is intentionally
+  // non-deterministic — the same state passed twice will produce different intel
+  // outcomes. This is by design: the save model persists the post-resolution
+  // GameState, not a seed, so determinism is not required and save-scumming
+  // at turn boundaries is not possible.
   const networkStrengthDeltas: number[] = [];
+  const generatedReports: IntelligenceReport[] = [];
   const intelOps = stateAfterActions.actionBudget.queuedActions.filter(
     (a) => a.type === ActionType.IntelligenceOp,
   );
@@ -399,6 +410,9 @@ export function resolveTurn(
     );
 
     networkStrengthDeltas.push(result.networkStrengthDelta);
+    if (result.report !== null) {
+      generatedReports.push(result.report);
+    }
   }
 
   // Counter-intelligence grows from funding, stability, and military caste loyalty.
@@ -467,19 +481,27 @@ export function resolveTurn(
   // Stub false until construction effect IDs are resolvable (Phase 5 build plan).
   const hasResearchInfrastructure = false;
 
+  // Research focus is owned by PolicyState (§4.13, §5.3). KnowledgeState does not
+  // store it — read from policies directly.
+  const researchFocus = stateAfterActions.policies.researchFocus;
+
   const researchProgress = calculateResearchProgressThisTurn(
-    stateAfterActions.knowledge.researchFocus,
+    researchFocus,
     updatedTreasury.balance,
     scholarlyOrderActive,
     hasResearchInfrastructure,
   );
 
-  let updatedKnowledge = applyKnowledgeProgress(stateAfterActions.knowledge, researchProgress);
+  let updatedKnowledge = applyKnowledgeProgress(
+    stateAfterActions.knowledge,
+    researchProgress,
+    researchFocus,
+  );
 
   const newlyUnlockedMilestones: Array<{ branch: KnowledgeBranch; milestoneIndex: number }> = [];
 
-  if (updatedKnowledge.researchFocus !== null) {
-    const focusBranch = updatedKnowledge.researchFocus;
+  if (researchFocus !== null) {
+    const focusBranch = researchFocus;
     const branchState = updatedKnowledge.branches[focusBranch];
 
     if (checkMilestoneUnlock(branchState)) {
@@ -642,5 +664,6 @@ export function resolveTurn(
     historyEntry,
     newlyUnlockedMilestones,
     triggeredFailureConditions,
+    generatedReports,
   };
 }

@@ -385,7 +385,9 @@ export interface KnowledgeBranchState {
 
 export interface KnowledgeState {
   branches: Record<KnowledgeBranch, KnowledgeBranchState>;
-  researchFocus: KnowledgeBranch | null; // null = no active research
+  // researchFocus is NOT stored here. The sole source of truth is PolicyState.researchFocus.
+  // The blueprint defines no mechanic by which events can redirect research focus
+  // independently of player policy (§4.13, §5.3).
   progressPerTurn: number; // calculated from treasury investment + clergy + infrastructure
 }
 
