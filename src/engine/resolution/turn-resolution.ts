@@ -90,6 +90,8 @@ import {
   applyDiplomacyUpdate,
   tickDiplomaticAgreements,
 } from '../systems/diplomacy';
+import { EVENT_POOL } from '../../data/events/index';
+import { STORYLINE_POOL } from '../../data/storylines/index';
 
 // ============================================================
 // Public Types
@@ -544,10 +546,9 @@ export function resolveTurn(
   // nextTurnNumber is needed here and again in Phase 11.
   const nextTurnNumber = state.turn.turnNumber + 1;
 
-  // Registries are empty until Phase 5 populates src/data/events/ and src/data/storylines/.
-  // The engines handle empty pools gracefully (no new events/storylines surface).
-  const EVENT_REGISTRY: EventDefinition[] = [];
-  const STORYLINE_REGISTRY: StorylineDefinition[] = [];
+  // Phase 5 data layer provides the event and storyline pools.
+  const EVENT_REGISTRY: EventDefinition[] = EVENT_POOL;
+  const STORYLINE_REGISTRY: StorylineDefinition[] = STORYLINE_POOL;
 
   // Advance existing event chains (resolved chain events produce their next-step event).
   const chainAdvancedEvents = advanceEventChains(

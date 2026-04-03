@@ -82,17 +82,17 @@ Each file must import from `src/engine/types.ts` only. No React imports.
 
 ## Phase 5 — Data Layer
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Event Pool, Storylines, Scenarios; `ux-blueprint.md` — Narrative Voice
 
 All player-facing strings must live here, never in engine or component files.
 
-- [ ] Create `src/data/events/index.ts` — event pool definitions
-- [ ] Create `src/data/storylines/index.ts` — storyline tree definitions
-- [ ] Create `src/data/scenarios/default.ts` — default starting scenario configuration
-- [ ] Create `src/data/text/labels.ts` — UI labels and navigation strings
-- [ ] Create `src/data/text/reports.ts` — report and decree text templates
-- [ ] Create `src/data/text/events.ts` — event dispatch text strings
+- [x] Create `src/data/events/index.ts` — event pool definitions
+- [x] Create `src/data/storylines/index.ts` — storyline tree definitions
+- [x] Create `src/data/scenarios/default.ts` — default starting scenario configuration
+- [x] Create `src/data/text/labels.ts` — UI labels and navigation strings
+- [x] Create `src/data/text/reports.ts` — report and decree text templates
+- [x] Create `src/data/text/events.ts` — event dispatch text strings
 
 ---
 
