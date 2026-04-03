@@ -123,18 +123,18 @@ All color, spacing, and typography values come from the blueprint. No hardcoded 
 
 ## Phase 8 — App Shell & Navigation
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` — §3 Global Screen Architecture; `ux-blueprint.md` — §6 Navigation UX
 
-- [ ] Create `src/main.tsx` — React root mount
-- [ ] Create `src/app.tsx` — top-level routing and layout shell
-- [ ] Create `src/ui/components/crown-bar/crown-bar.tsx` — persistent top status bar
-- [ ] Create `src/ui/components/crown-bar/crown-bar.module.css`
-- [ ] Create `src/ui/components/nav-rail/nav-rail.tsx` — left rail (desktop) / bottom bar (mobile)
-- [ ] Create `src/ui/components/nav-rail/nav-rail.module.css`
-- [ ] Create `src/ui/components/intelligence-panel/intelligence-panel.tsx` — right contextual panel
-- [ ] Create `src/ui/components/intelligence-panel/intelligence-panel.module.css`
-- [ ] Verify full layout renders in browser with placeholder screen content
+- [x] Create `src/main.tsx` — React root mount
+- [x] Create `src/app.tsx` — top-level routing and layout shell
+- [x] Create `src/ui/components/crown-bar/crown-bar.tsx` — persistent top status bar
+- [x] Create `src/ui/components/crown-bar/crown-bar.module.css`
+- [x] Create `src/ui/components/nav-rail/nav-rail.tsx` — left rail (desktop) / bottom bar (mobile)
+- [x] Create `src/ui/components/nav-rail/nav-rail.module.css`
+- [x] Create `src/ui/components/intelligence-panel/intelligence-panel.tsx` — right contextual panel
+- [x] Create `src/ui/components/intelligence-panel/intelligence-panel.module.css`
+- [x] Verify full layout renders in browser with placeholder screen content
 
 ---
 

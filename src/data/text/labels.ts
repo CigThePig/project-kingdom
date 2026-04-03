@@ -273,6 +273,7 @@ export const CONSTRUCTION_CATEGORY_LABELS: Record<ConstructionCategory, string> 
 // Standalone UI String Constants
 // ============================================================
 
+export const KINGDOM_NAME = 'The Kingdom';
 export const ACTION_BUDGET_LABEL = 'Actions Remaining';
 export const TURN_LABEL = 'Current Month';
 export const YEAR_LABEL = 'Year of Reign';

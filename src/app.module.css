@@ -1,0 +1,55 @@
+/* ==========================================================================
+   App Shell — CSS Grid Layout
+   Source: ui-blueprint.md §3 Global Screen Architecture
+   ========================================================================== */
+
+.shell {
+  display: grid;
+  grid-template-rows: var(--crown-bar-height) 1fr;
+  grid-template-columns: var(--nav-rail-width) 1fr var(--intel-panel-width);
+  grid-template-areas:
+    'crown  crown   crown'
+    'nav    content intel';
+  min-height: 100dvh;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+.content {
+  grid-area: content;
+  overflow-y: auto;
+  padding: var(--space-6);
+  max-width: var(--content-max-width);
+}
+
+.contentTitle {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+  margin: 0 0 var(--space-4);
+}
+
+.contentPlaceholder {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile: stack vertically, nav moves to bottom
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: var(--crown-bar-height) 1fr auto;
+    grid-template-areas:
+      'crown'
+      'content'
+      'nav';
+  }
+
+  .content {
+    padding: var(--space-4);
+    padding-bottom: calc(3.5rem + var(--space-4));
+  }
+}
