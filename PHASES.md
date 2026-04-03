@@ -111,13 +111,13 @@ All color, spacing, and typography values come from the blueprint. No hardcoded 
 
 ## Phase 7 — State Management & Hooks
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `TECHNICAL.md` — State Management; `ux-blueprint.md` — §10 Save/Load
 
-- [ ] Create `src/ui/context/game-context.tsx` — React context + useReducer for game state
-- [ ] Create `src/ui/hooks/use-game-state.ts` — read current kingdom state
-- [ ] Create `src/ui/hooks/use-turn-actions.ts` — dispatch player actions within budget
-- [ ] Create `src/ui/hooks/use-save.ts` — LocalStorage save/load with versioned JSON schema
+- [x] Create `src/ui/context/game-context.tsx` — React context + useReducer for game state
+- [x] Create `src/ui/hooks/use-game-state.ts` — read current kingdom state
+- [x] Create `src/ui/hooks/use-turn-actions.ts` — dispatch player actions within budget
+- [x] Create `src/ui/hooks/use-save.ts` — LocalStorage save/load with versioned JSON schema
 
 ---
 
