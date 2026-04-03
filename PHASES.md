@@ -98,14 +98,14 @@ All player-facing strings must live here, never in engine or component files.
 
 ## Phase 6 — UI Styles
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` — §2 Visual Language (color system, typography, spacing, seasonal accents)
 
 All color, spacing, and typography values come from the blueprint. No hardcoded hex values in components.
 
-- [ ] Create `src/ui/styles/tokens.css` — CSS custom properties: colors, spacing scale, type scale, status colors
-- [ ] Create `src/ui/styles/base.css` — reset and base element styles
-- [ ] Create `src/ui/styles/seasonal.css` — spring/summer/autumn/winter accent overrides
+- [x] Create `src/ui/styles/tokens.css` — CSS custom properties: colors, spacing scale, type scale, status colors
+- [x] Create `src/ui/styles/base.css` — reset and base element styles
+- [x] Create `src/ui/styles/seasonal.css` — spring/summer/autumn/winter accent overrides
 
 ---
 
