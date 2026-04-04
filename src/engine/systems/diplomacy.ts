@@ -413,6 +413,39 @@ export function generateNeighborActions(
     return actions;
   }
 
+  // --- Cultural pressure ---
+  const cultureMismatch = neighbor.culturalIdentity !== kingdomCulture;
+  if (
+    cultureMismatch &&
+    (neighbor.disposition === NeighborDisposition.Aggressive ||
+      neighbor.disposition === NeighborDisposition.Opportunistic) &&
+    rng < 0.08
+  ) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.BorderTension,
+      turnGenerated: currentTurn,
+      parameters: { cause: 'cultural_mismatch' },
+    });
+    return actions;
+  }
+
+  // --- Espionage detection (§9.2) ---
+  const espionageExposureChance = clamp(
+    (playerEspionage.networkStrength - neighbor.espionageCapability) * 0.005,
+    0,
+    0.15,
+  );
+  if (espionageExposureChance > 0 && rng < espionageExposureChance) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.EspionageRetaliation,
+      turnGenerated: currentTurn,
+      parameters: { severity: 'detected' },
+    });
+    return actions;
+  }
+
   return actions;
 }
 
