@@ -140,21 +140,21 @@ All color, spacing, and typography values come from the blueprint. No hardcoded 
 
 ## Phase 9 — Shared Components
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` — §4 Shared Component Library; `ux-blueprint.md` — §3 Information Hierarchy
 
 Build components only as they are needed by screens. Do not build components speculatively.
 
-- [ ] Create `src/ui/components/resource-card/resource-card.tsx` — resource status with trend arrows
-- [ ] Create `src/ui/components/resource-card/resource-card.module.css`
-- [ ] Create `src/ui/components/decree-card/decree-card.tsx` — decree option display
-- [ ] Create `src/ui/components/decree-card/decree-card.module.css`
-- [ ] Create `src/ui/components/policy-card/policy-card.tsx` — policy status display
-- [ ] Create `src/ui/components/policy-card/policy-card.module.css`
-- [ ] Create `src/ui/components/event-panel/event-panel.tsx` — event and storyline presentation
-- [ ] Create `src/ui/components/event-panel/event-panel.module.css`
-- [ ] Create `src/ui/components/forecast-module/forecast-module.tsx` — consequence preview display
-- [ ] Create `src/ui/components/forecast-module/forecast-module.module.css`
+- [x] Create `src/ui/components/resource-card/resource-card.tsx` — resource status with trend arrows
+- [x] Create `src/ui/components/resource-card/resource-card.module.css`
+- [x] Create `src/ui/components/decree-card/decree-card.tsx` — decree option display
+- [x] Create `src/ui/components/decree-card/decree-card.module.css`
+- [x] Create `src/ui/components/policy-card/policy-card.tsx` — policy status display
+- [x] Create `src/ui/components/policy-card/policy-card.module.css`
+- [x] Create `src/ui/components/event-panel/event-panel.tsx` — event and storyline presentation
+- [x] Create `src/ui/components/event-panel/event-panel.module.css`
+- [x] Create `src/ui/components/forecast-module/forecast-module.tsx` — consequence preview display
+- [x] Create `src/ui/components/forecast-module/forecast-module.module.css`
 
 ---
 

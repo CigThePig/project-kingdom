@@ -1,0 +1,114 @@
+/* ==========================================================================
+   Forecast Module — Consequence preview with directional projections
+   Source: ui-blueprint.md §6.12
+   ========================================================================== */
+
+.module {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-4);
+}
+
+/* --------------------------------------------------------------------------
+   Title
+   -------------------------------------------------------------------------- */
+.title {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  line-height: var(--line-height-tight);
+}
+
+/* --------------------------------------------------------------------------
+   Projections
+   -------------------------------------------------------------------------- */
+.projections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.projectionRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.turnLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+  min-width: 1.5rem;
+  text-align: right;
+}
+
+/* --------------------------------------------------------------------------
+   Bar track and fill
+   -------------------------------------------------------------------------- */
+.barTrack {
+  flex: 1;
+  height: 0.375rem;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+}
+
+.barFill {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-sm);
+}
+
+/* Direction color variants */
+.directionRising {
+  background: var(--color-status-positive);
+  color: var(--color-status-positive);
+}
+
+.directionFalling {
+  background: var(--color-status-critical);
+  color: var(--color-status-critical);
+}
+
+.directionStable {
+  background: var(--color-status-neutral);
+  color: var(--color-status-neutral);
+}
+
+/* --------------------------------------------------------------------------
+   Direction arrow
+   -------------------------------------------------------------------------- */
+.directionArrow {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  min-width: 1rem;
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   Summary
+   -------------------------------------------------------------------------- */
+.summary {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .module {
+    padding: var(--space-3);
+  }
+}
