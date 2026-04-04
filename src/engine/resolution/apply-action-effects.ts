@@ -561,7 +561,7 @@ function applyReligiousEdictEffect(state: GameState, action: QueuedAction): Game
       const newBalance = isNumber(treasuryCost)
         ? state.treasury.balance - treasuryCost
         : state.treasury.balance;
-      let pop = applyClassSatisfactionDelta(
+      const pop = applyClassSatisfactionDelta(
         state.population,
         PopulationClass.Clergy,
         RELIGIOUS_EDICT_FESTIVAL_CLERGY_SAT_DELTA,
