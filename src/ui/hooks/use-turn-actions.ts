@@ -14,6 +14,7 @@ import {
   type ApplyActionEffectsFn,
   type TurnResolutionResult,
 } from '../../engine/resolution/turn-resolution';
+import { applyActionEffects as applyRealActionEffects } from '../../engine/resolution/apply-action-effects';
 import { GameContext } from '../context/game-context';
 
 // ============================================================
@@ -34,8 +35,6 @@ export interface TurnActionsAPI {
   /** Number of action slots still available. */
   slotsRemaining: number;
 }
-
-const identityEffects: ApplyActionEffectsFn = (s) => s;
 
 export function useTurnActions(): TurnActionsAPI {
   const ctx = useContext(GameContext);
@@ -66,7 +65,7 @@ export function useTurnActions(): TurnActionsAPI {
   );
 
   const advanceTurn = useCallback(
-    (applyActionEffects: ApplyActionEffectsFn = identityEffects): TurnResolutionResult => {
+    (applyActionEffects: ApplyActionEffectsFn = applyRealActionEffects): TurnResolutionResult => {
       // Run the engine's turn resolution outside the reducer to keep
       // the reducer pure (resolveTurn uses Math.random internally).
       const result = resolveTurn(state.gameState, applyActionEffects);

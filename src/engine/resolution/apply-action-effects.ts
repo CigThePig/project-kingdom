@@ -1,0 +1,711 @@
+// Phase 1 — Action Effect Resolution
+// Blueprint Reference: gameplay-blueprint.md §5.2–§5.11
+//
+// Implements ApplyActionEffectsFn: applies all queued player actions to GameState
+// during Phase 2 of turn resolution. Pure TypeScript — no React imports.
+//
+// Actions are applied sequentially in player-queue order. Resource costs are
+// deducted immediately; each subsequent action sees reduced stockpiles.
+//
+// This handler does NOT re-resolve intelligence operations (Phase 5 handles those)
+// and does NOT run milestone checks (Phase 7 handles those).
+
+import {
+  ActionType,
+  ConstructionCategory,
+  ConstructionProject,
+  DiplomaticAgreement,
+  FestivalInvestmentLevel,
+  GameState,
+  IntelligenceFundingLevel,
+  KnowledgeBranch,
+  MilitaryPosture,
+  MilitaryRecruitmentStance,
+  PopulationClass,
+  QueuedAction,
+  RationingLevel,
+  ReligiousOrder,
+  ReligiousOrderType,
+  ReligiousTolerance,
+  ResourceState,
+  ResourceType,
+  TaxationLevel,
+  TradeOpenness,
+} from '../types';
+import { DECREE_POOL } from '../../data/decrees/index';
+import { applyDiplomaticActionEffect as applyNeighborRelDelta } from '../systems/diplomacy';
+import {
+  CONSTRUCTION_DEFAULT_TURNS,
+  DECREE_EFFECTS,
+  DIPLOMATIC_ACTION_DELTAS,
+  MAX_ACTIVE_RELIGIOUS_ORDERS,
+  RELIGIOUS_EDICT_FESTIVAL_FAITH_DELTA,
+  RELIGIOUS_EDICT_FESTIVAL_CLERGY_SAT_DELTA,
+  RELIGIOUS_EDICT_HERESY_DELTA,
+  RELIGIOUS_EDICT_HERESY_CLERGY_SAT_DELTA,
+  RELIGIOUS_EDICT_OBSERVANCE_COHESION_DELTA,
+  RELIGIOUS_EDICT_OBSERVANCE_FAITH_DELTA,
+  RELIGIOUS_ORDER_UPKEEP_PER_TURN,
+  RESEARCH_DIRECTIVE_PROGRESS_BURST,
+  RESEARCH_DIRECTIVE_TREASURY_COST,
+  TRADE_AGREEMENT_TURNS,
+} from '../constants';
+
+// ============================================================
+// Internal helpers
+// ============================================================
+
+function clamp(value: number, lo: number, hi: number): number {
+  return Math.max(lo, Math.min(hi, value));
+}
+
+function deductResourceCosts(
+  resources: ResourceState,
+  costs: Partial<Record<ResourceType, number>>,
+): ResourceState {
+  let updated = resources;
+  for (const [rt, cost] of Object.entries(costs) as [ResourceType, number][]) {
+    if (cost === undefined || cost <= 0) continue;
+    updated = {
+      ...updated,
+      [rt]: {
+        ...updated[rt],
+        stockpile: Math.max(0, updated[rt].stockpile - cost),
+      },
+    };
+  }
+  return updated;
+}
+
+function applyClassSatisfactionDelta(
+  population: GameState['population'],
+  cls: PopulationClass,
+  delta: number,
+): GameState['population'] {
+  const prev = population[cls];
+  return {
+    ...population,
+    [cls]: {
+      ...prev,
+      satisfaction: clamp(prev.satisfaction + delta, 0, 100),
+    },
+  };
+}
+
+// ============================================================
+// Type guards for parameters (Record<string, unknown>)
+// ============================================================
+
+function isString(v: unknown): v is string {
+  return typeof v === 'string';
+}
+
+function isNumber(v: unknown): v is number {
+  return typeof v === 'number';
+}
+
+function isPartialResourceCosts(v: unknown): v is Partial<Record<ResourceType, number>> {
+  if (typeof v !== 'object' || v === null) return false;
+  const obj = v as Record<string, unknown>;
+  for (const key of Object.keys(obj)) {
+    if (!Object.values(ResourceType).includes(key as ResourceType)) return false;
+    if (typeof obj[key] !== 'number') return false;
+  }
+  return true;
+}
+
+function isTaxationLevel(v: unknown): v is TaxationLevel {
+  return Object.values(TaxationLevel).includes(v as TaxationLevel);
+}
+
+function isTradeOpenness(v: unknown): v is TradeOpenness {
+  return Object.values(TradeOpenness).includes(v as TradeOpenness);
+}
+
+function isRationingLevel(v: unknown): v is RationingLevel {
+  return Object.values(RationingLevel).includes(v as RationingLevel);
+}
+
+function isReligiousTolerance(v: unknown): v is ReligiousTolerance {
+  return Object.values(ReligiousTolerance).includes(v as ReligiousTolerance);
+}
+
+function isFestivalInvestmentLevel(v: unknown): v is FestivalInvestmentLevel {
+  return Object.values(FestivalInvestmentLevel).includes(v as FestivalInvestmentLevel);
+}
+
+function isMilitaryRecruitmentStance(v: unknown): v is MilitaryRecruitmentStance {
+  return Object.values(MilitaryRecruitmentStance).includes(v as MilitaryRecruitmentStance);
+}
+
+function isIntelligenceFundingLevel(v: unknown): v is IntelligenceFundingLevel {
+  return Object.values(IntelligenceFundingLevel).includes(v as IntelligenceFundingLevel);
+}
+
+function isKnowledgeBranch(v: unknown): v is KnowledgeBranch {
+  return Object.values(KnowledgeBranch).includes(v as KnowledgeBranch);
+}
+
+function isMilitaryPosture(v: unknown): v is MilitaryPosture {
+  return Object.values(MilitaryPosture).includes(v as MilitaryPosture);
+}
+
+function isReligiousOrderType(v: unknown): v is ReligiousOrderType {
+  return Object.values(ReligiousOrderType).includes(v as ReligiousOrderType);
+}
+
+function isConstructionCategory(v: unknown): v is ConstructionCategory {
+  return Object.values(ConstructionCategory).includes(v as ConstructionCategory);
+}
+
+// ============================================================
+// Decree effect registry
+// Keys are decree IDs with the 'decree_' prefix stripped.
+// Each function receives (state, action) and returns a new GameState.
+// Resource costs are deducted before these run — handle only downstream effects here.
+// ============================================================
+
+type DecreeEffectFn = (state: GameState, action: QueuedAction) => GameState;
+
+function satDelta(
+  state: GameState,
+  deltas: Partial<Record<'nobilitySat' | 'clergySat' | 'merchantSat' | 'commonerSat' | 'militaryCasteSat', number>>,
+): GameState['population'] {
+  let pop = state.population;
+  if (deltas.nobilitySat) pop = applyClassSatisfactionDelta(pop, PopulationClass.Nobility, deltas.nobilitySat);
+  if (deltas.clergySat) pop = applyClassSatisfactionDelta(pop, PopulationClass.Clergy, deltas.clergySat);
+  if (deltas.merchantSat) pop = applyClassSatisfactionDelta(pop, PopulationClass.Merchants, deltas.merchantSat);
+  if (deltas.commonerSat) pop = applyClassSatisfactionDelta(pop, PopulationClass.Commoners, deltas.commonerSat);
+  if (deltas.militaryCasteSat) pop = applyClassSatisfactionDelta(pop, PopulationClass.MilitaryCaste, deltas.militaryCasteSat);
+  return pop;
+}
+
+const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
+  ['market_charter', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.market_charter),
+  })],
+
+  ['emergency_levy', (state) => {
+    const eff = DECREE_EFFECTS.emergency_levy;
+    return {
+      ...state,
+      treasury: { ...state.treasury, balance: state.treasury.balance + eff.treasuryDelta },
+      population: satDelta(state, eff),
+    };
+  }],
+
+  ['trade_subsidies', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.trade_subsidies),
+  })],
+
+  ['fortify_borders', (state) => {
+    const eff = DECREE_EFFECTS.fortify_borders;
+    return {
+      ...state,
+      population: satDelta(state, eff),
+      military: {
+        ...state.military,
+        readiness: clamp(state.military.readiness + eff.readinessDelta, 0, 100),
+      },
+    };
+  }],
+
+  ['arms_commission', (state) => {
+    const eff = DECREE_EFFECTS.arms_commission;
+    return {
+      ...state,
+      population: satDelta(state, eff),
+      military: {
+        ...state.military,
+        equipmentCondition: clamp(state.military.equipmentCondition + eff.equipmentDelta, 0, 100),
+      },
+    };
+  }],
+
+  ['general_mobilization', (state) => {
+    const eff = DECREE_EFFECTS.general_mobilization;
+    return {
+      ...state,
+      population: satDelta(state, eff),
+      military: {
+        ...state.military,
+        readiness: clamp(state.military.readiness + eff.readinessDelta, 0, 100),
+      },
+    };
+  }],
+
+  ['road_improvement', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.road_improvement),
+  })],
+
+  ['census', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.census),
+  })],
+
+  ['administrative_reform', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.administrative_reform),
+  })],
+
+  ['call_festival', (state) => {
+    const eff = DECREE_EFFECTS.call_festival;
+    return {
+      ...state,
+      population: satDelta(state, eff),
+      faithCulture: {
+        ...state.faithCulture,
+        faithLevel: clamp(state.faithCulture.faithLevel + eff.faithDelta, 0, 100),
+      },
+    };
+  }],
+
+  ['invest_religious_order', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.invest_religious_order),
+  })],
+
+  ['suppress_heresy', (state) => {
+    const eff = DECREE_EFFECTS.suppress_heresy;
+    return {
+      ...state,
+      population: satDelta(state, eff),
+      faithCulture: {
+        ...state.faithCulture,
+        heterodoxy: clamp(state.faithCulture.heterodoxy + eff.heterodoxyDelta, 0, 100),
+      },
+    };
+  }],
+
+  ['diplomatic_envoy', (state, action) => {
+    const eff = DECREE_EFFECTS.diplomatic_envoy;
+    const pop = satDelta(state, eff);
+    if (action.targetNeighborId === null) return { ...state, population: pop };
+    return {
+      ...state,
+      population: pop,
+      diplomacy: {
+        ...state.diplomacy,
+        neighbors: applyNeighborRelDelta(state.diplomacy.neighbors, action.targetNeighborId, eff.relationshipDelta),
+      },
+    };
+  }],
+
+  ['trade_agreement', (state, action) => {
+    const eff = DECREE_EFFECTS.trade_agreement;
+    const pop = satDelta(state, eff);
+    if (action.targetNeighborId === null) return { ...state, population: pop };
+    return {
+      ...state,
+      population: pop,
+      diplomacy: {
+        ...state.diplomacy,
+        neighbors: applyNeighborRelDelta(state.diplomacy.neighbors, action.targetNeighborId, eff.relationshipDelta),
+      },
+    };
+  }],
+
+  ['royal_marriage', (state, action) => {
+    const eff = DECREE_EFFECTS.royal_marriage;
+    const pop = satDelta(state, eff);
+    if (action.targetNeighborId === null) return { ...state, population: pop };
+    return {
+      ...state,
+      population: pop,
+      diplomacy: {
+        ...state.diplomacy,
+        neighbors: applyNeighborRelDelta(state.diplomacy.neighbors, action.targetNeighborId, eff.relationshipDelta),
+      },
+    };
+  }],
+
+  ['public_granary', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.public_granary),
+  })],
+
+  ['labor_rights', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.labor_rights),
+  })],
+
+  ['land_redistribution', (state) => ({
+    ...state,
+    population: satDelta(state, DECREE_EFFECTS.land_redistribution),
+  })],
+]);
+
+// ============================================================
+// Ten action handlers
+// ============================================================
+
+function applyDecreeEffect(state: GameState, action: QueuedAction): GameState {
+  const decree = DECREE_POOL.find((d) => d.id === action.actionDefinitionId);
+  if (!decree) return state; // unknown decree — no-op
+
+  // 1. Deduct resource costs
+  const resources = deductResourceCosts(state.resources, decree.resourceCosts);
+  const stateAfterCosts = { ...state, resources };
+
+  // 2. Strip 'decree_' prefix to get registry key
+  const registryKey = decree.id.replace(/^decree_/, '');
+  const effectFn = DECREE_EFFECT_REGISTRY.get(registryKey);
+  if (!effectFn) return stateAfterCosts; // no immediate effect defined
+
+  return effectFn(stateAfterCosts, action);
+}
+
+function applyPolicyChangeEffect(state: GameState, action: QueuedAction): GameState {
+  const policy = action.parameters['policy'];
+  const newValue = action.parameters['newValue'];
+
+  if (!isString(policy)) return state;
+
+  let policies = state.policies;
+
+  switch (policy) {
+    case 'taxationLevel':
+      if (isTaxationLevel(newValue)) policies = { ...policies, taxationLevel: newValue };
+      break;
+    case 'tradeOpenness':
+      if (isTradeOpenness(newValue)) policies = { ...policies, tradeOpenness: newValue };
+      break;
+    case 'rationingLevel':
+      if (isRationingLevel(newValue)) policies = { ...policies, rationingLevel: newValue };
+      break;
+    case 'religiousTolerance':
+      if (isReligiousTolerance(newValue)) policies = { ...policies, religiousTolerance: newValue };
+      break;
+    case 'festivalInvestmentLevel':
+      if (isFestivalInvestmentLevel(newValue)) policies = { ...policies, festivalInvestmentLevel: newValue };
+      break;
+    case 'militaryRecruitmentStance':
+      if (isMilitaryRecruitmentStance(newValue)) policies = { ...policies, militaryRecruitmentStance: newValue };
+      break;
+    case 'intelligenceFundingLevel':
+      if (isIntelligenceFundingLevel(newValue)) policies = { ...policies, intelligenceFundingLevel: newValue };
+      break;
+    case 'researchFocus':
+      // newValue may be a KnowledgeBranch or null
+      if (newValue === null || isKnowledgeBranch(newValue)) {
+        policies = { ...policies, researchFocus: newValue };
+      }
+      break;
+    case 'laborAllocationPriority':
+      if (newValue === null || isKnowledgeBranch(newValue)) {
+        policies = { ...policies, laborAllocationPriority: newValue };
+      }
+      break;
+  }
+
+  return { ...state, policies };
+}
+
+function applyConstructionEffect(state: GameState, action: QueuedAction): GameState {
+  // targetRegionId is required for construction
+  if (action.targetRegionId === null) return state;
+
+  const projectDefinitionId = action.parameters['projectDefinitionId'];
+  const effectId = action.parameters['effectId'];
+  if (!isString(projectDefinitionId) || !isString(effectId)) return state;
+
+  const categoryRaw = action.parameters['category'];
+  const category: ConstructionCategory = isConstructionCategory(categoryRaw)
+    ? categoryRaw
+    : ConstructionCategory.Civic;
+
+  const turnsTotalRaw = action.parameters['turnsTotal'];
+  const turnsTotal: number = isNumber(turnsTotalRaw) && turnsTotalRaw > 0
+    ? turnsTotalRaw
+    : CONSTRUCTION_DEFAULT_TURNS;
+
+  // Deduct upfront resource costs if provided
+  const costRaw = action.parameters['resourceCosts'];
+  const resources = isPartialResourceCosts(costRaw)
+    ? deductResourceCosts(state.resources, costRaw)
+    : state.resources;
+
+  const newProject: ConstructionProject = {
+    id: `construction-${action.id}`,
+    definitionId: projectDefinitionId,
+    category,
+    targetRegionId: action.targetRegionId,
+    turnsRemaining: turnsTotal,
+    turnsTotal,
+    resourceCostRemaining: {}, // full cost paid upfront; Phase 10 sees nothing to deduct
+    effectId,
+  };
+
+  return {
+    ...state,
+    resources,
+    constructionProjects: [...state.constructionProjects, newProject],
+  };
+}
+
+function applyMilitaryOrderEffect(state: GameState, action: QueuedAction): GameState {
+  let military = state.military;
+  let policies = state.policies;
+
+  const postureChange = action.parameters['postureChange'];
+  if (isMilitaryPosture(postureChange)) {
+    military = { ...military, deploymentPosture: postureChange };
+  }
+
+  // Recruitment stance lives on PolicyState, not MilitaryState, so Phase 5 reads it correctly
+  const stanceChange = action.parameters['recruitmentStanceChange'];
+  if (isMilitaryRecruitmentStance(stanceChange)) {
+    policies = { ...policies, militaryRecruitmentStance: stanceChange };
+  }
+
+  const readinessBoost = action.parameters['readinessBoost'];
+  if (isNumber(readinessBoost)) {
+    military = { ...military, readiness: clamp(military.readiness + readinessBoost, 0, 100) };
+  }
+
+  return { ...state, military, policies };
+}
+
+function applyTradeActionEffect(state: GameState, action: QueuedAction): GameState {
+  const subType = action.parameters['tradeActionType'];
+  if (!isString(subType)) return state;
+
+  const targetNeighborId = action.targetNeighborId;
+
+  if (subType === 'initiate_agreement' && targetNeighborId !== null) {
+    const newAgreement: DiplomaticAgreement = {
+      agreementId: `trade-${action.id}`,
+      neighborId: targetNeighborId,
+      turnsRemaining: TRADE_AGREEMENT_TURNS,
+    };
+    const updatedNeighbors = state.diplomacy.neighbors.map((n) =>
+      n.id === targetNeighborId
+        ? { ...n, activeAgreements: [...n.activeAgreements, newAgreement] }
+        : n,
+    );
+    return { ...state, diplomacy: { ...state.diplomacy, neighbors: updatedNeighbors } };
+  }
+
+  if (subType === 'cancel_agreement' && targetNeighborId !== null) {
+    const agreementId = action.parameters['agreementId'];
+    const updatedNeighbors = state.diplomacy.neighbors.map((n) => {
+      if (n.id !== targetNeighborId) return n;
+      const filtered = isString(agreementId)
+        ? n.activeAgreements.filter((a) => a.agreementId !== agreementId)
+        : n.activeAgreements;
+      return { ...n, activeAgreements: filtered };
+    });
+    // Apply relationship penalty for breaking a trade agreement
+    const penalizedNeighbors = applyNeighborRelDelta(updatedNeighbors, targetNeighborId, -8);
+    return { ...state, diplomacy: { ...state.diplomacy, neighbors: penalizedNeighbors } };
+  }
+
+  if (subType === 'economic_stabilization') {
+    return {
+      ...state,
+      treasury: { ...state.treasury, balance: state.treasury.balance + 10 },
+    };
+  }
+
+  return state;
+}
+
+function applyDiplomaticActionEffect(state: GameState, action: QueuedAction): GameState {
+  const subType = action.parameters['diplomaticActionType'];
+  const targetNeighborId = action.targetNeighborId;
+  if (!isString(subType) || targetNeighborId === null) return state;
+
+  const delta = DIPLOMATIC_ACTION_DELTAS[subType] ?? 0;
+  let updatedNeighbors = applyNeighborRelDelta(state.diplomacy.neighbors, targetNeighborId, delta);
+
+  // Clear all active agreements when breaking relations
+  if (subType === 'break_agreement') {
+    updatedNeighbors = updatedNeighbors.map((n) =>
+      n.id === targetNeighborId ? { ...n, activeAgreements: [] } : n,
+    );
+  }
+
+  return { ...state, diplomacy: { ...state.diplomacy, neighbors: updatedNeighbors } };
+}
+
+function applyIntelligenceOpEffect(state: GameState, action: QueuedAction): GameState {
+  // Phase 5 of turn-resolution.ts resolves intelligence operations from queuedActions.
+  // This handler only applies an optional upfront initiation cost if specified.
+  const initiationCost = action.parameters['initiationCost'];
+  if (isNumber(initiationCost) && initiationCost > 0) {
+    return {
+      ...state,
+      treasury: { ...state.treasury, balance: state.treasury.balance - initiationCost },
+    };
+  }
+  return state;
+}
+
+function applyReligiousEdictEffect(state: GameState, action: QueuedAction): GameState {
+  const edictType = action.parameters['edictType'];
+  if (!isString(edictType)) return state;
+
+  switch (edictType) {
+    case 'fund_festival': {
+      const treasuryCost = action.parameters['cost'];
+      const newBalance = isNumber(treasuryCost)
+        ? state.treasury.balance - treasuryCost
+        : state.treasury.balance;
+      let pop = applyClassSatisfactionDelta(
+        state.population,
+        PopulationClass.Clergy,
+        RELIGIOUS_EDICT_FESTIVAL_CLERGY_SAT_DELTA,
+      );
+      return {
+        ...state,
+        treasury: { ...state.treasury, balance: newBalance },
+        population: pop,
+        faithCulture: {
+          ...state.faithCulture,
+          faithLevel: clamp(state.faithCulture.faithLevel + RELIGIOUS_EDICT_FESTIVAL_FAITH_DELTA, 0, 100),
+        },
+      };
+    }
+
+    case 'invest_religious_order': {
+      if (state.faithCulture.activeOrders.length >= MAX_ACTIVE_RELIGIOUS_ORDERS) return state;
+      const orderTypeRaw = action.parameters['orderType'];
+      if (!isReligiousOrderType(orderTypeRaw)) return state;
+      const newOrder: ReligiousOrder = {
+        type: orderTypeRaw,
+        isActive: true,
+        upkeepPerTurn: RELIGIOUS_ORDER_UPKEEP_PER_TURN,
+      };
+      return {
+        ...state,
+        faithCulture: {
+          ...state.faithCulture,
+          activeOrders: [...state.faithCulture.activeOrders, newOrder],
+        },
+      };
+    }
+
+    case 'address_heterodoxy': {
+      const pop = applyClassSatisfactionDelta(
+        state.population,
+        PopulationClass.Clergy,
+        RELIGIOUS_EDICT_HERESY_CLERGY_SAT_DELTA,
+      );
+      return {
+        ...state,
+        population: pop,
+        faithCulture: {
+          ...state.faithCulture,
+          heterodoxy: clamp(state.faithCulture.heterodoxy + RELIGIOUS_EDICT_HERESY_DELTA, 0, 100),
+        },
+      };
+    }
+
+    case 'establish_observance': {
+      return {
+        ...state,
+        faithCulture: {
+          ...state.faithCulture,
+          faithLevel: clamp(state.faithCulture.faithLevel + RELIGIOUS_EDICT_OBSERVANCE_FAITH_DELTA, 0, 100),
+          culturalCohesion: clamp(state.faithCulture.culturalCohesion + RELIGIOUS_EDICT_OBSERVANCE_COHESION_DELTA, 0, 100),
+        },
+      };
+    }
+
+    default:
+      return state;
+  }
+}
+
+function applyResearchDirectiveEffect(state: GameState, action: QueuedAction): GameState {
+  const focus = state.policies.researchFocus;
+  if (focus === null) return state; // no branch focused — directive has no target
+
+  // Allow explicit branch override from parameters
+  const branchOverride = action.parameters['branch'];
+  const targetBranch = isKnowledgeBranch(branchOverride) ? branchOverride : focus;
+
+  const currentBranch = state.knowledge.branches[targetBranch];
+  const updatedBranch = {
+    ...currentBranch,
+    progressValue: currentBranch.progressValue + RESEARCH_DIRECTIVE_PROGRESS_BURST,
+  };
+
+  return {
+    ...state,
+    treasury: {
+      ...state.treasury,
+      balance: state.treasury.balance - RESEARCH_DIRECTIVE_TREASURY_COST,
+    },
+    knowledge: {
+      ...state.knowledge,
+      branches: { ...state.knowledge.branches, [targetBranch]: updatedBranch },
+    },
+  };
+}
+
+function applyCrisisResponseEffect(state: GameState, action: QueuedAction): GameState {
+  // Marks the event resolved and records the player's choice.
+  // Full outcome mechanics belong to Phase 2 (event effect resolution).
+  // Phase 11 of turn-resolution.ts archives events where isResolved === true.
+  const eventId = action.parameters['eventId'];
+  const choiceId = action.parameters['choiceId'];
+  if (!isString(eventId) || !isString(choiceId)) return state;
+
+  const updatedEvents = state.activeEvents.map((evt) =>
+    evt.id === eventId && !evt.isResolved
+      ? { ...evt, isResolved: true, choiceMade: choiceId }
+      : evt,
+  );
+
+  return { ...state, activeEvents: updatedEvents };
+}
+
+// ============================================================
+// Main export — implements ApplyActionEffectsFn
+// ============================================================
+
+export function applyActionEffects(
+  state: GameState,
+  queuedActions: ReadonlyArray<QueuedAction>,
+): GameState {
+  let current = state;
+  for (const action of queuedActions) {
+    switch (action.type) {
+      case ActionType.Decree:
+        current = applyDecreeEffect(current, action);
+        break;
+      case ActionType.PolicyChange:
+        current = applyPolicyChangeEffect(current, action);
+        break;
+      case ActionType.Construction:
+        current = applyConstructionEffect(current, action);
+        break;
+      case ActionType.MilitaryOrder:
+        current = applyMilitaryOrderEffect(current, action);
+        break;
+      case ActionType.TradeAction:
+        current = applyTradeActionEffect(current, action);
+        break;
+      case ActionType.DiplomaticAction:
+        current = applyDiplomaticActionEffect(current, action);
+        break;
+      case ActionType.IntelligenceOp:
+        current = applyIntelligenceOpEffect(current, action);
+        break;
+      case ActionType.ReligiousEdict:
+        current = applyReligiousEdictEffect(current, action);
+        break;
+      case ActionType.ResearchDirective:
+        current = applyResearchDirectiveEffect(current, action);
+        break;
+      case ActionType.CrisisResponse:
+        current = applyCrisisResponseEffect(current, action);
+        break;
+    }
+  }
+  return current;
+}

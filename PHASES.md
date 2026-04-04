@@ -12,37 +12,28 @@ Progress tracker for turning the kingdom simulation from demo scaffold into a fu
 
 ## Phase 1 — Action Effect Resolution
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Action Types (§ all 10 action types), Turn Resolution Phase 2
 
 The most critical gap. Player actions can be queued but don't fully alter game state on resolution. Complete the mechanical effect application for all action types in turn resolution Phase 2.
 
-**Files to modify:**
-- `src/engine/resolution/turn-resolution.ts` — Phase 2 action execution logic
-- `src/engine/systems/treasury.ts` — decree and edict cost application
-- `src/engine/systems/food.ts` — rationing and agricultural decree effects
-- `src/engine/systems/population.ts` — labor allocation and recruitment effects
-- `src/engine/systems/military.ts` — military order execution (posture, recruitment, deployment)
-- `src/engine/systems/trade.ts` — trade action execution (import/export, agreements)
-- `src/engine/systems/diplomacy.ts` — diplomatic action execution (proposals, treaties)
-- `src/engine/systems/espionage.ts` — intelligence operation initiation
-- `src/engine/systems/faith.ts` — religious edict effects (festivals, orders, heterodoxy response)
-- `src/engine/systems/knowledge.ts` — research directive burst application
-- `src/engine/systems/regions.ts` — construction project initiation
-- `src/engine/resolution/action-budget.ts` — slot cost enforcement for all action types
+**Files modified:**
+- `src/engine/resolution/apply-action-effects.ts` — new file; implements `ApplyActionEffectsFn` with all 10 action type handlers
+- `src/engine/constants.ts` — Block 16 added: action effect constants for decree deltas, research directive costs, diplomatic deltas, religious edict deltas, construction defaults
+- `src/ui/hooks/use-turn-actions.ts` — wired real `applyActionEffects` as default instead of identity stub
 
 **Checklist:**
-- [ ] Decree execution: apply resource costs, immediate effects, and delayed effect scheduling
-- [ ] Policy changes: apply standing policy modifications (taxation, recruitment, trade openness, rationing, research focus, religious tolerance, festival investment, intelligence funding, labor allocation)
-- [ ] Military orders: change recruitment level, readiness target, deployment posture, force composition
-- [ ] Trade actions: initiate/cancel trade agreements, adjust import/export, apply economic stabilization
-- [ ] Diplomatic actions: send envoys, propose treaties, issue ultimatums, break agreements
-- [ ] Intelligence operations: initiate covert ops with success probability, cost deduction, risk tracking
-- [ ] Religious edicts: fund festivals, invest in religious orders, address heterodoxy, establish observances
-- [ ] Research directives: apply one-time research burst at elevated treasury cost
-- [ ] Construction initiation: begin multi-turn projects with resource commitment and region assignment
-- [ ] Crisis responses: execute event-linked reactive decisions (free or slot-consuming per event rules)
-- [ ] Verify end-to-end: queue a decree, advance turn, confirm game state changes in reports
+- [x] Decree execution: apply resource costs, immediate effects, and delayed effect scheduling
+- [x] Policy changes: apply standing policy modifications (taxation, recruitment, trade openness, rationing, research focus, religious tolerance, festival investment, intelligence funding, labor allocation)
+- [x] Military orders: change recruitment level, readiness target, deployment posture, force composition
+- [x] Trade actions: initiate/cancel trade agreements, adjust import/export, apply economic stabilization
+- [x] Diplomatic actions: send envoys, propose treaties, issue ultimatums, break agreements
+- [x] Intelligence operations: initiate covert ops with success probability, cost deduction, risk tracking
+- [x] Religious edicts: fund festivals, invest in religious orders, address heterodoxy, establish observances
+- [x] Research directives: apply one-time research burst at elevated treasury cost
+- [x] Construction initiation: begin multi-turn projects with resource commitment and region assignment
+- [x] Crisis responses: execute event-linked reactive decisions (free or slot-consuming per event rules)
+- [x] Verify end-to-end: queue a decree, advance turn, confirm game state changes in reports
 
 ---
 
