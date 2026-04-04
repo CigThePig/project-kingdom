@@ -8,6 +8,7 @@ import {
   FailureCondition,
   FestivalInvestmentLevel,
   IntelligenceFundingLevel,
+  IntelligenceOperationType,
   KnowledgeBranch,
   MilitaryPosture,
   MilitaryRecruitmentStance,
@@ -339,4 +340,69 @@ export const RELIGIOUS_ORDER_TYPE_LABELS: Record<ReligiousOrderType, string> = {
   [ReligiousOrderType.Scholarly]: 'Scholarly Order',
   [ReligiousOrderType.Martial]: 'Martial Order',
   [ReligiousOrderType.Charitable]: 'Charitable Order',
+};
+
+// ============================================================
+// Region Labels
+// ============================================================
+
+export const REGION_LABELS: Record<string, string> = {
+  region_heartlands: 'The Heartlands',
+  region_ironvale: 'Ironvale',
+  region_timbermark: 'Timbermark',
+};
+
+export const ECONOMIC_OUTPUT_LABELS: Record<string, string> = {
+  Food: 'Food Production',
+  Trade: 'Trade Hub',
+  [ResourceType.Wood]: 'Timber',
+  [ResourceType.Iron]: 'Iron',
+  [ResourceType.Stone]: 'Stone',
+};
+
+// ============================================================
+// Neighbor Labels
+// ============================================================
+
+export const NEIGHBOR_LABELS: Record<string, string> = {
+  neighbor_arenthal: 'Kingdom of Arenthal',
+  neighbor_valdris: 'Valdris Confederation',
+};
+
+// ============================================================
+// Intelligence Operation Labels
+// ============================================================
+
+export const INTELLIGENCE_OP_LABELS: Record<IntelligenceOperationType, string> = {
+  [IntelligenceOperationType.Reconnaissance]: 'Reconnaissance',
+  [IntelligenceOperationType.DiplomaticIntelligence]: 'Diplomatic Intelligence',
+  [IntelligenceOperationType.EconomicIntelligence]: 'Economic Intelligence',
+  [IntelligenceOperationType.Sabotage]: 'Sabotage',
+  [IntelligenceOperationType.InternalSurveillance]: 'Internal Surveillance',
+  [IntelligenceOperationType.CounterEspionageSweep]: 'Counter-Espionage Sweep',
+};
+
+export const INTELLIGENCE_OP_DESCRIPTIONS: Record<IntelligenceOperationType, string> = {
+  [IntelligenceOperationType.Reconnaissance]: 'Gather general intelligence on a neighboring kingdom\'s military posture and capabilities.',
+  [IntelligenceOperationType.DiplomaticIntelligence]: 'Uncover a neighbor\'s diplomatic intentions, secret agreements, and alliance movements.',
+  [IntelligenceOperationType.EconomicIntelligence]: 'Assess a neighbor\'s treasury strength, trade dependencies, and economic vulnerabilities.',
+  [IntelligenceOperationType.Sabotage]: 'Conduct covert operations to disrupt a neighbor\'s infrastructure or military readiness.',
+  [IntelligenceOperationType.InternalSurveillance]: 'Monitor domestic factions for signs of conspiracy, sedition, or noble intrigue.',
+  [IntelligenceOperationType.CounterEspionageSweep]: 'Identify and neutralize foreign intelligence operatives within the kingdom.',
+};
+
+export const INTELLIGENCE_OP_RISK_LABELS: Record<IntelligenceOperationType, string> = {
+  [IntelligenceOperationType.Reconnaissance]: 'Agent exposure and network degradation.',
+  [IntelligenceOperationType.DiplomaticIntelligence]: 'Agent exposure and diplomatic incident if discovered.',
+  [IntelligenceOperationType.EconomicIntelligence]: 'Agent exposure and diplomatic incident if discovered.',
+  [IntelligenceOperationType.Sabotage]: 'Agent exposure, severe diplomatic incident, and potential retaliation.',
+  [IntelligenceOperationType.InternalSurveillance]: 'Agent exposure and reduced network strength.',
+  [IntelligenceOperationType.CounterEspionageSweep]: 'Agent exposure and reduced network strength.',
+};
+
+export const INTELLIGENCE_SUCCESS_TIERS: Record<string, string> = {
+  favorable: 'Favorable Odds',
+  moderate: 'Moderate Risk',
+  difficult: 'Difficult Undertaking',
+  perilous: 'Perilous Mission',
 };

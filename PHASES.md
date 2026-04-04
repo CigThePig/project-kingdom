@@ -190,23 +190,23 @@ These three screens are the highest-value and most-used. Build them first.
 
 ## Phase 12 — Simulation Screens
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` — individual screen specs for each below; `ux-blueprint.md` — §6 Navigation Depth Rules
 
-- [ ] Create `src/ui/screens/regions/regions.tsx`
-- [ ] Create `src/ui/screens/regions/regions.module.css`
-- [ ] Create `src/ui/screens/military/military.tsx`
-- [ ] Create `src/ui/screens/military/military.module.css`
-- [ ] Create `src/ui/screens/trade/trade.tsx`
-- [ ] Create `src/ui/screens/trade/trade.module.css`
-- [ ] Create `src/ui/screens/diplomacy/diplomacy.tsx`
-- [ ] Create `src/ui/screens/diplomacy/diplomacy.module.css`
-- [ ] Create `src/ui/screens/intelligence/intelligence.tsx`
-- [ ] Create `src/ui/screens/intelligence/intelligence.module.css`
-- [ ] Create `src/ui/screens/knowledge/knowledge.tsx`
-- [ ] Create `src/ui/screens/knowledge/knowledge.module.css`
-- [ ] Create `src/ui/screens/archive/archive.tsx`
-- [ ] Create `src/ui/screens/archive/archive.module.css`
+- [x] Create `src/ui/screens/regions/regions.tsx`
+- [x] Create `src/ui/screens/regions/regions.module.css`
+- [x] Create `src/ui/screens/military/military.tsx`
+- [x] Create `src/ui/screens/military/military.module.css`
+- [x] Create `src/ui/screens/trade/trade.tsx`
+- [x] Create `src/ui/screens/trade/trade.module.css`
+- [x] Create `src/ui/screens/diplomacy/diplomacy.tsx`
+- [x] Create `src/ui/screens/diplomacy/diplomacy.module.css`
+- [x] Create `src/ui/screens/intelligence/intelligence.tsx`
+- [x] Create `src/ui/screens/intelligence/intelligence.module.css`
+- [x] Create `src/ui/screens/knowledge/knowledge.tsx`
+- [x] Create `src/ui/screens/knowledge/knowledge.module.css`
+- [x] Create `src/ui/screens/archive/archive.tsx`
+- [x] Create `src/ui/screens/archive/archive.module.css`
 
 ---
 
