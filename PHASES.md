@@ -177,14 +177,14 @@ These three screens are the highest-value and most-used. Build them first.
 
 ## Phase 11 — Action Screens
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` — Decrees, Policies, Society screen specs; `ux-blueprint.md` — §4 Decision Support
 
-- [ ] Create `src/ui/screens/decrees/decrees.tsx`
-- [ ] Create `src/ui/screens/decrees/decrees.module.css`
-- [ ] Create `src/ui/screens/society/society.tsx` — population classes + faith/culture tabs
-- [ ] Create `src/ui/screens/society/society.module.css`
-- [ ] Verify action budget enforcement (3-slot limit) works in the UI
+- [x] Create `src/ui/screens/decrees/decrees.tsx`
+- [x] Create `src/ui/screens/decrees/decrees.module.css`
+- [x] Create `src/ui/screens/society/society.tsx` — population classes + faith/culture tabs
+- [x] Create `src/ui/screens/society/society.module.css`
+- [x] Verify action budget enforcement (3-slot limit) works in the UI
 
 ---
 

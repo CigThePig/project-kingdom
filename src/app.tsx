@@ -9,6 +9,8 @@ import { IntelligencePanel } from './ui/components/intelligence-panel/intelligen
 import { Dashboard } from './ui/screens/dashboard/dashboard';
 import { Reports } from './ui/screens/reports/reports';
 import { Events } from './ui/screens/events/events';
+import { Decrees } from './ui/screens/decrees/decrees';
+import { Society } from './ui/screens/society/society';
 import styles from './app.module.css';
 
 // ============================================================
@@ -76,7 +78,13 @@ export function App() {
         )}
         {activeScreen === 'reports' && <Reports />}
         {activeScreen === 'events' && <Events />}
-        {activeScreen !== 'dashboard' && activeScreen !== 'reports' && activeScreen !== 'events' && (
+        {activeScreen === 'decrees' && <Decrees />}
+        {activeScreen === 'faith' && <Society />}
+        {activeScreen !== 'dashboard' &&
+          activeScreen !== 'reports' &&
+          activeScreen !== 'events' &&
+          activeScreen !== 'decrees' &&
+          activeScreen !== 'faith' && (
           <p className={styles.contentPlaceholder}>
             Screen content will be implemented in a later phase.
           </p>
