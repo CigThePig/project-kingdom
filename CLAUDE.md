@@ -149,12 +149,14 @@ These are hard constraints. Do not violate them without explicit instruction.
 
 ## Progress Tracking
 
-All implementation progress is tracked in **`PHASES.md`** at the project root.
+The original scaffold phases (0–14) are **complete**. All architecture, engine systems, UI screens, data layer, state management, and styling are in place. The project is now in the **game implementation** stage.
+
+Current progress is tracked in **`PHASES.md`** at the project root, which contains Phases 1–10 covering: action effect resolution, event/storyline mechanics, AI neighbors, win/loss conditions, screen interactivity, turn summary feedback, content expansion, knowledge tree visualization, onboarding, and final polish/deployment.
 
 At the start of every session:
 1. Open `PHASES.md` and identify the current phase (first phase with unchecked items).
 2. Work through checkboxes in order — complete one phase before starting the next.
 3. Check off items as you complete them: change `- [ ]` to `- [x]`.
-4. Each phase lists the exact files to create and the blueprint section to read first.
+4. Each phase lists the exact files to modify or create, and the blueprint section to read first.
 
-If a phase is fully checked, move to the next one. Never skip a phase unless its files already exist and have been verified working.
+If a phase is fully checked, move to the next one. Never skip a phase unless its deliverables already exist and have been verified working.
