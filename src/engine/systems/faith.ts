@@ -82,7 +82,7 @@ export function applyReligiousOrderEffects(
 ): number {
   const orderBonus = activeOrders
     .filter((o) => o.isActive)
-    .reduce((sum, _o) => sum + 0.5, 0); // each active order adds 0.5 faith/turn
+    .length * 0.5; // each active order adds 0.5 faith/turn
   return baseFaithDelta + orderBonus;
 }
 

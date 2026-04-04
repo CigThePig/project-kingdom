@@ -659,7 +659,7 @@ export function resolveTurn(
   };
 
   // Reset action budget for the next turn.
-  const nextActionBudget = resetActionBudgetForNextTurn(stateAfterActions.actionBudget);
+  const nextActionBudget = resetActionBudgetForNextTurn();
 
   // Build CrownBar display data for the new turn.
   const unresolvedUrgentMatters = activeEvents.filter(

@@ -104,7 +104,7 @@ export function checkActionBudgetExhausted(budget: ActionBudget): boolean {
  * Clears the action queue and zeroes all counters.
  * Returns a fresh ActionBudget (immutable; does not mutate the input).
  */
-export function resetActionBudgetForNextTurn(_budget: ActionBudget): ActionBudget {
+export function resetActionBudgetForNextTurn(): ActionBudget {
   return {
     slotsTotal: ACTION_BUDGET_BASE,
     slotsUsed: 0,
