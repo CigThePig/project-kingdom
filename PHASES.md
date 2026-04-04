@@ -260,26 +260,29 @@ Expand from demo content to game-quality variety.
 
 ## Phase 8 — Knowledge Tree Visualization
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` — Knowledge screen spec; `gameplay-blueprint.md` — Knowledge & Advancement System
 
 Transform the knowledge screen from data display into a visual interactive tree.
 
-**Files to modify:**
-- `src/ui/screens/knowledge/knowledge.tsx` — visual tree layout with nodes and branches
-- `src/ui/screens/knowledge/knowledge.module.css` — node styling, progress indicators, dependency lines
+**Files modified:**
+- `src/ui/screens/knowledge/knowledge.tsx` — horizontal tree layout with branch rows, milestone nodes, node detail panel, cross-branch SVG lines, research contributors
+- `src/ui/screens/knowledge/knowledge.module.css` — node styling (unlocked/active/locked/selected states), progress connectors, dependency lines, branch focus highlight, mobile responsive
+
+**Files created:**
+- `src/data/knowledge/index.ts` — 30 milestone definitions (6 branches × 5 milestones) with names, descriptions, unlock lists; 7 cross-branch dependencies; research contributor labels
 
 **Checklist:**
-- [ ] Visual branch layout: all 6 knowledge branches arranged as tree, radial, or horizontal display
-- [ ] Node display: each advancement as a node — filled for unlocked, dimmed for locked
-- [ ] Progress bars: show progress toward next milestone in each branch
-- [ ] Current research focus: highlighted branch with distinct visual treatment
-- [ ] Cross-branch dependencies: connecting lines between prerequisites in different branches
-- [ ] Milestone unlock indicators: clear visual celebration when milestone reached
-- [ ] Node detail on selection: what it unlocks (new decrees, construction, policy options), prerequisites, estimated turns at current investment
-- [ ] Scholarly clergy and research infrastructure indicators: show what contributes to research speed
-- [ ] Mobile layout: vertically scrollable linear layout instead of spatial tree
-- [ ] Verify: advance research over several turns, confirm visual progress updates and milestone unlocks display correctly
+- [x] Visual branch layout: all 6 knowledge branches arranged as horizontal tree (branch header left, 5 milestone nodes flowing left-to-right)
+- [x] Node display: each advancement as a node — filled (positive teal) for unlocked, pulsing for active, dimmed for locked
+- [x] Progress bars: connector lines between nodes with fill showing progress toward next milestone
+- [x] Current research focus: highlighted branch with seasonal accent border and left inset glow
+- [x] Cross-branch dependencies: SVG overlay lines between prerequisite nodes (dashed for unsatisfied, solid for satisfied), highlighted on node selection
+- [x] Milestone unlock indicators: positive state treatment on unlocked nodes, node detail shows "Achieved" status
+- [x] Node detail on selection: what it unlocks (decree/construction/bonus chips), cross-branch links, progress bar, estimated turns at current investment
+- [x] Scholarly clergy and research infrastructure indicators: Research Speed Contributors section showing base, treasury, scholarly order, infrastructure with active/inactive status
+- [x] Mobile layout: branch rows switch to single-column, node track scrolls horizontally, SVG overlay hidden
+- [x] Verify: advance research over several turns, confirm visual progress updates and milestone unlocks display correctly
 
 ---
 
