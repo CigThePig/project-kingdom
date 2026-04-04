@@ -130,6 +130,15 @@
   filter: brightness(1.15);
 }
 
+@keyframes badgePulse {
+  0%, 100% { box-shadow: 0 0 0 0 hsla(0, 55%, 45%, 0.4); }
+  50% { box-shadow: 0 0 0 4px hsla(0, 55%, 45%, 0); }
+}
+
+.urgentBadge {
+  animation: badgePulse 2s ease-in-out infinite;
+}
+
 /* Action slot indicator */
 .actionSlots {
   display: flex;

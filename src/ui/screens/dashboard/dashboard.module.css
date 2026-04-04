@@ -18,6 +18,14 @@
   flex-wrap: wrap;
 }
 
+.resourceRow > * {
+  animation: fadeIn 250ms ease-out backwards;
+}
+
+.resourceRow > *:nth-child(1) { animation-delay: 0ms; }
+.resourceRow > *:nth-child(2) { animation-delay: 50ms; }
+.resourceRow > *:nth-child(3) { animation-delay: 100ms; }
+
 /* --------------------------------------------------------------------------
    Class Satisfaction Grid
    -------------------------------------------------------------------------- */
@@ -40,6 +48,16 @@
   gap: var(--space-3);
 }
 
+.classGrid > * {
+  animation: fadeIn 250ms ease-out backwards;
+}
+
+.classGrid > *:nth-child(1) { animation-delay: 50ms; }
+.classGrid > *:nth-child(2) { animation-delay: 100ms; }
+.classGrid > *:nth-child(3) { animation-delay: 150ms; }
+.classGrid > *:nth-child(4) { animation-delay: 200ms; }
+.classGrid > *:nth-child(5) { animation-delay: 250ms; }
+
 .classCard {
   display: flex;
   flex-direction: column;
@@ -60,6 +78,8 @@
 .classCard[data-status='critical'] {
   border-color: var(--color-status-critical);
   background: var(--color-status-critical-bg);
+  --pulse-color: hsla(0, 55%, 45%, 0.3);
+  animation: pulseGlow 3s ease-in-out infinite;
 }
 
 .classCard[data-status='restless'] {
@@ -196,7 +216,8 @@
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  animation: slideUp 250ms ease-out;
 }
 
 .urgentBanner:hover {
@@ -279,6 +300,7 @@
   align-items: center;
   justify-content: center;
   background: var(--color-bg-overlay);
+  animation: fadeIn 200ms ease-out;
 }
 
 .confirmCard {
@@ -327,11 +349,24 @@
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-inverse);
-  background: var(--color-accent-metallic);
-  border: none;
+  background: linear-gradient(180deg, hsl(210, 10%, 58%) 0%, hsl(210, 8%, 48%) 100%);
+  border: 1px solid hsl(210, 8%, 62%);
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-6);
   cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+  box-shadow: 0 1px 4px hsla(220, 20%, 4%, 0.4);
+}
+
+.confirmButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px hsla(220, 20%, 4%, 0.5);
+  filter: brightness(1.08);
+}
+
+.confirmButton:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .cancelButton {
@@ -343,6 +378,13 @@
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-6);
   cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.cancelButton:hover {
+  background: var(--color-bg-surface);
+  color: var(--color-text-primary);
+  border-color: var(--color-border-strong);
 }
 
 /* --------------------------------------------------------------------------
@@ -356,6 +398,7 @@
   align-items: center;
   justify-content: center;
   background: var(--color-bg-overlay);
+  animation: fadeIn 300ms ease-out;
 }
 
 .summaryCard {
@@ -387,7 +430,12 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  animation: slideUp 300ms ease-out backwards;
 }
+
+.summarySection:nth-child(2) { animation-delay: 100ms; }
+.summarySection:nth-child(3) { animation-delay: 200ms; }
+.summarySection:nth-child(4) { animation-delay: 300ms; }
 
 .summarySectionHeader {
   font-family: var(--font-family-heading);
@@ -471,10 +519,20 @@
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   font-size: var(--font-size-sm);
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
+  animation: slideIn 250ms ease-out backwards;
+}
+
+.alertItem:nth-child(1) { animation-delay: 0ms; }
+.alertItem:nth-child(2) { animation-delay: 80ms; }
+.alertItem:nth-child(3) { animation-delay: 160ms; }
+
+.alertItem:hover {
+  transform: translateX(2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .alertItem[data-severity='caution'] {
@@ -482,9 +540,7 @@
   border-color: var(--color-status-warning);
 }
 
-.alertItem:hover {
-  opacity: 0.85;
-}
+/* (hover handled above with transform) */
 
 .alertSeverityBadge {
   font-size: var(--font-size-xs);
@@ -512,12 +568,25 @@
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-inverse);
-  background: var(--color-accent-metallic);
-  border: none;
+  background: linear-gradient(180deg, hsl(210, 10%, 58%) 0%, hsl(210, 8%, 48%) 100%);
+  border: 1px solid hsl(210, 8%, 62%);
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-6);
   cursor: pointer;
   margin-top: var(--space-2);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
+  box-shadow: 0 1px 4px hsla(220, 20%, 4%, 0.4);
+}
+
+.summaryDismiss:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 2px 8px hsla(220, 20%, 4%, 0.5);
+}
+
+.summaryDismiss:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 /* --------------------------------------------------------------------------

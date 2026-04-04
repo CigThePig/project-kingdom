@@ -28,7 +28,9 @@
 }
 
 .disabled:hover {
-  background: var(--color-bg-surface);
+  background: var(--surface-base-bg);
+  transform: none;
+  box-shadow: var(--surface-base-shadow);
 }
 
 /* --------------------------------------------------------------------------

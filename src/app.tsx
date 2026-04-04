@@ -124,7 +124,7 @@ function AppShell() {
 
       <NavRail activeScreen={activeScreen} onNavigate={setActiveScreen} />
 
-      <main className={styles.content}>
+      <main className={styles.content} key={activeScreen}>
         <h1 className={styles.contentTitle}>{SCREEN_TITLES[activeScreen]}</h1>
         <Suspense fallback={<div className={styles.screenLoader}>Loading…</div>}>
           {activeScreen === 'dashboard' && (
