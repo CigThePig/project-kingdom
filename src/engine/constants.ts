@@ -288,7 +288,7 @@ export const TRADE_INCOME_MULTIPLIER: Record<TradeOpenness, number> = {
 // Block 13 — Save & Failure Tracking (§13, §10.4)
 // ============================================================
 
-export const SAVE_SCHEMA_VERSION = 1;
+export const SAVE_SCHEMA_VERSION = 2;
 
 // LocalStorage key must include the version to avoid loading incompatible saves.
 export const SAVE_STORAGE_KEY = 'kingdom-save-v1';

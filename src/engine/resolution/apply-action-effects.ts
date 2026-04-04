@@ -21,6 +21,7 @@ import {
   KnowledgeBranch,
   MilitaryPosture,
   MilitaryRecruitmentStance,
+  PersistentConsequence,
   PopulationClass,
   QueuedAction,
   RationingLevel,
@@ -29,11 +30,17 @@ import {
   ReligiousTolerance,
   ResourceState,
   ResourceType,
+  StorylineStatus,
   TaxationLevel,
   TradeOpenness,
 } from '../types';
 import { DECREE_POOL } from '../../data/decrees/index';
+import { EVENT_CHOICE_EFFECTS } from '../../data/events/effects';
+import { STORYLINE_CHOICE_EFFECTS } from '../../data/storylines/effects';
+import { STORYLINE_POOL } from '../../data/storylines/index';
 import { applyDiplomaticActionEffect as applyNeighborRelDelta } from '../systems/diplomacy';
+import { applyEventChoiceEffects, applyStorylineBranchEffects } from '../events/apply-event-effects';
+import { recordBranchDecision } from '../events/storyline-engine';
 import {
   CONSTRUCTION_DEFAULT_TURNS,
   DECREE_EFFECTS,
@@ -648,20 +655,88 @@ function applyResearchDirectiveEffect(state: GameState, action: QueuedAction): G
 }
 
 function applyCrisisResponseEffect(state: GameState, action: QueuedAction): GameState {
-  // Marks the event resolved and records the player's choice.
-  // Full outcome mechanics belong to Phase 2 (event effect resolution).
-  // Phase 11 of turn-resolution.ts archives events where isResolved === true.
+  // Handle storyline branch decisions (parameters contain storylineId + branchPointId).
+  const storylineId = action.parameters['storylineId'];
+  if (isString(storylineId)) {
+    return applyStorylineBranchDecision(state, action);
+  }
+
+  // Handle event crisis responses.
   const eventId = action.parameters['eventId'];
   const choiceId = action.parameters['choiceId'];
   if (!isString(eventId) || !isString(choiceId)) return state;
 
-  const updatedEvents = state.activeEvents.map((evt) =>
-    evt.id === eventId && !evt.isResolved
-      ? { ...evt, isResolved: true, choiceMade: choiceId }
-      : evt,
+  const event = state.activeEvents.find((e) => e.id === eventId);
+  if (!event || event.isResolved) return state;
+
+  // Mark the event resolved.
+  const resolvedEvent = { ...event, isResolved: true, choiceMade: choiceId };
+  const updatedEvents = state.activeEvents.map((e) =>
+    e.id === eventId ? resolvedEvent : e,
   );
 
-  return { ...state, activeEvents: updatedEvents };
+  let updatedState = { ...state, activeEvents: updatedEvents };
+
+  // Apply mechanical effects for the player's choice.
+  updatedState = applyEventChoiceEffects(updatedState, resolvedEvent, EVENT_CHOICE_EFFECTS);
+
+  // Record a persistent consequence.
+  const consequence: PersistentConsequence = {
+    sourceId: event.definitionId,
+    sourceType: 'event',
+    choiceMade: choiceId,
+    turnApplied: state.turn.turnNumber,
+    tag: `${event.definitionId}:${choiceId}`,
+  };
+  updatedState = {
+    ...updatedState,
+    persistentConsequences: [...updatedState.persistentConsequences, consequence],
+  };
+
+  return updatedState;
+}
+
+function applyStorylineBranchDecision(state: GameState, action: QueuedAction): GameState {
+  const storylineId = action.parameters['storylineId'];
+  const branchPointId = action.parameters['branchPointId'];
+  const choiceId = action.parameters['choiceId'];
+  if (!isString(storylineId) || !isString(branchPointId) || !isString(choiceId)) return state;
+
+  const storyline = state.activeStorylines.find((s) => s.id === storylineId);
+  if (!storyline || storyline.status === StorylineStatus.Resolved) return state;
+
+  // Find the definition from the storyline pool.
+  const definition = STORYLINE_POOL.find((d) => d.id === storyline.definitionId);
+  if (!definition) return state;
+
+  // Record the branch decision (updates status, branch, countdown).
+  const updatedStoryline = recordBranchDecision(
+    storyline, branchPointId, choiceId, state.turn.turnNumber, definition,
+  );
+
+  const updatedStorylines = state.activeStorylines.map((s) =>
+    s.id === storylineId ? updatedStoryline : s,
+  );
+
+  let updatedState = { ...state, activeStorylines: updatedStorylines };
+
+  // Apply mechanical effects for the branch choice.
+  updatedState = applyStorylineBranchEffects(updatedState, updatedStoryline, STORYLINE_CHOICE_EFFECTS);
+
+  // Record persistent consequence.
+  const consequence: PersistentConsequence = {
+    sourceId: storyline.definitionId,
+    sourceType: 'storyline',
+    choiceMade: choiceId,
+    turnApplied: state.turn.turnNumber,
+    tag: `${storyline.definitionId}:${branchPointId}:${choiceId}`,
+  };
+  updatedState = {
+    ...updatedState,
+    persistentConsequences: [...updatedState.persistentConsequences, consequence],
+  };
+
+  return updatedState;
 }
 
 // ============================================================

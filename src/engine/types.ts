@@ -460,6 +460,51 @@ export interface ConstructionProject {
 }
 
 // ============================================================
+// Section 12b — Mechanical Effect Delta
+// ============================================================
+
+/**
+ * A flat, all-optional delta representing any combination of game state changes.
+ * Used by event choice effects, storyline branch effects, and storyline resolution effects.
+ */
+export interface MechanicalEffectDelta {
+  treasuryDelta?: number;
+  foodDelta?: number;
+  stabilityDelta?: number;
+  faithDelta?: number;
+  heterodoxyDelta?: number;
+  culturalCohesionDelta?: number;
+  militaryReadinessDelta?: number;
+  militaryMoraleDelta?: number;
+  militaryEquipmentDelta?: number;
+  militaryForceSizeDelta?: number;
+  espionageNetworkDelta?: number;
+  nobilitySatDelta?: number;
+  clergySatDelta?: number;
+  merchantSatDelta?: number;
+  commonerSatDelta?: number;
+  militaryCasteSatDelta?: number;
+  /** Per-neighbor relationship score deltas. Keys are neighbor IDs. */
+  diplomacyDeltas?: Record<string, number>;
+  /** Applied to the event/storyline's affectedRegionId. */
+  regionDevelopmentDelta?: number;
+  /** Applied to the event/storyline's affectedRegionId. */
+  regionConditionDelta?: number;
+}
+
+/**
+ * Records that an event or storyline choice left a lasting mark on the kingdom.
+ * Used to influence future event eligibility and storyline conditions.
+ */
+export interface PersistentConsequence {
+  sourceId: string;        // event definitionId or storyline definitionId
+  sourceType: 'event' | 'storyline';
+  choiceMade: string;      // choiceId that was selected
+  turnApplied: number;
+  tag: string;             // internal identifier, e.g. 'evt_merchant_capital_flight:offer_tax_relief'
+}
+
+// ============================================================
 // Section 13 — Event Types
 // ============================================================
 
@@ -595,6 +640,11 @@ export interface GameState {
 
   // Failure tracking
   activeFailureConditions: FailureCondition[];
+
+  // Persistent history tracked in GameState for engine access
+  persistentConsequences: PersistentConsequence[];
+  resolvedStorylineIds: string[];       // definitionIds of resolved storylines
+  lastStorylineActivationTurn: number;  // turn number of most recent storyline activation
 
   // Scenario
   scenarioId: string;
