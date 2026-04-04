@@ -27,6 +27,9 @@
    Label
    -------------------------------------------------------------------------- */
 .label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-tertiary);

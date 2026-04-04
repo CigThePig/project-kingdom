@@ -61,6 +61,7 @@ import {
 } from '../../../data/text/reports';
 import { ResourceCard } from '../../components/resource-card/resource-card';
 import { ForecastModule, type ForecastProjection } from '../../components/forecast-module/forecast-module';
+import { Icon } from '../../components/icon/icon';
 import styles from './dashboard.module.css';
 
 // ============================================================
@@ -499,7 +500,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
       {/* Class Satisfaction Grid */}
       <section>
-        <h2 className={styles.sectionLabel}>Population Sentiment</h2>
+        <h2 className={styles.sectionLabel}><Icon name="society" size="0.875rem" /> Population Sentiment</h2>
         <div className={styles.classGrid}>
           {Object.values(PopulationClass).map((cls) => {
             const classState = kingdom.population[cls];
@@ -580,7 +581,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
       {/* Forecast Area */}
       <section>
-        <h2 className={styles.sectionLabel}>Strategic Forecast</h2>
+        <h2 className={styles.sectionLabel}><Icon name="compass" size="0.875rem" /> Strategic Forecast</h2>
         <div className={styles.forecastArea}>
           <ForecastModule
             title="Treasury Outlook"
@@ -615,7 +616,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       {/* Turn Advance Section */}
       <div className={styles.turnAdvance}>
         <button className={styles.advanceButton} onClick={handleAdvanceClick}>
-          {ADVANCE_TURN_LABEL}
+          <Icon name="hourglass" size="1.125rem" /> {ADVANCE_TURN_LABEL}
         </button>
       </div>
 

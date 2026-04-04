@@ -41,6 +41,11 @@
   flex-wrap: wrap;
 }
 
+.categoryIcon {
+  flex-shrink: 0;
+  color: var(--color-accent-metallic);
+}
+
 .title {
   margin: 0;
   font-family: var(--font-family-heading);

@@ -1,7 +1,8 @@
 // Phase 9 — Decree Card: decree option display with cost and effect preview.
 // Blueprint Reference: ui-blueprint.md §4.3, §6.4
 
-import type { DecreeCategory, MechanicalEffectDelta, PopulationClass, ResourceType } from '../../../engine/types';
+import { DecreeCategory } from '../../../engine/types';
+import type { MechanicalEffectDelta, PopulationClass, ResourceType } from '../../../engine/types';
 import {
   DECREE_CATEGORY_LABELS,
   CLASS_LABELS,
@@ -15,7 +16,17 @@ import {
   CONSEQUENCE_PREVIEW_HEADER,
 } from '../../../data/text/reports';
 import { ConsequencePreview } from '../consequence-preview/consequence-preview';
+import { Icon } from '../icon/icon';
 import styles from './decree-card.module.css';
+
+const CATEGORY_ICON_MAP: Record<DecreeCategory, string> = {
+  [DecreeCategory.Economic]: 'treasury',
+  [DecreeCategory.Military]: 'military',
+  [DecreeCategory.Civic]: 'stability',
+  [DecreeCategory.Religious]: 'flame',
+  [DecreeCategory.Diplomatic]: 'diplomacy',
+  [DecreeCategory.Social]: 'food',
+};
 
 // ============================================================
 // Props
@@ -86,6 +97,7 @@ export function DecreeCard({
     <div className={styles.card + (isDisabled ? ' ' + styles.disabled : '')}>
       {/* Header row */}
       <div className={styles.header}>
+        <Icon name={CATEGORY_ICON_MAP[category] ?? 'decrees'} size="1.25em" className={styles.categoryIcon} />
         <h3 className={styles.title}>{title}</h3>
         <span className={styles.categoryBadge}>{DECREE_CATEGORY_LABELS[category]}</span>
         {isNew && <span className={styles.newBadge}>New</span>}

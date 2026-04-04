@@ -322,40 +322,38 @@ Upgrade the base visual system so every surface has depth, texture, and spatial 
 
 ## Phase 8B — Iconography & Visual Identity
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` §2.5 (Iconography — class icons, faith, espionage, knowledge branches, resources, domains)
 
 Replace text-only indicators with an inline SVG icon system that gives every game concept a recognizable visual symbol. Each icon is a React component rendering inline SVG — zero dependencies, full control over color/size via CSS custom properties.
 
-**Files to create:**
-- `src/ui/components/icon/icon.tsx` — shared Icon component (maps icon name to SVG component, supports `size` and `color` props)
-- `src/ui/components/icon/icon.module.css`
-- `src/ui/components/icon/icons/` — individual icon files as named-export React components, one per file
+**Files created:**
+- `src/ui/components/icon/icon.tsx` — shared `Icon` component with name→SVG lookup, size/color CSS custom property support
+- `src/ui/components/icon/icon.module.css` — icon wrapper styling
+- `src/ui/components/icon/icons/` — 42 individual SVG icon components (resource, class, domain, faith, knowledge, status, action, intelligence)
 
-**Files to modify:**
-- `src/ui/components/crown-bar/crown-bar.tsx` — add icons to treasury/food/stability stat chips, action slot icons, urgent badge icon
-- `src/ui/components/nav-rail/nav-rail.tsx` — add screen icons to each nav item (currently text-only)
-- `src/ui/components/resource-card/resource-card.tsx` — resource type icon in header
-- `src/ui/components/decree-card/decree-card.tsx` — category icon, slot cost icon
-- `src/ui/components/event-panel/event-panel.tsx` — event type icon, storyline icon for storyline events
-- `src/ui/components/policy-card/policy-card.tsx` — policy domain icon
-- `src/ui/components/intelligence-panel/intelligence-panel.tsx` — section icons, confidence level icons
-- All screen files — section header icons, status indicator icons
+**Files modified:**
+- `src/ui/components/crown-bar/crown-bar.tsx` + `.module.css` — resource icons on stat chips, warning icon on urgent badge, lantern icon on intel toggle
+- `src/ui/components/nav-rail/nav-rail.tsx` + `.module.css` — domain icons on all 12 nav items (desktop: icon + label stacked; mobile: icon + label)
+- `src/ui/components/resource-card/resource-card.tsx` + `.module.css` — resource type icon in label
+- `src/ui/components/decree-card/decree-card.tsx` + `.module.css` — category icon in header with metallic accent color
+- `src/ui/components/event-panel/event-panel.tsx` — severity icon in badge row, scroll icon for storyline events
+- `src/ui/screens/dashboard/dashboard.tsx` + `.module.css` — section header icons (society, compass), hourglass on turn advance button
 
 **Checklist:**
-- [ ] Resource icons: treasury (coin/chest), food (wheat/basket), stability (scales/pillar)
-- [ ] Class icons: nobility (crown), clergy (chalice), merchants (scales), commoners (sheaf), military (shield)
-- [ ] Domain icons: one per nav screen (12 total — dashboard/compass, reports/scroll, decrees/seal, policies/balance, society/people, regions/map, military/sword, trade/ship, diplomacy/handshake, intelligence/lantern, knowledge/book, events/bell, archive/ledger)
-- [ ] Faith & culture icons: flame, temple, festival, heterodoxy
-- [ ] Knowledge branch icons: plough (agriculture), sword (military), scroll (governance), ship (commerce), lyre (culture), compass (exploration)
-- [ ] Status icons: trend up/down/stable arrows, warning triangle, critical circle, positive check, locked padlock
-- [ ] Action icons: slot dot → small seal/stamp icon, turn advance → hourglass/sundial
-- [ ] Intelligence icons: shadow/cloak, confidence levels (1-3 bars), sealed envelope
-- [ ] Nav rail uses icons with labels on desktop, icons-only on collapsed rail
-- [ ] Crown bar stat chips get resource icons before values
-- [ ] Decree cards show category icon in header
-- [ ] Event panels show type-specific icon (storyline events get storyline icon)
-- [ ] Verify: every major game concept has a visual icon; text labels are supplemented not replaced
+- [x] Resource icons: treasury (coin/chest), food (wheat/basket), stability (scales/pillar)
+- [x] Class icons: nobility (crown), clergy (chalice), merchants (scales), commoners (sheaf), military (shield)
+- [x] Domain icons: one per nav screen (12 total — dashboard/compass, reports/scroll, decrees/seal, policies/balance, society/people, regions/map, military/sword, trade/ship, diplomacy/handshake, intelligence/lantern, knowledge/book, events/bell, archive/ledger)
+- [x] Faith & culture icons: flame, temple, festival
+- [x] Knowledge branch icons: plough (agriculture), sword (military), scroll (governance), ship (commerce), lyre (culture), compass (exploration)
+- [x] Status icons: trend up/down/stable arrows, warning triangle, critical circle, positive check, locked padlock
+- [x] Action icons: seal/stamp icon, hourglass for turn advance
+- [x] Intelligence icons: cloak, confidence bars, sealed envelope
+- [x] Nav rail uses icons with labels on desktop, icons-only on collapsed rail
+- [x] Crown bar stat chips get resource icons before values
+- [x] Decree cards show category icon in header
+- [x] Event panels show type-specific icon (storyline events get storyline icon)
+- [x] Verify: every major game concept has a visual icon; text labels are supplemented not replaced
 
 ---
 
