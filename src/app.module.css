@@ -35,6 +35,13 @@
   font-size: var(--font-size-sm);
 }
 
+.screenLoader {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  padding: var(--space-8) 0;
+  text-align: center;
+}
+
 /* --------------------------------------------------------------------------
    Mobile: stack vertically, nav moves to bottom
    -------------------------------------------------------------------------- */
