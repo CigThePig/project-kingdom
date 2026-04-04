@@ -75,6 +75,37 @@
 }
 
 /* --------------------------------------------------------------------------
+   Mini bar
+   -------------------------------------------------------------------------- */
+.miniBar {
+  width: 100%;
+  height: 3px;
+  background: var(--color-bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: var(--space-1);
+}
+
+.miniBarFill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--color-seasonal-accent, var(--color-accent-metallic));
+  transition: width var(--transition-normal);
+}
+
+.miniBarFillWarning {
+  background: var(--color-status-warning);
+}
+
+.miniBarFillCritical {
+  background: var(--color-status-critical);
+}
+
+.miniBarFillPositive {
+  background: var(--color-status-positive);
+}
+
+/* --------------------------------------------------------------------------
    Interpretation
    -------------------------------------------------------------------------- */
 .interpretation {

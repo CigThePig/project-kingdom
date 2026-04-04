@@ -176,6 +176,41 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* Phase 8D: Styled data rows */
+.dataRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border-default);
+}
+
+.dataRow:nth-child(even) {
+  background: hsla(215, 12%, 20%, 0.3);
+}
+
+.dataRow:last-child {
+  border-bottom: none;
+}
+
+.dataLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.dataValue {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
+}
+
+/* Tab indicator with seasonal accent slide */
+.tabActive {
+  border-bottom: 2px solid var(--color-seasonal-accent, var(--color-accent-metallic));
+  transition: border-color var(--transition-normal);
+}
+
 /* --------------------------------------------------------------------------
    Mobile Responsive
    -------------------------------------------------------------------------- */

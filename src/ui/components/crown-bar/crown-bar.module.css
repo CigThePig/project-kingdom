@@ -17,7 +17,8 @@
   border-bottom: 1px solid var(--color-border-default);
   border-top: 2px solid var(--color-seasonal-accent, var(--color-accent-metallic));
   gap: var(--space-4);
-  box-shadow: 0 2px 12px hsla(220, 20%, 4%, 0.4);
+  box-shadow: var(--crown-bar-glow, none), 0 2px 12px hsla(220, 20%, 4%, 0.4);
+  transition: box-shadow 600ms ease, border-color 600ms ease;
 }
 
 /* --------------------------------------------------------------------------
@@ -96,6 +97,20 @@
   color: var(--color-text-primary);
   font-variant-numeric: tabular-nums;
   line-height: var(--line-height-tight);
+}
+
+/* Phase 8E: Critical state slow red pulse */
+.statChip[data-critical='true'] .statValue {
+  color: var(--color-status-critical);
+}
+
+.statChip[data-critical='true'] {
+  animation: statCriticalPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes statCriticalPulse {
+  0%, 100% { background: transparent; }
+  50% { background: hsla(0, 50%, 35%, 0.12); border-radius: var(--border-radius-sm); }
 }
 
 /* --------------------------------------------------------------------------

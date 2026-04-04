@@ -414,4 +414,4 @@ export const RIGHT_PANEL_RISK_ASSESSMENT_HEADER = 'Risk Assessment';
 export const RIGHT_PANEL_OPERATION_HEADER = 'Operation Detail';
 export const RIGHT_PANEL_ADVANCEMENT_HEADER = 'Advancement Detail';
 export const RIGHT_PANEL_EVENT_CONTEXT_HEADER = 'Background Context';
-export const RIGHT_PANEL_EMPTY = 'Select an item to view contextual details.';
+export const RIGHT_PANEL_EMPTY = 'Your advisors await your attention, Your Majesty. Select an item to view its context.';

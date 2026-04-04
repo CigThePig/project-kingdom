@@ -50,10 +50,17 @@
 }
 
 .screenLoader {
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
+  font-style: italic;
   padding: var(--space-8) 0;
   text-align: center;
+  animation: shimmer 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 /* --------------------------------------------------------------------------

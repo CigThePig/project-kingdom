@@ -482,16 +482,19 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           label="Treasury"
           value={kingdom.treasury.balance}
           netFlow={kingdom.treasury.netFlowPerTurn}
+          maxValue={1000}
         />
         <ResourceCard
           label="Food Reserves"
           value={kingdom.food.reserves}
           netFlow={kingdom.food.netFlowPerTurn}
+          maxValue={500}
         />
         <ResourceCard
           label="Stability"
           value={kingdom.stability.value}
           netFlow={0}
+          maxValue={100}
           interpretation={
             kingdom.stability.value < 30 ? 'Declining order' : undefined
           }

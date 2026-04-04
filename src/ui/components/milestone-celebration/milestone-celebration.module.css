@@ -1,0 +1,116 @@
+/* ==========================================================================
+   Milestone Celebration — Expanding ring + glow + text on unlock
+   Source: ux-blueprint.md §8 (Phase 8E)
+   ========================================================================== */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: milestoneOverlay 2.5s ease-out forwards;
+  pointer-events: none;
+}
+
+.ring {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 3px solid var(--color-seasonal-accent, var(--color-accent));
+  border-radius: 50%;
+  animation: ringExpand 1.2s ease-out forwards;
+  opacity: 0;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  animation: milestoneContentIn 2.5s ease-out forwards;
+  --icon-color: var(--color-seasonal-accent, var(--color-accent));
+}
+
+.label {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-seasonal-text, var(--color-text-secondary));
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.name {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  text-align: center;
+  text-shadow: 0 0 16px var(--color-seasonal-glow, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   Keyframes
+   -------------------------------------------------------------------------- */
+@keyframes milestoneOverlay {
+  0% { background: hsla(220, 15%, 8%, 0); }
+  10% { background: hsla(220, 15%, 8%, 0.6); }
+  70% { background: hsla(220, 15%, 8%, 0.6); }
+  100% { background: hsla(220, 15%, 8%, 0); }
+}
+
+@keyframes ringExpand {
+  0% {
+    opacity: 0.8;
+    transform: scale(0.5);
+  }
+  60% {
+    opacity: 0.3;
+    transform: scale(4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(6);
+  }
+}
+
+@keyframes milestoneContentIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  15% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  25% {
+    transform: scale(1);
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .overlay,
+  .ring,
+  .content {
+    animation-duration: 0.5s;
+  }
+
+  .ring {
+    animation: none;
+    display: none;
+  }
+}

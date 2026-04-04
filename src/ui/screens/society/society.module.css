@@ -487,6 +487,48 @@
 }
 
 /* --------------------------------------------------------------------------
+   Satisfaction Gauge (secondary visual indicator)
+   -------------------------------------------------------------------------- */
+.satisfactionGauge {
+  width: 100%;
+  height: 4px;
+  background: var(--color-bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: var(--space-1);
+}
+
+.satisfactionGaugeFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width var(--transition-normal);
+}
+
+.satisfactionGaugeFill[data-level='critical'] {
+  background: var(--color-status-critical);
+}
+
+.satisfactionGaugeFill[data-level='restless'] {
+  background: var(--color-status-warning);
+}
+
+.satisfactionGaugeFill[data-level='uneasy'] {
+  background: var(--color-status-neutral);
+}
+
+.satisfactionGaugeFill[data-level='content'] {
+  background: var(--color-status-positive);
+}
+
+/* --------------------------------------------------------------------------
+   Faith Section
+   -------------------------------------------------------------------------- */
+.faithSection {
+  border-left: 3px solid var(--color-status-faith);
+  padding-left: var(--space-3);
+}
+
+/* --------------------------------------------------------------------------
    Empty state
    -------------------------------------------------------------------------- */
 .emptyState {

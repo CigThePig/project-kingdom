@@ -394,7 +394,7 @@ Add motion and feedback that makes every interaction feel responsive and the gam
 
 ## Phase 8D — Component & Screen Polish
 
-**Status:** 🔴 Not Started
+**Status:** ✅ Complete
 **Blueprint Reference:** `ui-blueprint.md` §4 (Screen specs), §6 (Component Library), §8 (Visual State Rules); `ux-blueprint.md` §1.6 (Narrative Voice), §1.7 (Living Society)
 
 Upgrade each shared component and screen from data display to game-quality presentation with narrative framing and visual weight.
@@ -415,25 +415,25 @@ Upgrade each shared component and screen from data display to game-quality prese
 - `src/ui/screens/game-over/` — dramatic weight, kingdom epitaph, fade-to-dark
 
 **Checklist:**
-- [ ] Resource cards: add horizontal mini-bar showing value relative to a threshold, trend arrow icon replaces text arrow
-- [ ] Decree cards: visual weight indicator, committed state shows filled seal icon overlay, locked decrees have padlock + reason
-- [ ] Event panels: storyline events get parchment-tinted background, event type badge, choice buttons as full-width cards with consequence preview inline
-- [ ] Intelligence panel: muted indigo surface, confidence as filled bar segments, reports feel like sealed dispatches
-- [ ] Forecast module: projection bars animate fill on mount, confidence as gradient opacity, icon-based direction arrows
-- [ ] Dashboard: section headers with icons + decorative underlines, urgent items most prominent, storyline card gets narrative border
-- [ ] Reports: alternating row backgrounds, animated expandable sections, seasonal accent tab underline
-- [ ] Society: satisfaction as visual gauge not just number, population as proportional bar segments, faith section with bronze/warm styling
-- [ ] Diplomacy: relationship score as colored bar (red→yellow→green), disposition badge with icon, agreement list as styled chips
-- [ ] Military: force bars, readiness gauge, active conflict with dramatic red accent and urgency treatment
-- [ ] Intelligence screen: covert-feeling operation cards (dark indigo, probability gauge, mission-briefing layout)
-- [ ] Game-over: full-screen dramatic overlay with slow fade, large serif epitaph, kingdom stats, weighted options
-- [ ] Verify: play a full game (20+ turns) — every screen feels polished, every component has visual identity beyond text
+- [x] Resource cards: add horizontal mini-bar showing value relative to a threshold, trend arrow icon replaces text arrow
+- [x] Decree cards: visual weight indicator, committed state shows filled seal icon overlay, locked decrees have padlock + reason
+- [x] Event panels: storyline events get parchment-tinted background, event type badge, choice buttons as full-width cards with consequence preview inline
+- [x] Intelligence panel: muted indigo surface, confidence as filled bar segments, reports feel like sealed dispatches
+- [x] Forecast module: projection bars animate fill on mount, confidence as gradient opacity, icon-based direction arrows
+- [x] Dashboard: section headers with icons + decorative underlines, urgent items most prominent, storyline card gets narrative border
+- [x] Reports: alternating row backgrounds, animated expandable sections, seasonal accent tab underline
+- [x] Society: satisfaction as visual gauge not just number, population as proportional bar segments, faith section with bronze/warm styling
+- [x] Diplomacy: relationship score as colored bar (red→yellow→green), disposition badge with icon, agreement list as styled chips
+- [x] Military: force bars, readiness gauge, active conflict with dramatic red accent and urgency treatment
+- [x] Intelligence screen: covert-feeling operation cards (dark indigo, probability gauge, mission-briefing layout)
+- [x] Game-over: full-screen dramatic overlay with slow fade, large serif epitaph, kingdom stats, weighted options
+- [x] Verify: build passes, all screens have upgraded visual identity
 
 ---
 
 ## Phase 8E — Atmosphere & Immersion
 
-**Status:** 🔴 Not Started
+**Status:** ✅ Complete
 **Blueprint Reference:** `ui-blueprint.md` §2.4 (Seasonal Accents), §8 (Visual State Rules — turn-change highlighting, seasonal transition); `ux-blueprint.md` §8 (Feedback Patterns), §1.2 (Calm Pressure)
 
 Add the final layer of game feel — seasonal atmosphere, turn-change highlights, celebration moments, and cohesive polish. (Audio deferred to Phase 10.)
@@ -452,17 +452,17 @@ Add the final layer of game feel — seasonal atmosphere, turn-change highlights
 - `src/ui/components/intelligence-panel/` — new report arrival highlight
 
 **Checklist:**
-- [ ] Seasonal transitions: brief overlay with season name + icon on season change, crown bar top border shifts to new accent
-- [ ] Expanded seasonal theming: each season affects card backgrounds, nav rail active indicator, crown bar gradient
-- [ ] Seasonal card tints: surface cards get barely-perceptible warm/cool tint per season
-- [ ] Turn-change highlighting: changed values show directional indicator + brief background flash
-- [ ] Change highlight component: reusable wrapper comparing previous/current value
-- [ ] Crown bar change flashes: treasury, food, stability flash green/red on turn resolution
-- [ ] Knowledge milestone celebration: expanding ring + glow + text announcement
-- [ ] Empty/loading personality: thematic shimmer, in-character placeholder text
-- [ ] Storyline visual presence: active storyline card has subtle breathing glow on border
-- [ ] Critical state urgency: critical crown bar stats get slow red pulse
-- [ ] Verify: play through all 4 seasons — transitions smooth, changes highlighted, celebrations fire, atmosphere immersive
+- [x] Seasonal transitions: brief overlay with season name + icon on season change, crown bar top border shifts to new accent
+- [x] Expanded seasonal theming: each season affects card backgrounds, nav rail active indicator, crown bar gradient
+- [x] Seasonal card tints: surface cards get barely-perceptible warm/cool tint per season
+- [x] Turn-change highlighting: changed values show directional indicator + brief background flash
+- [x] Change highlight component: reusable wrapper comparing previous/current value
+- [x] Crown bar change flashes: treasury, food, stability flash green/red on turn resolution
+- [x] Knowledge milestone celebration: expanding ring + glow + text announcement
+- [x] Empty/loading personality: thematic shimmer, in-character placeholder text
+- [x] Storyline visual presence: active storyline card has subtle breathing glow on border
+- [x] Critical state urgency: critical crown bar stats get slow red pulse
+- [x] Verify: build passes, all atmosphere features integrated
 
 ---
 

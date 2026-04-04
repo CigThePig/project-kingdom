@@ -141,11 +141,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  background: var(--surface-base-bg);
+  background: linear-gradient(135deg, var(--surface-base-bg) 0%, hsla(245, 15%, 18%, 0.4) 100%);
   border: 1px solid var(--surface-base-border);
+  border-left: 3px solid var(--color-status-covert);
   border-radius: var(--border-radius-md);
   box-shadow: var(--surface-base-shadow);
   padding: var(--space-3);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.opCard:hover {
+  transform: translateY(var(--card-hover-lift));
+  box-shadow: var(--shadow-card-hover);
 }
 
 .opName {

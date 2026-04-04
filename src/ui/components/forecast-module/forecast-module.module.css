@@ -67,6 +67,11 @@
   width: 100%;
   height: 100%;
   border-radius: var(--border-radius-sm);
+  transition: width 600ms ease-out;
+}
+
+.barFillAnimated {
+  transition: width 600ms ease-out;
 }
 
 /* Direction color variants */
@@ -103,6 +108,14 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: var(--line-height-normal);
+}
+
+.confidenceOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, hsla(215, 12%, 20%, 0.5) 100%);
+  border-radius: var(--border-radius-sm);
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------

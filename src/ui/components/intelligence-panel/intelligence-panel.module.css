@@ -269,6 +269,32 @@
   padding-left: var(--space-2);
 }
 
+/* Phase 8D: Sealed dispatch aesthetic */
+.confidenceBar {
+  display: flex;
+  gap: 2px;
+  align-items: center;
+}
+
+.confidenceSegment {
+  width: 6px;
+  height: 12px;
+  border-radius: 1px;
+  background: var(--color-bg-tertiary);
+}
+
+.confidenceSegment[data-filled='true'] {
+  background: var(--color-status-covert);
+}
+
+.reportEnvelope {
+  border-left: 3px solid var(--color-status-covert);
+  padding-left: var(--space-3);
+  background: var(--color-status-covert-bg);
+  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+  padding: var(--space-2) var(--space-3);
+}
+
 /* --------------------------------------------------------------------------
    Mobile: slide-up sheet
    -------------------------------------------------------------------------- */
