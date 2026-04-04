@@ -808,6 +808,11 @@ export function resolveTurn(
     }
   }
 
+  // Initialise with pre-phase values so conflict consequences (Phase 5d) can
+  // reference them before Phases 6 and 8 recalculate the final figures.
+  let updatedFaithCulture = stateAfterActions.faithCulture;
+  let updatedStability = stateAfterActions.stability;
+
   // Apply consequences of resolved conflicts.
   for (const resolved of resolvedConflicts) {
     const playerWon = resolved.playerAdvantage > 0;
@@ -898,7 +903,7 @@ export function resolveTurn(
     externalHeterodoxPressure,
   );
 
-  let updatedFaithCulture = applyFaithCultureUpdate(
+  updatedFaithCulture = applyFaithCultureUpdate(
     stateAfterActions.faithCulture,
     faithDelta,
     cohesionDelta,
@@ -958,7 +963,7 @@ export function resolveTurn(
     (a) => !a.isFree && a.type !== ActionType.PolicyChange,
   ).length;
 
-  let updatedStability = calculateStability(
+  updatedStability = calculateStability(
     updatedPopulation,
     foodSecurityScore,
     updatedFaithCulture.faithLevel,
