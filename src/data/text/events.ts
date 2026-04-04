@@ -285,6 +285,340 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
       note_with_quiet_satisfaction: 'Note with Quiet Satisfaction',
     },
   },
+  // --- CLASS-SPECIFIC: Nobility (3) ---
+  evt_noble_succession_dispute: {
+    title: 'Noble Succession Dispute',
+    body: 'Two prominent noble houses have entered a bitter dispute over the inheritance of a deceased lord\'s estates and titles. Both claimants present compelling arguments, and the matter threatens to divide the court. The crown\'s judgment is demanded.',
+    choices: {
+      mediate_succession: 'Mediate the Succession',
+      support_senior_claimant: 'Support the Senior Claimant',
+      let_nobles_settle_it: 'Let the Nobles Settle It',
+    },
+  },
+  evt_noble_court_faction: {
+    title: 'Court Faction Emerges',
+    body: 'Intelligence reports indicate that a faction of lesser nobles has coalesced at court, united by shared grievances against the crown\'s recent policies. Their meetings grow bolder, and their rhetoric more pointed. The faction has not yet acted openly, but its existence is no longer secret.',
+    choices: {
+      co_opt_faction_leaders: 'Co-opt Faction Leaders',
+      publicly_denounce_faction: 'Publicly Denounce the Faction',
+      monitor_faction_quietly: 'Monitor Quietly',
+    },
+  },
+  evt_noble_land_seizure: {
+    title: 'Noble Land Seizures Reported',
+    body: 'Emboldened by their standing at court, several noble houses have begun seizing common lands, displacing tenant farmers and consolidating their holdings. The commoners affected have petitioned the crown for redress, while the nobles claim ancient prerogatives.',
+    choices: {
+      reverse_seizures: 'Order Seizures Reversed',
+      impose_compensation: 'Impose Compensation',
+      uphold_noble_claims: 'Uphold Noble Claims',
+    },
+  },
+
+  // --- CLASS-SPECIFIC: Clergy (3) ---
+  evt_clergy_monastic_dispute: {
+    title: 'Monastic Jurisdictional Dispute',
+    body: 'Two rival monastic orders have come into conflict over the administration of a prosperous region\'s parishes. Both claim historical authority, and the dispute has disrupted religious services in several communities. The faithful await resolution.',
+    choices: {
+      arbitrate_dispute: 'Arbitrate the Dispute',
+      favor_established_order: 'Favor the Established Order',
+      leave_to_ecclesiastical_courts: 'Leave to Ecclesiastical Courts',
+    },
+  },
+  evt_clergy_pilgrimage_movement: {
+    title: 'Pilgrimage Movement Grows',
+    body: 'A spontaneous pilgrimage movement has emerged among the faithful, with growing numbers of commoners and clergy traveling to a regional shrine believed to possess healing properties. The movement strengthens devotion but draws laborers from their fields.',
+    choices: {
+      endorse_pilgrimage: 'Endorse the Pilgrimage',
+      provide_royal_escort: 'Provide Royal Escort',
+      discourage_travel: 'Discourage the Travel',
+    },
+  },
+  evt_clergy_prophecy_claim: {
+    title: 'Clergy Member Claims Prophecy',
+    body: 'A respected member of the clergy has publicly claimed to have received a divine prophecy foretelling great change for the kingdom. The orthodox hierarchy is alarmed, while common folk and some scholars are captivated. The prophecy\'s implications are deeply unsettling to those in power.',
+    choices: {
+      investigate_prophecy: 'Investigate the Prophecy',
+      endorse_as_divine_sign: 'Endorse as Divine Sign',
+      dismiss_as_superstition: 'Dismiss as Superstition',
+    },
+  },
+
+  // --- CLASS-SPECIFIC: Merchants (3) ---
+  evt_merchant_guild_formation: {
+    title: 'Merchants Petition for Guild Charter',
+    body: 'The kingdom\'s leading merchants have submitted a formal petition for the establishment of a chartered merchants\' guild. The guild would regulate trade practices, set standards, and represent merchant interests at court. The nobility views the proposal with suspicion.',
+    choices: {
+      grant_guild_charter: 'Grant the Guild Charter',
+      impose_royal_oversight: 'Grant with Royal Oversight',
+      deny_guild_petition: 'Deny the Petition',
+    },
+  },
+  evt_merchant_smuggling_ring: {
+    title: 'Smuggling Ring Uncovered',
+    body: 'Intelligence operatives have uncovered a sophisticated smuggling operation running through the kingdom\'s trade routes. The network has been evading tariffs and moving contraband goods, costing the treasury significant revenue. Several prominent merchants may be implicated.',
+    choices: {
+      raid_smuggling_operation: 'Raid the Operation',
+      infiltrate_network: 'Infiltrate the Network',
+      levy_fines_and_warn: 'Levy Fines and Warn',
+    },
+  },
+  evt_merchant_foreign_traders: {
+    title: 'Foreign Traders Seek Access',
+    body: 'A delegation of foreign merchants has arrived at the capital, seeking permission to establish permanent trading posts within the kingdom. They offer exotic goods and new commercial connections, though their presence would compete with established local traders.',
+    choices: {
+      welcome_foreign_merchants: 'Welcome Foreign Merchants',
+      negotiate_trade_terms: 'Negotiate Terms',
+      restrict_foreign_access: 'Restrict Access',
+    },
+  },
+
+  // --- CLASS-SPECIFIC: Commoners (3) ---
+  evt_commoner_plague_outbreak: {
+    title: 'Plague Outbreak in the Commons',
+    body: 'A virulent illness has broken out in the kingdom\'s most densely populated districts. The disease spreads rapidly through cramped quarters and compromised nutrition. Without decisive intervention, the outbreak could devastate the common population and spread to other classes.',
+    choices: {
+      quarantine_affected_districts: 'Quarantine Affected Districts',
+      mobilize_clergy_healers: 'Mobilize Clergy Healers',
+      distribute_herbal_remedies: 'Distribute Herbal Remedies',
+    },
+  },
+  evt_commoner_folk_hero: {
+    title: 'Folk Hero Emerges Among Commoners',
+    body: 'A charismatic figure has risen from the commoner ranks, celebrated in songs and stories as a champion of the downtrodden. The folk hero\'s growing fame reflects deep popular discontent, though the figure has not called for rebellion — yet.',
+    choices: {
+      invite_to_court: 'Invite to Court',
+      co_opt_folk_narrative: 'Co-opt the Narrative',
+      ignore_the_stories: 'Ignore the Stories',
+    },
+  },
+  evt_commoner_migration_wave: {
+    title: 'Rural Migration Wave',
+    body: 'Significant numbers of rural commoners are abandoning their villages and migrating toward the kingdom\'s towns and trading centers. The migration is driven by poor rural conditions and the promise of urban opportunity, but it strains town resources and depletes agricultural labor.',
+    choices: {
+      manage_resettlement: 'Manage Resettlement',
+      restrict_movement: 'Restrict Movement',
+      allow_natural_flow: 'Allow Natural Flow',
+    },
+  },
+
+  // --- CLASS-SPECIFIC: Military Caste (3) ---
+  evt_military_veteran_demands: {
+    title: 'Veterans Demand Recognition',
+    body: 'A delegation of military veterans has presented a formal petition to the crown, demanding pensions, land grants, and formal recognition of their service. The veterans command respect among the military caste and their cause has broad sympathy among the ranks.',
+    choices: {
+      grant_veteran_pensions: 'Grant Veteran Pensions',
+      offer_land_grants: 'Offer Land Grants',
+      acknowledge_service_only: 'Acknowledge Service Only',
+    },
+  },
+  evt_military_desertion_crisis: {
+    title: 'Desertion Crisis in the Ranks',
+    body: 'Military commanders report an alarming increase in desertions. Soldiers cite poor conditions, inadequate equipment, and low morale as their reasons for abandoning their posts. The crisis threatens to hollow out the kingdom\'s fighting capability.',
+    choices: {
+      increase_military_pay: 'Increase Military Pay',
+      enforce_harsh_discipline: 'Enforce Harsh Discipline',
+      appeal_to_honor: 'Appeal to Honor and Duty',
+    },
+  },
+  evt_military_honor_dispute: {
+    title: 'Honor Dispute Between Officers and Nobles',
+    body: 'A bitter dispute has erupted between military officers promoted on merit and noble-born officers claiming precedence by birth. The conflict has paralyzed the command structure and created factions within the officer corps. Both sides appeal to the crown.',
+    choices: {
+      uphold_military_merit: 'Uphold Military Merit',
+      defer_to_noble_rank: 'Defer to Noble Rank',
+      establish_joint_council: 'Establish Joint Council',
+    },
+  },
+
+  // --- SEASONAL: Spring (2) ---
+  evt_spring_planting_festival: {
+    title: 'Spring Planting Festival',
+    body: 'With food reserves healthy and the thaw complete, communities across the kingdom have organized spring planting festivals. The celebrations mark the beginning of the growing season with rituals, communal feasting, and prayers for a bountiful harvest.',
+    choices: {
+      sponsor_planting_rites: 'Sponsor the Planting Rites',
+      attend_ceremonies: 'Attend the Ceremonies',
+    },
+  },
+  evt_spring_river_thaw: {
+    title: 'Spring Thaw Threatens Infrastructure',
+    body: 'The spring thaw has brought a rapid increase in river levels across the kingdom\'s lowland regions. Bridges and riverside structures are under stress, and several roads have become impassable. Without preventive action, infrastructure damage could be significant.',
+    choices: {
+      reinforce_riverbanks: 'Reinforce Riverbanks',
+      evacuate_lowlands: 'Evacuate Lowland Settlements',
+      monitor_water_levels: 'Monitor Water Levels',
+    },
+  },
+
+  // --- SEASONAL: Summer (2) ---
+  evt_summer_drought: {
+    title: 'Summer Drought Grips the Kingdom',
+    body: 'A prolonged period without rainfall has dried wells, withered crops, and strained the kingdom\'s water supplies. Agricultural production is falling sharply, and commoners in several regions report water shortages. The drought shows no sign of breaking.',
+    choices: {
+      ration_water_supplies: 'Ration Water Supplies',
+      dig_emergency_wells: 'Dig Emergency Wells',
+      pray_for_rain: 'Organize Prayers for Rain',
+    },
+  },
+  evt_summer_trade_season: {
+    title: 'Peak Trade Season Arrives',
+    body: 'The warm months have brought a surge in merchant activity. Trade caravans clog the roads, market towns are bustling, and the treasury benefits from increased tariff revenue. The court considers how best to capitalize on this seasonal commercial boom.',
+    choices: {
+      host_trade_fair: 'Host a Grand Trade Fair',
+      reduce_trade_tariffs: 'Temporarily Reduce Tariffs',
+      maintain_current_policy: 'Maintain Current Policy',
+    },
+  },
+
+  // --- SEASONAL: Autumn (2) ---
+  evt_autumn_harvest_bounty: {
+    title: 'Bountiful Autumn Harvest',
+    body: 'The harvest has exceeded all expectations. Granaries are overflowing, and farmers report yields significantly above average. The surplus presents a welcome opportunity — the question is how best to use it before it spoils or loses value.',
+    choices: {
+      stockpile_surplus: 'Stockpile the Surplus',
+      export_for_profit: 'Export for Profit',
+      distribute_to_poor: 'Distribute to the Poor',
+    },
+  },
+  evt_autumn_bandit_raids: {
+    title: 'Autumn Bandit Raids',
+    body: 'As harvest stores accumulate and days shorten, bandit activity in the rural outskirts has surged. Raiding parties target granaries, merchant wagons, and isolated farms. The common folk demand protection, and the military suggests a show of force.',
+    choices: {
+      dispatch_patrol_forces: 'Dispatch Patrol Forces',
+      arm_rural_militia: 'Arm the Rural Militia',
+      increase_road_patrols: 'Increase Road Patrols',
+    },
+  },
+
+  // --- SEASONAL: Winter (2) ---
+  evt_winter_blizzard: {
+    title: 'Severe Blizzard Strikes',
+    body: 'A devastating blizzard has swept across the kingdom, burying roads in snow and isolating entire communities. Temperatures have plummeted, and the most vulnerable face exposure and starvation if relief does not reach them. The storm shows no sign of abating.',
+    choices: {
+      open_warming_shelters: 'Open Warming Shelters',
+      distribute_fuel_and_blankets: 'Distribute Fuel and Blankets',
+      wait_out_the_storm: 'Wait Out the Storm',
+    },
+  },
+  evt_winter_food_shortage: {
+    title: 'Winter Food Stores Run Low',
+    body: 'The kingdom\'s food reserves are critically low as winter deepens. Rationing has already been informal in many communities, but the situation demands a coordinated royal response. Without intervention, famine conditions will set in before the spring thaw.',
+    choices: {
+      impose_strict_rationing: 'Impose Strict Rationing',
+      purchase_emergency_grain: 'Purchase Emergency Grain',
+      request_neighbor_aid: 'Request Neighbor Aid',
+    },
+  },
+
+  // --- REGIONAL (6) ---
+  evt_region_mine_collapse: {
+    title: 'Mine Collapse in Resource Region',
+    body: 'A major mine collapse has trapped workers and halted extraction in one of the kingdom\'s resource-producing regions. The disaster has shocked the community and disrupted the supply of critical materials. Rescue and recovery operations require immediate decision.',
+    choices: {
+      launch_rescue_operation: 'Launch Rescue Operation',
+      hire_foreign_engineers: 'Hire Foreign Engineers',
+      seal_and_rebuild: 'Seal and Begin Rebuilding',
+    },
+  },
+  evt_region_trade_route_disruption: {
+    title: 'Trade Route Disrupted',
+    body: 'A key trade route through one of the kingdom\'s regions has been disrupted by a combination of deteriorating roads and reports of bandit activity. Merchant caravans are being delayed or rerouted, and commerce in the affected area has slowed significantly.',
+    choices: {
+      military_escort_caravans: 'Provide Military Escorts',
+      negotiate_safe_passage: 'Negotiate Safe Passage',
+      reroute_trade: 'Reroute Trade',
+    },
+  },
+  evt_region_local_festival: {
+    title: 'Regional Festival Celebrated',
+    body: 'A region has organized a traditional local festival celebrating its patron saint and cultural heritage. The event has drawn visitors from neighboring areas and provides an opportunity to strengthen the crown\'s presence in the provinces.',
+    choices: {
+      send_royal_blessing: 'Send Royal Blessing',
+      attend_in_person: 'Attend in Person',
+    },
+  },
+  evt_region_resource_discovery: {
+    title: 'New Resource Deposit Discovered',
+    body: 'Surveyors have identified a promising new resource deposit in one of the kingdom\'s regions. Preliminary assessment suggests significant extractable wealth, but development will require investment. Several parties express interest in the discovery.',
+    choices: {
+      fund_extraction: 'Fund Royal Extraction',
+      auction_rights: 'Auction Extraction Rights',
+      survey_further: 'Commission Further Survey',
+    },
+  },
+  evt_region_infrastructure_decay: {
+    title: 'Regional Infrastructure Deteriorating',
+    body: 'Years of deferred maintenance have taken their toll on a region\'s roads, bridges, and public buildings. The deterioration is now visible and actively hampering commerce and daily life. Local officials urgently request crown investment in repairs.',
+    choices: {
+      fund_major_repairs: 'Fund Major Repairs',
+      levy_local_labor: 'Levy Local Labor for Repairs',
+      defer_maintenance: 'Defer Maintenance Again',
+    },
+  },
+  evt_region_separatist_sentiment: {
+    title: 'Separatist Sentiment Grows',
+    body: 'A peripheral region, long neglected and suffering from poor conditions, has seen the emergence of open separatist sentiment. Local leaders speak publicly of autonomy, and some have begun collecting their own taxes. The situation demands a response before it becomes a formal rebellion.',
+    choices: {
+      negotiate_autonomy_terms: 'Negotiate Autonomy Terms',
+      dispatch_royal_governor: 'Dispatch a Royal Governor',
+      show_of_force: 'Send a Show of Force',
+    },
+  },
+
+  // --- ESCALATION (6) ---
+  evt_escalation_famine_panic: {
+    title: 'Famine Panic Grips the Kingdom',
+    body: 'With food reserves perilously low and stability crumbling, panic has seized the population. Crowds storm markets and granaries, hoarding has become rampant, and violent confrontations over food are reported daily. The kingdom stands on the brink of collapse.',
+    choices: {
+      seize_noble_granaries: 'Seize Noble Granaries',
+      enforce_martial_rationing: 'Enforce Martial Rationing',
+      appeal_for_calm: 'Appeal for Calm',
+    },
+  },
+  evt_escalation_treasury_crisis: {
+    title: 'Treasury Crisis Demands Action',
+    body: 'The kingdom\'s treasury is nearly empty. Creditors demand payment, military wages are overdue, and essential services face suspension. Without immediate and drastic measures to restore solvency, the crown\'s authority and the kingdom\'s functioning are in jeopardy.',
+    choices: {
+      emergency_asset_sales: 'Sell Crown Assets',
+      demand_noble_contributions: 'Demand Noble Contributions',
+      suspend_non_essential_spending: 'Suspend Non-Essential Spending',
+    },
+  },
+  evt_escalation_faith_collapse: {
+    title: 'Faith Crisis Threatens the Realm',
+    body: 'The kingdom\'s religious unity has shattered. Heterodox movements have gained dominant influence in several regions, the orthodox clergy is demoralized, and the common people are spiritually adrift. Without a decisive response, the social fabric woven by faith will unravel entirely.',
+    choices: {
+      call_grand_synod: 'Call a Grand Synod',
+      impose_state_religion: 'Impose State Religion',
+      embrace_pluralism: 'Embrace Religious Pluralism',
+    },
+  },
+  evt_escalation_military_mutiny: {
+    title: 'Military Forces Threaten Mutiny',
+    body: 'The kingdom\'s armed forces have reached a breaking point. Officers report that soldiers are organizing, refusing orders, and making collective demands. Without immediate concessions or decisive action, the military could turn against the crown itself.',
+    choices: {
+      meet_mutiny_demands: 'Meet the Demands',
+      isolate_ringleaders: 'Isolate the Ringleaders',
+      negotiate_with_officers: 'Negotiate Through Officers',
+    },
+  },
+  evt_escalation_noble_conspiracy: {
+    title: 'Noble Conspiracy Against the Crown',
+    body: 'Intelligence has uncovered a serious conspiracy among the nobility to depose the ruling house. The plotters have financial backing, military contacts, and foreign support. The conspiracy is advanced and the threat is existential. The crown must act decisively.',
+    choices: {
+      preemptive_arrests: 'Order Preemptive Arrests',
+      offer_reconciliation: 'Offer Reconciliation',
+      plant_double_agents: 'Plant Double Agents',
+    },
+  },
+  evt_escalation_mass_exodus: {
+    title: 'Mass Exodus Threatens the Kingdom',
+    body: 'Conditions in the kingdom have deteriorated to the point that significant numbers of commoners are fleeing across the borders. Entire villages are being abandoned, fields left fallow, and the population base — the foundation of all the kingdom\'s systems — is eroding rapidly.',
+    choices: {
+      promise_sweeping_reforms: 'Promise Sweeping Reforms',
+      close_borders: 'Close the Borders',
+      let_dissenters_leave: 'Let the Dissenters Leave',
+    },
+  },
 };
 
 // ============================================================
@@ -303,6 +637,14 @@ export const STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
           launch_espionage_investigation: 'Launch Espionage Investigation',
           open_direct_negotiation: 'Open Direct Negotiation',
           issue_public_condemnation: 'Issue Public Condemnation',
+        },
+      },
+      bp_pretender_mid: {
+        body: 'The pretender\'s movement has entered a critical phase. Intelligence suggests foreign powers may be providing backing, while the pretender\'s noble supporters grow bolder. The crown must decide how to bring this crisis to a decisive end.',
+        choices: {
+          expose_foreign_backing: 'Expose Foreign Backing',
+          offer_minor_title: 'Offer a Minor Title',
+          rally_loyalist_nobles: 'Rally Loyalist Nobles',
         },
       },
       bp_pretender_resolution: {
@@ -327,6 +669,14 @@ export const STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
           order_suppression: 'Order Suppression',
         },
       },
+      bp_prophet_mid: {
+        body: 'The prophet\'s movement has grown beyond the frontier into the heartlands. Followers now number in the thousands, and the movement has developed its own rituals and gathering places. The orthodox clergy warns of permanent schism if the matter is not resolved.',
+        choices: {
+          invite_prophet_to_capital: 'Invite Prophet to Capital',
+          integrate_teachings: 'Integrate Key Teachings',
+          exile_the_prophet: 'Exile the Prophet',
+        },
+      },
       bp_prophet_resolution: {
         body: 'The matter of the frontier prophet has reached its resolution. The faith of the realm — whether unified, reformed, or fractured — now reflects the choices made during this crisis.',
         choices: {
@@ -347,6 +697,14 @@ export const STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
           conduct_reconnaissance: 'Conduct Reconnaissance',
           dispatch_diplomatic_envoy: 'Dispatch Diplomatic Envoy',
           begin_military_preparation: 'Begin Military Preparation',
+        },
+      },
+      bp_frozen_march_mid: {
+        body: 'The military situation has intensified. The neighboring force has moved into forward positions, and skirmishes along the border have claimed lives on both sides. A full-scale conflict appears increasingly likely unless dramatic action is taken.',
+        choices: {
+          fortify_mountain_passes: 'Fortify Mountain Passes',
+          seek_allied_reinforcements: 'Seek Allied Reinforcements',
+          launch_preemptive_strike: 'Launch Preemptive Strike',
         },
       },
       bp_frozen_march_resolution: {
@@ -371,6 +729,14 @@ export const STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
           await_and_observe: 'Await and Observe',
         },
       },
+      bp_merchant_king_mid: {
+        body: 'The merchant family\'s ambitions have become undeniable. They have begun financing noble alliances, sponsoring public works, and openly discussing representation at court. The situation demands a definitive resolution before it reshapes the kingdom\'s social order.',
+        choices: {
+          grant_noble_title: 'Grant a Noble Title',
+          seize_merchant_assets: 'Seize Merchant Assets',
+          broker_merchant_noble_alliance: 'Broker an Alliance',
+        },
+      },
       bp_merchant_king_resolution: {
         body: 'The matter of the merchant family\'s rising power has been settled. The balance between noble privilege and merchant enterprise has been redefined.',
         choices: {
@@ -390,6 +756,15 @@ export const STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
         choices: {
           dispatch_rescue_party: 'Dispatch Rescue Party',
           await_further_word: 'Await Further Word',
+          send_scout_riders: 'Send Scout Riders',
+        },
+      },
+      bp_expedition_mid: {
+        body: 'Word has finally arrived from the frontier. The expedition — or what remains of it — has discovered ruins of extraordinary significance. Ancient texts, artifacts, and architectural remains suggest a civilization of remarkable advancement. The question is whether to invest heavily in excavation or secure what has been found.',
+        choices: {
+          fund_full_excavation: 'Fund Full Excavation',
+          secure_and_document: 'Secure and Document',
+          abandon_the_site: 'Abandon the Site',
         },
       },
       bp_expedition_resolution: {
@@ -412,6 +787,14 @@ export const STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
           embrace_cultural_exchange: 'Embrace Cultural Exchange',
           permit_with_restrictions: 'Permit with Restrictions',
           restrict_foreign_practices: 'Restrict Foreign Practices',
+        },
+      },
+      bp_festival_mid: {
+        body: 'Foreign cultural influence has become a permanent feature of the kingdom\'s life. Districts in major towns now have distinct foreign quarters, hybrid art forms are emerging, and the debate over cultural identity has intensified. The crown must decide the long-term direction.',
+        choices: {
+          establish_cultural_quarter: 'Establish Cultural Quarter',
+          host_synthesis_festival: 'Host a Synthesis Festival',
+          reassert_traditional_values: 'Reassert Traditional Values',
         },
       },
       bp_festival_resolution: {

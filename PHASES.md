@@ -222,36 +222,39 @@ Build the full feedback loop: what changed, why, and what to look at next.
 
 ## Phase 7 — Content Expansion
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Event Categories (all), Class-Specific Events, Storyline Categories, Scenario Designs
 
 Expand from demo content to game-quality variety.
 
-**Files to modify:**
-- `src/data/events/index.ts` — expand from 26 to 60+ events
-- `src/data/decrees/index.ts` — expand from 18 to 30+ decrees
-- `src/data/storylines/index.ts` — flesh out all 6 storyline categories with full branching
-- `src/data/text/events.ts` — event dispatch text for new events
-- `src/data/text/reports.ts` — report templates for new systems
+**Files modified:**
+- `src/data/events/index.ts` — expanded from 26 to 61 events (35 new: 15 class-specific, 8 seasonal, 6 regional, 6 escalation)
+- `src/data/events/effects.ts` — added EVENT_CHOICE_EFFECTS for all 35 new events
+- `src/data/decrees/index.ts` — expanded from 18 to 30 decrees (12 new knowledge-gated)
+- `src/data/decrees/effects.ts` — added DECREE_EFFECTS for all 12 new decrees
+- `src/data/storylines/index.ts` — expanded all 6 storylines with mid-arc branch points (opening → mid-arc → resolution)
+- `src/data/storylines/effects.ts` — added STORYLINE_CHOICE_EFFECTS for 18 new mid-arc choices, updated STORYLINE_RESOLUTION_EFFECTS keyed to mid-arc choices
+- `src/data/text/events.ts` — added EVENT_TEXT for 35 new events, updated STORYLINE_TEXT with 6 new mid-arc branch points
+- `src/ui/context/game-context.tsx` — wired scenario selection into INIT_NEW_GAME reducer with createScenarioState()
 
-**Files to create:**
-- `src/data/scenarios/fractured-inheritance.ts` — The Fractured Inheritance scenario
-- `src/data/scenarios/merchants-gambit.ts` — The Merchant's Gambit scenario
-- `src/data/scenarios/frozen-march.ts` — The Frozen March scenario
-- `src/data/scenarios/faithful-kingdom.ts` — The Faithful Kingdom scenario
+**Files created:**
+- `src/data/scenarios/fractured-inheritance.ts` — The Fractured Inheritance scenario (succession crisis, low noble satisfaction 30, high treasury 700, separatist region)
+- `src/data/scenarios/merchants-gambit.ts` — The Merchant's Gambit scenario (powerful merchants, weak military, 3 neighbors including aggressive Krath)
+- `src/data/scenarios/frozen-march.ts` — The Frozen March scenario (winter start, strained food, strong but under-equipped military, hostile neighbor)
+- `src/data/scenarios/faithful-kingdom.ts` — The Faithful Kingdom scenario (faith 85, large clergy, 2 active religious orders, rival faith neighbor)
 
 **Checklist:**
-- [ ] Class-specific events: at least 3 per class (nobility power struggles, clergy disputes, merchant trade conflicts, commoner festivals/plagues, military veteran demands) — 15+ new events
-- [ ] Seasonal events: at least 2 per season (spring flooding, summer drought, autumn harvest, winter storms) — 8+ new events
-- [ ] Regional events: events tied to specific region conditions — 6+ new events
-- [ ] Escalation events: events triggered by prolonged low satisfaction, low faith, or low stability — 6+ new events
-- [ ] Knowledge-gated decrees: decrees that unlock only after reaching specific knowledge milestones — 12+ new decrees
-- [ ] Storyline fleshing: each of the 6 storylines has at least 2 branch points with 3 choices each, distinct resolution paths, and meaningful mechanical consequences
-- [ ] The Fractured Inheritance scenario: succession crisis, divided nobles, separatist region
-- [ ] The Merchant's Gambit scenario: trade-focused start, powerful merchant class, weak military
-- [ ] The Frozen March scenario: military pressure, harsh climate, strained food
-- [ ] The Faithful Kingdom scenario: deeply religious, large clergy, rival faith neighbor
-- [ ] Verify: start a new game, play 20+ turns, confirm diverse events appear and at least one storyline activates
+- [x] Class-specific events: at least 3 per class (nobility power struggles, clergy disputes, merchant trade conflicts, commoner festivals/plagues, military veteran demands) — 15+ new events
+- [x] Seasonal events: at least 2 per season (spring flooding, summer drought, autumn harvest, winter storms) — 8+ new events
+- [x] Regional events: events tied to specific region conditions — 6+ new events
+- [x] Escalation events: events triggered by prolonged low satisfaction, low faith, or low stability — 6+ new events
+- [x] Knowledge-gated decrees: decrees that unlock only after reaching specific knowledge milestones — 12+ new decrees
+- [x] Storyline fleshing: each of the 6 storylines has at least 2 branch points with 3 choices each, distinct resolution paths, and meaningful mechanical consequences
+- [x] The Fractured Inheritance scenario: succession crisis, divided nobles, separatist region
+- [x] The Merchant's Gambit scenario: trade-focused start, powerful merchant class, weak military
+- [x] The Frozen March scenario: military pressure, harsh climate, strained food
+- [x] The Faithful Kingdom scenario: deeply religious, large clergy, rival faith neighbor
+- [x] Verify: start a new game, play 20+ turns, confirm diverse events appear and at least one storyline activates
 
 ---
 

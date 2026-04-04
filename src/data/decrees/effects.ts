@@ -111,4 +111,90 @@ export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
     nobilitySatDelta: -6,
     clergySatDelta: -4,
   },
+
+  // ====================
+  // Knowledge-Gated: Agricultural (2)
+  // ====================
+  decree_crop_rotation: {
+    foodDelta: +15,
+    commonerSatDelta: +2,
+  },
+  decree_irrigation_works: {
+    foodDelta: +30,
+    commonerSatDelta: +3,
+    regionDevelopmentDelta: +4,
+  },
+
+  // ====================
+  // Knowledge-Gated: Military (2)
+  // ====================
+  decree_advanced_fortifications: {
+    militaryReadinessDelta: +8,
+    militaryCasteSatDelta: +3,
+    regionDevelopmentDelta: +2,
+  },
+  decree_elite_training_program: {
+    militaryReadinessDelta: +12,
+    militaryMoraleDelta: +5,
+    militaryCasteSatDelta: +4,
+    treasuryDelta: -40,
+  },
+
+  // ====================
+  // Knowledge-Gated: Civic (2)
+  // ====================
+  decree_tax_code_reform: {
+    treasuryDelta: +40,
+    merchantSatDelta: +2,
+    nobilitySatDelta: -2,
+    stabilityDelta: +2,
+  },
+  decree_provincial_governance: {
+    stabilityDelta: +6,
+    regionDevelopmentDelta: +4,
+    nobilitySatDelta: -4,
+    commonerSatDelta: +3,
+  },
+
+  // ====================
+  // Knowledge-Gated: Maritime/Trade (2)
+  // ====================
+  decree_harbor_expansion: {
+    merchantSatDelta: +4,
+    treasuryDelta: +20,
+    regionDevelopmentDelta: +3,
+  },
+  decree_trade_fleet_commission: {
+    merchantSatDelta: +6,
+    treasuryDelta: +40,
+    commonerSatDelta: +2,
+  },
+
+  // ====================
+  // Knowledge-Gated: Cultural/Scholarly (2)
+  // ====================
+  decree_university_charter: {
+    clergySatDelta: +3,
+    culturalCohesionDelta: +3,
+    commonerSatDelta: +1,
+  },
+  decree_diplomatic_academy: {
+    nobilitySatDelta: +3,
+    stabilityDelta: +3,
+    culturalCohesionDelta: +2,
+  },
+
+  // ====================
+  // Knowledge-Gated: Natural Philosophy (2)
+  // ====================
+  decree_engineering_corps: {
+    regionDevelopmentDelta: +4,
+    militaryReadinessDelta: +3,
+    commonerSatDelta: +2,
+  },
+  decree_medical_reforms: {
+    commonerSatDelta: +5,
+    clergySatDelta: +2,
+    stabilityDelta: +3,
+  },
 };

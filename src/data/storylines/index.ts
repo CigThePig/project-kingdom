@@ -1,5 +1,6 @@
 // gameplay-blueprint.md §8 — Storyline Pool Definitions
 // 6 storylines: one per StorylineCategory.
+// Each storyline has: opening branch → mid-arc branch → resolution branch.
 
 import type { StorylineDefinition } from '../../engine/events/storyline-engine';
 import {
@@ -27,16 +28,37 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
         choices: [
           {
             choiceId: 'launch_espionage_investigation',
-            nextBranchId: 'bp_pretender_resolution',
+            nextBranchId: 'bp_pretender_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'open_direct_negotiation',
-            nextBranchId: 'bp_pretender_resolution',
+            nextBranchId: 'bp_pretender_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'issue_public_condemnation',
+            nextBranchId: 'bp_pretender_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_pretender_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'expose_foreign_backing',
+            nextBranchId: 'bp_pretender_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'offer_minor_title',
+            nextBranchId: 'bp_pretender_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'rally_loyalist_nobles',
             nextBranchId: 'bp_pretender_resolution',
             turnsUntilNextBranchPoint: 2,
           },
@@ -76,16 +98,37 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
         choices: [
           {
             choiceId: 'send_clergy_investigation',
-            nextBranchId: 'bp_prophet_resolution',
+            nextBranchId: 'bp_prophet_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'declare_tolerance',
-            nextBranchId: 'bp_prophet_resolution',
+            nextBranchId: 'bp_prophet_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'order_suppression',
+            nextBranchId: 'bp_prophet_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_prophet_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'invite_prophet_to_capital',
+            nextBranchId: 'bp_prophet_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'integrate_teachings',
+            nextBranchId: 'bp_prophet_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'exile_the_prophet',
             nextBranchId: 'bp_prophet_resolution',
             turnsUntilNextBranchPoint: 2,
           },
@@ -124,16 +167,37 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
         choices: [
           {
             choiceId: 'conduct_reconnaissance',
-            nextBranchId: 'bp_frozen_march_resolution',
+            nextBranchId: 'bp_frozen_march_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'dispatch_diplomatic_envoy',
-            nextBranchId: 'bp_frozen_march_resolution',
+            nextBranchId: 'bp_frozen_march_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'begin_military_preparation',
+            nextBranchId: 'bp_frozen_march_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_frozen_march_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'fortify_mountain_passes',
+            nextBranchId: 'bp_frozen_march_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'seek_allied_reinforcements',
+            nextBranchId: 'bp_frozen_march_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'launch_preemptive_strike',
             nextBranchId: 'bp_frozen_march_resolution',
             turnsUntilNextBranchPoint: 2,
           },
@@ -174,18 +238,39 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
         choices: [
           {
             choiceId: 'impose_regulatory_limits',
-            nextBranchId: 'bp_merchant_king_resolution',
+            nextBranchId: 'bp_merchant_king_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'accept_investment_offer',
-            nextBranchId: 'bp_merchant_king_resolution',
+            nextBranchId: 'bp_merchant_king_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'await_and_observe',
+            nextBranchId: 'bp_merchant_king_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_merchant_king_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'grant_noble_title',
+            nextBranchId: 'bp_merchant_king_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'seize_merchant_assets',
             nextBranchId: 'bp_merchant_king_resolution',
             turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'broker_merchant_noble_alliance',
+            nextBranchId: 'bp_merchant_king_resolution',
+            turnsUntilNextBranchPoint: 3,
           },
         ],
       },
@@ -223,11 +308,37 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
         choices: [
           {
             choiceId: 'dispatch_rescue_party',
-            nextBranchId: 'bp_expedition_resolution',
+            nextBranchId: 'bp_expedition_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'await_further_word',
+            nextBranchId: 'bp_expedition_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'send_scout_riders',
+            nextBranchId: 'bp_expedition_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_expedition_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'fund_full_excavation',
+            nextBranchId: 'bp_expedition_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'secure_and_document',
+            nextBranchId: 'bp_expedition_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'abandon_the_site',
             nextBranchId: 'bp_expedition_resolution',
             turnsUntilNextBranchPoint: 2,
           },
@@ -267,16 +378,37 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
         choices: [
           {
             choiceId: 'embrace_cultural_exchange',
-            nextBranchId: 'bp_festival_resolution',
+            nextBranchId: 'bp_festival_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'permit_with_restrictions',
-            nextBranchId: 'bp_festival_resolution',
+            nextBranchId: 'bp_festival_mid',
             turnsUntilNextBranchPoint: 3,
           },
           {
             choiceId: 'restrict_foreign_practices',
+            nextBranchId: 'bp_festival_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_festival_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'establish_cultural_quarter',
+            nextBranchId: 'bp_festival_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'host_synthesis_festival',
+            nextBranchId: 'bp_festival_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'reassert_traditional_values',
             nextBranchId: 'bp_festival_resolution',
             turnsUntilNextBranchPoint: 2,
           },

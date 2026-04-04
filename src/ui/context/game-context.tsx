@@ -19,6 +19,10 @@ import {
 } from '../../engine/resolution/action-budget';
 import type { TurnResolutionResult } from '../../engine/resolution/turn-resolution';
 import { createDefaultScenario } from '../../data/scenarios/default';
+import { createFracturedInheritanceScenario } from '../../data/scenarios/fractured-inheritance';
+import { createMerchantsGambitScenario } from '../../data/scenarios/merchants-gambit';
+import { createFrozenMarchScenario } from '../../data/scenarios/frozen-march';
+import { createFaithfulKingdomScenario } from '../../data/scenarios/faithful-kingdom';
 
 // ============================================================
 // Context State
@@ -64,9 +68,24 @@ export const GameContext = createContext<GameContextValue | null>(null);
 // Initial State
 // ============================================================
 
-function createInitialState(): GameContextState {
+function createScenarioState(scenarioId?: string): GameState {
+  switch (scenarioId) {
+    case 'fractured_inheritance':
+      return createFracturedInheritanceScenario();
+    case 'merchants_gambit':
+      return createMerchantsGambitScenario();
+    case 'frozen_march':
+      return createFrozenMarchScenario();
+    case 'faithful_kingdom':
+      return createFaithfulKingdomScenario();
+    default:
+      return createDefaultScenario();
+  }
+}
+
+function createInitialState(scenarioId?: string): GameContextState {
   return {
-    gameState: createDefaultScenario(),
+    gameState: createScenarioState(scenarioId),
     turnHistory: [],
     eventHistory: [],
     intelligenceReports: [],
@@ -85,7 +104,7 @@ function createInitialState(): GameContextState {
 function gameReducer(state: GameContextState, action: GameAction): GameContextState {
   switch (action.type) {
     case 'INIT_NEW_GAME': {
-      return createInitialState();
+      return createInitialState(action.scenarioId);
     }
 
     case 'LOAD_SAVE': {
