@@ -11,7 +11,10 @@
     'crown  crown   crown'
     'nav    content intel';
   min-height: 100dvh;
-  background: var(--color-bg-primary);
+  background:
+    var(--color-seasonal-gradient, none),
+    radial-gradient(ellipse at 50% 0%, hsla(215, 20%, 14%, 0.8) 0%, transparent 70%),
+    var(--color-bg-primary);
   color: var(--color-text-primary);
 }
 
@@ -28,6 +31,16 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-heading);
   margin: 0 0 var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--color-seasonal-accent, var(--color-accent-metallic)) 0%,
+    transparent 60%
+  );
+  background-size: 100% 1px;
+  background-position: bottom;
+  background-repeat: no-repeat;
 }
 
 .contentPlaceholder {

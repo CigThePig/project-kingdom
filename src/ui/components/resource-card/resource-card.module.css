@@ -8,11 +8,19 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-1);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
+  border-top: var(--card-border-top-accent) solid var(--color-seasonal-accent, var(--color-accent-metallic));
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-4);
   min-width: 7rem;
+  box-shadow: var(--surface-base-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(var(--card-hover-lift));
+  box-shadow: var(--shadow-card-hover);
 }
 
 /* --------------------------------------------------------------------------

@@ -286,6 +286,188 @@ Transform the knowledge screen from data display into a visual interactive tree.
 
 ---
 
+## Phase 8A — Visual Foundation & Surface Hierarchy
+
+**Status:** 🟢 Complete
+**Blueprint Reference:** `ui-blueprint.md` §2 (Visual Language), §2.3 (Color System); `ux-blueprint.md` §1.2 (Calm Pressure), §1.3 (Clarity Before Depth)
+
+Upgrade the base visual system so every surface has depth, texture, and spatial hierarchy instead of flat boxes.
+
+**Files modified:**
+- `src/ui/styles/tokens.css` — new shadow tokens (elevated, inset, glow, card-hover), surface elevation levels (recessed/base/raised/floating), card interaction tokens, status border colors
+- `src/ui/styles/base.css` — global keyframe library (fadeIn, fadeOut, slideUp, slideDown, slideIn, scaleIn, pulseGlow, shimmer, breathe, flashHighlight), focus-visible styles, scrollbar upgrade, section-divider and shimmer utilities
+- `src/ui/styles/seasonal.css` — expanded with glow, border, card-tint, and gradient tokens per season
+- `src/app.module.css` — background depth (radial gradients + seasonal gradient), content title decorative underline
+- All component `.module.css` files — upgraded to surface elevation system with box-shadow, hover lift, and interaction transitions
+- All screen `.module.css` files — cards upgraded from flat to elevated surfaces
+- Crown bar — gradient background, seasonal top-border glow, depth shadow
+- Nav rail — depth shadow, active item inset glow
+- Intelligence panel — gradient background, depth shadow
+- Game-over — darker overlay, floating surface, critical glow
+
+**Checklist:**
+- [x] Richer shadow scale: add `--shadow-glow`, `--shadow-elevated`, `--shadow-inset` tokens for interactive/raised/recessed surfaces
+- [x] Surface hierarchy: distinguish 4 clear elevation levels (recessed, base, raised, floating) with distinct background + shadow + border combos
+- [x] Card upgrade: all cards gain subtle gradient borders or top-accent strips instead of uniform 1px borders; hover state adds lift (translateY -1px + shadow-elevated)
+- [x] Background depth: app background uses subtle radial gradient or noise texture instead of flat `hsl(220, 15%, 10%)`
+- [x] Section dividers: replace gap-only separation with styled dividers (thin rule with fade-out ends, or spacing + subtle background shift)
+- [x] Seasonal depth: each season gets a subtle background gradient tint, slightly warmer/cooler border accents, and crown bar gets a seasonal top-border glow
+- [x] Global keyframe library in `base.css`: define reusable `fadeIn`, `slideUp`, `slideIn`, `scaleIn`, `pulseGlow`, `shimmer` animations
+- [x] Focus-visible styles: distinct visible focus ring using seasonal accent color for keyboard navigation
+- [x] Status color backgrounds: warning/critical/positive cards get more pronounced background treatment (subtle gradient, not just flat tint)
+- [x] Scrollbar upgrade: styled scrollbar thumb with rounded ends, subtle hover brightening
+- [x] Verify: every screen visually distinguishes card hierarchy; hover states feel tactile; seasonal differences are noticeable
+
+---
+
+## Phase 8B — Iconography & Visual Identity
+
+**Status:** 🔴 Not Started
+**Blueprint Reference:** `ui-blueprint.md` §2.5 (Iconography — class icons, faith, espionage, knowledge branches, resources, domains)
+
+Replace text-only indicators with an inline SVG icon system that gives every game concept a recognizable visual symbol. Each icon is a React component rendering inline SVG — zero dependencies, full control over color/size via CSS custom properties.
+
+**Files to create:**
+- `src/ui/components/icon/icon.tsx` — shared Icon component (maps icon name to SVG component, supports `size` and `color` props)
+- `src/ui/components/icon/icon.module.css`
+- `src/ui/components/icon/icons/` — individual icon files as named-export React components, one per file
+
+**Files to modify:**
+- `src/ui/components/crown-bar/crown-bar.tsx` — add icons to treasury/food/stability stat chips, action slot icons, urgent badge icon
+- `src/ui/components/nav-rail/nav-rail.tsx` — add screen icons to each nav item (currently text-only)
+- `src/ui/components/resource-card/resource-card.tsx` — resource type icon in header
+- `src/ui/components/decree-card/decree-card.tsx` — category icon, slot cost icon
+- `src/ui/components/event-panel/event-panel.tsx` — event type icon, storyline icon for storyline events
+- `src/ui/components/policy-card/policy-card.tsx` — policy domain icon
+- `src/ui/components/intelligence-panel/intelligence-panel.tsx` — section icons, confidence level icons
+- All screen files — section header icons, status indicator icons
+
+**Checklist:**
+- [ ] Resource icons: treasury (coin/chest), food (wheat/basket), stability (scales/pillar)
+- [ ] Class icons: nobility (crown), clergy (chalice), merchants (scales), commoners (sheaf), military (shield)
+- [ ] Domain icons: one per nav screen (12 total — dashboard/compass, reports/scroll, decrees/seal, policies/balance, society/people, regions/map, military/sword, trade/ship, diplomacy/handshake, intelligence/lantern, knowledge/book, events/bell, archive/ledger)
+- [ ] Faith & culture icons: flame, temple, festival, heterodoxy
+- [ ] Knowledge branch icons: plough (agriculture), sword (military), scroll (governance), ship (commerce), lyre (culture), compass (exploration)
+- [ ] Status icons: trend up/down/stable arrows, warning triangle, critical circle, positive check, locked padlock
+- [ ] Action icons: slot dot → small seal/stamp icon, turn advance → hourglass/sundial
+- [ ] Intelligence icons: shadow/cloak, confidence levels (1-3 bars), sealed envelope
+- [ ] Nav rail uses icons with labels on desktop, icons-only on collapsed rail
+- [ ] Crown bar stat chips get resource icons before values
+- [ ] Decree cards show category icon in header
+- [ ] Event panels show type-specific icon (storyline events get storyline icon)
+- [ ] Verify: every major game concept has a visual icon; text labels are supplemented not replaced
+
+---
+
+## Phase 8C — Micro-interactions & Animation
+
+**Status:** 🔴 Not Started
+**Blueprint Reference:** `ux-blueprint.md` §8 (Feedback Patterns), §4.8 (Action Commitment), §4.10 (Turn Advance Ceremony); `ui-blueprint.md` §2.8 (Animation), §8 (Visual State Rules)
+
+Add motion and feedback that makes every interaction feel responsive and the game world feel alive.
+
+**Files to modify:**
+- `src/ui/styles/base.css` — animation utilities (stagger delays, entrance classes)
+- All component `.module.css` files — hover/active/focus micro-interactions
+- `src/ui/screens/dashboard/dashboard.tsx` + `.module.css` — turn advance ceremony upgrade
+- `src/ui/components/crown-bar/crown-bar.tsx` + `.module.css` — stat change flash animations
+- `src/ui/components/resource-card/resource-card.tsx` + `.module.css` — value change animation
+- `src/ui/components/decree-card/decree-card.tsx` + `.module.css` — commitment feedback
+- `src/ui/components/event-panel/event-panel.tsx` + `.module.css` — arrival animation, choice selection
+
+**Checklist:**
+- [ ] Card hover: all interactive cards gain `transform: translateY(-2px)` + `box-shadow` elevation on hover (120ms ease)
+- [ ] Card press: active state presses card down slightly (`translateY(0)` + reduced shadow) for tactile click feel
+- [ ] Button interactions: all buttons gain hover brightness/scale, active press-down, and commitment pulse for decree/action buttons
+- [ ] Page transitions: screen content fades in with subtle slideUp on navigation (200ms)
+- [ ] Staggered list entry: card grids and lists animate in with sequential delay (each card 30-50ms after previous)
+- [ ] Value change animation: resource values in crown bar and resource cards flash briefly (background highlight) when they change between turns
+- [ ] Turn advance ceremony: upgrade from plain overlay to multi-stage sequence — seal animation/transition → processing state with progress feel → summary slides in with gravitas
+- [ ] Turn summary entrance: summary items stagger in by severity group (critical first, then notable, then routine)
+- [ ] Decree commitment: committed decree card gets a brief seal/stamp visual pulse, slot counter animates the fill
+- [ ] Event arrival: new events slide in from right or fade with scale, storyline events get extra ceremony (border glow pulse)
+- [ ] Status transitions: when a class moves from content→restless or restless→critical, the card border color transitions with a brief pulse
+- [ ] Loading/empty states: shimmer placeholder animation for any loading content; empty states with thematic placeholder text + subtle breathing animation
+- [ ] Crown bar urgent badge: pulse animation when count increases
+- [ ] All animations respect `prefers-reduced-motion` (already have infrastructure in base.css)
+- [ ] Verify: navigate between all screens, commit actions, advance turns — every interaction has visible, satisfying feedback
+
+---
+
+## Phase 8D — Component & Screen Polish
+
+**Status:** 🔴 Not Started
+**Blueprint Reference:** `ui-blueprint.md` §4 (Screen specs), §6 (Component Library), §8 (Visual State Rules); `ux-blueprint.md` §1.6 (Narrative Voice), §1.7 (Living Society)
+
+Upgrade each shared component and screen from data display to game-quality presentation with narrative framing and visual weight.
+
+**Files to modify:**
+- `src/ui/components/resource-card/` — add mini sparkline/trend visualization, status-colored value, threshold indicator
+- `src/ui/components/decree-card/` — visual weight tiers, committed state with wax-seal visual
+- `src/ui/components/event-panel/` — narrative framing, parchment-style background for storyline events
+- `src/ui/components/intelligence-panel/` — sealed dispatch aesthetic, confidence bars
+- `src/ui/components/forecast-module/` — animated bar fills, confidence shading with gradient
+- `src/ui/components/consequence-preview/` — directional impact arrows with color intensity
+- `src/ui/screens/dashboard/` — command center layout with section headers, visual hierarchy
+- `src/ui/screens/reports/` — styled data rows, smooth expandable sections
+- `src/ui/screens/society/` — satisfaction gauge, population bars, ceremonial faith styling
+- `src/ui/screens/diplomacy/` — relationship gauge, posture indicator icon
+- `src/ui/screens/military/` — force composition bars, readiness gauge, conflict framing
+- `src/ui/screens/intelligence/` — operation cards with probability gauge, sealed-report aesthetic
+- `src/ui/screens/game-over/` — dramatic weight, kingdom epitaph, fade-to-dark
+
+**Checklist:**
+- [ ] Resource cards: add horizontal mini-bar showing value relative to a threshold, trend arrow icon replaces text arrow
+- [ ] Decree cards: visual weight indicator, committed state shows filled seal icon overlay, locked decrees have padlock + reason
+- [ ] Event panels: storyline events get parchment-tinted background, event type badge, choice buttons as full-width cards with consequence preview inline
+- [ ] Intelligence panel: muted indigo surface, confidence as filled bar segments, reports feel like sealed dispatches
+- [ ] Forecast module: projection bars animate fill on mount, confidence as gradient opacity, icon-based direction arrows
+- [ ] Dashboard: section headers with icons + decorative underlines, urgent items most prominent, storyline card gets narrative border
+- [ ] Reports: alternating row backgrounds, animated expandable sections, seasonal accent tab underline
+- [ ] Society: satisfaction as visual gauge not just number, population as proportional bar segments, faith section with bronze/warm styling
+- [ ] Diplomacy: relationship score as colored bar (red→yellow→green), disposition badge with icon, agreement list as styled chips
+- [ ] Military: force bars, readiness gauge, active conflict with dramatic red accent and urgency treatment
+- [ ] Intelligence screen: covert-feeling operation cards (dark indigo, probability gauge, mission-briefing layout)
+- [ ] Game-over: full-screen dramatic overlay with slow fade, large serif epitaph, kingdom stats, weighted options
+- [ ] Verify: play a full game (20+ turns) — every screen feels polished, every component has visual identity beyond text
+
+---
+
+## Phase 8E — Atmosphere & Immersion
+
+**Status:** 🔴 Not Started
+**Blueprint Reference:** `ui-blueprint.md` §2.4 (Seasonal Accents), §8 (Visual State Rules — turn-change highlighting, seasonal transition); `ux-blueprint.md` §8 (Feedback Patterns), §1.2 (Calm Pressure)
+
+Add the final layer of game feel — seasonal atmosphere, turn-change highlights, celebration moments, and cohesive polish. (Audio deferred to Phase 10.)
+
+**Files to create:**
+- `src/ui/components/season-transition/season-transition.tsx` + `.module.css` — seasonal transition overlay (name + icon, 1-2 second fade)
+- `src/ui/components/milestone-celebration/milestone-celebration.tsx` + `.module.css` — visual burst on knowledge milestone unlock
+- `src/ui/components/change-highlight/change-highlight.tsx` + `.module.css` — wrapper that highlights value changes between turns
+
+**Files to modify:**
+- `src/ui/styles/seasonal.css` — expanded seasonal treatments (background gradients, card tints, nav rail accent, crown bar glow)
+- `src/ui/components/crown-bar/` — seasonal glow, season badge with icon, change flashes
+- `src/ui/screens/dashboard/` — seasonal header treatment, change highlights
+- `src/ui/screens/knowledge/` — milestone unlock celebration visual
+- `src/ui/components/resource-card/` — change highlight integration
+- `src/ui/components/intelligence-panel/` — new report arrival highlight
+
+**Checklist:**
+- [ ] Seasonal transitions: brief overlay with season name + icon on season change, crown bar top border shifts to new accent
+- [ ] Expanded seasonal theming: each season affects card backgrounds, nav rail active indicator, crown bar gradient
+- [ ] Seasonal card tints: surface cards get barely-perceptible warm/cool tint per season
+- [ ] Turn-change highlighting: changed values show directional indicator + brief background flash
+- [ ] Change highlight component: reusable wrapper comparing previous/current value
+- [ ] Crown bar change flashes: treasury, food, stability flash green/red on turn resolution
+- [ ] Knowledge milestone celebration: expanding ring + glow + text announcement
+- [ ] Empty/loading personality: thematic shimmer, in-character placeholder text
+- [ ] Storyline visual presence: active storyline card has subtle breathing glow on border
+- [ ] Critical state urgency: critical crown bar stats get slow red pulse
+- [ ] Verify: play through all 4 seasons — transitions smooth, changes highlighted, celebrations fire, atmosphere immersive
+
+---
+
 ## Phase 9 — Onboarding & Pacing
 
 **Status:** 🔴 Not Started

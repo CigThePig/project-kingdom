@@ -40,18 +40,22 @@
   /* Warning: muted amber */
   --color-status-warning: hsl(40, 65%, 50%);
   --color-status-warning-bg: hsla(40, 65%, 50%, 0.12);
+  --color-status-warning-border: hsla(40, 65%, 50%, 0.35);
 
   /* Critical: restrained deep red */
   --color-status-critical: hsl(0, 55%, 45%);
   --color-status-critical-bg: hsla(0, 55%, 45%, 0.12);
+  --color-status-critical-border: hsla(0, 55%, 45%, 0.35);
 
   /* Positive: desaturated green/teal */
   --color-status-positive: hsl(165, 35%, 45%);
   --color-status-positive-bg: hsla(165, 35%, 45%, 0.12);
+  --color-status-positive-border: hsla(165, 35%, 45%, 0.35);
 
   /* Neutral change: soft blue-gray */
   --color-status-neutral: hsl(210, 15%, 55%);
   --color-status-neutral-bg: hsla(210, 15%, 55%, 0.12);
+  --color-status-neutral-border: hsla(210, 15%, 55%, 0.35);
 
   /* Locked/unavailable: reduced opacity muted overlay */
   --color-status-locked: hsla(220, 10%, 40%, 0.5);
@@ -137,13 +141,44 @@
   --border-radius-sm: 0.25rem;
   --border-radius-md: 0.5rem;
   --border-radius-lg: 0.75rem;
+  --border-radius-xl: 1rem;
 
   /* ========================================================================
-     Shadows
+     Surface Elevation Levels (Phase 8A)
+     4 distinct levels: recessed < base < raised < floating
+     ======================================================================== */
+  --surface-recessed-bg: var(--color-bg-primary);
+  --surface-recessed-border: var(--color-border-default);
+  --surface-recessed-shadow: var(--shadow-inset);
+
+  --surface-base-bg: var(--color-bg-surface);
+  --surface-base-border: hsl(215, 10%, 24%);
+  --surface-base-shadow: var(--shadow-sm);
+
+  --surface-raised-bg: var(--color-bg-surface-raised);
+  --surface-raised-border: var(--color-border-strong);
+  --surface-raised-shadow: var(--shadow-md);
+
+  --surface-floating-bg: hsl(215, 10%, 26%);
+  --surface-floating-border: hsl(215, 10%, 32%);
+  --surface-floating-shadow: var(--shadow-elevated);
+
+  /* Card interaction tokens */
+  --card-hover-lift: -2px;
+  --card-active-press: 0px;
+  --card-border-top-accent: 2px;
+
+  /* ========================================================================
+     Shadows — Enriched Scale (Phase 8A)
      ======================================================================== */
   --shadow-sm: 0 1px 2px hsla(220, 20%, 4%, 0.4);
   --shadow-md: 0 2px 6px hsla(220, 20%, 4%, 0.5);
   --shadow-lg: 0 4px 12px hsla(220, 20%, 4%, 0.6);
+  --shadow-elevated: 0 6px 20px hsla(220, 20%, 4%, 0.7), 0 2px 6px hsla(220, 20%, 4%, 0.4);
+  --shadow-inset: inset 0 1px 3px hsla(220, 20%, 4%, 0.5);
+  --shadow-glow: 0 0 12px hsla(210, 30%, 40%, 0.3);
+  --shadow-glow-seasonal: 0 0 12px var(--color-seasonal-accent-subtle);
+  --shadow-card-hover: 0 6px 16px hsla(220, 20%, 4%, 0.6), 0 2px 4px hsla(220, 20%, 4%, 0.3);
 
   /* ========================================================================
      Transitions (§2.8 — minimal, document-like)

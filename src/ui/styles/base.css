@@ -165,11 +165,17 @@ table {
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-border-strong);
-  border-radius: var(--border-radius-sm);
+  border-radius: 9999px;
+  border: 2px solid var(--color-bg-primary);
+  transition: background var(--transition-fast);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-accent-metallic);
+}
+
+::-webkit-scrollbar-corner {
+  background: var(--color-bg-primary);
 }
 
 /* ==========================================================================
@@ -188,9 +194,129 @@ table {
 }
 
 /* ==========================================================================
+   Focus-Visible Styles (Phase 8A)
+   ========================================================================== */
+
+:focus-visible {
+  outline: 2px solid var(--color-seasonal-accent, hsl(210, 30%, 50%));
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
+}
+
+button:focus-visible,
+[role='button']:focus-visible {
+  outline-offset: 1px;
+}
+
+/* ==========================================================================
+   Global Keyframe Library (Phase 8A)
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 4px var(--pulse-color, hsla(210, 30%, 50%, 0.2)); }
+  50% { box-shadow: 0 0 16px var(--pulse-color, hsla(210, 30%, 50%, 0.5)); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes flashHighlight {
+  0% { background-color: var(--flash-color, hsla(210, 30%, 50%, 0.3)); }
+  100% { background-color: transparent; }
+}
+
+/* ==========================================================================
    Utility Classes
    ========================================================================== */
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* Styled section divider — thin rule with fade-out ends */
+.section-divider {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-border-default) 20%,
+    var(--color-border-default) 80%,
+    transparent 100%
+  );
+  margin: var(--space-4) 0;
+}
+
+/* Shimmer loading placeholder */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-surface) 0%,
+    var(--color-bg-surface-raised) 40%,
+    var(--color-bg-surface) 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--border-radius-sm);
 }

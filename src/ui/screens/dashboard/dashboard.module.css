@@ -41,10 +41,17 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
   padding: var(--space-3);
+  box-shadow: var(--surface-base-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.classCard:hover {
+  transform: translateY(var(--card-hover-lift));
+  box-shadow: var(--shadow-card-hover);
 }
 
 .classCard[data-status='critical'] {
@@ -119,10 +126,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-4);
+  box-shadow: var(--surface-base-shadow);
 }
 
 .conditionLabel {
@@ -150,13 +158,14 @@
 .storylineCard {
   flex: 1;
   min-width: 12rem;
-  background: var(--color-bg-surface);
+  background: var(--surface-base-bg);
   border: 1px solid var(--color-border-storyline);
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  box-shadow: var(--surface-base-shadow), 0 0 12px hsla(38, 30%, 45%, 0.12);
 }
 
 .storylineTitle {
@@ -231,17 +240,26 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-inverse);
-  background: var(--color-accent-metallic);
-  border: none;
+  background: linear-gradient(180deg, hsl(210, 10%, 58%) 0%, hsl(210, 8%, 48%) 100%);
+  border: 1px solid hsl(210, 8%, 62%);
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-8);
   cursor: pointer;
-  transition: opacity var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
   letter-spacing: var(--letter-spacing-wide);
+  box-shadow: 0 2px 8px hsla(220, 20%, 4%, 0.5), inset 0 1px 0 hsla(210, 20%, 70%, 0.2);
+  text-shadow: 0 1px 2px hsla(220, 20%, 4%, 0.4);
 }
 
 .advanceButton:hover {
-  opacity: 0.85;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px hsla(220, 20%, 4%, 0.6), inset 0 1px 0 hsla(210, 20%, 70%, 0.25);
+  filter: brightness(1.08);
+}
+
+.advanceButton:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px hsla(220, 20%, 4%, 0.4), inset 0 1px 3px hsla(220, 20%, 4%, 0.3);
 }
 
 /* --------------------------------------------------------------------------
@@ -258,8 +276,9 @@
 }
 
 .confirmCard {
-  background: var(--color-bg-surface-raised);
-  border: 1px solid var(--color-border-strong);
+  background: var(--surface-floating-bg);
+  border: 1px solid var(--surface-floating-border);
+  border-top: 2px solid var(--color-seasonal-accent, var(--color-accent-metallic));
   border-radius: var(--border-radius-lg);
   padding: var(--space-6);
   max-width: 32rem;
@@ -267,7 +286,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--surface-floating-shadow);
+  animation: scaleIn 200ms ease-out;
 }
 
 .confirmTitle {
@@ -333,8 +353,9 @@
 }
 
 .summaryCard {
-  background: var(--color-bg-surface-raised);
-  border: 1px solid var(--color-border-strong);
+  background: var(--surface-floating-bg);
+  border: 1px solid var(--surface-floating-border);
+  border-top: 2px solid var(--color-seasonal-accent, var(--color-accent-metallic));
   border-radius: var(--border-radius-lg);
   padding: var(--space-6);
   max-width: 40rem;
@@ -344,7 +365,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--surface-floating-shadow);
+  animation: slideUp 300ms ease-out;
 }
 
 .summaryTitle {

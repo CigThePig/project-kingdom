@@ -13,9 +13,11 @@
   justify-content: space-between;
   height: var(--crown-bar-height);
   padding: 0 var(--space-4);
-  background: var(--color-bg-secondary);
+  background: linear-gradient(180deg, var(--color-bg-tertiary) 0%, var(--color-bg-secondary) 100%);
   border-bottom: 1px solid var(--color-border-default);
+  border-top: 2px solid var(--color-seasonal-accent, var(--color-accent-metallic));
   gap: var(--space-4);
+  box-shadow: 0 2px 12px hsla(220, 20%, 4%, 0.4);
 }
 
 /* --------------------------------------------------------------------------

@@ -41,9 +41,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
   padding: var(--space-4);
 }
 
@@ -110,9 +111,10 @@
   gap: var(--space-3);
   margin-top: var(--space-3);
   padding: var(--space-2) var(--space-3);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-sm);
+  box-shadow: var(--surface-base-shadow);
 }
 
 .fundingLabel {
@@ -139,9 +141,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
   padding: var(--space-3);
 }
 
@@ -222,9 +225,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
   padding: var(--space-3);
 }
 

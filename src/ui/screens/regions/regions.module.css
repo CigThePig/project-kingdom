@@ -43,9 +43,10 @@
 .regionCard {
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
   overflow: hidden;
   transition: border-color var(--transition-fast);
 }

@@ -9,39 +9,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-bg-overlay);
-  animation: fadeIn 0.6s ease-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  background: hsla(220, 20%, 4%, 0.92);
+  animation: fadeIn 0.8s ease-out;
 }
 
 .panel {
   max-width: 560px;
   width: 90%;
   padding: var(--spacing-xl);
-  background: var(--color-bg-secondary);
+  background: var(--surface-floating-bg, var(--color-bg-secondary));
   border: 1px solid var(--color-status-critical);
+  border-top: 3px solid var(--color-status-critical);
   border-radius: var(--radius-lg);
-  box-shadow: 0 8px 32px hsla(0, 0%, 0%, 0.4);
-  animation: slideUp 0.4s ease-out 0.2s both;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  box-shadow: var(--surface-floating-shadow, 0 8px 32px hsla(0, 0%, 0%, 0.4)), 0 0 40px hsla(0, 55%, 45%, 0.15);
+  animation: slideUp 0.5s ease-out 0.3s both;
 }
 
 .header {
