@@ -1,0 +1,215 @@
+/* ==========================================================================
+   Event Panel — Event and storyline presentation
+   Source: ui-blueprint.md §6.2, §6.3, §8.7
+   ========================================================================== */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-4);
+}
+
+/* Storyline variant: golden border treatment */
+.storyline {
+  border-color: var(--color-border-storyline);
+  border-width: 2px;
+}
+
+/* Resolved: reduced emphasis */
+.resolved {
+  opacity: 0.7;
+}
+
+/* --------------------------------------------------------------------------
+   Badge row
+   -------------------------------------------------------------------------- */
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.badge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Severity color variants */
+.severityNeutral {
+  color: var(--color-status-neutral);
+  background: hsla(210, 15%, 55%, 0.15);
+}
+
+.severityFaith {
+  color: var(--color-status-faith);
+  background: hsla(35, 45%, 48%, 0.15);
+}
+
+.severityWarning {
+  color: var(--color-status-warning);
+  background: hsla(40, 65%, 50%, 0.15);
+}
+
+.severityCritical {
+  color: var(--color-status-critical);
+  background: hsla(0, 55%, 45%, 0.15);
+}
+
+.categoryBadge {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+}
+
+/* --------------------------------------------------------------------------
+   Storyline indicator
+   -------------------------------------------------------------------------- */
+.storylineIndicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.storylineTitle {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-border-storyline);
+}
+
+.storylineAct {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* --------------------------------------------------------------------------
+   Chain indicator
+   -------------------------------------------------------------------------- */
+.chainIndicator {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Title and body
+   -------------------------------------------------------------------------- */
+.title {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+  line-height: var(--line-height-tight);
+}
+
+.body {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+}
+
+/* --------------------------------------------------------------------------
+   Class chips
+   -------------------------------------------------------------------------- */
+.classChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.classChip {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* --------------------------------------------------------------------------
+   Choice buttons
+   -------------------------------------------------------------------------- */
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+}
+
+.choiceButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  background: var(--color-bg-surface-raised);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--border-radius-sm);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.choiceButton:hover:not(:disabled) {
+  background: var(--color-bg-tertiary);
+}
+
+.choiceButton:disabled {
+  cursor: not-allowed;
+}
+
+.choiceSelected {
+  border-color: var(--color-status-positive);
+  background: var(--color-bg-surface-raised);
+}
+
+.choiceDismissed {
+  opacity: 0.4;
+}
+
+.choiceLabel {
+  font-weight: var(--font-weight-medium);
+}
+
+.choiceCost {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.choiceCostFree {
+  font-size: var(--font-size-xs);
+  color: var(--color-status-positive);
+  font-weight: var(--font-weight-medium);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .panel {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+
+  .choices {
+    flex-direction: column;
+  }
+
+  .choiceButton {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

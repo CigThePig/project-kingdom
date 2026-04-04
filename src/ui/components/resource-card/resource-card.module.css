@@ -1,0 +1,88 @@
+/* ==========================================================================
+   Resource Card — Compact resource status with trend arrow
+   Source: ui-blueprint.md §4.5, §6.1
+   ========================================================================== */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3) var(--space-4);
+  min-width: 7rem;
+}
+
+/* --------------------------------------------------------------------------
+   Label
+   -------------------------------------------------------------------------- */
+.label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  line-height: var(--line-height-tight);
+}
+
+/* --------------------------------------------------------------------------
+   Value
+   -------------------------------------------------------------------------- */
+.value {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-tight);
+}
+
+/* --------------------------------------------------------------------------
+   Trend indicators
+   -------------------------------------------------------------------------- */
+.trendPositive,
+.trendNegative,
+.trendNeutral {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-tight);
+}
+
+.trendPositive {
+  color: var(--color-status-positive);
+}
+
+.trendNegative {
+  color: var(--color-status-critical);
+}
+
+.trendNeutral {
+  color: var(--color-status-neutral);
+}
+
+/* --------------------------------------------------------------------------
+   Interpretation
+   -------------------------------------------------------------------------- */
+.interpretation {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  text-align: center;
+  line-height: var(--line-height-normal);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .card {
+    padding: var(--space-2) var(--space-3);
+    min-width: 5.5rem;
+  }
+
+  .value {
+    font-size: var(--font-size-lg);
+  }
+}
