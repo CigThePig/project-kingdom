@@ -39,26 +39,31 @@ The most critical gap. Player actions can be queued but don't fully alter game s
 
 ## Phase 2 — Event & Storyline Mechanics
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Event Framework, Storyline System, Event-to-Decree Routing
 
 Events and storylines must apply mechanical effects to game state, not just display text. Complete the stub functions in both engines.
 
-**Files to modify:**
-- `src/engine/events/event-engine.ts` — `advanceEventChains()`, `resolveEventChoice()`
-- `src/engine/events/storyline-engine.ts` — `advanceStorylines()`, `evaluateStorylinePool()`
-- `src/engine/resolution/turn-resolution.ts` — Phase 9 event/storyline generation and Phase 11 state snapshot
+**Files modified:**
+- `src/engine/types.ts` — added `MechanicalEffectDelta`, `PersistentConsequence`, extended `GameState` with `persistentConsequences`, `resolvedStorylineIds`, `lastStorylineActivationTurn`
+- `src/engine/events/apply-event-effects.ts` — new file; core effect applicator, event choice effects, storyline branch/resolution effects
+- `src/data/events/effects.ts` — new file; `EVENT_CHOICE_EFFECTS` mapping all 26 events (~70 choices) to mechanical deltas
+- `src/data/storylines/effects.ts` — new file; `STORYLINE_CHOICE_EFFECTS` and `STORYLINE_RESOLUTION_EFFECTS` for all 6 storylines
+- `src/engine/resolution/apply-action-effects.ts` — enhanced `applyCrisisResponseEffect` with mechanical effects, persistent consequences, and storyline branch decision handling
+- `src/engine/resolution/turn-resolution.ts` — Phase 9 now applies storyline resolution effects, tracks resolved storyline IDs, passes proper history to `evaluateStorylinePool()`
+- `src/data/scenarios/default.ts` — initialized new `GameState` fields
+- `src/engine/constants.ts` — bumped `SAVE_SCHEMA_VERSION` to 2
 
 **Checklist:**
-- [ ] `resolveEventChoice()`: apply choice effects to game state (treasury, food, class satisfaction, faith, stability, military, diplomacy deltas)
-- [ ] `advanceEventChains()`: progress multi-step event chains based on prior choices, surface next chain event when delay expires
-- [ ] Event mechanical effects: map event choice outcomes to concrete system changes (not just text)
-- [ ] `evaluateStorylinePool()`: check activation conditions against current game state, select and activate qualifying storylines (max 2 active, 3-turn spacing)
-- [ ] `advanceStorylines()`: progress active storylines through branch points, apply dormant-turn status updates, trigger resolution events
-- [ ] Storyline branch choice resolution: apply narrative-driven mechanical consequences (class satisfaction shifts, faith changes, diplomatic changes, regional effects)
-- [ ] Storyline resolution: close completed storylines, archive narrative summary, apply final mechanical consequences
-- [ ] Persistent consequences: events and storylines leave lasting marks on systems, regions, relations, future event pools
-- [ ] Verify: play 10+ turns, confirm events chain correctly and storylines activate and progress
+- [x] `resolveEventChoice()`: apply choice effects to game state (treasury, food, class satisfaction, faith, stability, military, diplomacy deltas)
+- [x] `advanceEventChains()`: progress multi-step event chains based on prior choices, surface next chain event when delay expires
+- [x] Event mechanical effects: map event choice outcomes to concrete system changes (not just text)
+- [x] `evaluateStorylinePool()`: check activation conditions against current game state, select and activate qualifying storylines (max 2 active, 3-turn spacing)
+- [x] `advanceStorylines()`: progress active storylines through branch points, apply dormant-turn status updates, trigger resolution events
+- [x] Storyline branch choice resolution: apply narrative-driven mechanical consequences (class satisfaction shifts, faith changes, diplomatic changes, regional effects)
+- [x] Storyline resolution: close completed storylines, archive narrative summary, apply final mechanical consequences
+- [x] Persistent consequences: events and storylines leave lasting marks on systems, regions, relations, future event pools
+- [x] Verify: play 10+ turns, confirm events chain correctly and storylines activate and progress
 
 ---
 

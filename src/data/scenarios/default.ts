@@ -326,6 +326,11 @@ export function createDefaultScenario(): GameState {
     // --- Failure Tracking ---
     activeFailureConditions: [],
 
+    // --- Persistent History ---
+    persistentConsequences: [],
+    resolvedStorylineIds: [],
+    lastStorylineActivationTurn: 0,
+
     // --- Scenario ---
     scenarioId: DEFAULT_SCENARIO_ID,
   };

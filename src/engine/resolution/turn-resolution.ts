@@ -12,11 +12,13 @@ import {
   IntelligenceOperationType,
   IntelligenceReport,
   KnowledgeBranch,
+  PersistentConsequence,
   PopulationClass,
   QueuedAction,
   ReligiousOrderType,
   ResourceState,
   ResourceType,
+  StorylineStatus,
   TurnHistoryEntry,
   TurnState,
 } from '../types';
@@ -27,6 +29,8 @@ import {
   evaluateStorylinePool,
   StorylineDefinition,
 } from '../events/storyline-engine';
+import { applyStorylineResolutionEffects } from '../events/apply-event-effects';
+import { STORYLINE_RESOLUTION_EFFECTS } from '../../data/storylines/effects';
 import { resetActionBudgetForNextTurn } from './action-budget';
 import { summarizeRegionalOutputs, checkTotalConquest } from '../systems/regions';
 import {
@@ -253,7 +257,7 @@ export function resolveTurn(
     constructionCostThisTurn,
   );
 
-  const updatedTreasury = applyTreasuryFlow(
+  let updatedTreasury = applyTreasuryFlow(
     stateAfterActions.treasury,
     incomeBreakdown,
     expenseBreakdown,
@@ -266,7 +270,7 @@ export function resolveTurn(
     stateAfterActions.military.forceSize,
   );
 
-  const updatedFood = applyFoodFlow(stateAfterActions.food, foodProduction, foodConsumption);
+  let updatedFood = applyFoodFlow(stateAfterActions.food, foodProduction, foodConsumption);
 
   // ---- Phase 4: Population and Class Dynamics ----
   // Trade income trend used by merchants satisfaction delta.
@@ -316,7 +320,7 @@ export function resolveTurn(
   );
 
   // Update nobility intrigue risk from new satisfaction.
-  const updatedPopulation = {
+  let updatedPopulation = {
     ...populationAfterDeltas,
     [PopulationClass.Nobility]: updateNobilityIntrigueRisk(
       populationAfterDeltas[PopulationClass.Nobility],
@@ -378,7 +382,7 @@ export function resolveTurn(
     stateAfterActions.diplomacy,
     aiRelationshipDeltas,
   );
-  const updatedDiplomacy = {
+  let updatedDiplomacy = {
     ...diplomacyAfterDrift,
     neighbors: tickDiplomaticAgreements(diplomacyAfterDrift.neighbors),
   };
@@ -430,7 +434,7 @@ export function resolveTurn(
     updatedPopulation[PopulationClass.MilitaryCaste].satisfaction,
   );
 
-  const updatedEspionage = {
+  let updatedEspionage = {
     ...applyEspionageUpdate(
       stateAfterActions.espionage,
       stateAfterActions.policies.intelligenceFundingLevel,
@@ -444,7 +448,7 @@ export function resolveTurn(
   };
 
   // Propagate espionage network strength to military intelligence advantage.
-  const updatedMilitary = {
+  let updatedMilitary = {
     ...militaryAfterUpdate,
     intelligenceAdvantage: updatedEspionage.networkStrength,
   };
@@ -473,7 +477,7 @@ export function resolveTurn(
     0,
   );
 
-  const updatedFaithCulture = applyFaithCultureUpdate(
+  let updatedFaithCulture = applyFaithCultureUpdate(
     stateAfterActions.faithCulture,
     faithDelta,
     cohesionDelta,
@@ -533,7 +537,7 @@ export function resolveTurn(
     (a) => !a.isFree && a.type !== ActionType.PolicyChange,
   ).length;
 
-  const updatedStability = calculateStability(
+  let updatedStability = calculateStability(
     updatedPopulation,
     foodSecurityScore,
     updatedFaithCulture.faithLevel,
@@ -572,17 +576,94 @@ export function resolveTurn(
   // Decrement dormant turn counters for active storylines.
   const advancedStorylines = advanceStorylines(stateAfterActions.activeStorylines);
 
+  // Apply resolution effects for storylines that were resolved this turn (via branch decisions).
+  // Build a working state from the already-computed phase variables so resolution deltas
+  // are applied on top of the fully resolved turn state.
+  let workingState: GameState = {
+    ...stateAfterActions,
+    treasury: updatedTreasury,
+    food: updatedFood,
+    population: updatedPopulation,
+    military: updatedMilitary,
+    stability: updatedStability,
+    faithCulture: updatedFaithCulture,
+    diplomacy: updatedDiplomacy,
+    espionage: updatedEspionage,
+  };
+  const newlyResolvedStorylineIds: string[] = [];
+  const storylineConsequences: PersistentConsequence[] = [];
+  let hadResolutions = false;
+
+  for (const storyline of advancedStorylines) {
+    if (storyline.status === StorylineStatus.Resolved && storyline.decisionHistory.length > 0) {
+      // Check if this storyline was resolved this turn (last decision was this turn).
+      const lastDecision = storyline.decisionHistory[storyline.decisionHistory.length - 1];
+      if (lastDecision.turnNumber === state.turn.turnNumber) {
+        workingState = applyStorylineResolutionEffects(
+          workingState, storyline, STORYLINE_RESOLUTION_EFFECTS,
+        );
+        newlyResolvedStorylineIds.push(storyline.definitionId);
+        storylineConsequences.push({
+          sourceId: storyline.definitionId,
+          sourceType: 'storyline',
+          choiceMade: lastDecision.choiceId,
+          turnApplied: state.turn.turnNumber,
+          tag: `${storyline.definitionId}:resolution:${storyline.decisionHistory[0].choiceId}`,
+        });
+        hadResolutions = true;
+      }
+    }
+  }
+
+  // Merge storyline resolution effects back into the phase variables.
+  if (hadResolutions) {
+    updatedTreasury = workingState.treasury;
+    updatedFood = workingState.food;
+    updatedPopulation = workingState.population;
+    updatedMilitary = workingState.military;
+    updatedStability = workingState.stability;
+    updatedFaithCulture = workingState.faithCulture;
+    updatedDiplomacy = workingState.diplomacy;
+    updatedEspionage = workingState.espionage;
+  }
+
+  // Track resolved storyline IDs and last activation turn for pool evaluation.
+  const allResolvedStorylineIds = [
+    ...stateAfterActions.resolvedStorylineIds,
+    ...newlyResolvedStorylineIds,
+  ];
+  const lastActivationTurn = advancedStorylines.length > 0
+    ? Math.max(
+        stateAfterActions.lastStorylineActivationTurn,
+        ...advancedStorylines.map((s) => s.turnActivated),
+      )
+    : stateAfterActions.lastStorylineActivationTurn;
+
   // Evaluate storyline pool for new activations.
   const newStorylines = evaluateStorylinePool(
     stateAfterActions,
     nextTurnNumber,
     STORYLINE_REGISTRY,
-    advancedStorylines,
-    [], // resolvedStorylineIds: tracked in SaveFile, not available here
-    0,  // lastActivationTurn: conservative default; tracking added with save layer
+    advancedStorylines.filter((s) => s.status !== StorylineStatus.Resolved),
+    allResolvedStorylineIds,
+    lastActivationTurn,
   );
 
-  const activeStorylines = [...advancedStorylines, ...newStorylines];
+  // Update lastStorylineActivationTurn if new storylines were activated.
+  const updatedLastActivationTurn = newStorylines.length > 0
+    ? nextTurnNumber
+    : lastActivationTurn;
+
+  const activeStorylines = [
+    ...advancedStorylines,
+    ...newStorylines,
+  ];
+
+  // Accumulate persistent consequences from storyline resolutions.
+  const updatedPersistentConsequences = [
+    ...stateAfterActions.persistentConsequences,
+    ...storylineConsequences,
+  ];
 
   // ---- Phase 10: Construction Progress ----
   // Decrement turn counters, remove completed projects, and deduct per-turn resource costs.
@@ -699,6 +780,9 @@ export function resolveTurn(
     actionBudget: nextActionBudget,
     crownBar: nextCrownBar,
     activeFailureConditions: triggeredFailureConditions,
+    persistentConsequences: updatedPersistentConsequences,
+    resolvedStorylineIds: allResolvedStorylineIds,
+    lastStorylineActivationTurn: updatedLastActivationTurn,
     scenarioId: stateAfterActions.scenarioId,
   };
 
