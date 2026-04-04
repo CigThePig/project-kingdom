@@ -1,7 +1,7 @@
 // Phase 10 — Dashboard Screen: kingdom overview and turn advance flow.
 // Blueprint Reference: ui-blueprint.md §5.1; ux-blueprint.md §2, §4
 
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 import {
   PopulationClass,
@@ -165,7 +165,7 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
   const { advanceTurn, queuedActions, slotsRemaining } = useTurnActions();
 
   const [turnPhase, setTurnPhase] = useState<TurnPhase>('idle');
-  const turnResultRef = useRef<TurnResolutionResult | null>(null);
+  const [turnResult, setTurnResult] = useState<TurnResolutionResult | null>(null);
 
   // ---- Turn advance handlers ----
 
@@ -175,12 +175,12 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
 
   function handleConfirm() {
     const result = advanceTurn();
-    turnResultRef.current = result;
+    setTurnResult(result);
     setTurnPhase('summary');
   }
 
   function handleDismissSummary() {
-    turnResultRef.current = null;
+    setTurnResult(null);
     setTurnPhase('idle');
   }
 
@@ -218,8 +218,8 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
 
   // ---- Build summary if available ----
 
-  const summaryItems = turnResultRef.current
-    ? buildTurnSummaryItems(turnResultRef.current)
+  const summaryItems = turnResult
+    ? buildTurnSummaryItems(turnResult)
     : null;
 
   return (

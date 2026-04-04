@@ -64,6 +64,9 @@
   --color-status-faith: hsl(35, 45%, 48%);
   --color-status-faith-bg: hsla(35, 45%, 48%, 0.12);
 
+  /* Selection highlight */
+  --color-selection: hsla(210, 30%, 40%, 0.4);
+
   /* ========================================================================
      Colors — Seasonal Accents (§2.4)
      Defaults; overridden by seasonal.css body class selectors

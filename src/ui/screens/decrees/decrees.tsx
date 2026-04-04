@@ -173,22 +173,7 @@ export function Decrees() {
 
   const budget = kingdom.actionBudget;
 
-  // ---- Decree selection ----
-
-  const handleDecreeSelect = useCallback(
-    (decreeId: string) => {
-      const decree = DECREE_POOL.find((d) => d.id === decreeId);
-      if (!decree) return;
-
-      if (decree.isHighImpact) {
-        setConfirmingDecree(decree);
-        return;
-      }
-
-      commitDecree(decree);
-    },
-    [queueAction],
-  );
+  // ---- Decree commit ----
 
   const commitDecree = useCallback(
     (decree: DecreeDefinition) => {
@@ -213,6 +198,23 @@ export function Decrees() {
       setConfirmingDecree(null);
     },
     [queueAction],
+  );
+
+  // ---- Decree selection ----
+
+  const handleDecreeSelect = useCallback(
+    (decreeId: string) => {
+      const decree = DECREE_POOL.find((d) => d.id === decreeId);
+      if (!decree) return;
+
+      if (decree.isHighImpact) {
+        setConfirmingDecree(decree);
+        return;
+      }
+
+      commitDecree(decree);
+    },
+    [commitDecree],
   );
 
   // ---- Policy change ----

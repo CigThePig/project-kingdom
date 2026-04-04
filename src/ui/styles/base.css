@@ -139,7 +139,7 @@ table {
    ========================================================================== */
 
 ::selection {
-  background: hsla(210, 30%, 40%, 0.4);
+  background: var(--color-selection);
   color: var(--color-text-heading);
 }
 
