@@ -14,6 +14,7 @@ import {
   NeighborDisposition,
   PopulationClass,
   RationingLevel,
+  ReligiousOrderType,
   ReligiousTolerance,
   ResourceType,
   Season,
@@ -282,3 +283,60 @@ export const CONFIRM_LABEL = 'Confirm';
 export const CANCEL_LABEL = 'Cancel';
 export const SAVE_LABEL = 'Save Kingdom';
 export const LOAD_LABEL = 'Load Kingdom';
+
+// ============================================================
+// Decrees Screen Labels
+// ============================================================
+
+export const DECREES_TAB_LABEL = 'Decrees';
+export const POLICIES_TAB_LABEL = 'Policies';
+export const ALL_CATEGORIES_LABEL = 'All';
+export const QUEUED_ACTIONS_LABEL = 'Queued Actions';
+export const NO_DECREES_AVAILABLE = 'No decrees match the selected category.';
+export const SLOT_COUNTER_LABEL = 'Action Slots';
+export const POLICY_CHANGE_LIMIT_LABEL = 'Policy Change';
+export const CONFIRM_HIGH_IMPACT_TITLE = 'Confirm High-Impact Decree';
+export const CONFIRM_HIGH_IMPACT_BODY = 'This decree carries significant consequences and cannot be reversed once the turn advances.';
+
+export const BUDGET_ERROR_LABELS: Record<string, string> = {
+  BUDGET_EXHAUSTED: 'All action slots have been used this turn.',
+  INSUFFICIENT_SLOTS: 'Not enough action slots remaining for this decree.',
+  POLICY_LIMIT_REACHED: 'Only one policy change is permitted per turn.',
+};
+
+// ============================================================
+// Policy Domain Labels
+// ============================================================
+
+export const POLICY_DOMAIN_LABELS: Record<string, string> = {
+  taxationLevel: 'Taxation',
+  tradeOpenness: 'Trade',
+  militaryRecruitmentStance: 'Military Recruitment',
+  rationingLevel: 'Food Rationing',
+  researchFocus: 'Research Focus',
+  religiousTolerance: 'Religious Tolerance',
+  festivalInvestmentLevel: 'Festival Investment',
+  intelligenceFundingLevel: 'Intelligence Funding',
+  laborAllocationPriority: 'Labor Allocation',
+};
+
+// ============================================================
+// Society Screen Labels
+// ============================================================
+
+export const SOCIETY_TAB_POPULATION = 'Population Classes';
+export const SOCIETY_TAB_FAITH = 'Faith & Culture';
+
+export const SATISFACTION_STATUS_LABELS: Record<string, string> = {
+  content: 'Content',
+  uneasy: 'Uneasy',
+  restless: 'Restless',
+  critical: 'Critical',
+};
+
+export const RELIGIOUS_ORDER_TYPE_LABELS: Record<ReligiousOrderType, string> = {
+  [ReligiousOrderType.Healing]: 'Order of Healing',
+  [ReligiousOrderType.Scholarly]: 'Scholarly Order',
+  [ReligiousOrderType.Martial]: 'Martial Order',
+  [ReligiousOrderType.Charitable]: 'Charitable Order',
+};

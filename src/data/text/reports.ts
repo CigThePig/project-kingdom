@@ -1,4 +1,15 @@
-import { FailureCondition, PopulationClass } from '../../engine/types';
+import {
+  FailureCondition,
+  FestivalInvestmentLevel,
+  IntelligenceFundingLevel,
+  MilitaryRecruitmentStance,
+  PopulationClass,
+  RationingLevel,
+  ReligiousOrderType,
+  ReligiousTolerance,
+  TaxationLevel,
+  TradeOpenness,
+} from '../../engine/types';
 import { CLASS_LABELS } from './labels';
 
 // ============================================================
@@ -139,3 +150,121 @@ export const FAILURE_CONDITION_REPORTS: Record<FailureCondition, string> = {
   [FailureCondition.Overthrow]:
     'The nobility has lost all confidence in the crown. Through intrigue, alliance, and decisive action, a faction within the court has seized power. The reign has ended — not with invasion, but with betrayal.',
 };
+
+// ============================================================
+// Policy Effect Summaries
+// ============================================================
+
+export const TAXATION_EFFECT: Record<TaxationLevel, string> = {
+  [TaxationLevel.Low]: 'Reduced tax revenue. Nobility and merchants are satisfied; treasury income falls.',
+  [TaxationLevel.Moderate]: 'Standard taxation. Balanced revenue with tolerable burden on all classes.',
+  [TaxationLevel.High]: 'Elevated tax revenue at the cost of satisfaction across taxable classes.',
+  [TaxationLevel.Punitive]: 'Maximum extraction. Treasury surges but all classes suffer under the burden.',
+};
+
+export const TRADE_OPENNESS_EFFECT: Record<TradeOpenness, string> = {
+  [TradeOpenness.Closed]: 'Borders sealed to commerce. Trade income collapses; merchants deeply dissatisfied.',
+  [TradeOpenness.Restricted]: 'Limited trade permitted. Modest revenue with controlled foreign influence.',
+  [TradeOpenness.Open]: 'Standard commerce. Healthy trade income and merchant satisfaction.',
+  [TradeOpenness.Encouraged]: 'Actively promoted trade. Maximum merchant income with increased foreign exposure.',
+};
+
+export const RATIONING_EFFECT: Record<RationingLevel, string> = {
+  [RationingLevel.Abundant]: 'Generous food distribution. Commoner satisfaction improves but reserves deplete faster.',
+  [RationingLevel.Normal]: 'Standard provisions. Balanced consumption against available supply.',
+  [RationingLevel.Rationed]: 'Restricted food access. Reserves last longer but commoner satisfaction declines.',
+  [RationingLevel.Emergency]: 'Severe rationing. Minimal consumption preserves reserves at great cost to morale.',
+};
+
+export const TOLERANCE_EFFECT: Record<ReligiousTolerance, string> = {
+  [ReligiousTolerance.Enforced]: 'Strict orthodoxy enforced. Clergy satisfied; heterodoxy suppressed. Dissent punished.',
+  [ReligiousTolerance.Favored]: 'Tradition favored but alternatives tolerated. Clergy generally content.',
+  [ReligiousTolerance.Tolerated]: 'Religious pluralism permitted. Clergy uneasy; heterodox movements find space.',
+  [ReligiousTolerance.Suppressed]: 'Religious expression suppressed. Clergy deeply unhappy; faith level falls.',
+};
+
+export const FESTIVAL_EFFECT: Record<FestivalInvestmentLevel, string> = {
+  [FestivalInvestmentLevel.None]: 'No festivals held. Faith suffers from absence of communal observance.',
+  [FestivalInvestmentLevel.Modest]: 'Simple observances maintain baseline devotion at minimal cost.',
+  [FestivalInvestmentLevel.Standard]: 'Regular celebrations strengthen faith and communal bonds.',
+  [FestivalInvestmentLevel.Lavish]: 'Grand festivities greatly boost faith but strain the treasury.',
+};
+
+export const RECRUITMENT_EFFECT: Record<MilitaryRecruitmentStance, string> = {
+  [MilitaryRecruitmentStance.Minimal]: 'Minimal enrollment. Military readiness declines but commoner labor is preserved.',
+  [MilitaryRecruitmentStance.Voluntary]: 'Voluntary service. Balanced force size with acceptable labor impact.',
+  [MilitaryRecruitmentStance.Conscript]: 'Forced conscription. Rapid force growth at significant cost to commoner satisfaction.',
+  [MilitaryRecruitmentStance.WarFooting]: 'Total mobilization. Maximum military strength but devastating impact on labor and morale.',
+};
+
+export const INTELLIGENCE_FUNDING_EFFECT: Record<IntelligenceFundingLevel, string> = {
+  [IntelligenceFundingLevel.None]: 'No intelligence funding. Espionage network atrophies; no covert operations possible.',
+  [IntelligenceFundingLevel.Minimal]: 'Basic surveillance maintained. Limited operational capability.',
+  [IntelligenceFundingLevel.Moderate]: 'Functional intelligence apparatus. Standard covert operations available.',
+  [IntelligenceFundingLevel.Heavy]: 'Extensive intelligence network. Full operational capability at significant treasury cost.',
+};
+
+// ============================================================
+// Society Screen — Class Descriptions
+// ============================================================
+
+export const CLASS_CONTRIBUTION_DESCRIPTIONS: Record<PopulationClass, string> = {
+  [PopulationClass.Nobility]:
+    'The nobility provides governance capacity, court intrigue management, and diplomatic connections. Their satisfaction directly influences stability through institutional loyalty.',
+  [PopulationClass.Clergy]:
+    'The clergy maintains faith institutions, supports cultural cohesion, and provides counsel. Their cooperation is essential for religious edicts and festival effectiveness.',
+  [PopulationClass.Merchants]:
+    'The merchant guild drives trade income, market efficiency, and economic growth. Their prosperity directly feeds the treasury through commerce taxes.',
+  [PopulationClass.Commoners]:
+    'The commonfolk provide the labor that sustains every system — agriculture, construction, and military conscription. Their satisfaction is the broadest contributor to stability.',
+  [PopulationClass.MilitaryCaste]:
+    'The military caste forms the professional core of the kingdom\'s defense. Their readiness, morale, and equipment determine the realm\'s ability to project force and deter aggression.',
+};
+
+export const CLASS_SATISFACTION_FACTORS: Record<PopulationClass, string> = {
+  [PopulationClass.Nobility]:
+    'Driven by taxation level on estates, perceived influence through stability, military readiness, and rivalry with ascending classes.',
+  [PopulationClass.Clergy]:
+    'Driven by religious tolerance policy, kingdom faith level, festival investment, and heterodoxy pressure.',
+  [PopulationClass.Merchants]:
+    'Driven by trade openness policy, taxation burden, and trade income trends.',
+  [PopulationClass.Commoners]:
+    'Driven by food reserves and rationing, taxation burden, military recruitment demands, and faith comfort.',
+  [PopulationClass.MilitaryCaste]:
+    'Driven by treasury balance for pay reliability, equipment condition, morale, and deployment posture.',
+};
+
+export const CLASS_RISK_DESCRIPTIONS: Record<string, string> = {
+  critical:
+    'Satisfaction has reached dangerous levels. Unrest events are highly likely. Immediate intervention required to prevent escalation.',
+  restless:
+    'Satisfaction is declining toward crisis. Pressure is building and unrest events become more probable.',
+  uneasy:
+    'Satisfaction is below comfortable levels. Continued neglect may push this class toward open discontent.',
+  content:
+    'Satisfaction is stable. No immediate risk from this class, though conditions may shift with policy changes.',
+};
+
+export const INTER_CLASS_DYNAMICS_SUMMARY =
+  'Class interests frequently conflict. Policies that benefit one group often burden another. Taxation weighs on all but funds the state. Trade openness enriches merchants but may threaten noble influence. Military recruitment strengthens defense but drains commoner labor. Religious policy satisfies clergy but may alienate others.';
+
+// ============================================================
+// Society Screen — Faith & Culture Descriptions
+// ============================================================
+
+export const RELIGIOUS_ORDER_DESCRIPTIONS: Record<ReligiousOrderType, string> = {
+  [ReligiousOrderType.Healing]:
+    'Provides care to the sick and wounded. Improves commoner satisfaction and reduces attrition from disease.',
+  [ReligiousOrderType.Scholarly]:
+    'Preserves and advances knowledge. Contributes research progress and supports cultural scholarship.',
+  [ReligiousOrderType.Martial]:
+    'Warrior-monks who bolster military morale and readiness. Provides a faith-based combat bonus.',
+  [ReligiousOrderType.Charitable]:
+    'Distributes alms and provisions to the poor. Improves commoner satisfaction and strengthens faith among the populace.',
+};
+
+export const HETERODOXY_WARNING_TEXT =
+  'Heterodox movements are gaining influence within the realm. If left unchecked, a religious schism may fracture the faithful.';
+
+export const SCHISM_ACTIVE_TEXT =
+  'A schism divides the faithful. The kingdom\'s religious unity has fractured, weakening clergy influence and faith stability.';
