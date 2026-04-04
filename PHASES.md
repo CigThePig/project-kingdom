@@ -174,33 +174,49 @@ All screens must support full player interaction, not just data display.
 
 ## Phase 6 — Turn Summary & Contextual Feedback
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ux-blueprint.md` — §4.10 Turn Advance Ceremony, §3 Information Hierarchy; `ui-blueprint.md` — §5 Right Contextual Intelligence Panel
 
 Build the full feedback loop: what changed, why, and what to look at next.
 
-**Files to modify:**
-- `src/ui/screens/dashboard/dashboard.tsx` — turn summary view, cross-screen linking
-- `src/ui/components/intelligence-panel/intelligence-panel.tsx` — per-screen contextual content
-- `src/ui/components/decree-card/decree-card.tsx` — consequence preview display
-- `src/ui/components/event-panel/event-panel.tsx` — consequence preview for choices
-- `src/ui/components/forecast-module/forecast-module.tsx` — 1-3 turn projections
+**Files modified:**
+- `src/engine/types.ts` — Added `TurnSummaryItem`, `TurnSummarySeverity`, `SummaryTargetScreen`, `SummaryItemCategory` types
+- `src/ui/screens/dashboard/dashboard.tsx` — Enhanced turn summary with structured `TurnSummaryItem` objects, navigable items with cross-screen linking, dashboard failure warning alerts, `onNavigate` prop
+- `src/ui/screens/dashboard/dashboard.module.css` — Clickable summary item styles, alert section styles
+- `src/ui/components/intelligence-panel/intelligence-panel.tsx` — Transformed to context-aware right panel with per-screen content (Dashboard forecast/risks, Decrees consequence preview, Society satisfaction factors, Intelligence reports, Knowledge advancement detail, Events context)
+- `src/ui/components/intelligence-panel/intelligence-panel.module.css` — Full rewrite with context section styles, risk items, chip rows, trend display, storyline items, chain sections
+- `src/ui/components/decree-card/decree-card.tsx` — Added `consequencePreview` prop with directional impact indicators via ConsequencePreview component
+- `src/ui/components/event-panel/event-panel.tsx` — Added `effects` field to `EventPanelChoice`, consequence preview per choice via ConsequencePreview component
+- `src/ui/components/event-panel/event-panel.module.css` — Added choice wrapper and effects styles
+- `src/ui/screens/events/events.tsx` — Passes `EVENT_CHOICE_EFFECTS` to EventPanel choices, wires right panel context on event hover
+- `src/ui/screens/decrees/decrees.tsx` — Passes `DECREE_EFFECTS` to DecreeCard, wires right panel context on decree hover
+- `src/ui/screens/society/society.tsx` — Wires right panel context when expanding a class
+- `src/ui/screens/knowledge/knowledge.tsx` — Wires right panel context when expanding a branch
+- `src/app.tsx` — Wrapped with `RightPanelProvider`, syncs `activeScreen` to right panel context, passes `onNavigate` to Dashboard
+- `src/data/text/reports.ts` — Added turn summary templates (construction, storyline, faith, intelligence, conflict, neighbor, military), consequence preview labels, right panel section headers
+- `src/data/text/labels.ts` — Added `CONSEQUENCE_DELTA_LABELS`, `FAILURE_SCREEN_MAP`
+
+**Files created:**
+- `src/data/decrees/effects.ts` — `DECREE_EFFECTS` mapping all 18 decrees to `MechanicalEffectDelta` for consequence preview
+- `src/ui/components/consequence-preview/consequence-preview.tsx` — Shared directional impact chip component
+- `src/ui/components/consequence-preview/consequence-preview.module.css` — Consequence preview styling
+- `src/ui/context/right-panel-context.tsx` — `RightPanelProvider` and `useRightPanel` hook for per-screen contextual state
 
 **Checklist:**
-- [ ] Turn summary view: post-resolution display organized by severity (critical → notable → routine)
-- [ ] Change items include: resource deltas, class satisfaction shifts with cause labels, faith/culture changes, intelligence report arrivals with confidence, knowledge milestone unlocks, construction completions, storyline progressions, new events
-- [ ] Each change item tappable to navigate to its home screen (cross-screen linking)
-- [ ] Dashboard alerts: urgent matters link directly to relevant screens (food shortage → Food report, border tension → Diplomacy)
-- [ ] Consequence previews on decree cards: show directional impact on affected domains and classes before committing
-- [ ] Consequence previews on event choices: show tradeoffs between options
-- [ ] Right panel — Dashboard context: short-horizon forecast, top risk factors, active storyline status
-- [ ] Right panel — Decrees context: consequence preview, affected domains/classes, prerequisites breakdown
-- [ ] Right panel — Society context: satisfaction factor breakdown, historical trend, risk assessment
-- [ ] Right panel — Intelligence context: operation detail with full risk profile, report confidence
-- [ ] Right panel — Knowledge context: selected advancement detail, what it unlocks, estimated turns
-- [ ] Right panel — Events context: background context, related prior chain events, storyline arc summary
-- [ ] Forecast modules: 1-3 turn projections for treasury, food, stability with confidence shading
-- [ ] Verify: advance a turn and confirm summary shows meaningful, cause-linked changes across all systems
+- [x] Turn summary view: post-resolution display organized by severity (critical → notable → routine)
+- [x] Change items include: resource deltas, class satisfaction shifts with cause labels, faith/culture changes, intelligence report arrivals with confidence, knowledge milestone unlocks, construction completions, storyline progressions, new events
+- [x] Each change item tappable to navigate to its home screen (cross-screen linking)
+- [x] Dashboard alerts: urgent matters link directly to relevant screens (food shortage → Food report, border tension → Diplomacy)
+- [x] Consequence previews on decree cards: show directional impact on affected domains and classes before committing
+- [x] Consequence previews on event choices: show tradeoffs between options
+- [x] Right panel — Dashboard context: short-horizon forecast, top risk factors, active storyline status
+- [x] Right panel — Decrees context: consequence preview, affected domains/classes, prerequisites breakdown
+- [x] Right panel — Society context: satisfaction factor breakdown, historical trend, risk assessment
+- [x] Right panel — Intelligence context: operation detail with full risk profile, report confidence
+- [x] Right panel — Knowledge context: selected advancement detail, what it unlocks, estimated turns
+- [x] Right panel — Events context: background context, related prior chain events, storyline arc summary
+- [x] Forecast modules: 1-3 turn projections for treasury, food, stability with confidence shading
+- [x] Verify: advance a turn and confirm summary shows meaningful, cause-linked changes across all systems
 
 ---
 

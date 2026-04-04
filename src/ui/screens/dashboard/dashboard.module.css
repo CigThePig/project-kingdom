@@ -398,6 +398,86 @@
   border-left-color: var(--color-status-critical);
 }
 
+.summaryItemNavigable {
+  composes: summaryItem;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  padding-right: var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.summaryItemNavigable:hover {
+  background: var(--color-bg-surface);
+  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+}
+
+.summaryItemNavigableCritical {
+  composes: summaryItemNavigable;
+  border-left-color: var(--color-status-critical);
+}
+
+.summaryNavArrow {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Dashboard Alerts (Failure Warnings)
+   -------------------------------------------------------------------------- */
+.alertsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.alertItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-status-critical-bg);
+  border: 1px solid var(--color-status-critical);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-2) var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
+  color: var(--color-text-primary);
+}
+
+.alertItem[data-severity='caution'] {
+  background: var(--color-status-warning-bg);
+  border-color: var(--color-status-warning);
+}
+
+.alertItem:hover {
+  opacity: 0.85;
+}
+
+.alertSeverityBadge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.alertSeverityBadge[data-severity='critical'] {
+  color: var(--color-status-critical);
+}
+
+.alertSeverityBadge[data-severity='caution'] {
+  color: var(--color-status-warning);
+}
+
+.alertText {
+  flex: 1;
+}
+
 .summaryDismiss {
   align-self: center;
   font-family: var(--font-family-heading);

@@ -1,12 +1,13 @@
 // Phase 9 — Event Panel: event and storyline presentation.
 // Blueprint Reference: ui-blueprint.md §6.2, §6.3, §8.7
 
-import type { EventSeverity, EventCategory, PopulationClass } from '../../../engine/types';
+import type { EventSeverity, EventCategory, MechanicalEffectDelta, PopulationClass } from '../../../engine/types';
 import {
   EVENT_SEVERITY_LABELS,
   EVENT_CATEGORY_LABELS,
   CLASS_LABELS,
 } from '../../../data/text/labels';
+import { ConsequencePreview } from '../consequence-preview/consequence-preview';
 import styles from './event-panel.module.css';
 
 // ============================================================
@@ -18,6 +19,7 @@ export interface EventPanelChoice {
   label: string;
   slotCost: number;
   isFree: boolean;
+  effects?: MechanicalEffectDelta;
 }
 
 interface EventPanelProps {
@@ -73,23 +75,30 @@ function ChoiceButton({
   onSelect?: (eventId: string, choiceId: string) => void;
 }) {
   return (
-    <button
-      className={
-        styles.choiceButton +
-        (isSelected ? ' ' + styles.choiceSelected : '') +
-        (isResolved && !isSelected ? ' ' + styles.choiceDismissed : '')
-      }
-      disabled={isResolved}
-      onClick={() => onSelect?.(eventId, choice.choiceId)}
-      aria-label={`${choice.label}${choice.isFree ? ' (free action)' : ` (${choice.slotCost} action slot${choice.slotCost !== 1 ? 's' : ''})`}`}
-    >
-      <span className={styles.choiceLabel}>{choice.label}</span>
-      {choice.isFree ? (
-        <span className={styles.choiceCostFree}>Free</span>
-      ) : (
-        <span className={styles.choiceCost}>{choice.slotCost} slot{choice.slotCost !== 1 ? 's' : ''}</span>
+    <div className={styles.choiceWrapper}>
+      <button
+        className={
+          styles.choiceButton +
+          (isSelected ? ' ' + styles.choiceSelected : '') +
+          (isResolved && !isSelected ? ' ' + styles.choiceDismissed : '')
+        }
+        disabled={isResolved}
+        onClick={() => onSelect?.(eventId, choice.choiceId)}
+        aria-label={`${choice.label}${choice.isFree ? ' (free action)' : ` (${choice.slotCost} action slot${choice.slotCost !== 1 ? 's' : ''})`}`}
+      >
+        <span className={styles.choiceLabel}>{choice.label}</span>
+        {choice.isFree ? (
+          <span className={styles.choiceCostFree}>Free</span>
+        ) : (
+          <span className={styles.choiceCost}>{choice.slotCost} slot{choice.slotCost !== 1 ? 's' : ''}</span>
+        )}
+      </button>
+      {choice.effects && !isResolved && (
+        <div className={styles.choiceEffects}>
+          <ConsequencePreview effects={choice.effects} compact />
+        </div>
       )}
-    </button>
+    </div>
   );
 }
 

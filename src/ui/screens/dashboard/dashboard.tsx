@@ -1,11 +1,16 @@
-// Phase 10 — Dashboard Screen: kingdom overview and turn advance flow.
-// Blueprint Reference: ui-blueprint.md §5.1; ux-blueprint.md §2, §4
+// Phase 6 — Dashboard Screen: kingdom overview, turn advance flow, navigable summary.
+// Blueprint Reference: ui-blueprint.md §5.1; ux-blueprint.md §2, §4, §4.10
 
 import { useState } from 'react';
 
 import {
   PopulationClass,
   StorylineStatus,
+} from '../../../engine/types';
+import type {
+  TurnSummaryItem,
+  SummaryTargetScreen,
+  FailureWarning,
 } from '../../../engine/types';
 import type { TurnResolutionResult } from '../../../engine/resolution/turn-resolution';
 import {
@@ -15,8 +20,11 @@ import {
 import {
   useKingdomState,
   useCrownBar,
+  useLastTurnResult,
 } from '../../hooks/use-game-state';
 import { useTurnActions } from '../../hooks/use-turn-actions';
+import { findConstructionDefinition } from '../../../data/construction/index';
+import { STORYLINE_TEXT } from '../../../data/text/events';
 import {
   CLASS_LABELS,
   SEASON_LABELS,
@@ -25,17 +33,32 @@ import {
   ADVANCE_TURN_LABEL,
   CONFIRM_LABEL,
   CANCEL_LABEL,
+  FAILURE_SCREEN_MAP,
+  NEIGHBOR_LABELS,
+  CONFLICT_PHASE_LABELS,
+  CONFLICT_OUTCOME_LABELS,
+  NEIGHBOR_ACTION_LABELS,
+  REGION_LABELS,
+  FAILURE_WARNING_MESSAGES,
 } from '../../../data/text/labels';
 import {
   TURN_SUMMARY_HEADER,
   TURN_SUMMARY_CRITICAL_SECTION,
   TURN_SUMMARY_NOTABLE_SECTION,
   TURN_SUMMARY_ROUTINE_SECTION,
+  FAILURE_CONDITION_REPORTS,
   TREASURY_BALANCE_LINE,
   FOOD_RESERVES_LINE,
-  FAILURE_CONDITION_REPORTS,
+  CONSTRUCTION_COMPLETE_LINE,
+  STORYLINE_PROGRESSION_LINE,
+  STORYLINE_RESOLVED_LINE,
+  FAITH_CHANGE_LINE,
+  INTELLIGENCE_ARRIVAL_LINE,
+  CONFLICT_UPDATE_LINE,
+  CONFLICT_RESOLVED_LINE,
+  NEIGHBOR_ACTION_LINE,
+  MILITARY_UPDATE_LINE,
 } from '../../../data/text/reports';
-import { STORYLINE_TEXT } from '../../../data/text/events';
 import { ResourceCard } from '../../components/resource-card/resource-card';
 import { ForecastModule, type ForecastProjection } from '../../components/forecast-module/forecast-module';
 import styles from './dashboard.module.css';
@@ -45,7 +68,7 @@ import styles from './dashboard.module.css';
 // ============================================================
 
 interface DashboardProps {
-  onNavigateToEvents: () => void;
+  onNavigate: (screen: SummaryTargetScreen) => void;
 }
 
 // ============================================================
@@ -89,69 +112,239 @@ function computeDirection(netFlow: number): ForecastProjection['direction'] {
   return 'stable';
 }
 
-function buildTurnSummaryItems(result: TurnResolutionResult): {
-  critical: string[];
-  notable: string[];
-  routine: string[];
-} {
-  const critical: string[] = [];
-  const notable: string[] = [];
-  const routine: string[] = [];
+// ============================================================
+// Enhanced Turn Summary Builder
+// ============================================================
 
-  // Failure conditions are always critical
+function buildTurnSummaryItems(
+  result: TurnResolutionResult,
+  previousState: {
+    faithLevel: number;
+    culturalCohesion: number;
+    militaryReadiness: number;
+    militaryMorale: number;
+  },
+): TurnSummaryItem[] {
+  const items: TurnSummaryItem[] = [];
+
+  // --- Critical: Failure conditions ---
   for (const fc of result.triggeredFailureConditions) {
-    critical.push(FAILURE_CONDITION_REPORTS[fc]);
+    items.push({
+      severity: 'critical',
+      text: FAILURE_CONDITION_REPORTS[fc],
+      targetScreen: (FAILURE_SCREEN_MAP[fc] as SummaryTargetScreen) ?? null,
+      category: 'failure',
+    });
   }
 
-  // Check class satisfactions in the new state
+  // --- Critical/Notable: Failure warnings ---
+  for (const fw of result.failureWarnings) {
+    const msg = FAILURE_WARNING_MESSAGES[fw.condition];
+    items.push({
+      severity: fw.severity === 'critical' ? 'critical' : 'notable',
+      text: msg[fw.severity],
+      targetScreen: (FAILURE_SCREEN_MAP[fw.condition] as SummaryTargetScreen) ?? null,
+      category: 'failure',
+    });
+  }
+
+  // --- Critical/Notable: Class satisfaction ---
   const pop = result.nextState.population;
   for (const cls of Object.values(PopulationClass)) {
     const classState = pop[cls];
     if (classState.satisfaction < SATISFACTION_BREAKING_POINT) {
-      critical.push(
-        `${CLASS_LABELS[cls]} sentiment has fallen to critical levels (${classState.satisfaction}).`,
-      );
+      items.push({
+        severity: 'critical',
+        text: `${CLASS_LABELS[cls]} sentiment has fallen to critical levels (${classState.satisfaction}).`,
+        targetScreen: 'faith',
+        category: 'class',
+      });
     } else if (
       classState.satisfactionDeltaLastTurn !== 0 &&
       classState.satisfaction < SATISFACTION_CRISIS_WARNING
     ) {
-      notable.push(
-        `${CLASS_LABELS[cls]} sentiment is at ${classState.satisfaction} (${classState.satisfactionDeltaLastTurn >= 0 ? '+' : ''}${classState.satisfactionDeltaLastTurn}).`,
-      );
+      items.push({
+        severity: 'notable',
+        text: `${CLASS_LABELS[cls]} sentiment is at ${classState.satisfaction} (${classState.satisfactionDeltaLastTurn >= 0 ? '+' : ''}${classState.satisfactionDeltaLastTurn}).`,
+        targetScreen: 'faith',
+        category: 'class',
+      });
     }
   }
 
-  // Milestone unlocks are notable
+  // --- Notable: Knowledge milestone unlocks ---
   for (const milestone of result.newlyUnlockedMilestones) {
-    notable.push(
-      `A milestone has been reached in ${KNOWLEDGE_BRANCH_LABELS[milestone.branch]} \u2014 advancement tier ${milestone.milestoneIndex + 1}.`,
-    );
+    items.push({
+      severity: 'notable',
+      text: `A milestone has been reached in ${KNOWLEDGE_BRANCH_LABELS[milestone.branch]} \u2014 advancement tier ${milestone.milestoneIndex + 1}.`,
+      targetScreen: 'knowledge',
+      category: 'knowledge',
+    });
   }
 
-  // Treasury and food are routine
-  routine.push(
-    TREASURY_BALANCE_LINE({
+  // --- Notable: Construction completions ---
+  for (const cId of result.completedConstructionIds) {
+    const def = findConstructionDefinition(cId);
+    items.push({
+      severity: 'notable',
+      text: CONSTRUCTION_COMPLETE_LINE({
+        projectName: def?.title ?? cId,
+        regionName: REGION_LABELS[cId] ?? 'Unknown Region',
+      }),
+      targetScreen: 'regions',
+      category: 'construction',
+    });
+  }
+
+  // --- Notable: Storyline progressions ---
+  for (const storyline of result.nextState.activeStorylines) {
+    const text = STORYLINE_TEXT[storyline.definitionId];
+    const title = text?.title ?? storyline.definitionId;
+    if (storyline.status === StorylineStatus.Active) {
+      items.push({
+        severity: 'notable',
+        text: STORYLINE_PROGRESSION_LINE({ storylineTitle: title }),
+        targetScreen: 'events',
+        category: 'storyline',
+      });
+    } else if (storyline.status === StorylineStatus.Resolved) {
+      items.push({
+        severity: 'notable',
+        text: STORYLINE_RESOLVED_LINE({ storylineTitle: title }),
+        targetScreen: 'archive',
+        category: 'storyline',
+      });
+    }
+  }
+
+  // --- Notable/Routine: Faith & culture changes ---
+  const faithDelta = result.nextState.faithCulture.faithLevel - previousState.faithLevel;
+  if (faithDelta !== 0) {
+    items.push({
+      severity: Math.abs(faithDelta) >= 5 ? 'notable' : 'routine',
+      text: FAITH_CHANGE_LINE({
+        faithLevel: result.nextState.faithCulture.faithLevel,
+        delta: faithDelta,
+      }),
+      targetScreen: 'faith',
+      category: 'faith',
+    });
+  }
+
+  // --- Notable/Routine: Conflict updates ---
+  for (const conflict of result.nextState.activeConflicts) {
+    const neighborName = NEIGHBOR_LABELS[conflict.neighborId] ?? conflict.neighborId;
+    if (conflict.lastOutcomeCode.startsWith('decisive_') || conflict.lastOutcomeCode.startsWith('attritional_') || conflict.lastOutcomeCode === 'stalemate') {
+      items.push({
+        severity: 'notable',
+        text: CONFLICT_RESOLVED_LINE({
+          neighborName,
+          outcome: CONFLICT_OUTCOME_LABELS[conflict.lastOutcomeCode] ?? conflict.lastOutcomeCode,
+        }),
+        targetScreen: 'military',
+        category: 'conflict',
+      });
+    } else {
+      items.push({
+        severity: 'notable',
+        text: CONFLICT_UPDATE_LINE({
+          neighborName,
+          phase: CONFLICT_PHASE_LABELS[conflict.phase],
+        }),
+        targetScreen: 'military',
+        category: 'conflict',
+      });
+    }
+  }
+
+  // --- Notable: Neighbor autonomous actions ---
+  for (const action of result.nextState.neighborActions) {
+    const neighborName = NEIGHBOR_LABELS[action.neighborId] ?? action.neighborId;
+    items.push({
+      severity: 'notable',
+      text: NEIGHBOR_ACTION_LINE({
+        neighborName,
+        actionLabel: NEIGHBOR_ACTION_LABELS[action.actionType],
+      }),
+      targetScreen: 'diplomacy',
+      category: 'diplomacy',
+    });
+  }
+
+  // --- Routine: Intelligence report arrivals ---
+  if (result.generatedReports.length > 0) {
+    items.push({
+      severity: 'routine',
+      text: INTELLIGENCE_ARRIVAL_LINE({ count: result.generatedReports.length }),
+      targetScreen: 'espionage',
+      category: 'intelligence',
+    });
+  }
+
+  // --- Routine: Treasury and food ---
+  items.push({
+    severity: 'routine',
+    text: TREASURY_BALANCE_LINE({
       balance: result.nextState.treasury.balance,
       netFlow: result.nextState.treasury.netFlowPerTurn,
     }),
-  );
+    targetScreen: 'treasury',
+    category: 'treasury',
+  });
 
-  routine.push(
-    FOOD_RESERVES_LINE({
+  items.push({
+    severity: 'routine',
+    text: FOOD_RESERVES_LINE({
       reserves: result.nextState.food.reserves,
       netFlow: result.nextState.food.netFlowPerTurn,
       seasonalModifier: result.nextState.food.seasonalModifier,
     }),
-  );
+    targetScreen: 'reports',
+    category: 'food',
+  });
 
-  // New events surfaced
-  const newUnresolved = result.nextState.activeEvents.filter((e) => !e.isResolved);
-  if (newUnresolved.length > 0) {
-    routine.push(
-      `${newUnresolved.length} new dispatch${newUnresolved.length !== 1 ? 'es' : ''} await${newUnresolved.length === 1 ? 's' : ''} your attention.`,
-    );
+  // --- Routine: Military update ---
+  const readinessDelta = result.nextState.military.readiness - previousState.militaryReadiness;
+  const moraleDelta = result.nextState.military.morale - previousState.militaryMorale;
+  if (readinessDelta !== 0 || moraleDelta !== 0) {
+    items.push({
+      severity: 'routine',
+      text: MILITARY_UPDATE_LINE({
+        readiness: result.nextState.military.readiness,
+        morale: result.nextState.military.morale,
+      }),
+      targetScreen: 'military',
+      category: 'military',
+    });
   }
 
+  // --- Routine: New events surfaced ---
+  const newUnresolved = result.nextState.activeEvents.filter((e) => !e.isResolved);
+  if (newUnresolved.length > 0) {
+    items.push({
+      severity: 'routine',
+      text: `${newUnresolved.length} new dispatch${newUnresolved.length !== 1 ? 'es' : ''} await${newUnresolved.length === 1 ? 's' : ''} your attention.`,
+      targetScreen: 'events',
+      category: 'event',
+    });
+  }
+
+  return items;
+}
+
+function groupBySeverity(items: TurnSummaryItem[]): {
+  critical: TurnSummaryItem[];
+  notable: TurnSummaryItem[];
+  routine: TurnSummaryItem[];
+} {
+  const critical: TurnSummaryItem[] = [];
+  const notable: TurnSummaryItem[] = [];
+  const routine: TurnSummaryItem[] = [];
+  for (const item of items) {
+    if (item.severity === 'critical') critical.push(item);
+    else if (item.severity === 'notable') notable.push(item);
+    else routine.push(item);
+  }
   return { critical, notable, routine };
 }
 
@@ -159,13 +352,21 @@ function buildTurnSummaryItems(result: TurnResolutionResult): {
 // Dashboard
 // ============================================================
 
-export function Dashboard({ onNavigateToEvents }: DashboardProps) {
+export function Dashboard({ onNavigate }: DashboardProps) {
   const kingdom = useKingdomState();
   const crownBar = useCrownBar();
   const { advanceTurn, queuedActions, slotsRemaining } = useTurnActions();
+  const lastResult = useLastTurnResult();
 
   const [turnPhase, setTurnPhase] = useState<TurnPhase>('idle');
   const [turnResult, setTurnResult] = useState<TurnResolutionResult | null>(null);
+  // Snapshot previous state before resolution for delta computation
+  const [prevSnapshot, setPrevSnapshot] = useState<{
+    faithLevel: number;
+    culturalCohesion: number;
+    militaryReadiness: number;
+    militaryMorale: number;
+  } | null>(null);
 
   // ---- Turn advance handlers ----
 
@@ -174,6 +375,13 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
   }
 
   function handleConfirm() {
+    // Capture current state before resolution
+    setPrevSnapshot({
+      faithLevel: kingdom.faithCulture.faithLevel,
+      culturalCohesion: kingdom.faithCulture.culturalCohesion,
+      militaryReadiness: kingdom.military.readiness,
+      militaryMorale: kingdom.military.morale,
+    });
     const result = advanceTurn();
     setTurnResult(result);
     setTurnPhase('summary');
@@ -181,7 +389,21 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
 
   function handleDismissSummary() {
     setTurnResult(null);
+    setPrevSnapshot(null);
     setTurnPhase('idle');
+  }
+
+  function handleSummaryItemClick(targetScreen: SummaryTargetScreen) {
+    if (targetScreen) {
+      handleDismissSummary();
+      onNavigate(targetScreen);
+    }
+  }
+
+  function handleAlertClick(screen: SummaryTargetScreen) {
+    if (screen) {
+      onNavigate(screen);
+    }
   }
 
   // ---- Forecast projections ----
@@ -198,7 +420,6 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
     { turnOffset: 3, direction: computeDirection(kingdom.food.netFlowPerTurn), confidence: 25 },
   ];
 
-  // Average class satisfaction delta for stability forecast
   const classDeltas = Object.values(PopulationClass).map(
     (cls) => kingdom.population[cls].satisfactionDeltaLastTurn,
   );
@@ -216,14 +437,44 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
     (s) => s.status === StorylineStatus.Active,
   );
 
+  // ---- Failure warnings (from last turn result) ----
+
+  const failureWarnings: FailureWarning[] = lastResult?.failureWarnings ?? [];
+
   // ---- Build summary if available ----
 
-  const summaryItems = turnResult
-    ? buildTurnSummaryItems(turnResult)
+  const summaryItems = turnResult && prevSnapshot
+    ? buildTurnSummaryItems(turnResult, prevSnapshot)
     : null;
+  const grouped = summaryItems ? groupBySeverity(summaryItems) : null;
 
   return (
     <div className={styles.screen}>
+      {/* Dashboard Alerts — Failure Warnings */}
+      {failureWarnings.length > 0 && turnPhase === 'idle' && (
+        <section className={styles.alertsSection}>
+          {failureWarnings.map((fw, i) => {
+            const msg = FAILURE_WARNING_MESSAGES[fw.condition];
+            const screen = FAILURE_SCREEN_MAP[fw.condition] as SummaryTargetScreen;
+            return (
+              <button
+                key={i}
+                className={styles.alertItem}
+                data-severity={fw.severity}
+                onClick={() => handleAlertClick(screen)}
+                aria-label={`${fw.severity} warning: ${msg[fw.severity]}`}
+              >
+                <span className={styles.alertSeverityBadge} data-severity={fw.severity}>
+                  {fw.severity === 'critical' ? 'Critical' : 'Caution'}
+                </span>
+                <span className={styles.alertText}>{msg[fw.severity]}</span>
+                <span className={styles.summaryNavArrow}>{'\u203A'}</span>
+              </button>
+            );
+          })}
+        </section>
+      )}
+
       {/* Resource Summary Row */}
       <div className={styles.resourceRow}>
         <ResourceCard
@@ -315,7 +566,7 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
       {crownBar.unresolvedUrgentMatters > 0 && (
         <button
           className={styles.urgentBanner}
-          onClick={onNavigateToEvents}
+          onClick={() => onNavigate('events')}
           aria-label={`${crownBar.unresolvedUrgentMatters} urgent matters require attention`}
         >
           <span className={styles.urgentCount}>
@@ -418,40 +669,53 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
       )}
 
       {/* Turn Summary Overlay */}
-      {turnPhase === 'summary' && summaryItems && (
+      {turnPhase === 'summary' && grouped && (
         <div className={styles.summaryOverlay} role="dialog" aria-modal="true">
           <div className={styles.summaryCard}>
             <h2 className={styles.summaryTitle}>{TURN_SUMMARY_HEADER}</h2>
 
-            {summaryItems.critical.length > 0 && (
+            {grouped.critical.length > 0 && (
               <div className={styles.summarySection}>
                 <h3 className={styles.summaryCritical}>
                   {TURN_SUMMARY_CRITICAL_SECTION}
                 </h3>
-                {summaryItems.critical.map((item, i) => (
-                  <p key={i} className={styles.summaryItemCritical}>{item}</p>
+                {grouped.critical.map((item, i) => (
+                  <SummaryItemRow
+                    key={i}
+                    item={item}
+                    onClick={handleSummaryItemClick}
+                    isCritical
+                  />
                 ))}
               </div>
             )}
 
-            {summaryItems.notable.length > 0 && (
+            {grouped.notable.length > 0 && (
               <div className={styles.summarySection}>
                 <h3 className={styles.summaryNotable}>
                   {TURN_SUMMARY_NOTABLE_SECTION}
                 </h3>
-                {summaryItems.notable.map((item, i) => (
-                  <p key={i} className={styles.summaryItem}>{item}</p>
+                {grouped.notable.map((item, i) => (
+                  <SummaryItemRow
+                    key={i}
+                    item={item}
+                    onClick={handleSummaryItemClick}
+                  />
                 ))}
               </div>
             )}
 
-            {summaryItems.routine.length > 0 && (
+            {grouped.routine.length > 0 && (
               <div className={styles.summarySection}>
                 <h3 className={styles.summaryRoutine}>
                   {TURN_SUMMARY_ROUTINE_SECTION}
                 </h3>
-                {summaryItems.routine.map((item, i) => (
-                  <p key={i} className={styles.summaryItem}>{item}</p>
+                {grouped.routine.map((item, i) => (
+                  <SummaryItemRow
+                    key={i}
+                    item={item}
+                    onClick={handleSummaryItemClick}
+                  />
                 ))}
               </div>
             )}
@@ -466,5 +730,38 @@ export function Dashboard({ onNavigateToEvents }: DashboardProps) {
         </div>
       )}
     </div>
+  );
+}
+
+// ============================================================
+// Summary Item Row — clickable if it has a target screen
+// ============================================================
+
+function SummaryItemRow({
+  item,
+  onClick,
+  isCritical,
+}: {
+  item: TurnSummaryItem;
+  onClick: (screen: SummaryTargetScreen) => void;
+  isCritical?: boolean;
+}) {
+  if (item.targetScreen) {
+    return (
+      <button
+        className={isCritical ? styles.summaryItemNavigableCritical : styles.summaryItemNavigable}
+        onClick={() => onClick(item.targetScreen)}
+        aria-label={`${item.text} — navigate to ${item.targetScreen}`}
+      >
+        <span>{item.text}</span>
+        <span className={styles.summaryNavArrow}>{'\u203A'}</span>
+      </button>
+    );
+  }
+
+  return (
+    <p className={isCritical ? styles.summaryItemCritical : styles.summaryItem}>
+      {item.text}
+    </p>
   );
 }

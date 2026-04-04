@@ -7,6 +7,7 @@ import { SCREEN_TITLES } from './data/text/labels';
 import { CrownBar } from './ui/components/crown-bar/crown-bar';
 import { NavRail } from './ui/components/nav-rail/nav-rail';
 import { IntelligencePanel } from './ui/components/intelligence-panel/intelligence-panel';
+import { RightPanelProvider, useRightPanel } from './ui/context/right-panel-context';
 import styles from './app.module.css';
 
 // ============================================================
@@ -59,10 +60,10 @@ const SEASON_CLASS_MAP: Record<Season, string> = {
 const ALL_SEASON_CLASSES = Object.values(SEASON_CLASS_MAP);
 
 // ============================================================
-// App Shell
+// App Shell (inner, within RightPanelProvider)
 // ============================================================
 
-export function App() {
+function AppShell() {
   const [activeScreen, setActiveScreen] = useState<ScreenId>('dashboard');
   const [intelPanelOpen, setIntelPanelOpen] = useState(false);
   const { season } = useCrownBar();
@@ -72,6 +73,12 @@ export function App() {
   const isGameOver = useIsGameOver();
   const gameOverConditions = useGameOverConditions();
   const dispatch = useGameDispatch();
+  const { update: updateRightPanel } = useRightPanel();
+
+  // Sync activeScreen to right panel context.
+  useEffect(() => {
+    updateRightPanel({ screen: activeScreen });
+  }, [activeScreen, updateRightPanel]);
 
   // Auto-load saved game on mount.
   useEffect(() => {
@@ -121,7 +128,7 @@ export function App() {
         <h1 className={styles.contentTitle}>{SCREEN_TITLES[activeScreen]}</h1>
         <Suspense fallback={<div className={styles.screenLoader}>Loading…</div>}>
           {activeScreen === 'dashboard' && (
-            <Dashboard onNavigateToEvents={() => setActiveScreen('events')} />
+            <Dashboard onNavigate={(screen) => { if (screen) setActiveScreen(screen as ScreenId); }} />
           )}
           {activeScreen === 'reports' && <Reports />}
           {activeScreen === 'events' && <Events />}
@@ -159,5 +166,17 @@ export function App() {
         </Suspense>
       )}
     </div>
+  );
+}
+
+// ============================================================
+// App (wrapped with RightPanelProvider)
+// ============================================================
+
+export function App() {
+  return (
+    <RightPanelProvider>
+      <AppShell />
+    </RightPanelProvider>
   );
 }

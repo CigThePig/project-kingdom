@@ -479,6 +479,44 @@ export const CONFLICT_OUTCOME_LABELS: Record<string, string> = {
 // Game Over Screen Labels
 // ============================================================
 
+// ============================================================
+// Consequence Preview Labels (Phase 6)
+// ============================================================
+
+export const CONSEQUENCE_DELTA_LABELS: Record<string, string> = {
+  treasuryDelta: 'Treasury',
+  foodDelta: 'Food',
+  stabilityDelta: 'Stability',
+  faithDelta: 'Faith',
+  heterodoxyDelta: 'Heterodoxy',
+  culturalCohesionDelta: 'Cultural Cohesion',
+  militaryReadinessDelta: 'Military Readiness',
+  militaryMoraleDelta: 'Military Morale',
+  militaryEquipmentDelta: 'Equipment',
+  militaryForceSizeDelta: 'Force Size',
+  espionageNetworkDelta: 'Network Strength',
+  nobilitySatDelta: 'Nobility',
+  clergySatDelta: 'Clergy',
+  merchantSatDelta: 'Merchants',
+  commonerSatDelta: 'Commoners',
+  militaryCasteSatDelta: 'Military Caste',
+  regionDevelopmentDelta: 'Region Development',
+  regionConditionDelta: 'Region Condition',
+};
+
+/** Maps failure conditions to the screen the player should visit. */
+export const FAILURE_SCREEN_MAP: Record<FailureCondition, string> = {
+  [FailureCondition.Famine]: 'reports',
+  [FailureCondition.Insolvency]: 'treasury',
+  [FailureCondition.Collapse]: 'faith',
+  [FailureCondition.Conquest]: 'military',
+  [FailureCondition.Overthrow]: 'faith',
+};
+
+// ============================================================
+// Game Over Screen Labels
+// ============================================================
+
 export const GAME_OVER_TITLE = 'The Reign Has Ended';
 export const GAME_OVER_ASSESSMENT_TITLE = 'Kingdom Assessment';
 export const GAME_OVER_NEW_GAME_LABEL = 'Begin New Reign';

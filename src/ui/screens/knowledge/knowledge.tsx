@@ -18,6 +18,7 @@ import {
 import { useKingdomState } from '../../hooks/use-game-state';
 import { useTurnActions } from '../../hooks/use-turn-actions';
 import { GameContext } from '../../context/game-context';
+import { useRightPanel } from '../../context/right-panel-context';
 import {
   KNOWLEDGE_BRANCH_LABELS,
   BUDGET_ERROR_LABELS,
@@ -80,7 +81,15 @@ export function Knowledge() {
 
   const knowledgeState = kingdom.knowledge;
   const researchFocus = kingdom.policies.researchFocus;
+  const { update: updateRightPanel } = useRightPanel();
   const [expandedBranch, setExpandedBranch] = useState<KnowledgeBranch | null>(null);
+
+  function handleExpandBranch(branch: KnowledgeBranch | null) {
+    setExpandedBranch(branch);
+    if (branch) {
+      updateRightPanel({ selectedBranchId: branch });
+    }
+  }
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [policyChangeUsed, setPolicyChangeUsed] = useState(
     kingdom.actionBudget.policyChangesUsedThisTurn > 0,
@@ -247,7 +256,7 @@ export function Knowledge() {
                 {/* Clickable summary area */}
                 <div
                   className={styles.branchSummary}
-                  onClick={() => setExpandedBranch(isExpanded ? null : branch)}
+                  onClick={() => handleExpandBranch(isExpanded ? null : branch)}
                   role="button"
                   tabIndex={0}
                   aria-expanded={isExpanded}
@@ -255,7 +264,7 @@ export function Knowledge() {
                   onKeyDown={(e: React.KeyboardEvent) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setExpandedBranch(isExpanded ? null : branch);
+                      handleExpandBranch(isExpanded ? null : branch);
                     }
                   }}
                 >

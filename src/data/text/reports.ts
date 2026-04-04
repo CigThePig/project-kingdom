@@ -321,3 +321,97 @@ export const ARCHIVE_EMPTY_TEXT =
 
 export const ARCHIVE_NO_RESULTS_TEXT =
   'No archive entries match the current filters.';
+
+// ============================================================
+// Turn Summary — Extended Templates (Phase 6)
+// ============================================================
+
+export const CONSTRUCTION_COMPLETE_LINE: ReportTemplate<{
+  projectName: string;
+  regionName: string;
+}> = ({ projectName, regionName }) =>
+  `Construction complete: ${projectName} in ${regionName} is now operational.`;
+
+export const STORYLINE_PROGRESSION_LINE: ReportTemplate<{
+  storylineTitle: string;
+}> = ({ storylineTitle }) =>
+  `The ${storylineTitle} storyline has progressed to its next stage.`;
+
+export const STORYLINE_RESOLVED_LINE: ReportTemplate<{
+  storylineTitle: string;
+}> = ({ storylineTitle }) =>
+  `The ${storylineTitle} storyline has reached its conclusion.`;
+
+export const FAITH_CHANGE_LINE: ReportTemplate<{
+  faithLevel: number;
+  delta: number;
+}> = ({ faithLevel, delta }) => {
+  const direction = delta > 0 ? 'risen' : 'fallen';
+  return `Faith among the populace has ${direction} to ${faithLevel} (${delta >= 0 ? '+' : ''}${delta}).`;
+};
+
+export const CULTURAL_COHESION_LINE: ReportTemplate<{
+  cohesion: number;
+  delta: number;
+}> = ({ cohesion, delta }) => {
+  const direction = delta > 0 ? 'strengthened' : 'weakened';
+  return `Cultural cohesion has ${direction} to ${cohesion} (${delta >= 0 ? '+' : ''}${delta}).`;
+};
+
+export const INTELLIGENCE_ARRIVAL_LINE: ReportTemplate<{
+  count: number;
+}> = ({ count }) =>
+  `${count} new intelligence report${count !== 1 ? 's' : ''} ${count === 1 ? 'has' : 'have'} arrived from field operatives.`;
+
+export const CONFLICT_UPDATE_LINE: ReportTemplate<{
+  neighborName: string;
+  phase: string;
+}> = ({ neighborName, phase }) =>
+  `The conflict with ${neighborName} continues — current phase: ${phase}.`;
+
+export const CONFLICT_RESOLVED_LINE: ReportTemplate<{
+  neighborName: string;
+  outcome: string;
+}> = ({ neighborName, outcome }) =>
+  `The conflict with ${neighborName} has concluded: ${outcome}.`;
+
+export const NEIGHBOR_ACTION_LINE: ReportTemplate<{
+  neighborName: string;
+  actionLabel: string;
+}> = ({ neighborName, actionLabel }) =>
+  `${neighborName}: ${actionLabel}.`;
+
+export const FAILURE_WARNING_LINE: ReportTemplate<{
+  message: string;
+}> = ({ message }) => message;
+
+export const MILITARY_UPDATE_LINE: ReportTemplate<{
+  readiness: number;
+  morale: number;
+}> = ({ readiness, morale }) =>
+  `Military readiness stands at ${readiness}, morale at ${morale}.`;
+
+// ============================================================
+// Consequence Preview Labels (Phase 6)
+// ============================================================
+
+export const CONSEQUENCE_PREVIEW_HEADER = 'Projected Impact';
+export const CONSEQUENCE_TRADEOFF_HEADER = 'Tradeoffs';
+export const CONSEQUENCE_CLASSES_HELPED = 'Benefits';
+export const CONSEQUENCE_CLASSES_HURT = 'Burdens';
+
+// ============================================================
+// Right Panel Section Headers (Phase 6)
+// ============================================================
+
+export const RIGHT_PANEL_FORECAST_HEADER = 'Strategic Forecast';
+export const RIGHT_PANEL_RISK_HEADER = 'Risk Factors';
+export const RIGHT_PANEL_STORYLINE_HEADER = 'Active Storylines';
+export const RIGHT_PANEL_CONSEQUENCE_HEADER = 'Consequence Preview';
+export const RIGHT_PANEL_SATISFACTION_HEADER = 'Satisfaction Factors';
+export const RIGHT_PANEL_TREND_HEADER = 'Historical Trend';
+export const RIGHT_PANEL_RISK_ASSESSMENT_HEADER = 'Risk Assessment';
+export const RIGHT_PANEL_OPERATION_HEADER = 'Operation Detail';
+export const RIGHT_PANEL_ADVANCEMENT_HEADER = 'Advancement Detail';
+export const RIGHT_PANEL_EVENT_CONTEXT_HEADER = 'Background Context';
+export const RIGHT_PANEL_EMPTY = 'Select an item to view contextual details.';
