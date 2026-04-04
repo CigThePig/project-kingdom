@@ -129,9 +129,9 @@ export function Icon({ name, size, color, className }: IconProps) {
   const IconSVG = ICON_MAP[name];
   if (!IconSVG) return null;
 
-  const style: CSSProperties = {};
-  if (size) style['--icon-size' as string] = size;
-  if (color) style['--icon-color' as string] = color;
+  const style = {} as CSSProperties & Record<string, string>;
+  if (size) style['--icon-size'] = size;
+  if (color) style['--icon-color'] = color;
 
   return (
     <span
