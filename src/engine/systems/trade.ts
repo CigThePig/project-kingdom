@@ -2,8 +2,15 @@
 // Pure engine logic for trade income calculation.
 // No React imports. No player-facing text.
 
-import { TradeOpenness } from '../types';
 import {
+  DiplomaticAgreement,
+  NeighborDisposition,
+  NeighborState,
+  TradeOpenness,
+} from '../types';
+import {
+  NEIGHBOR_AI_TRADE_PROPOSAL_THRESHOLD,
+  NEIGHBOR_AI_TRADE_WITHDRAWAL_THRESHOLD,
   TRADE_BASE_INCOME,
   TRADE_DIPLOMATIC_BONUS_PER_FRIENDLY_NEIGHBOR,
   TRADE_INCOME_MULTIPLIER,
@@ -101,4 +108,46 @@ export function calculateTradeIncome(
     (1 + tradeKnowledgeBonus);
 
   return clamp(baseTradeIncome + diplomaticBonus, 0, Infinity);
+}
+
+// ============================================================
+// Trade AI (§9.2)
+// ============================================================
+
+/**
+ * Determines if a neighbor should propose a trade agreement.
+ * Based on relationship score, disposition (Mercantile neighbors more likely),
+ * and absence of existing trade agreements.
+ */
+export function shouldProposeTradeAgreement(
+  neighbor: NeighborState,
+  existingAgreements: DiplomaticAgreement[],
+): boolean {
+  if (neighbor.isAtWarWithPlayer) return false;
+  if (neighbor.relationshipScore < NEIGHBOR_AI_TRADE_PROPOSAL_THRESHOLD) return false;
+
+  const hasTradeAgreement = existingAgreements.some(
+    (a) => a.agreementId.startsWith('trade_') && a.neighborId === neighbor.id,
+  );
+  if (hasTradeAgreement) return false;
+
+  return neighbor.disposition === NeighborDisposition.Mercantile || neighbor.relationshipScore >= 70;
+}
+
+/**
+ * Determines if a neighbor should withdraw from trade.
+ * Based on deteriorating relationship or war state.
+ */
+export function shouldWithdrawTrade(
+  neighbor: NeighborState,
+  existingAgreements: DiplomaticAgreement[],
+): boolean {
+  if (neighbor.isAtWarWithPlayer) return true;
+
+  const hasTradeAgreement = existingAgreements.some(
+    (a) => a.agreementId.startsWith('trade_') && a.neighborId === neighbor.id,
+  );
+  if (!hasTradeAgreement) return false;
+
+  return neighbor.relationshipScore < NEIGHBOR_AI_TRADE_WITHDRAWAL_THRESHOLD;
 }

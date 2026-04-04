@@ -288,7 +288,7 @@ export const TRADE_INCOME_MULTIPLIER: Record<TradeOpenness, number> = {
 // Block 13 — Save & Failure Tracking (§13, §10.4)
 // ============================================================
 
-export const SAVE_SCHEMA_VERSION = 2;
+export const SAVE_SCHEMA_VERSION = 3;
 
 // LocalStorage key must include the version to avoid loading incompatible saves.
 export const SAVE_STORAGE_KEY = 'kingdom-save-v1';
@@ -539,3 +539,141 @@ export const RELIGIOUS_ORDER_UPKEEP_PER_TURN = 20;
 // Construction project defaults (§5.4)
 export const CONSTRUCTION_DEFAULT_TURNS = 4;
 export const TRADE_AGREEMENT_TURNS = 12; // 1 in-game year
+
+// ============================================================
+// Block 17 — AI Neighbor & Conflict Constants (Phase 3)
+// gameplay-blueprint.md §6.2, §9
+// ============================================================
+
+// --- AI Behavior Thresholds ---
+
+// Relationship score below which an Aggressive/Opportunistic neighbor may declare war.
+export const NEIGHBOR_AI_WAR_DECLARATION_THRESHOLD = 10;
+
+// Relationship score below which a neighbor may issue demands.
+export const NEIGHBOR_AI_DEMAND_THRESHOLD = 30;
+
+// Relationship score above which a neighbor may propose a treaty.
+export const NEIGHBOR_AI_TREATY_PROPOSAL_THRESHOLD = 65;
+
+// Relationship score above which a neighbor may propose a trade agreement.
+export const NEIGHBOR_AI_TRADE_PROPOSAL_THRESHOLD = 55;
+
+// Relationship score below which a neighbor withdraws trade agreements.
+export const NEIGHBOR_AI_TRADE_WITHDRAWAL_THRESHOLD = 35;
+
+// War weariness above which a neighbor may offer peace.
+export const NEIGHBOR_AI_PEACE_OFFER_WAR_WEARINESS = 60;
+
+// Relationship score below which hostile neighbors increase military strength.
+export const NEIGHBOR_AI_MILITARY_BUILDUP_THRESHOLD = 25;
+
+// Minimum turns between autonomous AI actions per neighbor.
+export const NEIGHBOR_AI_ACTION_COOLDOWN = 3;
+
+// Per-turn war weariness accumulation for neighbors in active conflict.
+export const NEIGHBOR_AI_WAR_WEARINESS_PER_TURN = 8;
+
+// Per-turn neighbor military strength change when building up.
+export const NEIGHBOR_AI_MILITARY_BUILDUP_RATE = 3;
+
+// Per-turn neighbor military strength loss during conflict (from casualties).
+export const NEIGHBOR_AI_MILITARY_ATTRITION_RATE = 2;
+
+// Religious pressure: heterodoxy delta when a neighbor with different faith pressures.
+export const NEIGHBOR_AI_RELIGIOUS_PRESSURE_HETERODOXY_DELTA = 5;
+
+// --- Conflict Resolution Weights (§6.2) ---
+
+// Maximum advantage contribution from force size ratio (larger army advantage).
+export const CONFLICT_FORCE_RATIO_MAX_ADVANTAGE = 30;
+
+// Weighted contributions to combat power score (must sum to ~1.0).
+export const CONFLICT_READINESS_WEIGHT = 0.20;
+export const CONFLICT_EQUIPMENT_WEIGHT = 0.15;
+export const CONFLICT_MORALE_WEIGHT = 0.15;
+export const CONFLICT_CASTE_QUALITY_WEIGHT = 0.10;
+export const CONFLICT_TERRAIN_WEIGHT = 0.10;
+export const CONFLICT_INTELLIGENCE_WEIGHT = 0.15;
+export const CONFLICT_KNOWLEDGE_WEIGHT = 0.10;
+
+// Random swing range: +/- this value applied to advantage shift each turn.
+export const CONFLICT_RANDOMNESS_RANGE = 15;
+
+// --- Conflict Phase Transitions ---
+
+// Turns of skirmish before escalation to campaign.
+export const CONFLICT_SKIRMISH_TO_CAMPAIGN_TURNS = 2;
+
+// If player advantage drops below this during campaign, escalates to siege.
+export const CONFLICT_CAMPAIGN_TO_SIEGE_ADVANTAGE = -30;
+
+// Maximum turns a campaign can last before forced resolution.
+export const CONFLICT_MAX_CAMPAIGN_TURNS = 8;
+
+// --- Conflict Per-Turn Consequences ---
+
+// Casualty rates as fraction of force size per turn, by conflict phase.
+export const CONFLICT_CASUALTY_RATE: Record<string, number> = {
+  Skirmish: 0.02,
+  Campaign: 0.05,
+  Siege: 0.08,
+};
+
+// Treasury drain per turn during active conflict.
+export const CONFLICT_TREASURY_DRAIN_PER_TURN = 50;
+
+// Food drain per turn during active conflict.
+export const CONFLICT_FOOD_DRAIN_PER_TURN = 20;
+
+// Stability penalty per active conflict per turn.
+export const CONFLICT_STABILITY_PENALTY_PER_CONFLICT = 3;
+
+// Morale shift based on conflict advantage direction.
+export const CONFLICT_MORALE_BONUS_WINNING = 3;
+export const CONFLICT_MORALE_PENALTY_LOSING = 5;
+
+// --- Conflict Resolution Thresholds ---
+
+// Player advantage at or above this = victory.
+export const CONFLICT_VICTORY_ADVANTAGE_THRESHOLD = 60;
+
+// Player advantage at or below this = defeat.
+export const CONFLICT_DEFEAT_ADVANTAGE_THRESHOLD = -60;
+
+// --- Conflict Resolution Consequences ---
+
+// Relationship boost with OTHER neighbors after a victory (respect for strength).
+export const CONFLICT_VICTORY_RELATIONSHIP_BOOST = 15;
+
+// Treasury plunder gained on victory.
+export const CONFLICT_VICTORY_TREASURY_PLUNDER = 100;
+
+// Chance (0-1) of territory loss on defeat.
+export const CONFLICT_DEFEAT_TERRITORY_LOSS_CHANCE = 0.6;
+
+// Relationship penalty with defeated neighbor (additive to current score).
+export const CONFLICT_DEFEAT_RELATIONSHIP_PENALTY = -10;
+
+// Satisfaction penalties on defeat.
+export const CONFLICT_DEFEAT_COMMONER_SAT_PENALTY = -8;
+export const CONFLICT_DEFEAT_MILITARY_CASTE_SAT_PENALTY = -10;
+export const CONFLICT_DEFEAT_NOBILITY_SAT_PENALTY = -5;
+
+// Satisfaction bonuses on victory.
+export const CONFLICT_VICTORY_MILITARY_CASTE_SAT_BONUS = 8;
+export const CONFLICT_VICTORY_NOBILITY_SAT_BONUS = 5;
+export const CONFLICT_VICTORY_COMMONER_SAT_BONUS = 3;
+
+// --- Trade AI ---
+
+// Duration of AI-proposed trade agreements (in turns).
+export const TRADE_AI_PROPOSAL_AGREEMENT_TURNS = 12;
+
+// --- Espionage Exposure ---
+
+// Relationship penalty when espionage is discovered by a neighbor.
+export const ESPIONAGE_EXPOSURE_RELATIONSHIP_PENALTY = -12;
+
+// Tension ID added when espionage is discovered.
+export const ESPIONAGE_EXPOSURE_TENSION_ID = 'espionage_discovered';
