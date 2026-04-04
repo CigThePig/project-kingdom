@@ -11,6 +11,13 @@ import { Reports } from './ui/screens/reports/reports';
 import { Events } from './ui/screens/events/events';
 import { Decrees } from './ui/screens/decrees/decrees';
 import { Society } from './ui/screens/society/society';
+import { Regions } from './ui/screens/regions/regions';
+import { Military } from './ui/screens/military/military';
+import { Trade } from './ui/screens/trade/trade';
+import { Diplomacy } from './ui/screens/diplomacy/diplomacy';
+import { Intelligence } from './ui/screens/intelligence/intelligence';
+import { Knowledge } from './ui/screens/knowledge/knowledge';
+import { Archive } from './ui/screens/archive/archive';
 import styles from './app.module.css';
 
 // ============================================================
@@ -80,15 +87,13 @@ export function App() {
         {activeScreen === 'events' && <Events />}
         {activeScreen === 'decrees' && <Decrees />}
         {activeScreen === 'faith' && <Society />}
-        {activeScreen !== 'dashboard' &&
-          activeScreen !== 'reports' &&
-          activeScreen !== 'events' &&
-          activeScreen !== 'decrees' &&
-          activeScreen !== 'faith' && (
-          <p className={styles.contentPlaceholder}>
-            Screen content will be implemented in a later phase.
-          </p>
-        )}
+        {activeScreen === 'regions' && <Regions />}
+        {activeScreen === 'military' && <Military />}
+        {activeScreen === 'treasury' && <Trade />}
+        {activeScreen === 'diplomacy' && <Diplomacy />}
+        {activeScreen === 'espionage' && <Intelligence />}
+        {activeScreen === 'knowledge' && <Knowledge />}
+        {activeScreen === 'archive' && <Archive />}
       </main>
 
       <IntelligencePanel

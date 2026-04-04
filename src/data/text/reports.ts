@@ -2,6 +2,7 @@ import {
   FailureCondition,
   FestivalInvestmentLevel,
   IntelligenceFundingLevel,
+  KnowledgeBranch,
   MilitaryRecruitmentStance,
   PopulationClass,
   RationingLevel,
@@ -268,3 +269,45 @@ export const HETERODOXY_WARNING_TEXT =
 
 export const SCHISM_ACTIVE_TEXT =
   'A schism divides the faithful. The kingdom\'s religious unity has fractured, weakening clergy influence and faith stability.';
+
+// ============================================================
+// Region Descriptions
+// ============================================================
+
+export const REGION_DESCRIPTIONS: Record<string, string> = {
+  region_heartlands:
+    'The agricultural heart of the kingdom. Fertile plains and established farming communities provide the bulk of the realm\'s food supply.',
+  region_ironvale:
+    'A mountainous territory rich in iron deposits. Mining operations supply the kingdom\'s forges and military infrastructure.',
+  region_timbermark:
+    'Dense forests and lumber operations define this region. Timber fuels construction and trade across the realm.',
+};
+
+// ============================================================
+// Knowledge Branch Descriptions
+// ============================================================
+
+export const KNOWLEDGE_BRANCH_DESCRIPTIONS: Record<KnowledgeBranch, string> = {
+  [KnowledgeBranch.Agricultural]:
+    'Advances in farming techniques, crop rotation, and irrigation. Each milestone improves food production efficiency.',
+  [KnowledgeBranch.Military]:
+    'Developments in tactics, fortification design, and military organization. Each milestone enhances military effectiveness.',
+  [KnowledgeBranch.Civic]:
+    'Improvements in governance, record-keeping, and public administration. Each milestone strengthens population management.',
+  [KnowledgeBranch.MaritimeTrade]:
+    'Progress in navigation, trade logistics, and merchant practices. Each milestone increases trade income.',
+  [KnowledgeBranch.CulturalScholarly]:
+    'Cultivation of arts, philosophy, and cultural institutions. Each milestone reinforces faith and cultural cohesion.',
+  [KnowledgeBranch.NaturalPhilosophy]:
+    'Exploration of natural laws, engineering principles, and material science. Each milestone improves resource processing.',
+};
+
+// ============================================================
+// Archive Screen Text
+// ============================================================
+
+export const ARCHIVE_EMPTY_TEXT =
+  'The historical archive is empty. Records will accumulate as the kingdom progresses through each month of governance.';
+
+export const ARCHIVE_NO_RESULTS_TEXT =
+  'No archive entries match the current filters.';

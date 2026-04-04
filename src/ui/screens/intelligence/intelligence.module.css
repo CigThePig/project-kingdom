@@ -1,0 +1,351 @@
+/* ==========================================================================
+   Intelligence Screen — Espionage & Covert Operations
+   Source: ui-blueprint.md §4.10; ux-blueprint.md §6
+   Visual tone: austere, muted — distinct from other screens.
+   ========================================================================== */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* Intelligence domain gets a slightly more muted palette */
+.screen[data-domain='intelligence'] {
+  --intel-accent: var(--color-text-tertiary);
+}
+
+/* --------------------------------------------------------------------------
+   Section Label
+   -------------------------------------------------------------------------- */
+.sectionLabel {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Gauge Grid
+   -------------------------------------------------------------------------- */
+.gaugeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+.gaugeCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-4);
+}
+
+.gaugeLabel {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.gaugeValueRow {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+}
+
+.gaugeValue {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.gaugeMax {
+  font-size: var(--font-size-sm);
+  color: var(--color-status-neutral);
+  font-variant-numeric: tabular-nums;
+}
+
+.gaugeBarTrack {
+  height: 0.5rem;
+  background: var(--color-bg-tertiary);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.gaugeBarFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width var(--transition-fast);
+}
+
+.gaugeBarFill[data-status='good'] {
+  background: var(--color-status-positive);
+}
+
+.gaugeBarFill[data-status='fair'] {
+  background: var(--color-status-warning);
+}
+
+.gaugeBarFill[data-status='poor'] {
+  background: var(--color-status-critical);
+}
+
+/* --------------------------------------------------------------------------
+   Funding Row
+   -------------------------------------------------------------------------- */
+.fundingRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-sm);
+}
+
+.fundingLabel {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.fundingValue {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   Operations Grid
+   -------------------------------------------------------------------------- */
+.opGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.opCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3);
+}
+
+.opName {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+}
+
+.opDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+.opMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.opTier {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  background: var(--color-bg-tertiary);
+}
+
+.opTier[data-tier='favorable'] {
+  color: var(--color-status-positive);
+}
+
+.opTier[data-tier='moderate'] {
+  color: var(--color-status-neutral);
+}
+
+.opTier[data-tier='difficult'] {
+  color: var(--color-status-warning);
+}
+
+.opTier[data-tier='perilous'] {
+  color: var(--color-status-critical);
+}
+
+.opRisk {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.riskLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.riskText {
+  font-size: var(--font-size-xs);
+  color: var(--color-status-warning);
+}
+
+/* --------------------------------------------------------------------------
+   Reports Feed
+   -------------------------------------------------------------------------- */
+.reportList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.reportItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3);
+}
+
+.reportItem[data-correction='true'] {
+  border-left: 3px solid var(--color-status-warning);
+}
+
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reportType {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.reportTurn {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.reportTarget {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.reportConfidence {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.confidenceLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.confidenceValue {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.confidenceValue[data-status='good'] {
+  color: var(--color-status-positive);
+}
+
+.confidenceValue[data-status='fair'] {
+  color: var(--color-status-neutral);
+}
+
+.confidenceValue[data-status='poor'] {
+  color: var(--color-status-critical);
+}
+
+.confidenceBarTrack {
+  height: 0.25rem;
+  background: var(--color-bg-tertiary);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.confidenceBarFill {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width var(--transition-fast);
+}
+
+.confidenceBarFill[data-status='good'] {
+  background: var(--color-status-positive);
+}
+
+.confidenceBarFill[data-status='fair'] {
+  background: var(--color-status-neutral);
+}
+
+.confidenceBarFill[data-status='poor'] {
+  background: var(--color-status-critical);
+}
+
+.correctionBadge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-status-warning);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-status-warning-bg);
+  border-radius: var(--border-radius-sm);
+  align-self: flex-start;
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .screen {
+    gap: var(--space-4);
+  }
+
+  .gaugeGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .opGrid {
+    grid-template-columns: 1fr;
+  }
+}
