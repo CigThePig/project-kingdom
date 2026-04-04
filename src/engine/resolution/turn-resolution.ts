@@ -4,6 +4,7 @@
 
 import {
   ActionType,
+  ConflictState,
   ConstructionProject,
   CrownBarData,
   EventSeverity,
@@ -12,6 +13,8 @@ import {
   IntelligenceOperationType,
   IntelligenceReport,
   KnowledgeBranch,
+  NeighborAction,
+  NeighborActionType,
   PersistentConsequence,
   PopulationClass,
   QueuedAction,
@@ -86,14 +89,32 @@ import {
   checkMilestoneUnlock,
   applyMilestoneUnlock,
   getAgriculturalBonus,
+  getMilitaryBonus,
   getTradeBonus,
   getCulturalBonus,
 } from '../systems/knowledge';
 import {
   calculateAIRelationshipDelta,
   applyDiplomacyUpdate,
+  deriveDiplomaticPosture,
   tickDiplomaticAgreements,
+  generateNeighborActions,
+  handleEspionageExposure,
+  updateNeighborMilitaryStrength,
+  updateNeighborWarWeariness,
+  applyWarDeclaration,
+  applyPeaceResolution,
 } from '../systems/diplomacy';
+import {
+  calculatePlayerCombatPower,
+  calculateNeighborCombatPower,
+  resolveConflictTurn,
+  advanceConflictPhase,
+  calculateWarCosts,
+  calculateConflictMoraleImpact,
+  initiateConflict,
+  applyConflictConsequences,
+} from '../systems/military';
 import { EVENT_POOL } from '../../data/events/index';
 import { STORYLINE_POOL } from '../../data/storylines/index';
 
@@ -453,6 +474,397 @@ export function resolveTurn(
     intelligenceAdvantage: updatedEspionage.networkStrength,
   };
 
+  // ---- Phase 5b: AI Neighbor Autonomous Actions ----
+  const allNeighborActions: NeighborAction[] = [];
+  const knowledgeMilBonus = getMilitaryBonus(stateAfterActions.knowledge) * 100;
+  let externalHeterodoxPressure = 0;
+
+  for (const neighbor of updatedDiplomacy.neighbors) {
+    const actions = generateNeighborActions(
+      neighbor,
+      updatedMilitary,
+      stateAfterActions.stability.value,
+      updatedTreasury.balance,
+      updatedEspionage,
+      stateAfterActions.faithCulture.kingdomFaithTraditionId,
+      stateAfterActions.faithCulture.kingdomCultureIdentityId,
+      state.turn.turnNumber,
+      stateAfterActions.activeConflicts,
+      Math.random(),
+    );
+    allNeighborActions.push(...actions);
+  }
+
+  // Process AI actions: apply war declarations, trade proposals/withdrawals,
+  // treaty proposals, demands, border tensions, and religious pressure.
+  for (const action of allNeighborActions) {
+    switch (action.actionType) {
+      case NeighborActionType.WarDeclaration: {
+        updatedDiplomacy = {
+          ...updatedDiplomacy,
+          neighbors: applyWarDeclaration(updatedDiplomacy.neighbors, action.neighborId),
+        };
+        break;
+      }
+      case NeighborActionType.TradeProposal: {
+        const turns =
+          typeof action.parameters['agreementTurns'] === 'number'
+            ? action.parameters['agreementTurns']
+            : 12;
+        updatedDiplomacy = {
+          ...updatedDiplomacy,
+          neighbors: updatedDiplomacy.neighbors.map((n) =>
+            n.id === action.neighborId
+              ? {
+                  ...n,
+                  activeAgreements: [
+                    ...n.activeAgreements,
+                    {
+                      agreementId: `trade_${action.neighborId}_t${state.turn.turnNumber}`,
+                      neighborId: action.neighborId,
+                      turnsRemaining: turns,
+                    },
+                  ],
+                }
+              : n,
+          ),
+        };
+        break;
+      }
+      case NeighborActionType.TradeWithdrawal: {
+        updatedDiplomacy = {
+          ...updatedDiplomacy,
+          neighbors: updatedDiplomacy.neighbors.map((n) =>
+            n.id === action.neighborId
+              ? {
+                  ...n,
+                  activeAgreements: n.activeAgreements.filter(
+                    (a) => !a.agreementId.startsWith('trade_'),
+                  ),
+                }
+              : n,
+          ),
+        };
+        break;
+      }
+      case NeighborActionType.TreatyProposal: {
+        updatedDiplomacy = {
+          ...updatedDiplomacy,
+          neighbors: updatedDiplomacy.neighbors.map((n) =>
+            n.id === action.neighborId
+              ? {
+                  ...n,
+                  activeAgreements: [
+                    ...n.activeAgreements,
+                    {
+                      agreementId: `treaty_${action.neighborId}_t${state.turn.turnNumber}`,
+                      neighborId: action.neighborId,
+                      turnsRemaining: null,
+                    },
+                  ],
+                  relationshipScore: clamp(n.relationshipScore + 5, 0, 100),
+                }
+              : n,
+          ),
+        };
+        break;
+      }
+      case NeighborActionType.Demand: {
+        // Demands reduce relationship; player can respond via crisis response events.
+        updatedDiplomacy = {
+          ...updatedDiplomacy,
+          neighbors: updatedDiplomacy.neighbors.map((n) =>
+            n.id === action.neighborId
+              ? {
+                  ...n,
+                  relationshipScore: clamp(n.relationshipScore - 3, 0, 100),
+                  outstandingTensions: n.outstandingTensions.includes('demand_pending')
+                    ? n.outstandingTensions
+                    : [...n.outstandingTensions, 'demand_pending'],
+                }
+              : n,
+          ),
+        };
+        break;
+      }
+      case NeighborActionType.BorderTension: {
+        updatedDiplomacy = {
+          ...updatedDiplomacy,
+          neighbors: updatedDiplomacy.neighbors.map((n) =>
+            n.id === action.neighborId
+              ? {
+                  ...n,
+                  relationshipScore: clamp(n.relationshipScore - 2, 0, 100),
+                  outstandingTensions: n.outstandingTensions.includes('border_tension')
+                    ? n.outstandingTensions
+                    : [...n.outstandingTensions, 'border_tension'],
+                }
+              : n,
+          ),
+        };
+        break;
+      }
+      case NeighborActionType.MilitaryBuildup: {
+        // No direct effect on player state; neighbor strength is updated below.
+        break;
+      }
+      case NeighborActionType.ReligiousPressure: {
+        const heterDelta =
+          typeof action.parameters['heterodoxyDelta'] === 'number'
+            ? action.parameters['heterodoxyDelta']
+            : 5;
+        externalHeterodoxPressure += heterDelta;
+        break;
+      }
+      case NeighborActionType.PeaceOffer:
+      case NeighborActionType.EspionageRetaliation:
+        // These generate events for the player to respond to; no immediate state change.
+        break;
+    }
+  }
+
+  // Update lastActionTurn for neighbors that took actions.
+  const actedNeighborIds = new Set(allNeighborActions.map((a) => a.neighborId));
+  updatedDiplomacy = {
+    ...updatedDiplomacy,
+    neighbors: updatedDiplomacy.neighbors.map((n) =>
+      actedNeighborIds.has(n.id) ? { ...n, lastActionTurn: state.turn.turnNumber } : n,
+    ),
+  };
+
+  // ---- Phase 5c: Espionage Exposure Check ----
+  // Failed sabotage operations (already resolved above) may expose espionage.
+  // Check if any intel op targeted a neighbor and failed — approximate with
+  // counter-intelligence exceeding network strength for the target.
+  for (const op of intelOps) {
+    if (op.targetNeighborId === null) continue;
+    const targetNeighbor = updatedDiplomacy.neighbors.find(
+      (n) => n.id === op.targetNeighborId,
+    );
+    if (!targetNeighbor) continue;
+
+    // Exposure probability: higher if target's espionage capability exceeds our counter-intel.
+    const exposureRoll = Math.random();
+    const exposureChance = clamp(
+      (targetNeighbor.espionageCapability - updatedEspionage.counterIntelligenceLevel) * 0.01,
+      0.05,
+      0.4,
+    );
+
+    if (exposureRoll < exposureChance) {
+      const exposure = handleEspionageExposure(targetNeighbor, state.turn.turnNumber);
+      // Apply relationship penalty.
+      updatedDiplomacy = {
+        ...updatedDiplomacy,
+        neighbors: updatedDiplomacy.neighbors.map((n) => {
+          if (n.id !== targetNeighbor.id) return n;
+          const newScore = clamp(n.relationshipScore + exposure.relationshipDelta, 0, 100);
+          return {
+            ...n,
+            relationshipScore: newScore,
+            attitudePosture: deriveDiplomaticPosture(newScore),
+            outstandingTensions:
+              exposure.tensionId && !n.outstandingTensions.includes(exposure.tensionId)
+                ? [...n.outstandingTensions, exposure.tensionId]
+                : n.outstandingTensions,
+          };
+        }),
+      };
+      if (exposure.action) {
+        allNeighborActions.push(exposure.action);
+      }
+    }
+  }
+
+  // ---- Phase 5d: Conflict Initiation & Resolution ----
+  // Check for new conflicts from war declarations.
+  let activeConflicts: ConflictState[] = [...stateAfterActions.activeConflicts];
+
+  for (const action of allNeighborActions) {
+    if (action.actionType === NeighborActionType.WarDeclaration) {
+      const alreadyInConflict = activeConflicts.some(
+        (c) => c.neighborId === action.neighborId,
+      );
+      if (!alreadyInConflict) {
+        // Target the region with highest strategic value.
+        const targetRegion = stateAfterActions.regions
+          .filter((r) => !r.isOccupied)
+          .sort((a, b) => b.strategicValue - a.strategicValue)[0];
+        activeConflicts.push(
+          initiateConflict(
+            action.neighborId,
+            state.turn.turnNumber,
+            targetRegion?.id ?? null,
+          ),
+        );
+      }
+    }
+  }
+
+  // Also check for player-initiated wars (player relationship dropped to War via actions).
+  for (const neighbor of updatedDiplomacy.neighbors) {
+    if (
+      neighbor.isAtWarWithPlayer &&
+      !activeConflicts.some((c) => c.neighborId === neighbor.id)
+    ) {
+      const targetRegion = stateAfterActions.regions
+        .filter((r) => !r.isOccupied)
+        .sort((a, b) => b.strategicValue - a.strategicValue)[0];
+      activeConflicts.push(
+        initiateConflict(
+          neighbor.id,
+          state.turn.turnNumber,
+          targetRegion?.id ?? null,
+        ),
+      );
+    }
+  }
+
+  // Resolve active conflicts.
+  const resolvedConflicts: ConflictState[] = [];
+  const ongoingConflicts: ConflictState[] = [];
+
+  for (const conflict of activeConflicts) {
+    const neighbor = updatedDiplomacy.neighbors.find((n) => n.id === conflict.neighborId);
+    if (!neighbor) {
+      ongoingConflicts.push(conflict);
+      continue;
+    }
+
+    // Calculate terrain advantage from target region.
+    const targetRegion = conflict.targetRegionId
+      ? stateAfterActions.regions.find((r) => r.id === conflict.targetRegionId)
+      : null;
+    const terrainAdvantage = targetRegion ? targetRegion.strategicValue : 50;
+
+    const playerPower = calculatePlayerCombatPower(
+      updatedMilitary,
+      terrainAdvantage,
+      knowledgeMilBonus,
+    );
+    const neighborPower = calculateNeighborCombatPower(neighbor);
+
+    const outcome = resolveConflictTurn(
+      conflict,
+      playerPower,
+      neighborPower,
+      updatedMilitary.forceSize,
+      neighbor.militaryStrength,
+      Math.random(),
+    );
+
+    // Apply casualties to player forces.
+    updatedMilitary = {
+      ...updatedMilitary,
+      forceSize: Math.max(0, updatedMilitary.forceSize - outcome.playerCasualties),
+    };
+
+    // Apply war costs.
+    const warCosts = calculateWarCosts(conflict);
+    updatedTreasury = {
+      ...updatedTreasury,
+      balance: Math.max(0, updatedTreasury.balance - warCosts.treasuryDrain),
+    };
+    updatedFood = {
+      ...updatedFood,
+      reserves: Math.max(0, updatedFood.reserves - warCosts.foodDrain),
+    };
+
+    // Apply conflict morale impact.
+    const conflictMorale = calculateConflictMoraleImpact(conflict);
+    if (conflictMorale !== 0) {
+      updatedMilitary = {
+        ...updatedMilitary,
+        morale: clamp(updatedMilitary.morale + conflictMorale, 0, 100),
+      };
+    }
+
+    // Update conflict state.
+    let updatedConflict: ConflictState = {
+      ...conflict,
+      turnsElapsed: conflict.turnsElapsed + 1,
+      playerAdvantage: clamp(conflict.playerAdvantage + outcome.advantageShift, -100, 100),
+      playerCasualties: conflict.playerCasualties + outcome.playerCasualties,
+      neighborCasualties: conflict.neighborCasualties + outcome.neighborCasualties,
+      lastOutcomeCode: outcome.outcomeCode,
+    };
+
+    // Advance phase if needed.
+    updatedConflict = advanceConflictPhase(updatedConflict);
+
+    if (outcome.isResolved) {
+      resolvedConflicts.push(updatedConflict);
+    } else {
+      ongoingConflicts.push(updatedConflict);
+    }
+  }
+
+  // Apply consequences of resolved conflicts.
+  for (const resolved of resolvedConflicts) {
+    const playerWon = resolved.playerAdvantage > 0;
+
+    // Apply peace resolution to diplomacy.
+    updatedDiplomacy = {
+      ...updatedDiplomacy,
+      neighbors: applyPeaceResolution(updatedDiplomacy.neighbors, resolved.neighborId),
+    };
+
+    // Apply victory/defeat consequences via the military module.
+    const stateForConsequences: GameState = {
+      ...stateAfterActions,
+      treasury: updatedTreasury,
+      food: updatedFood,
+      population: updatedPopulation,
+      military: updatedMilitary,
+      diplomacy: updatedDiplomacy,
+      stability: updatedStability,
+      faithCulture: updatedFaithCulture,
+      espionage: updatedEspionage,
+    };
+    const afterConsequences = applyConflictConsequences(
+      stateForConsequences,
+      resolved,
+      playerWon,
+      Math.random(),
+    );
+
+    // Merge consequences back.
+    updatedTreasury = afterConsequences.treasury;
+    updatedFood = afterConsequences.food;
+    updatedPopulation = afterConsequences.population;
+    updatedMilitary = afterConsequences.military;
+    updatedDiplomacy = afterConsequences.diplomacy;
+    updatedStability = afterConsequences.stability;
+  }
+
+  activeConflicts = ongoingConflicts;
+
+  // ---- Phase 5e: Update Neighbor Military Strength & War Weariness ----
+  updatedDiplomacy = {
+    ...updatedDiplomacy,
+    neighbors: updatedDiplomacy.neighbors.map((n) => {
+      const conflictForNeighbor = activeConflicts.find((c) => c.neighborId === n.id);
+      const isInConflict = conflictForNeighbor !== undefined;
+      const conflictAdvantage = conflictForNeighbor?.playerAdvantage ?? 0;
+
+      return {
+        ...n,
+        militaryStrength: updateNeighborMilitaryStrength(n, isInConflict, conflictAdvantage),
+        warWeariness: updateNeighborWarWeariness(n, isInConflict),
+        isAtWarWithPlayer: n.attitudePosture === 'War',
+      };
+    }),
+  };
+
+  // Re-derive postures after all changes.
+  updatedDiplomacy = {
+    ...updatedDiplomacy,
+    neighbors: updatedDiplomacy.neighbors.map((n) => ({
+      ...n,
+      attitudePosture: deriveDiplomaticPosture(n.relationshipScore),
+    })),
+  };
+
   // ---- Phase 6: Faith and Culture ----
   const faithDelta = calculateFaithDelta(
     updatedPopulation[PopulationClass.Clergy].satisfaction,
@@ -469,12 +881,12 @@ export function resolveTurn(
     getCulturalBonus(stateAfterActions.knowledge),
   );
 
-  // External heterodox pressure: 0 until the event engine provides context (Phase 4 build plan).
+  // External heterodox pressure from AI neighbor religious pressure actions (Phase 5b).
   const heterodoxyDelta = calculateHeterodoxyDelta(
     stateAfterActions.faithCulture.faithLevel,
     updatedPopulation[PopulationClass.Clergy].satisfaction,
     stateAfterActions.policies.religiousTolerance,
-    0,
+    externalHeterodoxPressure,
   );
 
   let updatedFaithCulture = applyFaithCultureUpdate(
@@ -545,6 +957,18 @@ export function resolveTurn(
     actionsTakenThisTurn,
     stateAfterActions.stability,
   );
+
+  // Apply stability penalty from active conflicts (§6.2).
+  if (activeConflicts.length > 0) {
+    const conflictStabilityPenalty = activeConflicts.reduce(
+      (sum, c) => sum + calculateWarCosts(c).stabilityPenalty,
+      0,
+    );
+    updatedStability = {
+      ...updatedStability,
+      value: clamp(updatedStability.value - conflictStabilityPenalty, 0, 100),
+    };
+  }
 
   // ---- Phase 9: Event and Storyline Generation ----
   // nextTurnNumber is needed here and again in Phase 11.
@@ -777,6 +1201,8 @@ export function resolveTurn(
     constructionProjects: updatedConstructionProjects,
     activeEvents,
     activeStorylines,
+    activeConflicts,
+    neighborActions: allNeighborActions,
     actionBudget: nextActionBudget,
     crownBar: nextCrownBar,
     activeFailureConditions: triggeredFailureConditions,

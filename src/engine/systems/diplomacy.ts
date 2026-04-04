@@ -3,9 +3,14 @@
 // No React imports. No player-facing text.
 
 import {
+  ConflictState,
   DiplomaticAgreement,
   DiplomaticPosture,
   DiplomacyState,
+  EspionageState,
+  MilitaryState,
+  NeighborAction,
+  NeighborActionType,
   NeighborDisposition,
   NeighborState,
 } from '../types';
@@ -14,6 +19,21 @@ import {
   DIPLOMACY_POSTURE_THRESHOLDS,
   DIPLOMACY_SHARED_CULTURE_BONUS,
   DIPLOMACY_SHARED_FAITH_BONUS,
+  ESPIONAGE_EXPOSURE_RELATIONSHIP_PENALTY,
+  ESPIONAGE_EXPOSURE_TENSION_ID,
+  NEIGHBOR_AI_ACTION_COOLDOWN,
+  NEIGHBOR_AI_DEMAND_THRESHOLD,
+  NEIGHBOR_AI_MILITARY_ATTRITION_RATE,
+  NEIGHBOR_AI_MILITARY_BUILDUP_RATE,
+  NEIGHBOR_AI_MILITARY_BUILDUP_THRESHOLD,
+  NEIGHBOR_AI_PEACE_OFFER_WAR_WEARINESS,
+  NEIGHBOR_AI_RELIGIOUS_PRESSURE_HETERODOXY_DELTA,
+  NEIGHBOR_AI_TRADE_PROPOSAL_THRESHOLD,
+  NEIGHBOR_AI_TRADE_WITHDRAWAL_THRESHOLD,
+  NEIGHBOR_AI_TREATY_PROPOSAL_THRESHOLD,
+  NEIGHBOR_AI_WAR_DECLARATION_THRESHOLD,
+  NEIGHBOR_AI_WAR_WEARINESS_PER_TURN,
+  TRADE_AI_PROPOSAL_AGREEMENT_TURNS,
 } from '../constants';
 
 // ============================================================
@@ -203,4 +223,294 @@ export function applyDiplomacyUpdate(
   });
 
   return { ...current, neighbors: updatedNeighbors };
+}
+
+// ============================================================
+// AI Neighbor Autonomous Behavior (§9)
+// ============================================================
+
+/**
+ * Evaluates whether a neighbor should declare war based on disposition,
+ * relationship score, player weakness, and military strength comparison.
+ * Only Aggressive and Opportunistic neighbors initiate war.
+ */
+export function shouldDeclareWar(
+  neighbor: NeighborState,
+  playerMilitaryStrength: number,
+  playerStability: number,
+  rng: number,
+): boolean {
+  if (neighbor.isAtWarWithPlayer) return false;
+  if (neighbor.relationshipScore > NEIGHBOR_AI_WAR_DECLARATION_THRESHOLD) return false;
+
+  const isAggressive = neighbor.disposition === NeighborDisposition.Aggressive;
+  const isOpportunistic = neighbor.disposition === NeighborDisposition.Opportunistic;
+  if (!isAggressive && !isOpportunistic) return false;
+
+  // Aggressive neighbors are more willing; opportunistic need clear advantage.
+  const militaryAdvantage = neighbor.militaryStrength - playerMilitaryStrength;
+  const instabilityFactor = playerStability < 30 ? 0.2 : 0;
+
+  const warChance = isAggressive
+    ? 0.3 + (militaryAdvantage > 0 ? 0.2 : 0) + instabilityFactor
+    : 0.1 + (militaryAdvantage > 10 ? 0.3 : 0) + instabilityFactor;
+
+  return rng < warChance;
+}
+
+/**
+ * Generates autonomous actions for a neighbor based on current game state evaluation.
+ * Each neighbor evaluates: military strength, diplomatic stance, trade value,
+ * stability, intelligence exposure, religious alignment (§9.2).
+ * Returns an array of actions (typically 0 or 1 per turn).
+ */
+export function generateNeighborActions(
+  neighbor: NeighborState,
+  playerMilitary: MilitaryState,
+  playerStability: number,
+  playerTreasury: number,
+  playerEspionage: EspionageState,
+  kingdomFaith: string,
+  kingdomCulture: string,
+  currentTurn: number,
+  activeConflicts: ConflictState[],
+  rng: number,
+): NeighborAction[] {
+  const actions: NeighborAction[] = [];
+
+  // Respect action cooldown — no spam.
+  if (currentTurn - neighbor.lastActionTurn < NEIGHBOR_AI_ACTION_COOLDOWN) {
+    return actions;
+  }
+
+  const inConflict = activeConflicts.some((c) => c.neighborId === neighbor.id);
+  const playerMilStr = clamp(
+    (playerMilitary.readiness + playerMilitary.morale + playerMilitary.equipmentCondition) / 3,
+    0,
+    100,
+  );
+
+  // --- At War: consider peace offer ---
+  if (neighbor.isAtWarWithPlayer && inConflict) {
+    if (neighbor.warWeariness >= NEIGHBOR_AI_PEACE_OFFER_WAR_WEARINESS) {
+      actions.push({
+        neighborId: neighbor.id,
+        actionType: NeighborActionType.PeaceOffer,
+        turnGenerated: currentTurn,
+        parameters: { warWeariness: neighbor.warWeariness },
+      });
+      return actions;
+    }
+    return actions; // at war, no other actions
+  }
+
+  // --- War Declaration ---
+  if (shouldDeclareWar(neighbor, playerMilStr, playerStability, rng)) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.WarDeclaration,
+      turnGenerated: currentTurn,
+      parameters: {},
+    });
+    return actions;
+  }
+
+  // --- Hostile/Tense behaviors ---
+  if (neighbor.relationshipScore <= NEIGHBOR_AI_MILITARY_BUILDUP_THRESHOLD) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.MilitaryBuildup,
+      turnGenerated: currentTurn,
+      parameters: {},
+    });
+    return actions;
+  }
+
+  if (neighbor.relationshipScore <= NEIGHBOR_AI_DEMAND_THRESHOLD) {
+    // Aggressive and Opportunistic neighbors issue demands.
+    if (
+      neighbor.disposition === NeighborDisposition.Aggressive ||
+      neighbor.disposition === NeighborDisposition.Opportunistic
+    ) {
+      actions.push({
+        neighborId: neighbor.id,
+        actionType: NeighborActionType.Demand,
+        turnGenerated: currentTurn,
+        parameters: { treasuryDemand: Math.round(playerTreasury * 0.1) },
+      });
+      return actions;
+    }
+    // Other dispositions create border tensions.
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.BorderTension,
+      turnGenerated: currentTurn,
+      parameters: {},
+    });
+    return actions;
+  }
+
+  // --- Trade proposals / withdrawals ---
+  const hasTradeAgreement = neighbor.activeAgreements.some(
+    (a) => a.agreementId.startsWith('trade_'),
+  );
+
+  if (!hasTradeAgreement && neighbor.relationshipScore >= NEIGHBOR_AI_TRADE_PROPOSAL_THRESHOLD) {
+    // Mercantile neighbors are eager to trade.
+    const tradeChance =
+      neighbor.disposition === NeighborDisposition.Mercantile ? 0.5 : 0.2;
+    if (rng < tradeChance) {
+      actions.push({
+        neighborId: neighbor.id,
+        actionType: NeighborActionType.TradeProposal,
+        turnGenerated: currentTurn,
+        parameters: { agreementTurns: TRADE_AI_PROPOSAL_AGREEMENT_TURNS },
+      });
+      return actions;
+    }
+  }
+
+  if (hasTradeAgreement && neighbor.relationshipScore < NEIGHBOR_AI_TRADE_WITHDRAWAL_THRESHOLD) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.TradeWithdrawal,
+      turnGenerated: currentTurn,
+      parameters: {},
+    });
+    return actions;
+  }
+
+  // --- Treaty proposals ---
+  if (neighbor.relationshipScore >= NEIGHBOR_AI_TREATY_PROPOSAL_THRESHOLD) {
+    const hasNonTradeAgreement = neighbor.activeAgreements.some(
+      (a) => !a.agreementId.startsWith('trade_'),
+    );
+    if (!hasNonTradeAgreement && rng < 0.15) {
+      actions.push({
+        neighborId: neighbor.id,
+        actionType: NeighborActionType.TreatyProposal,
+        turnGenerated: currentTurn,
+        parameters: {},
+      });
+      return actions;
+    }
+  }
+
+  // --- Religious pressure ---
+  const faithMismatch = neighbor.religiousProfile !== kingdomFaith;
+  if (
+    faithMismatch &&
+    (neighbor.disposition === NeighborDisposition.Aggressive ||
+      neighbor.disposition === NeighborDisposition.Cautious) &&
+    rng < 0.1
+  ) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.ReligiousPressure,
+      turnGenerated: currentTurn,
+      parameters: { heterodoxyDelta: NEIGHBOR_AI_RELIGIOUS_PRESSURE_HETERODOXY_DELTA },
+    });
+    return actions;
+  }
+
+  return actions;
+}
+
+/**
+ * Handles neighbor reaction to discovered espionage operations.
+ * Returns relationship delta and optional tension addition.
+ */
+export function handleEspionageExposure(
+  neighbor: NeighborState,
+  currentTurn: number,
+): { relationshipDelta: number; tensionId: string | null; action: NeighborAction | null } {
+  const alreadyHasTension = neighbor.outstandingTensions.includes(ESPIONAGE_EXPOSURE_TENSION_ID);
+  const relationshipDelta = ESPIONAGE_EXPOSURE_RELATIONSHIP_PENALTY;
+  const tensionId = alreadyHasTension ? null : ESPIONAGE_EXPOSURE_TENSION_ID;
+
+  // Aggressive neighbors retaliate with border tensions.
+  let action: NeighborAction | null = null;
+  if (neighbor.disposition === NeighborDisposition.Aggressive) {
+    action = {
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.EspionageRetaliation,
+      turnGenerated: currentTurn,
+      parameters: { severity: 'hostile' },
+    };
+  }
+
+  return { relationshipDelta, tensionId, action };
+}
+
+/**
+ * Updates neighbor military strength based on disposition and conflict state.
+ * Hostile neighbors build up; neighbors in conflict suffer attrition.
+ */
+export function updateNeighborMilitaryStrength(
+  neighbor: NeighborState,
+  isInConflict: boolean,
+  conflictAdvantage: number,
+): number {
+  let delta = 0;
+
+  if (isInConflict) {
+    // Attrition during conflict; worse when losing.
+    const attritionMultiplier = conflictAdvantage > 0 ? 1.5 : 1.0;
+    delta = -Math.round(NEIGHBOR_AI_MILITARY_ATTRITION_RATE * attritionMultiplier);
+  } else if (neighbor.relationshipScore <= NEIGHBOR_AI_MILITARY_BUILDUP_THRESHOLD) {
+    delta = NEIGHBOR_AI_MILITARY_BUILDUP_RATE;
+  }
+
+  return clamp(neighbor.militaryStrength + delta, 5, 100);
+}
+
+/**
+ * Updates neighbor war weariness. Increases during conflict, decays during peace.
+ */
+export function updateNeighborWarWeariness(
+  neighbor: NeighborState,
+  isInConflict: boolean,
+): number {
+  if (isInConflict) {
+    return clamp(neighbor.warWeariness + NEIGHBOR_AI_WAR_WEARINESS_PER_TURN, 0, 100);
+  }
+  // Slow decay during peace.
+  return clamp(neighbor.warWeariness - 3, 0, 100);
+}
+
+/**
+ * Applies a war declaration: sets neighbor to war posture, marks isAtWarWithPlayer.
+ */
+export function applyWarDeclaration(
+  neighbors: NeighborState[],
+  neighborId: string,
+): NeighborState[] {
+  return neighbors.map((n) => {
+    if (n.id !== neighborId) return n;
+    return {
+      ...n,
+      relationshipScore: 0,
+      attitudePosture: DiplomaticPosture.War,
+      isAtWarWithPlayer: true,
+    };
+  });
+}
+
+/**
+ * Applies a peace resolution: elevates relationship to Tense, clears war state.
+ */
+export function applyPeaceResolution(
+  neighbors: NeighborState[],
+  neighborId: string,
+): NeighborState[] {
+  return neighbors.map((n) => {
+    if (n.id !== neighborId) return n;
+    return {
+      ...n,
+      relationshipScore: 25,
+      attitudePosture: DiplomaticPosture.Tense,
+      isAtWarWithPlayer: false,
+      warWeariness: 0,
+    };
+  });
 }

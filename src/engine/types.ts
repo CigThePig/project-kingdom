@@ -141,6 +141,29 @@ export enum NeighborDisposition {
 }
 
 // ============================================================
+// Section 6b — Conflict & AI Neighbor Enums
+// ============================================================
+
+export enum ConflictPhase {
+  Skirmish = 'Skirmish',
+  Campaign = 'Campaign',
+  Siege = 'Siege',
+}
+
+export enum NeighborActionType {
+  TradeProposal = 'TradeProposal',
+  TradeWithdrawal = 'TradeWithdrawal',
+  TreatyProposal = 'TreatyProposal',
+  Demand = 'Demand',
+  WarDeclaration = 'WarDeclaration',
+  PeaceOffer = 'PeaceOffer',
+  BorderTension = 'BorderTension',
+  MilitaryBuildup = 'MilitaryBuildup',
+  EspionageRetaliation = 'EspionageRetaliation',
+  ReligiousPressure = 'ReligiousPressure',
+}
+
+// ============================================================
 // Section 7 — Knowledge Enums
 // ============================================================
 
@@ -361,10 +384,46 @@ export interface NeighborState {
   religiousProfile: string; // internal faith-tradition ID
   culturalIdentity: string; // internal culture ID
   espionageCapability: number; // 0–100
+  lastActionTurn: number; // turn of last autonomous AI action
+  warWeariness: number; // 0��100, accumulates during conflicts
+  isAtWarWithPlayer: boolean; // convenience flag derived from posture
 }
 
 export interface DiplomacyState {
   neighbors: NeighborState[];
+}
+
+// --- AI Neighbor Actions ---
+
+export interface NeighborAction {
+  neighborId: string;
+  actionType: NeighborActionType;
+  turnGenerated: number;
+  parameters: Record<string, unknown>;
+}
+
+// --- Conflicts ---
+
+export interface ConflictState {
+  id: string;
+  neighborId: string;
+  phase: ConflictPhase;
+  turnStarted: number;
+  turnsElapsed: number;
+  playerAdvantage: number; // -100 to +100, positive = player winning
+  targetRegionId: string | null; // region under threat/siege
+  playerCasualties: number; // cumulative force losses
+  neighborCasualties: number; // estimated enemy losses
+  lastOutcomeCode: string; // internal outcome code, NOT player-facing text
+}
+
+export interface ConflictResolutionOutcome {
+  advantageShift: number;
+  playerCasualties: number;
+  neighborCasualties: number;
+  outcomeCode: string; // internal code for text layer
+  isResolved: boolean;
+  playerVictory: boolean | null; // null if ongoing
 }
 
 // --- Espionage ---
@@ -631,6 +690,8 @@ export interface GameState {
   constructionProjects: ConstructionProject[];
   activeEvents: ActiveEvent[];
   activeStorylines: ActiveStoryline[];
+  activeConflicts: ConflictState[];
+  neighborActions: NeighborAction[]; // AI actions generated this turn, cleared each turn
 
   // Turn action management
   actionBudget: ActionBudget;

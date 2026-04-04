@@ -69,28 +69,32 @@ Events and storylines must apply mechanical effects to game state, not just disp
 
 ## Phase 3 — AI Neighbors & Conflict Resolution
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Diplomacy System (AI behavior), Military System (Conflict Resolution)
 
 Neighboring kingdoms must be autonomous actors that react to player state, not passive data.
 
-**Files to modify:**
-- `src/engine/systems/diplomacy.ts` — AI decision logic, relationship shifts, treaty proposals
-- `src/engine/systems/military.ts` — conflict resolution mechanics, multi-turn campaigns
-- `src/engine/systems/trade.ts` — AI-initiated trade proposals and disruptions
-- `src/engine/resolution/turn-resolution.ts` — Phase 5 military/diplomacy/intelligence resolution
+**Files modified:**
+- `src/engine/types.ts` — Added `ConflictPhase`, `NeighborActionType` enums; `ConflictState`, `ConflictResolutionOutcome`, `NeighborAction` interfaces; extended `NeighborState` with `lastActionTurn`, `warWeariness`, `isAtWarWithPlayer`; extended `GameState` with `activeConflicts`, `neighborActions`
+- `src/engine/constants.ts` — Block 17: AI behavior thresholds, conflict resolution weights, phase transitions, per-turn consequences, resolution thresholds, victory/defeat consequences, trade AI, espionage exposure constants
+- `src/engine/systems/diplomacy.ts` — AI autonomous action generation (`generateNeighborActions`, `shouldDeclareWar`), espionage exposure handling, neighbor military/war weariness updates, war declaration/peace resolution applicators
+- `src/engine/systems/military.ts` — Combat power calculators (`calculatePlayerCombatPower`, `calculateNeighborCombatPower`), conflict turn resolution, phase advancement, war cost calculation, conflict initiation, conflict consequence application (victory/defeat)
+- `src/engine/systems/trade.ts` — Trade AI proposal/withdrawal logic (`shouldProposeTradeAgreement`, `shouldWithdrawTrade`)
+- `src/engine/resolution/turn-resolution.ts` — Phases 5b-5e: AI neighbor action generation, action processing, espionage exposure checks, conflict initiation/resolution, neighbor military/weariness updates; Phase 8: conflict stability penalties; Phase 11: activeConflicts/neighborActions in final state
+- `src/data/scenarios/default.ts` — Initialized new NeighborState and GameState fields
+- `src/data/text/labels.ts` — Labels for ConflictPhase, NeighborActionType, conflict outcomes
 
 **Checklist:**
-- [ ] AI neighbor behavior: each neighbor evaluates player military strength, diplomatic stance, trade value, stability, intelligence exposure, and religious alignment each turn
-- [ ] Diplomatic escalation: AI can shift posture (friendly → cautious → hostile → war), propose treaties, break agreements, issue demands
-- [ ] Trade AI: neighbors propose or withdraw trade based on relationship, resource needs, and merchant class influence
-- [ ] Military threat: hostile neighbors build forces, issue warnings, and potentially declare war based on player weakness
-- [ ] Conflict initiation: AI-triggered or player-triggered military conflict with clear cause
-- [ ] Conflict resolution: outcome based on force size, readiness, equipment, morale, military caste quality, terrain, intelligence advantage, military knowledge, randomness
-- [ ] Multi-turn conflicts: campaigns that persist across turns with evolving advantage, not single-turn resolution
-- [ ] Conflict consequences: territory loss/gain, resource costs, population casualties, class satisfaction shifts, diplomatic ripple effects
-- [ ] Intelligence exposure reaction: neighbors respond to discovered espionage (diplomatic incidents, counter-measures)
-- [ ] Verify: play 15+ turns, confirm neighbors take visible autonomous actions and conflicts resolve meaningfully
+- [x] AI neighbor behavior: each neighbor evaluates player military strength, diplomatic stance, trade value, stability, intelligence exposure, and religious alignment each turn
+- [x] Diplomatic escalation: AI can shift posture (friendly → cautious → hostile → war), propose treaties, break agreements, issue demands
+- [x] Trade AI: neighbors propose or withdraw trade based on relationship, resource needs, and merchant class influence
+- [x] Military threat: hostile neighbors build forces, issue warnings, and potentially declare war based on player weakness
+- [x] Conflict initiation: AI-triggered or player-triggered military conflict with clear cause
+- [x] Conflict resolution: outcome based on force size, readiness, equipment, morale, military caste quality, terrain, intelligence advantage, military knowledge, randomness
+- [x] Multi-turn conflicts: campaigns that persist across turns with evolving advantage, not single-turn resolution
+- [x] Conflict consequences: territory loss/gain, resource costs, population casualties, class satisfaction shifts, diplomatic ripple effects
+- [x] Intelligence exposure reaction: neighbors respond to discovered espionage (diplomatic incidents, counter-measures)
+- [x] Verify: play 15+ turns, confirm neighbors take visible autonomous actions and conflicts resolve meaningfully
 
 ---
 

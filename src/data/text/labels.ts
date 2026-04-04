@@ -1,5 +1,6 @@
 import {
   ActionType,
+  ConflictPhase,
   ConstructionCategory,
   DecreeCategory,
   DiplomaticPosture,
@@ -12,6 +13,7 @@ import {
   KnowledgeBranch,
   MilitaryPosture,
   MilitaryRecruitmentStance,
+  NeighborActionType,
   NeighborDisposition,
   PopulationClass,
   RationingLevel,
@@ -405,4 +407,56 @@ export const INTELLIGENCE_SUCCESS_TIERS: Record<string, string> = {
   moderate: 'Moderate Risk',
   difficult: 'Difficult Undertaking',
   perilous: 'Perilous Mission',
+};
+
+// ============================================================
+// Conflict & AI Neighbor Labels (Phase 3)
+// ============================================================
+
+export const CONFLICT_PHASE_LABELS: Record<ConflictPhase, string> = {
+  [ConflictPhase.Skirmish]: 'Border Skirmish',
+  [ConflictPhase.Campaign]: 'Military Campaign',
+  [ConflictPhase.Siege]: 'Siege',
+};
+
+export const CONFLICT_PHASE_DESCRIPTIONS: Record<ConflictPhase, string> = {
+  [ConflictPhase.Skirmish]: 'Initial border clashes and probing attacks between forces.',
+  [ConflictPhase.Campaign]: 'A sustained military engagement across multiple fronts.',
+  [ConflictPhase.Siege]: 'Enemy forces lay siege to a strategic region.',
+};
+
+export const NEIGHBOR_ACTION_LABELS: Record<NeighborActionType, string> = {
+  [NeighborActionType.TradeProposal]: 'Trade Proposal',
+  [NeighborActionType.TradeWithdrawal]: 'Trade Withdrawal',
+  [NeighborActionType.TreatyProposal]: 'Treaty Proposal',
+  [NeighborActionType.Demand]: 'Diplomatic Demand',
+  [NeighborActionType.WarDeclaration]: 'Declaration of War',
+  [NeighborActionType.PeaceOffer]: 'Peace Offer',
+  [NeighborActionType.BorderTension]: 'Border Tension',
+  [NeighborActionType.MilitaryBuildup]: 'Military Buildup',
+  [NeighborActionType.EspionageRetaliation]: 'Espionage Retaliation',
+  [NeighborActionType.ReligiousPressure]: 'Religious Pressure',
+};
+
+export const NEIGHBOR_ACTION_DESCRIPTIONS: Record<NeighborActionType, string> = {
+  [NeighborActionType.TradeProposal]: 'A neighboring kingdom proposes a trade agreement to establish regular commerce.',
+  [NeighborActionType.TradeWithdrawal]: 'A neighboring kingdom withdraws from existing trade arrangements, citing deteriorating relations.',
+  [NeighborActionType.TreatyProposal]: 'A neighboring kingdom proposes a formal treaty of cooperation and mutual respect.',
+  [NeighborActionType.Demand]: 'A neighboring kingdom issues a demand backed by the implicit threat of force.',
+  [NeighborActionType.WarDeclaration]: 'A neighboring kingdom has formally declared war. Military conflict is now imminent.',
+  [NeighborActionType.PeaceOffer]: 'A war-weary neighbor extends an offer of peace and ceasefire.',
+  [NeighborActionType.BorderTension]: 'Increased military activity and border patrols signal growing hostility from a neighbor.',
+  [NeighborActionType.MilitaryBuildup]: 'Intelligence reports indicate a neighboring kingdom is expanding its military forces.',
+  [NeighborActionType.EspionageRetaliation]: 'A neighbor has discovered our intelligence operations and responds with hostile countermeasures.',
+  [NeighborActionType.ReligiousPressure]: 'A neighboring kingdom exerts religious influence, spreading dissenting theological interpretations.',
+};
+
+export const CONFLICT_OUTCOME_LABELS: Record<string, string> = {
+  initiated: 'Conflict Initiated',
+  ongoing: 'Hostilities Continue',
+  decisive_victory: 'Decisive Victory',
+  decisive_defeat: 'Decisive Defeat',
+  attritional_victory: 'Hard-Won Victory',
+  attritional_defeat: 'Grinding Defeat',
+  stalemate: 'Stalemate',
 };

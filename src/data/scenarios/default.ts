@@ -180,6 +180,9 @@ export function createDefaultScenario(): GameState {
           religiousProfile: 'orthodox',
           culturalIdentity: 'coastal',
           espionageCapability: 30,
+          lastActionTurn: 0,
+          warWeariness: 0,
+          isAtWarWithPlayer: false,
         },
         {
           id: 'neighbor_valdris',
@@ -192,6 +195,9 @@ export function createDefaultScenario(): GameState {
           religiousProfile: 'reformed',
           culturalIdentity: 'highland',
           espionageCapability: 40,
+          lastActionTurn: 0,
+          warWeariness: 0,
+          isAtWarWithPlayer: false,
         },
       ],
     },
@@ -302,6 +308,8 @@ export function createDefaultScenario(): GameState {
     // --- Active Events & Storylines ---
     activeEvents: [],
     activeStorylines: [],
+    activeConflicts: [],
+    neighborActions: [],
 
     // --- Action Budget ---
     actionBudget: {
