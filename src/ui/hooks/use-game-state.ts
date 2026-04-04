@@ -6,13 +6,14 @@ import { useContext } from 'react';
 import type {
   ActionBudget,
   CrownBarData,
+  FailureCondition,
   GameState,
   IntelligenceReport,
   TurnHistoryEntry,
   TurnState,
 } from '../../engine/types';
 import type { TurnResolutionResult } from '../../engine/resolution/turn-resolution';
-import { GameContext, type GameContextState } from '../context/game-context';
+import { GameContext, type GameAction, type GameContextState } from '../context/game-context';
 
 // ============================================================
 // Internal helper
@@ -68,4 +69,16 @@ export function useIntelligenceReports(): IntelligenceReport[] {
 
 export function useIsMidTurn(): boolean {
   return useGameContext().state.isMidTurn;
+}
+
+export function useIsGameOver(): boolean {
+  return useGameContext().state.isGameOver;
+}
+
+export function useGameOverConditions(): FailureCondition[] {
+  return useGameContext().state.gameOverConditions;
+}
+
+export function useGameDispatch(): React.Dispatch<GameAction> {
+  return useGameContext().dispatch;
 }

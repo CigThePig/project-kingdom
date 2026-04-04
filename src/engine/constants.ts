@@ -288,7 +288,12 @@ export const TRADE_INCOME_MULTIPLIER: Record<TradeOpenness, number> = {
 // Block 13 — Save & Failure Tracking (§13, §10.4)
 // ============================================================
 
-export const SAVE_SCHEMA_VERSION = 3;
+export const SAVE_SCHEMA_VERSION = 4;
+
+// Overthrow failure condition (§10.4): triggers when nobility intrigue risk is high
+// and any class is at or below the breaking point for consecutive turns.
+export const OVERTHROW_INTRIGUE_THRESHOLD = 75;
+export const OVERTHROW_CONSECUTIVE_TURNS = 3;
 
 // LocalStorage key must include the version to avoid loading incompatible saves.
 export const SAVE_STORAGE_KEY = 'kingdom-save-v1';

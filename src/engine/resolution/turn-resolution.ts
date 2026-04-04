@@ -9,6 +9,7 @@ import {
   CrownBarData,
   EventSeverity,
   FailureCondition,
+  FailureWarning,
   GameState,
   IntelligenceOperationType,
   IntelligenceReport,
@@ -25,7 +26,10 @@ import {
   TurnHistoryEntry,
   TurnState,
 } from '../types';
-import { SEASON_MONTHS } from '../constants';
+import {
+  SEASON_MONTHS,
+  OVERTHROW_CONSECUTIVE_TURNS,
+} from '../constants';
 import { advanceEventChains, EventDefinition, surfaceEvents } from '../events/event-engine';
 import {
   advanceStorylines,
@@ -35,7 +39,7 @@ import {
 import { applyStorylineResolutionEffects } from '../events/apply-event-effects';
 import { STORYLINE_RESOLUTION_EFFECTS } from '../../data/storylines/effects';
 import { resetActionBudgetForNextTurn } from './action-budget';
-import { summarizeRegionalOutputs, checkTotalConquest } from '../systems/regions';
+import { summarizeRegionalOutputs, checkTotalConquest, getOccupiedFraction, applyRegionDevelopmentChange } from '../systems/regions';
 import {
   calculateTaxationIncome,
   calculateIncome,
@@ -61,6 +65,8 @@ import {
   updateNobilityIntrigueRisk,
   calculateStability,
   checkCollapse,
+  checkOverthrow,
+  isOverthrowRiskActive,
 } from '../systems/population';
 import {
   calculateReadinessDecay,
@@ -117,6 +123,7 @@ import {
 } from '../systems/military';
 import { EVENT_POOL } from '../../data/events/index';
 import { STORYLINE_POOL } from '../../data/storylines/index';
+import { findConstructionDefinition } from '../../data/construction/index';
 
 // ============================================================
 // Public Types
@@ -137,6 +144,8 @@ export interface TurnResolutionResult {
   historyEntry: TurnHistoryEntry;
   newlyUnlockedMilestones: Array<{ branch: KnowledgeBranch; milestoneIndex: number }>;
   triggeredFailureConditions: FailureCondition[];
+  failureWarnings: FailureWarning[];
+  completedConstructionIds: string[];
   // Intelligence reports generated this turn. The hook layer appends these to
   // SaveFile.intelligenceReports so the player can review operation outcomes.
   generatedReports: IntelligenceReport[];
@@ -1090,13 +1099,101 @@ export function resolveTurn(
   ];
 
   // ---- Phase 10: Construction Progress ----
-  // Decrement turn counters, remove completed projects, and deduct per-turn resource costs.
+  // Decrement turn counters, remove completed projects, apply completion effects,
+  // and deduct per-turn resource costs.
   let workingResources = stateAfterActions.resources;
+  let constructionRegions = stateAfterActions.regions;
+  let constructionTreasury = updatedTreasury;
+  let constructionFood = updatedFood;
+  let constructionMilitary = updatedMilitary;
+  let constructionFaithCulture = updatedFaithCulture;
+  let constructionStability = updatedStability;
+  let constructionKnowledge = updatedKnowledge;
   const updatedConstructionProjects: ConstructionProject[] = [];
+  const completedConstructionIds: string[] = [];
 
   for (const project of stateAfterActions.constructionProjects) {
     if (project.turnsRemaining <= 1) {
-      // Project completes this turn; effect application handled by data layer on completion.
+      // Project completes this turn — apply completion effects.
+      completedConstructionIds.push(project.definitionId);
+      const def = findConstructionDefinition(project.definitionId);
+      if (def) {
+        const fx = def.completionEffect;
+        // Region development
+        if (fx.regionDevelopmentDelta) {
+          constructionRegions = applyRegionDevelopmentChange(
+            constructionRegions,
+            project.targetRegionId,
+            fx.regionDevelopmentDelta,
+          );
+        }
+        // Treasury income bonus (applied as immediate balance bump; persistent via development)
+        if (fx.treasuryIncomeDelta) {
+          constructionTreasury = {
+            ...constructionTreasury,
+            balance: constructionTreasury.balance + fx.treasuryIncomeDelta,
+          };
+        }
+        // Food production bonus
+        if (fx.foodProductionDelta) {
+          constructionFood = {
+            ...constructionFood,
+            reserves: constructionFood.reserves + fx.foodProductionDelta,
+          };
+        }
+        // Military bonuses
+        if (fx.militaryReadinessDelta || fx.militaryEquipmentDelta) {
+          constructionMilitary = {
+            ...constructionMilitary,
+            readiness: clamp(
+              constructionMilitary.readiness + (fx.militaryReadinessDelta ?? 0),
+              0,
+              100,
+            ),
+            equipmentCondition: clamp(
+              constructionMilitary.equipmentCondition + (fx.militaryEquipmentDelta ?? 0),
+              0,
+              100,
+            ),
+          };
+        }
+        // Faith bonus
+        if (fx.faithDelta) {
+          constructionFaithCulture = {
+            ...constructionFaithCulture,
+            faithLevel: clamp(constructionFaithCulture.faithLevel + fx.faithDelta, 0, 100),
+          };
+        }
+        // Knowledge progress bonus (applied to focused branch if any)
+        if (fx.knowledgeProgressDelta && stateAfterActions.policies.researchFocus) {
+          const focusBranch = stateAfterActions.policies.researchFocus;
+          const currentBranch = constructionKnowledge.branches[focusBranch];
+          constructionKnowledge = {
+            ...constructionKnowledge,
+            branches: {
+              ...constructionKnowledge.branches,
+              [focusBranch]: {
+                ...currentBranch,
+                progressValue: currentBranch.progressValue + fx.knowledgeProgressDelta,
+              },
+            },
+          };
+        }
+        // Stability bonus
+        if (fx.stabilityDelta) {
+          constructionStability = {
+            ...constructionStability,
+            value: clamp(constructionStability.value + fx.stabilityDelta, 0, 100),
+          };
+        }
+        // Trade income bonus (applied as immediate treasury bump)
+        if (fx.tradeIncomeDelta) {
+          constructionTreasury = {
+            ...constructionTreasury,
+            balance: constructionTreasury.balance + fx.tradeIncomeDelta,
+          };
+        }
+      }
       continue;
     }
 
@@ -1138,13 +1235,61 @@ export function resolveTurn(
     year: nextYear,
   };
 
+  // Track overthrow risk counter.
+  const overthrowRiskActive = isOverthrowRiskActive(updatedPopulation);
+  const nextConsecutiveTurnsOverthrowRisk = overthrowRiskActive
+    ? state.consecutiveTurnsOverthrowRisk + 1
+    : 0;
+
   // Evaluate failure conditions from final resolved state.
   const triggeredFailureConditions: FailureCondition[] = [];
-  if (checkInsolvency(updatedTreasury)) triggeredFailureConditions.push(FailureCondition.Insolvency);
-  if (checkFamine(updatedFood)) triggeredFailureConditions.push(FailureCondition.Famine);
-  if (checkCollapse(updatedStability)) triggeredFailureConditions.push(FailureCondition.Collapse);
-  if (checkTotalConquest(stateAfterActions.regions))
+  if (checkInsolvency(constructionTreasury)) triggeredFailureConditions.push(FailureCondition.Insolvency);
+  if (checkFamine(constructionFood)) triggeredFailureConditions.push(FailureCondition.Famine);
+  if (checkCollapse(constructionStability)) triggeredFailureConditions.push(FailureCondition.Collapse);
+  if (checkTotalConquest(constructionRegions))
     triggeredFailureConditions.push(FailureCondition.Conquest);
+  if (checkOverthrow(nextConsecutiveTurnsOverthrowRisk))
+    triggeredFailureConditions.push(FailureCondition.Overthrow);
+
+  // Evaluate failure forecasting — warn player 1-2 turns before each failure.
+  const failureWarnings: FailureWarning[] = [];
+  if (!triggeredFailureConditions.includes(FailureCondition.Famine)) {
+    const turnsEmpty = constructionFood.consecutiveTurnsEmpty;
+    if (turnsEmpty >= 2) {
+      failureWarnings.push({ condition: FailureCondition.Famine, turnsRemaining: 1, severity: 'critical' });
+    } else if (turnsEmpty >= 1) {
+      failureWarnings.push({ condition: FailureCondition.Famine, turnsRemaining: 2, severity: 'caution' });
+    }
+  }
+  if (!triggeredFailureConditions.includes(FailureCondition.Insolvency)) {
+    const turnsInsolvent = constructionTreasury.consecutiveTurnsInsolvent;
+    if (turnsInsolvent >= 2) {
+      failureWarnings.push({ condition: FailureCondition.Insolvency, turnsRemaining: 1, severity: 'critical' });
+    } else if (turnsInsolvent >= 1) {
+      failureWarnings.push({ condition: FailureCondition.Insolvency, turnsRemaining: 2, severity: 'caution' });
+    }
+  }
+  if (!triggeredFailureConditions.includes(FailureCondition.Collapse)) {
+    const turnsAtZero = constructionStability.consecutiveTurnsAtZero;
+    if (turnsAtZero >= 1) {
+      failureWarnings.push({ condition: FailureCondition.Collapse, turnsRemaining: 1, severity: 'critical' });
+    }
+  }
+  if (!triggeredFailureConditions.includes(FailureCondition.Conquest)) {
+    const occupiedFraction = getOccupiedFraction(constructionRegions);
+    if (occupiedFraction > 0.75) {
+      failureWarnings.push({ condition: FailureCondition.Conquest, turnsRemaining: 1, severity: 'critical' });
+    } else if (occupiedFraction > 0.5) {
+      failureWarnings.push({ condition: FailureCondition.Conquest, turnsRemaining: 2, severity: 'caution' });
+    }
+  }
+  if (!triggeredFailureConditions.includes(FailureCondition.Overthrow)) {
+    if (nextConsecutiveTurnsOverthrowRisk >= OVERTHROW_CONSECUTIVE_TURNS - 1) {
+      failureWarnings.push({ condition: FailureCondition.Overthrow, turnsRemaining: 1, severity: 'critical' });
+    } else if (nextConsecutiveTurnsOverthrowRisk >= OVERTHROW_CONSECUTIVE_TURNS - 2) {
+      failureWarnings.push({ condition: FailureCondition.Overthrow, turnsRemaining: 2, severity: 'caution' });
+    }
+  }
 
   // Snapshot the start-of-turn state for the history entry.
   const historyEntry: TurnHistoryEntry = {
@@ -1177,26 +1322,26 @@ export function resolveTurn(
     turnNumber: nextTurnNumber,
     season: nextSeason,
     year: nextYear,
-    treasuryBalance: updatedTreasury.balance,
-    foodReserves: updatedFood.reserves,
-    stabilityRating: updatedStability.value,
+    treasuryBalance: constructionTreasury.balance,
+    foodReserves: constructionFood.reserves,
+    stabilityRating: constructionStability.value,
     unresolvedUrgentMatters,
   };
 
   // Assemble the complete next game state.
   const nextState: GameState = {
     turn: nextTurn,
-    treasury: updatedTreasury,
-    food: updatedFood,
+    treasury: constructionTreasury,
+    food: constructionFood,
     resources: workingResources,
     population: updatedPopulation,
-    military: updatedMilitary,
-    stability: updatedStability,
-    faithCulture: updatedFaithCulture,
+    military: constructionMilitary,
+    stability: constructionStability,
+    faithCulture: constructionFaithCulture,
     diplomacy: updatedDiplomacy,
     espionage: updatedEspionage,
-    knowledge: updatedKnowledge,
-    regions: stateAfterActions.regions,
+    knowledge: constructionKnowledge,
+    regions: constructionRegions,
     policies: stateAfterActions.policies,
     constructionProjects: updatedConstructionProjects,
     activeEvents,
@@ -1206,6 +1351,7 @@ export function resolveTurn(
     actionBudget: nextActionBudget,
     crownBar: nextCrownBar,
     activeFailureConditions: triggeredFailureConditions,
+    consecutiveTurnsOverthrowRisk: nextConsecutiveTurnsOverthrowRisk,
     persistentConsequences: updatedPersistentConsequences,
     resolvedStorylineIds: allResolvedStorylineIds,
     lastStorylineActivationTurn: updatedLastActivationTurn,
@@ -1217,6 +1363,8 @@ export function resolveTurn(
     historyEntry,
     newlyUnlockedMilestones,
     triggeredFailureConditions,
+    failureWarnings,
+    completedConstructionIds,
     generatedReports,
   };
 }

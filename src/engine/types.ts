@@ -208,6 +208,14 @@ export enum FailureCondition {
   Overthrow = 'Overthrow',
 }
 
+export type FailureWarningSeverity = 'caution' | 'critical';
+
+export interface FailureWarning {
+  condition: FailureCondition;
+  turnsRemaining: number;
+  severity: FailureWarningSeverity;
+}
+
 // ============================================================
 // Section 9 — Policy Enums
 // ============================================================
@@ -701,6 +709,7 @@ export interface GameState {
 
   // Failure tracking
   activeFailureConditions: FailureCondition[];
+  consecutiveTurnsOverthrowRisk: number; // for overthrow failure condition tracking
 
   // Persistent history tracked in GameState for engine access
   persistentConsequences: PersistentConsequence[];

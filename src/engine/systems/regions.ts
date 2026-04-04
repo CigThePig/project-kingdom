@@ -196,3 +196,12 @@ export function applyOccupationChange(
 export function checkTotalConquest(regions: RegionState[]): boolean {
   return regions.length > 0 && regions.every((r) => r.isOccupied);
 }
+
+/**
+ * Returns the fraction (0–1) of regions currently occupied.
+ * Used by failure forecasting to warn of approaching conquest.
+ */
+export function getOccupiedFraction(regions: RegionState[]): number {
+  if (regions.length === 0) return 0;
+  return regions.filter((r) => r.isOccupied).length / regions.length;
+}
