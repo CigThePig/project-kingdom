@@ -308,4 +308,220 @@ export const DECREE_POOL: DecreeDefinition[] = [
     isHighImpact: true,
     knowledgePrerequisite: null,
   },
+
+  // ====================
+  // Knowledge-Gated: Agricultural (2)
+  // ====================
+  {
+    id: 'decree_crop_rotation',
+    title: 'Implement Crop Rotation',
+    category: DecreeCategory.Economic,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Wood]: 10 },
+    prerequisites: ['Agricultural milestone 1'],
+    affectedClasses: [PopulationClass.Commoners],
+    effectPreview:
+      'Introduce systematic crop rotation practices across the kingdom\'s farmlands. Improves long-term food production efficiency and soil health.',
+    isHighImpact: false,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.Agricultural,
+      milestoneIndex: 0,
+    },
+  },
+  {
+    id: 'decree_irrigation_works',
+    title: 'Commission Irrigation Works',
+    category: DecreeCategory.Economic,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Stone]: 20, [ResourceType.Wood]: 15 },
+    prerequisites: ['Agricultural milestone 2'],
+    affectedClasses: [PopulationClass.Commoners, PopulationClass.Merchants],
+    effectPreview:
+      'Build a major irrigation system to protect against drought and increase agricultural yields. A costly investment with significant long-term food security benefits.',
+    isHighImpact: true,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.Agricultural,
+      milestoneIndex: 1,
+    },
+  },
+
+  // ====================
+  // Knowledge-Gated: Military (2)
+  // ====================
+  {
+    id: 'decree_advanced_fortifications',
+    title: 'Build Advanced Fortifications',
+    category: DecreeCategory.Military,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Stone]: 25, [ResourceType.Iron]: 10 },
+    prerequisites: ['Military milestone 1'],
+    affectedClasses: [PopulationClass.MilitaryCaste],
+    effectPreview:
+      'Upgrade border defenses with advanced engineering techniques. Significantly improves defensive capability and deters aggression from neighbors.',
+    isHighImpact: false,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.Military,
+      milestoneIndex: 0,
+    },
+  },
+  {
+    id: 'decree_elite_training_program',
+    title: 'Establish Elite Training Program',
+    category: DecreeCategory.Military,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Iron]: 20 },
+    prerequisites: ['Military milestone 2'],
+    affectedClasses: [PopulationClass.MilitaryCaste, PopulationClass.Nobility],
+    effectPreview:
+      'Create a rigorous training program for elite military units. Dramatically improves force quality, morale, and readiness at significant cost.',
+    isHighImpact: true,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.Military,
+      milestoneIndex: 1,
+    },
+  },
+
+  // ====================
+  // Knowledge-Gated: Civic (2)
+  // ====================
+  {
+    id: 'decree_tax_code_reform',
+    title: 'Reform the Tax Code',
+    category: DecreeCategory.Civic,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: ['Civic Administration milestone 1'],
+    affectedClasses: [PopulationClass.Merchants, PopulationClass.Nobility],
+    effectPreview:
+      'Modernize and rationalize the tax collection system. Increases treasury efficiency while reducing unfair burdens. Merchants welcome reform; nobles resist scrutiny.',
+    isHighImpact: false,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.Civic,
+      milestoneIndex: 0,
+    },
+  },
+  {
+    id: 'decree_provincial_governance',
+    title: 'Establish Provincial Governance',
+    category: DecreeCategory.Civic,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Stone]: 15 },
+    prerequisites: ['Civic Administration milestone 2'],
+    affectedClasses: [PopulationClass.Nobility, PopulationClass.Commoners],
+    effectPreview:
+      'Create formal provincial administration structures, reducing the crown\'s dependence on local noble governance. Improves stability and regional development at the cost of noble influence.',
+    isHighImpact: true,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.Civic,
+      milestoneIndex: 1,
+    },
+  },
+
+  // ====================
+  // Knowledge-Gated: Maritime/Trade (2)
+  // ====================
+  {
+    id: 'decree_harbor_expansion',
+    title: 'Expand Harbor Facilities',
+    category: DecreeCategory.Economic,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Wood]: 20, [ResourceType.Stone]: 15 },
+    prerequisites: ['Maritime Trade milestone 1'],
+    affectedClasses: [PopulationClass.Merchants],
+    effectPreview:
+      'Expand port infrastructure to accommodate larger trading vessels and higher trade volume. Directly benefits merchant income and strengthens international commerce.',
+    isHighImpact: false,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.MaritimeTrade,
+      milestoneIndex: 0,
+    },
+  },
+  {
+    id: 'decree_trade_fleet_commission',
+    title: 'Commission a Trade Fleet',
+    category: DecreeCategory.Economic,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Wood]: 30, [ResourceType.Iron]: 15 },
+    prerequisites: ['Maritime Trade milestone 2'],
+    affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
+    effectPreview:
+      'Build a royal merchant fleet to secure trade routes and expand commercial reach. A major investment that transforms the kingdom\'s trading capability.',
+    isHighImpact: true,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.MaritimeTrade,
+      milestoneIndex: 1,
+    },
+  },
+
+  // ====================
+  // Knowledge-Gated: Cultural/Scholarly (2)
+  // ====================
+  {
+    id: 'decree_university_charter',
+    title: 'Charter a Royal University',
+    category: DecreeCategory.Civic,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Stone]: 20 },
+    prerequisites: ['Cultural Scholarly milestone 1'],
+    affectedClasses: [PopulationClass.Clergy, PopulationClass.Commoners],
+    effectPreview:
+      'Establish a center of higher learning, attracting scholars and advancing the kingdom\'s intellectual prestige. Accelerates research and improves clergy scholarly output.',
+    isHighImpact: false,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.CulturalScholarly,
+      milestoneIndex: 0,
+    },
+  },
+  {
+    id: 'decree_diplomatic_academy',
+    title: 'Found a Diplomatic Academy',
+    category: DecreeCategory.Diplomatic,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Stone]: 15 },
+    prerequisites: ['Cultural Scholarly milestone 2'],
+    affectedClasses: [PopulationClass.Nobility, PopulationClass.Clergy],
+    effectPreview:
+      'Establish an academy for training diplomats and courtiers. Improves the quality of diplomatic negotiations and strengthens the kingdom\'s international standing.',
+    isHighImpact: true,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.CulturalScholarly,
+      milestoneIndex: 1,
+    },
+  },
+
+  // ====================
+  // Knowledge-Gated: Natural Philosophy (2)
+  // ====================
+  {
+    id: 'decree_engineering_corps',
+    title: 'Establish Engineering Corps',
+    category: DecreeCategory.Civic,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Iron]: 15 },
+    prerequisites: ['Natural Philosophy milestone 1'],
+    affectedClasses: [PopulationClass.MilitaryCaste, PopulationClass.Commoners],
+    effectPreview:
+      'Create a specialized corps of engineers to improve infrastructure, military fortifications, and resource extraction. Benefits both civilian and military applications.',
+    isHighImpact: false,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.NaturalPhilosophy,
+      milestoneIndex: 0,
+    },
+  },
+  {
+    id: 'decree_medical_reforms',
+    title: 'Institute Medical Reforms',
+    category: DecreeCategory.Social,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Wood]: 10 },
+    prerequisites: ['Natural Philosophy milestone 2'],
+    affectedClasses: [PopulationClass.Commoners, PopulationClass.Clergy],
+    effectPreview:
+      'Implement systematic medical practices based on natural philosophy research. Improves population health, reduces plague impact, and enhances clergy healing capacity.',
+    isHighImpact: true,
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.NaturalPhilosophy,
+      milestoneIndex: 1,
+    },
+  },
 ];

@@ -184,4 +184,221 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     issue_commemorative_decree:     { treasuryDelta: -20, nobilitySatDelta: +2, stabilityDelta: +2 },
     note_with_quiet_satisfaction:   { stabilityDelta: +1 },
   },
+
+  // ============================================================
+  // CLASS-SPECIFIC: Nobility (3)
+  // ============================================================
+  evt_noble_succession_dispute: {
+    mediate_succession:        { nobilitySatDelta: +2, stabilityDelta: +3, treasuryDelta: -25 },
+    support_senior_claimant:   { nobilitySatDelta: +4, commonerSatDelta: -2, stabilityDelta: +1 },
+    let_nobles_settle_it:      { nobilitySatDelta: -3, stabilityDelta: -4 },
+  },
+  evt_noble_court_faction: {
+    co_opt_faction_leaders:    { nobilitySatDelta: +3, treasuryDelta: -30, stabilityDelta: +2 },
+    publicly_denounce_faction: { nobilitySatDelta: -4, commonerSatDelta: +2, stabilityDelta: -1 },
+    monitor_faction_quietly:   { nobilitySatDelta: -1, espionageNetworkDelta: +3 },
+  },
+  evt_noble_land_seizure: {
+    reverse_seizures:          { nobilitySatDelta: -5, commonerSatDelta: +4, stabilityDelta: +2 },
+    impose_compensation:       { nobilitySatDelta: -2, commonerSatDelta: +2, treasuryDelta: +15 },
+    uphold_noble_claims:       { nobilitySatDelta: +3, commonerSatDelta: -4, stabilityDelta: -2 },
+  },
+
+  // ============================================================
+  // CLASS-SPECIFIC: Clergy (3)
+  // ============================================================
+  evt_clergy_monastic_dispute: {
+    arbitrate_dispute:                { clergySatDelta: +2, faithDelta: +2, treasuryDelta: -15 },
+    favor_established_order:          { clergySatDelta: +3, heterodoxyDelta: -2, commonerSatDelta: -1 },
+    leave_to_ecclesiastical_courts:   { clergySatDelta: -1, faithDelta: -1 },
+  },
+  evt_clergy_pilgrimage_movement: {
+    endorse_pilgrimage:     { faithDelta: +3, clergySatDelta: +2, commonerSatDelta: +1 },
+    provide_royal_escort:   { faithDelta: +4, clergySatDelta: +3, treasuryDelta: -25, militaryReadinessDelta: -2 },
+    discourage_travel:      { clergySatDelta: -2, faithDelta: -1, commonerSatDelta: -1 },
+  },
+  evt_clergy_prophecy_claim: {
+    investigate_prophecy:      { clergySatDelta: +1, treasuryDelta: -20, heterodoxyDelta: -3, espionageNetworkDelta: +2 },
+    endorse_as_divine_sign:   { faithDelta: +5, clergySatDelta: +3, heterodoxyDelta: +4, nobilitySatDelta: -2 },
+    dismiss_as_superstition:  { clergySatDelta: -3, commonerSatDelta: -1, heterodoxyDelta: -1 },
+  },
+
+  // ============================================================
+  // CLASS-SPECIFIC: Merchants (3)
+  // ============================================================
+  evt_merchant_guild_formation: {
+    grant_guild_charter:      { merchantSatDelta: +5, nobilitySatDelta: -2, stabilityDelta: +1 },
+    impose_royal_oversight:   { merchantSatDelta: +1, nobilitySatDelta: +1, stabilityDelta: +2 },
+    deny_guild_petition:      { merchantSatDelta: -4, stabilityDelta: -1 },
+  },
+  evt_merchant_smuggling_ring: {
+    raid_smuggling_operation: { merchantSatDelta: -3, treasuryDelta: +40, espionageNetworkDelta: +3, stabilityDelta: +2 },
+    infiltrate_network:       { espionageNetworkDelta: +6, treasuryDelta: -15, merchantSatDelta: -1 },
+    levy_fines_and_warn:      { merchantSatDelta: -2, treasuryDelta: +25, stabilityDelta: +1 },
+  },
+  evt_merchant_foreign_traders: {
+    welcome_foreign_merchants:  { merchantSatDelta: +2, culturalCohesionDelta: -2 },
+    negotiate_trade_terms:      { merchantSatDelta: +3, treasuryDelta: +20, nobilitySatDelta: -1 },
+    restrict_foreign_access:    { merchantSatDelta: -2, culturalCohesionDelta: +2, nobilitySatDelta: +1 },
+  },
+
+  // ============================================================
+  // CLASS-SPECIFIC: Commoners (3)
+  // ============================================================
+  evt_commoner_plague_outbreak: {
+    quarantine_affected_districts:  { commonerSatDelta: -3, stabilityDelta: +3, merchantSatDelta: -2, regionConditionDelta: -3 },
+    mobilize_clergy_healers:        { commonerSatDelta: +2, clergySatDelta: +3, faithDelta: +3, treasuryDelta: -30 },
+    distribute_herbal_remedies:     { commonerSatDelta: +1, treasuryDelta: -20, foodDelta: -15 },
+  },
+  evt_commoner_folk_hero: {
+    invite_to_court:          { commonerSatDelta: +4, nobilitySatDelta: -2, stabilityDelta: +2 },
+    co_opt_folk_narrative:    { commonerSatDelta: +2, culturalCohesionDelta: +2, stabilityDelta: +1 },
+    ignore_the_stories:       { commonerSatDelta: -1, stabilityDelta: -2 },
+  },
+  evt_commoner_migration_wave: {
+    manage_resettlement:    { commonerSatDelta: +2, treasuryDelta: -30, regionDevelopmentDelta: +3 },
+    restrict_movement:      { commonerSatDelta: -3, stabilityDelta: +2, nobilitySatDelta: +1 },
+    allow_natural_flow:     { regionConditionDelta: -2, commonerSatDelta: -1 },
+  },
+
+  // ============================================================
+  // CLASS-SPECIFIC: Military Caste (3)
+  // ============================================================
+  evt_military_veteran_demands: {
+    grant_veteran_pensions:    { militaryCasteSatDelta: +5, treasuryDelta: -40, militaryMoraleDelta: +3 },
+    offer_land_grants:         { militaryCasteSatDelta: +3, nobilitySatDelta: -2, regionDevelopmentDelta: +2 },
+    acknowledge_service_only:  { militaryCasteSatDelta: -2, militaryMoraleDelta: -2 },
+  },
+  evt_military_desertion_crisis: {
+    increase_military_pay:    { militaryCasteSatDelta: +4, treasuryDelta: -50, militaryMoraleDelta: +3, militaryReadinessDelta: +3 },
+    enforce_harsh_discipline: { militaryCasteSatDelta: -3, militaryReadinessDelta: +5, stabilityDelta: -2, militaryMoraleDelta: -2 },
+    appeal_to_honor:          { militaryCasteSatDelta: +1, militaryMoraleDelta: +2 },
+  },
+  evt_military_honor_dispute: {
+    uphold_military_merit:    { militaryCasteSatDelta: +3, nobilitySatDelta: -3, militaryMoraleDelta: +2 },
+    defer_to_noble_rank:      { nobilitySatDelta: +3, militaryCasteSatDelta: -3, militaryMoraleDelta: -2 },
+    establish_joint_council:  { militaryCasteSatDelta: +1, nobilitySatDelta: +1, stabilityDelta: +2, treasuryDelta: -15 },
+  },
+
+  // ============================================================
+  // SEASONAL: Spring (2)
+  // ============================================================
+  evt_spring_planting_festival: {
+    sponsor_planting_rites:  { faithDelta: +2, commonerSatDelta: +3, foodDelta: +5, treasuryDelta: -15 },
+    attend_ceremonies:       { commonerSatDelta: +1, faithDelta: +1 },
+  },
+  evt_spring_river_thaw: {
+    reinforce_riverbanks:        { treasuryDelta: -35, regionConditionDelta: +3, commonerSatDelta: +2 },
+    evacuate_lowlands:           { commonerSatDelta: -1, stabilityDelta: +2, regionConditionDelta: -1 },
+    monitor_water_levels:        { regionConditionDelta: -3, commonerSatDelta: -2 },
+  },
+
+  // ============================================================
+  // SEASONAL: Summer (2)
+  // ============================================================
+  evt_summer_drought: {
+    ration_water_supplies:       { foodDelta: -20, commonerSatDelta: -2, stabilityDelta: +2 },
+    dig_emergency_wells:         { treasuryDelta: -45, foodDelta: -10, regionDevelopmentDelta: +2, commonerSatDelta: +1 },
+    pray_for_rain:               { faithDelta: +2, foodDelta: -30, commonerSatDelta: -1 },
+  },
+  evt_summer_trade_season: {
+    host_trade_fair:           { treasuryDelta: +30, merchantSatDelta: +3, commonerSatDelta: +1 },
+    reduce_trade_tariffs:      { merchantSatDelta: +4, treasuryDelta: -20, nobilitySatDelta: -1 },
+    maintain_current_policy:   { merchantSatDelta: +1 },
+  },
+
+  // ============================================================
+  // SEASONAL: Autumn (2)
+  // ============================================================
+  evt_autumn_harvest_bounty: {
+    stockpile_surplus:     { foodDelta: +25 },
+    export_for_profit:     { treasuryDelta: +35, foodDelta: -15, merchantSatDelta: +2 },
+    distribute_to_poor:    { commonerSatDelta: +4, foodDelta: -10, faithDelta: +1 },
+  },
+  evt_autumn_bandit_raids: {
+    dispatch_patrol_forces:  { militaryReadinessDelta: -3, stabilityDelta: +3, commonerSatDelta: +2, regionConditionDelta: +2 },
+    arm_rural_militia:       { commonerSatDelta: +1, stabilityDelta: +1, militaryCasteSatDelta: -1 },
+    increase_road_patrols:   { stabilityDelta: +1, commonerSatDelta: -1 },
+  },
+
+  // ============================================================
+  // SEASONAL: Winter (2)
+  // ============================================================
+  evt_winter_blizzard: {
+    open_warming_shelters:         { treasuryDelta: -30, commonerSatDelta: +3, faithDelta: +1, regionConditionDelta: -2 },
+    distribute_fuel_and_blankets:  { treasuryDelta: -20, commonerSatDelta: +2, foodDelta: -10 },
+    wait_out_the_storm:            { commonerSatDelta: -3, regionConditionDelta: -4, stabilityDelta: -2 },
+  },
+  evt_winter_food_shortage: {
+    impose_strict_rationing:     { commonerSatDelta: -3, stabilityDelta: +2, foodDelta: +15 },
+    purchase_emergency_grain:    { treasuryDelta: -60, foodDelta: +30, merchantSatDelta: +1 },
+    request_neighbor_aid:        { foodDelta: +20, stabilityDelta: -1 },
+  },
+
+  // ============================================================
+  // REGIONAL (6)
+  // ============================================================
+  evt_region_mine_collapse: {
+    launch_rescue_operation:  { treasuryDelta: -40, commonerSatDelta: +3, stabilityDelta: +2, regionConditionDelta: -3 },
+    hire_foreign_engineers:   { treasuryDelta: -60, regionDevelopmentDelta: +4, regionConditionDelta: +2 },
+    seal_and_rebuild:         { commonerSatDelta: -3, regionConditionDelta: -2, treasuryDelta: -20 },
+  },
+  evt_region_trade_route_disruption: {
+    military_escort_caravans:  { militaryReadinessDelta: -2, merchantSatDelta: +3, treasuryDelta: +15, regionConditionDelta: +2 },
+    negotiate_safe_passage:    { treasuryDelta: -20, merchantSatDelta: +2, stabilityDelta: +1 },
+    reroute_trade:             { merchantSatDelta: -2, regionConditionDelta: -1 },
+  },
+  evt_region_local_festival: {
+    send_royal_blessing:  { faithDelta: +1, commonerSatDelta: +1, regionConditionDelta: +1 },
+    attend_in_person:     { faithDelta: +2, commonerSatDelta: +3, nobilitySatDelta: +1, treasuryDelta: -15 },
+  },
+  evt_region_resource_discovery: {
+    fund_extraction:   { treasuryDelta: -50, regionDevelopmentDelta: +6, merchantSatDelta: +2 },
+    auction_rights:    { treasuryDelta: +30, merchantSatDelta: +3, commonerSatDelta: -1 },
+    survey_further:    { regionDevelopmentDelta: +1 },
+  },
+  evt_region_infrastructure_decay: {
+    fund_major_repairs:   { treasuryDelta: -45, regionDevelopmentDelta: +4, regionConditionDelta: +3, commonerSatDelta: +2 },
+    levy_local_labor:     { commonerSatDelta: -3, regionConditionDelta: +2, regionDevelopmentDelta: +2 },
+    defer_maintenance:    { regionConditionDelta: -3, regionDevelopmentDelta: -2, merchantSatDelta: -1 },
+  },
+  evt_region_separatist_sentiment: {
+    negotiate_autonomy_terms:   { commonerSatDelta: +3, nobilitySatDelta: -2, stabilityDelta: +2, regionConditionDelta: +2 },
+    dispatch_royal_governor:    { stabilityDelta: +3, commonerSatDelta: -2, nobilitySatDelta: +1, treasuryDelta: -25 },
+    show_of_force:              { militaryReadinessDelta: -3, stabilityDelta: +1, commonerSatDelta: -4, militaryCasteSatDelta: -1 },
+  },
+
+  // ============================================================
+  // ESCALATION (6)
+  // ============================================================
+  evt_escalation_famine_panic: {
+    seize_noble_granaries:       { foodDelta: +30, nobilitySatDelta: -6, commonerSatDelta: +3, stabilityDelta: -2 },
+    enforce_martial_rationing:   { foodDelta: +15, commonerSatDelta: -2, stabilityDelta: +4, militaryReadinessDelta: -3 },
+    appeal_for_calm:             { commonerSatDelta: -1, stabilityDelta: -3 },
+  },
+  evt_escalation_treasury_crisis: {
+    emergency_asset_sales:            { treasuryDelta: +80, regionDevelopmentDelta: -3, merchantSatDelta: -2 },
+    demand_noble_contributions:       { treasuryDelta: +60, nobilitySatDelta: -5, stabilityDelta: -2 },
+    suspend_non_essential_spending:   { treasuryDelta: +30, militaryReadinessDelta: -3, clergySatDelta: -2, faithDelta: -2 },
+  },
+  evt_escalation_faith_collapse: {
+    call_grand_synod:        { treasuryDelta: -80, faithDelta: +8, clergySatDelta: +4, heterodoxyDelta: -10, stabilityDelta: +3 },
+    impose_state_religion:   { faithDelta: +5, clergySatDelta: +2, commonerSatDelta: -4, heterodoxyDelta: -6, stabilityDelta: -3 },
+    embrace_pluralism:       { faithDelta: -3, heterodoxyDelta: +5, culturalCohesionDelta: -4, commonerSatDelta: +3, merchantSatDelta: +2 },
+  },
+  evt_escalation_military_mutiny: {
+    meet_mutiny_demands:      { militaryCasteSatDelta: +6, treasuryDelta: -60, militaryMoraleDelta: +5, nobilitySatDelta: -3 },
+    isolate_ringleaders:      { militaryCasteSatDelta: -4, stabilityDelta: +3, militaryReadinessDelta: -5, espionageNetworkDelta: +3 },
+    negotiate_with_officers:  { militaryCasteSatDelta: +2, treasuryDelta: -30, stabilityDelta: +1, militaryMoraleDelta: +2 },
+  },
+  evt_escalation_noble_conspiracy: {
+    preemptive_arrests:     { nobilitySatDelta: -6, stabilityDelta: +5, commonerSatDelta: +2, espionageNetworkDelta: +4 },
+    offer_reconciliation:   { nobilitySatDelta: +3, stabilityDelta: +2, treasuryDelta: -40, commonerSatDelta: -2 },
+    plant_double_agents:    { espionageNetworkDelta: +8, nobilitySatDelta: -1, treasuryDelta: -25, stabilityDelta: +1 },
+  },
+  evt_escalation_mass_exodus: {
+    promise_sweeping_reforms:  { commonerSatDelta: +5, treasuryDelta: -50, nobilitySatDelta: -3, stabilityDelta: +3 },
+    close_borders:             { commonerSatDelta: -4, stabilityDelta: +2, merchantSatDelta: -3 },
+    let_dissenters_leave:      { commonerSatDelta: -2, stabilityDelta: -4, merchantSatDelta: -1 },
+  },
 };
