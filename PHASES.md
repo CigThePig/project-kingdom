@@ -226,13 +226,13 @@ These three screens are the highest-value and most-used. Build them first.
 
 ## Phase 14 — Testing & Deployment
 
-**Status:** 🔴 Not Started
+**Status:** 🟡 In Progress
 **Blueprint Reference:** `TECHNICAL.md` — GitHub Pages Deployment, Browser Targets
 
-- [ ] Run `npm run lint` — fix all ESLint errors
-- [ ] Run `npm run build` — fix all TypeScript type errors
-- [ ] Run `npm run preview` — verify production build serves correctly at `/project-kingdom/`
-- [ ] Enable GitHub Pages in repository settings (source: `gh-pages` branch, root directory)
+- [x] Run `npm run lint` — fix all ESLint errors
+- [x] Run `npm run build` — fix all TypeScript type errors
+- [x] Run `npm run preview` — verify production build serves correctly at `/project-kingdom/`
+- [ ] Enable GitHub Pages in repository settings (source: GitHub Actions, not gh-pages branch)
 - [ ] Push to `main` — verify GitHub Actions workflow runs and deploys successfully
 - [ ] Verify live URL: `https://cigthepig.github.io/project-kingdom/`
 - [ ] Test on Chrome, Firefox, Safari, and a mobile device
