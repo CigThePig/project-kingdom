@@ -1,0 +1,436 @@
+/* ==========================================================================
+   Dashboard Screen — Kingdom Overview
+   Source: ui-blueprint.md §5.1, ux-blueprint.md §2, §4
+   ========================================================================== */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* --------------------------------------------------------------------------
+   Resource Summary Row
+   -------------------------------------------------------------------------- */
+.resourceRow {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   Class Satisfaction Grid
+   -------------------------------------------------------------------------- */
+.sectionLabel {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  margin: 0 0 var(--space-2);
+}
+
+.classGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--space-3);
+}
+
+.classCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3);
+}
+
+.classCard[data-status='critical'] {
+  border-color: var(--color-status-critical);
+  background: var(--color-status-critical-bg);
+}
+
+.classCard[data-status='restless'] {
+  border-color: var(--color-status-warning);
+  background: var(--color-status-warning-bg);
+}
+
+.className {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.classSatisfaction {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.classDelta {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+
+.classDeltaPositive {
+  composes: classDelta;
+  color: var(--color-status-positive);
+}
+
+.classDeltaNegative {
+  composes: classDelta;
+  color: var(--color-status-critical);
+}
+
+.classDeltaNeutral {
+  composes: classDelta;
+  color: var(--color-status-neutral);
+}
+
+.classStatus {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.statusContent { color: var(--color-status-positive); }
+.statusUneasy { color: var(--color-status-neutral); }
+.statusRestless { color: var(--color-status-warning); }
+.statusCritical { color: var(--color-status-critical); }
+
+/* --------------------------------------------------------------------------
+   Kingdom Condition Row (Faith, Storyline)
+   -------------------------------------------------------------------------- */
+.conditionRow {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.conditionCard {
+  flex: 1;
+  min-width: 12rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3) var(--space-4);
+}
+
+.conditionLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.conditionValue {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.schismWarning {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-status-critical);
+}
+
+.storylineCard {
+  flex: 1;
+  min-width: 12rem;
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-storyline);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.storylineTitle {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+}
+
+.storylineNote {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+/* --------------------------------------------------------------------------
+   Urgent Matters Banner
+   -------------------------------------------------------------------------- */
+.urgentBanner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  background: var(--color-status-warning-bg);
+  border: 1px solid var(--color-status-warning);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.urgentBanner:hover {
+  background: var(--color-status-warning);
+  color: var(--color-text-inverse);
+}
+
+.urgentCount {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.urgentText {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+/* --------------------------------------------------------------------------
+   Forecast Area
+   -------------------------------------------------------------------------- */
+.forecastArea {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.forecastArea > * {
+  flex: 1;
+  min-width: 14rem;
+}
+
+/* --------------------------------------------------------------------------
+   Turn Advance Section
+   -------------------------------------------------------------------------- */
+.turnAdvance {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-4) 0;
+}
+
+.advanceButton {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-inverse);
+  background: var(--color-accent-metallic);
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3) var(--space-8);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+.advanceButton:hover {
+  opacity: 0.85;
+}
+
+/* --------------------------------------------------------------------------
+   Confirm Overlay
+   -------------------------------------------------------------------------- */
+.confirmOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-overlay);
+}
+
+.confirmCard {
+  background: var(--color-bg-surface-raised);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-6);
+  max-width: 32rem;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  box-shadow: var(--shadow-lg);
+}
+
+.confirmTitle {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+  margin: 0;
+}
+
+.confirmSection {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.confirmWarning {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-status-warning);
+}
+
+.confirmActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+.confirmButton {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-inverse);
+  background: var(--color-accent-metallic);
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: var(--space-2) var(--space-6);
+  cursor: pointer;
+}
+
+.cancelButton {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-2) var(--space-6);
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   Turn Summary
+   -------------------------------------------------------------------------- */
+.summaryOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-index-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-overlay);
+}
+
+.summaryCard {
+  background: var(--color-bg-surface-raised);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-6);
+  max-width: 40rem;
+  width: 90%;
+  max-height: 80dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  box-shadow: var(--shadow-lg);
+}
+
+.summaryTitle {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+  margin: 0;
+}
+
+.summarySection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.summarySectionHeader {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.summaryCritical {
+  composes: summarySectionHeader;
+  color: var(--color-status-critical);
+}
+
+.summaryNotable {
+  composes: summarySectionHeader;
+  color: var(--color-status-warning);
+}
+
+.summaryRoutine {
+  composes: summarySectionHeader;
+  color: var(--color-text-secondary);
+}
+
+.summaryItem {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--color-border-default);
+}
+
+.summaryItemCritical {
+  composes: summaryItem;
+  border-left-color: var(--color-status-critical);
+}
+
+.summaryDismiss {
+  align-self: center;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-inverse);
+  background: var(--color-accent-metallic);
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: var(--space-2) var(--space-6);
+  cursor: pointer;
+  margin-top: var(--space-2);
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .classGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .conditionRow {
+    flex-direction: column;
+  }
+
+  .forecastArea {
+    flex-direction: column;
+  }
+
+  .confirmCard,
+  .summaryCard {
+    width: 95%;
+    padding: var(--space-4);
+  }
+}

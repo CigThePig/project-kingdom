@@ -6,6 +6,9 @@ import { SCREEN_TITLES } from './data/text/labels';
 import { CrownBar } from './ui/components/crown-bar/crown-bar';
 import { NavRail } from './ui/components/nav-rail/nav-rail';
 import { IntelligencePanel } from './ui/components/intelligence-panel/intelligence-panel';
+import { Dashboard } from './ui/screens/dashboard/dashboard';
+import { Reports } from './ui/screens/reports/reports';
+import { Events } from './ui/screens/events/events';
 import styles from './app.module.css';
 
 // ============================================================
@@ -68,9 +71,16 @@ export function App() {
 
       <main className={styles.content}>
         <h1 className={styles.contentTitle}>{SCREEN_TITLES[activeScreen]}</h1>
-        <p className={styles.contentPlaceholder}>
-          Screen content will be implemented in a later phase.
-        </p>
+        {activeScreen === 'dashboard' && (
+          <Dashboard onNavigateToEvents={() => setActiveScreen('events')} />
+        )}
+        {activeScreen === 'reports' && <Reports />}
+        {activeScreen === 'events' && <Events />}
+        {activeScreen !== 'dashboard' && activeScreen !== 'reports' && activeScreen !== 'events' && (
+          <p className={styles.contentPlaceholder}>
+            Screen content will be implemented in a later phase.
+          </p>
+        )}
       </main>
 
       <IntelligencePanel
