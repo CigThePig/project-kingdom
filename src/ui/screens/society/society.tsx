@@ -46,14 +46,6 @@ type ActiveTab = 'population' | 'faith';
 // Helpers
 // ============================================================
 
-const CLASS_ICONS: Record<PopulationClass, string> = {
-  [PopulationClass.Nobility]: '\u{1F451}',
-  [PopulationClass.Clergy]: '\u{1F4D6}',
-  [PopulationClass.Merchants]: '\u2696',
-  [PopulationClass.Commoners]: '\u{1F33E}',
-  [PopulationClass.MilitaryCaste]: '\u{1F6E1}',
-};
-
 const CLASS_ICON_NAMES: Record<PopulationClass, string> = {
   [PopulationClass.Nobility]: 'nobility',
   [PopulationClass.Clergy]: 'clergy',

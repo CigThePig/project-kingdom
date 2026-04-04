@@ -26,6 +26,7 @@ export function ChangeHighlight({ value, children, showArrow = true }: ChangeHig
     if (prev === value) return;
 
     const direction = value > prev ? 'up' : 'down';
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setFlash(direction);
 
     if (timerRef.current) clearTimeout(timerRef.current);

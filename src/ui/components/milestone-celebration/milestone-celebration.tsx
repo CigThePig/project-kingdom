@@ -23,6 +23,7 @@ export function MilestoneCelebration({ milestoneName, onComplete }: MilestoneCel
   useEffect(() => {
     if (milestoneName && milestoneName !== prevNameRef.current) {
       prevNameRef.current = milestoneName;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplayName(milestoneName);
       setActive(true);
 
