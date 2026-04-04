@@ -187,7 +187,6 @@ export function Decrees() {
 
       commitDecree(decree);
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [queueAction],
   );
 
