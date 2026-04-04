@@ -100,34 +100,41 @@ Neighboring kingdoms must be autonomous actors that react to player state, not p
 
 ## Phase 4 — Win/Loss Conditions & Construction
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `gameplay-blueprint.md` — Win/Loss Conditions, Development & Infrastructure System
 
 Implement game-ending failure states and the long-term construction investment system.
 
-**Files to modify:**
-- `src/engine/resolution/turn-resolution.ts` — failure state detection, construction Phase 10
-- `src/engine/systems/regions.ts` — construction project tracking per region
-- `src/ui/context/game-context.tsx` — game-over state handling
-- `src/data/text/labels.ts` — failure state messages and construction text
+**Files modified:**
+- `src/engine/types.ts` — Added `FailureWarning`, `FailureWarningSeverity` interfaces; added `consecutiveTurnsOverthrowRisk` to `GameState`
+- `src/engine/constants.ts` — Added `OVERTHROW_INTRIGUE_THRESHOLD`, `OVERTHROW_CONSECUTIVE_TURNS`; bumped `SAVE_SCHEMA_VERSION` to 4
+- `src/engine/systems/population.ts` — Added `checkOverthrow()`, `isOverthrowRiskActive()` functions
+- `src/engine/systems/regions.ts` — Added `getOccupiedFraction()` for conquest forecasting
+- `src/engine/resolution/turn-resolution.ts` — Phase 10: construction completion effects (region development, treasury, food, military, faith, knowledge, stability, trade bonuses); Phase 11: overthrow detection, failure forecasting with `FailureWarning[]`
+- `src/ui/context/game-context.tsx` — Added `isGameOver`, `gameOverConditions` to context state; game-over detection in `TURN_RESOLVED` reducer
+- `src/ui/hooks/use-game-state.ts` — Added `useIsGameOver()`, `useGameOverConditions()`, `useGameDispatch()` hooks
+- `src/app.tsx` — Game-over overlay rendering with lazy-loaded `GameOver` component
+- `src/data/text/labels.ts` — Game-over screen labels, failure warning messages for all 5 conditions
+- `src/data/scenarios/default.ts` — Initialized `consecutiveTurnsOverthrowRisk: 0`
 
-**Files to create:**
-- `src/ui/screens/game-over/game-over.tsx` — game-over screen with failure explanation
-- `src/ui/screens/game-over/game-over.module.css`
+**Files created:**
+- `src/data/construction/index.ts` — 18 construction project definitions (3 per category) with `ConstructionProjectDefinition` and `ConstructionCompletionEffect` interfaces, `findConstructionDefinition()` lookup helper
+- `src/ui/screens/game-over/game-over.tsx` — Game-over screen with failure type, cause report, kingdom assessment, Load Save / New Game actions
+- `src/ui/screens/game-over/game-over.module.css` — Full-screen overlay styling with CSS custom properties
 
 **Checklist:**
-- [ ] Famine detection: food reserves at 0 for 3 consecutive turns with no recovery path
-- [ ] Insolvency detection: treasury at 0 with negative net flow for 3 consecutive turns
-- [ ] Collapse detection: stability at 0 for 2 consecutive turns
-- [ ] Conquest detection: all regions occupied by foreign military
-- [ ] Overthrow detection: class crisis (noble conspiracy, military coup, popular revolution) reaches final stage
-- [ ] Failure forecasting: warn player 2 turns before each failure state with increasing urgency
-- [ ] Game-over screen: display failure type, cause explanation, kingdom assessment summary, option to load save or start new game
-- [ ] Construction project tracking: multi-turn progress per project (resource commitment, turns remaining, completion percentage)
-- [ ] Construction Phase 10: advance active projects by 1 turn each resolution, apply persistent effects on completion
-- [ ] Construction categories: economic, military, civic, religious, scholarly, trade — each with distinct bonuses
-- [ ] Knowledge-gated construction: certain projects require knowledge milestones as prerequisites
-- [ ] Verify: deliberately trigger each failure state, confirm game-over flow works; initiate and complete a construction project
+- [x] Famine detection: food reserves at 0 for 3 consecutive turns with no recovery path
+- [x] Insolvency detection: treasury at 0 with negative net flow for 3 consecutive turns
+- [x] Collapse detection: stability at 0 for 2 consecutive turns
+- [x] Conquest detection: all regions occupied by foreign military
+- [x] Overthrow detection: class crisis (noble conspiracy, military coup, popular revolution) reaches final stage
+- [x] Failure forecasting: warn player 2 turns before each failure state with increasing urgency
+- [x] Game-over screen: display failure type, cause explanation, kingdom assessment summary, option to load save or start new game
+- [x] Construction project tracking: multi-turn progress per project (resource commitment, turns remaining, completion percentage)
+- [x] Construction Phase 10: advance active projects by 1 turn each resolution, apply persistent effects on completion
+- [x] Construction categories: economic, military, civic, religious, scholarly, trade — each with distinct bonuses
+- [x] Knowledge-gated construction: certain projects require knowledge milestones as prerequisites
+- [x] Verify: deliberately trigger each failure state, confirm game-over flow works; initiate and complete a construction project
 
 ---
 

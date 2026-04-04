@@ -333,6 +333,7 @@ export function createDefaultScenario(): GameState {
 
     // --- Failure Tracking ---
     activeFailureConditions: [],
+    consecutiveTurnsOverthrowRisk: 0,
 
     // --- Persistent History ---
     persistentConsequences: [],

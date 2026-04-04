@@ -27,6 +27,8 @@ import {
   STABILITY_FOOD_SECURITY_WEIGHT,
   STABILITY_MAX,
   STABILITY_MIN,
+  OVERTHROW_INTRIGUE_THRESHOLD,
+  OVERTHROW_CONSECUTIVE_TURNS,
 } from '../constants';
 
 // ============================================================
@@ -321,6 +323,25 @@ export function getClassesAtBreakingPoint(population: PopulationState): Populati
  */
 export function checkCollapse(stability: StabilityState): boolean {
   return stability.consecutiveTurnsAtZero >= STABILITY_CONSECUTIVE_TURNS_FOR_COLLAPSE;
+}
+
+/**
+ * Returns true when the overthrow failure condition is met:
+ * nobility intrigue risk has been at or above the threshold while any class
+ * is at the breaking point for the required number of consecutive turns (§10.4).
+ */
+export function checkOverthrow(consecutiveTurnsOverthrowRisk: number): boolean {
+  return consecutiveTurnsOverthrowRisk >= OVERTHROW_CONSECUTIVE_TURNS;
+}
+
+/**
+ * Evaluates whether the current turn qualifies as an "overthrow risk" turn.
+ * Returns true when nobility intrigue risk is high AND at least one class is at breaking point.
+ */
+export function isOverthrowRiskActive(population: PopulationState): boolean {
+  const nobilityIntrigue = population[PopulationClass.Nobility].intrigueRisk ?? 0;
+  if (nobilityIntrigue < OVERTHROW_INTRIGUE_THRESHOLD) return false;
+  return getClassesAtBreakingPoint(population).length > 0;
 }
 
 // ============================================================

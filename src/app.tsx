@@ -1,7 +1,7 @@
 import { useState, useEffect, lazy, Suspense, useRef } from 'react';
 
 import { Season } from './engine/types';
-import { useCrownBar, useKingdomState } from './ui/hooks/use-game-state';
+import { useCrownBar, useKingdomState, useIsGameOver, useGameOverConditions, useGameDispatch } from './ui/hooks/use-game-state';
 import { useSave } from './ui/hooks/use-save';
 import { SCREEN_TITLES } from './data/text/labels';
 import { CrownBar } from './ui/components/crown-bar/crown-bar';
@@ -25,6 +25,7 @@ const Diplomacy = lazy(() => import('./ui/screens/diplomacy/diplomacy').then(m =
 const Intelligence = lazy(() => import('./ui/screens/intelligence/intelligence').then(m => ({ default: m.Intelligence })));
 const Knowledge = lazy(() => import('./ui/screens/knowledge/knowledge').then(m => ({ default: m.Knowledge })));
 const Archive = lazy(() => import('./ui/screens/archive/archive').then(m => ({ default: m.Archive })));
+const GameOver = lazy(() => import('./ui/screens/game-over/game-over').then(m => ({ default: m.GameOver })));
 
 // ============================================================
 // Screen Identifier
@@ -68,6 +69,9 @@ export function App() {
   const { save, autosave, load, hasSavedGame } = useSave();
   const { turn } = useKingdomState();
   const prevTurnRef = useRef(turn.turnNumber);
+  const isGameOver = useIsGameOver();
+  const gameOverConditions = useGameOverConditions();
+  const dispatch = useGameDispatch();
 
   // Auto-load saved game on mount.
   useEffect(() => {
@@ -137,6 +141,23 @@ export function App() {
         isOpen={intelPanelOpen}
         onClose={() => setIntelPanelOpen(false)}
       />
+
+      {isGameOver && gameOverConditions.length > 0 && (
+        <Suspense fallback={null}>
+          <GameOver
+            conditions={gameOverConditions}
+            onLoadSave={() => {
+              if (hasSavedGame()) {
+                load();
+              }
+            }}
+            onNewGame={() => {
+              dispatch({ type: 'INIT_NEW_GAME' });
+              setActiveScreen('dashboard');
+            }}
+          />
+        </Suspense>
+      )}
     </div>
   );
 }

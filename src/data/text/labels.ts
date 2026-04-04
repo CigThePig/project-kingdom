@@ -460,3 +460,57 @@ export const CONFLICT_OUTCOME_LABELS: Record<string, string> = {
   attritional_defeat: 'Grinding Defeat',
   stalemate: 'Stalemate',
 };
+
+// ============================================================
+// Game Over Screen Labels
+// ============================================================
+
+export const GAME_OVER_TITLE = 'The Reign Has Ended';
+export const GAME_OVER_ASSESSMENT_TITLE = 'Kingdom Assessment';
+export const GAME_OVER_NEW_GAME_LABEL = 'Begin New Reign';
+export const GAME_OVER_LOAD_SAVE_LABEL = 'Load Saved Kingdom';
+export const GAME_OVER_TURNS_LABEL = 'Months Ruled';
+export const GAME_OVER_TREASURY_LABEL = 'Treasury';
+export const GAME_OVER_FOOD_LABEL = 'Food Reserves';
+export const GAME_OVER_STABILITY_LABEL = 'Stability';
+export const GAME_OVER_POPULATION_LABEL = 'Total Population';
+
+// ============================================================
+// Failure Warning Messages (Forecasting)
+// ============================================================
+
+export const FAILURE_WARNING_MESSAGES: Record<
+  FailureCondition,
+  { caution: string; critical: string }
+> = {
+  [FailureCondition.Famine]: {
+    caution:
+      'Food reserves have been depleted. If production does not recover within two turns, widespread famine will consume the realm.',
+    critical:
+      'Starvation spreads unchecked. Without immediate intervention, famine will end this reign next turn.',
+  },
+  [FailureCondition.Insolvency]: {
+    caution:
+      'The treasury is empty and debts mount. If the crown cannot restore positive revenue within two turns, insolvency is inevitable.',
+    critical:
+      'Creditors refuse extension. Without immediate funds, the apparatus of governance will collapse next turn.',
+  },
+  [FailureCondition.Collapse]: {
+    caution:
+      'Civil order has deteriorated to nothing. If stability is not restored immediately, the kingdom will fracture next turn.',
+    critical:
+      'Civil order has deteriorated to nothing. If stability is not restored immediately, the kingdom will fracture next turn.',
+  },
+  [FailureCondition.Conquest]: {
+    caution:
+      'More than half of the kingdom\'s regions are under foreign occupation. Continued losses will mean total conquest.',
+    critical:
+      'Nearly all regions have fallen. Without a decisive military reversal, foreign conquest will be complete.',
+  },
+  [FailureCondition.Overthrow]: {
+    caution:
+      'Noble intrigue festers alongside deep popular unrest. If the crown does not address these grievances, overthrow becomes likely.',
+    critical:
+      'Conspiracy reaches a critical mass. Without immediate reconciliation, a coup or revolution will topple the throne next turn.',
+  },
+};

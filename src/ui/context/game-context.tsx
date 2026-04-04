@@ -6,6 +6,7 @@ import { createContext, useReducer, useMemo, type ReactNode } from 'react';
 import {
   ActionType,
   type ActiveEvent,
+  type FailureCondition,
   type GameState,
   type IntelligenceReport,
   type QueuedAction,
@@ -31,6 +32,8 @@ export interface GameContextState {
   lastTurnResult: TurnResolutionResult | null;
   isMidTurn: boolean;
   lastSavedAt: number | null;
+  isGameOver: boolean;
+  gameOverConditions: FailureCondition[];
 }
 
 // ============================================================
@@ -70,6 +73,8 @@ function createInitialState(): GameContextState {
     lastTurnResult: null,
     isMidTurn: false,
     lastSavedAt: null,
+    isGameOver: false,
+    gameOverConditions: [],
   };
 }
 
@@ -93,6 +98,8 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
         lastTurnResult: null,
         isMidTurn: save.isMidTurn,
         lastSavedAt: save.savedAt,
+        isGameOver: false,
+        gameOverConditions: [],
       };
     }
 
@@ -159,6 +166,8 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
       // Move resolved events from the previous turn into event history.
       const newlyResolved = state.gameState.activeEvents.filter((e) => e.isResolved);
 
+      const hasFailure = result.triggeredFailureConditions.length > 0;
+
       return {
         ...state,
         gameState: result.nextState,
@@ -168,6 +177,8 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
         lastTurnResult: result,
         isMidTurn: false,
         lastSavedAt: state.lastSavedAt,
+        isGameOver: hasFailure,
+        gameOverConditions: hasFailure ? result.triggeredFailureConditions : [],
       };
     }
 
