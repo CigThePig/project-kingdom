@@ -485,3 +485,57 @@ export const DIPLOMACY_POSTURE_THRESHOLDS: Record<DiplomaticPosture, number> = {
   [DiplomaticPosture.Neutral]: 70,
   [DiplomaticPosture.Friendly]: 100,
 };
+
+// ============================================================
+// Block 16 — Action Effect Constants (Phase 1)
+// gameplay-blueprint.md §5.2–§5.11
+// ============================================================
+
+// Per-decree immediate satisfaction/state deltas.
+// All satisfaction values are within SATISFACTION_MAX_DELTA_PER_TURN (5).
+// Keys match decree IDs with the 'decree_' prefix stripped.
+export const DECREE_EFFECTS = {
+  market_charter:        { merchantSat: +4, commonerSat: +2 },
+  emergency_levy:        { treasuryDelta: +120, merchantSat: -4, commonerSat: -3, nobilitySat: -2 },
+  trade_subsidies:       { merchantSat: +5 },
+  fortify_borders:       { militaryCasteSat: +3, readinessDelta: +5 },
+  arms_commission:       { militaryCasteSat: +4, merchantSat: +2, equipmentDelta: +8 },
+  general_mobilization:  { militaryCasteSat: +5, commonerSat: -4, readinessDelta: +10 },
+  road_improvement:      { merchantSat: +3, commonerSat: +2 },
+  census:                { nobilitySat: -2, commonerSat: +1 },
+  administrative_reform: { nobilitySat: -3, clergySat: -2 },
+  call_festival:         { clergySat: +4, commonerSat: +4, faithDelta: +5 },
+  invest_religious_order:{ clergySat: +4 },
+  suppress_heresy:       { clergySat: +2, commonerSat: -2, heterodoxyDelta: -10 },
+  diplomatic_envoy:      { nobilitySat: +2, relationshipDelta: +5 },
+  trade_agreement:       { merchantSat: +3, nobilitySat: +1, relationshipDelta: +8 },
+  royal_marriage:        { nobilitySat: +4, clergySat: +2, relationshipDelta: +20 },
+  public_granary:        { commonerSat: +5 },
+  labor_rights:          { commonerSat: +5, merchantSat: -3, nobilitySat: -2 },
+  land_redistribution:   { commonerSat: +5, nobilitySat: -5, clergySat: -3 },
+} as const;
+
+// Research directive burst (§5.10)
+export const RESEARCH_DIRECTIVE_TREASURY_COST = 80;
+export const RESEARCH_DIRECTIVE_PROGRESS_BURST = 30;
+
+// Diplomatic action relationship deltas by sub-type (§5.7)
+export const DIPLOMATIC_ACTION_DELTAS: Record<string, number> = {
+  send_envoy:      +8,
+  propose_treaty:  +12,
+  issue_ultimatum: -15,
+  break_agreement: -20,
+};
+
+// Religious edict immediate effect magnitudes (§5.9)
+export const RELIGIOUS_EDICT_FESTIVAL_FAITH_DELTA = 8;
+export const RELIGIOUS_EDICT_FESTIVAL_CLERGY_SAT_DELTA = 4;
+export const RELIGIOUS_EDICT_OBSERVANCE_FAITH_DELTA = 5;
+export const RELIGIOUS_EDICT_OBSERVANCE_COHESION_DELTA = 3;
+export const RELIGIOUS_EDICT_HERESY_DELTA = -15;
+export const RELIGIOUS_EDICT_HERESY_CLERGY_SAT_DELTA = 3;
+export const RELIGIOUS_ORDER_UPKEEP_PER_TURN = 20;
+
+// Construction project defaults (§5.4)
+export const CONSTRUCTION_DEFAULT_TURNS = 4;
+export const TRADE_AGREEMENT_TURNS = 12; // 1 in-game year
