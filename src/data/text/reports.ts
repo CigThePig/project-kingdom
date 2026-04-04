@@ -205,6 +205,16 @@ export const INTELLIGENCE_FUNDING_EFFECT: Record<IntelligenceFundingLevel, strin
   [IntelligenceFundingLevel.Heavy]: 'Extensive intelligence network. Full operational capability at significant treasury cost.',
 };
 
+export const LABOR_ALLOCATION_EFFECT: Record<string, string> = {
+  none: 'No labor priority set. Workforce is distributed across all domains without directed focus.',
+  [KnowledgeBranch.Agricultural]: 'Surplus labor directed to farmlands. Food production increases but other domains may slow.',
+  [KnowledgeBranch.Military]: 'Surplus labor supports military operations. Readiness and equipment maintenance improve.',
+  [KnowledgeBranch.Civic]: 'Surplus labor channeled to civic projects. Construction completes faster; public order improves.',
+  [KnowledgeBranch.MaritimeTrade]: 'Surplus labor directed to trade routes and ports. Trade income increases.',
+  [KnowledgeBranch.CulturalScholarly]: 'Surplus labor supports scholarly institutions. Research progress accelerates modestly.',
+  [KnowledgeBranch.NaturalPhilosophy]: 'Surplus labor assists philosophical inquiry. Natural knowledge advancement receives a modest boost.',
+};
+
 // ============================================================
 // Society Screen — Class Descriptions
 // ============================================================

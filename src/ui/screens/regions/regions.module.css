@@ -43,17 +43,11 @@
 .regionCard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border-default);
   border-radius: var(--border-radius-md);
-  padding: var(--space-4);
-  cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
-}
-
-.regionCard:hover {
-  background: var(--color-bg-surface-raised);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
 }
 
 .regionCard[data-expanded='true'] {
@@ -63,6 +57,19 @@
 .regionCard[data-occupied='true'] {
   border-color: var(--color-status-critical);
   opacity: 0.75;
+}
+
+.regionSummary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.regionSummary:hover {
+  background: var(--color-bg-surface-raised);
 }
 
 /* --------------------------------------------------------------------------
@@ -211,8 +218,7 @@
   flex-direction: column;
   gap: var(--space-3);
   border-top: 1px solid var(--color-border-default);
-  padding-top: var(--space-3);
-  margin-top: var(--space-1);
+  padding: var(--space-3) var(--space-4) var(--space-4);
 }
 
 .detailSection {
@@ -234,6 +240,197 @@
   color: var(--color-text-secondary);
   line-height: var(--line-height-normal);
   margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Construction Projects
+   -------------------------------------------------------------------------- */
+.errorMessage {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-status-critical-bg);
+  border: 1px solid var(--color-status-critical);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-status-critical);
+}
+
+.constructionSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.projectList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.projectCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-sm);
+  padding: var(--space-3);
+}
+
+.projectHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.projectTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+}
+
+.projectCategory {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+
+.projectEffect {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+.projectMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.projectMetaItem {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  padding: 2px var(--space-2);
+  border-radius: var(--border-radius-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.projectPrereq {
+  font-size: var(--font-size-xs);
+  color: var(--color-status-warning);
+  background: var(--color-status-warning-bg);
+  padding: 2px var(--space-2);
+  border-radius: var(--border-radius-sm);
+}
+
+.beginButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+  align-self: flex-start;
+}
+
+.beginButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.slotCost {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  opacity: 0.75;
+  padding: 1px var(--space-1);
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--border-radius-sm);
+}
+
+.confirmPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-accent);
+  border-radius: var(--border-radius-sm);
+}
+
+.confirmText {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+}
+
+.confirmButtons {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.cancelConfirmButton {
+  padding: var(--space-1) var(--space-2);
+  background: transparent;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+/* Active construction project items */
+.activeProjectList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.activeProjectItem {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.activeProjectHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.activeProjectName {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.activeProjectTurns {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+.progressBarTrack {
+  height: 0.25rem;
+  background: var(--color-bg-tertiary);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--color-seasonal-accent);
+  border-radius: 9999px;
+  transition: width var(--transition-fast);
 }
 
 /* --------------------------------------------------------------------------
