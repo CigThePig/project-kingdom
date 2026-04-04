@@ -1,0 +1,192 @@
+/* ==========================================================================
+   Reports Screen — Domain Reports & Assessments
+   Source: ui-blueprint.md §5.2; ux-blueprint.md §3
+   ========================================================================== */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+/* --------------------------------------------------------------------------
+   Tab Bar
+   -------------------------------------------------------------------------- */
+.tabBar {
+  display: flex;
+  gap: var(--space-1);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  border-bottom: 1px solid var(--color-border-default);
+  padding-bottom: var(--space-1);
+}
+
+.tab {
+  flex-shrink: 0;
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.tab:hover {
+  color: var(--color-text-primary);
+}
+
+.tabActive {
+  composes: tab;
+  color: var(--color-text-heading);
+  font-weight: var(--font-weight-semibold);
+  border-bottom-color: var(--color-accent-metallic);
+}
+
+/* --------------------------------------------------------------------------
+   Report Content
+   -------------------------------------------------------------------------- */
+.reportContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.summary {
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-relaxed);
+}
+
+/* --------------------------------------------------------------------------
+   Detail Sections (native <details>)
+   -------------------------------------------------------------------------- */
+.detailSection {
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+}
+
+.detailSection summary {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+  background: var(--color-bg-surface);
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.detailSection summary::before {
+  content: '\25B6\00a0';
+  font-size: var(--font-size-xs);
+  transition: transform var(--transition-fast);
+  display: inline-block;
+}
+
+.detailSection[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.detailBody {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+}
+
+/* --------------------------------------------------------------------------
+   Data Table
+   -------------------------------------------------------------------------- */
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.dataTable th {
+  text-align: left;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-border-default);
+  font-size: var(--font-size-xs);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+}
+
+.dataTable td {
+  padding: var(--space-1) var(--space-2);
+  border-bottom: 1px solid var(--color-border-default);
+  color: var(--color-text-primary);
+}
+
+.dataTable td:last-child {
+  text-align: right;
+  font-weight: var(--font-weight-medium);
+}
+
+/* --------------------------------------------------------------------------
+   Warning Block
+   -------------------------------------------------------------------------- */
+.warningBlock {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-status-warning);
+  background: var(--color-status-warning-bg);
+  border: 1px solid var(--color-status-warning);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-3) var(--space-4);
+  line-height: var(--line-height-normal);
+}
+
+.criticalBlock {
+  composes: warningBlock;
+  color: var(--color-status-critical);
+  background: var(--color-status-critical-bg);
+  border-color: var(--color-status-critical);
+}
+
+/* --------------------------------------------------------------------------
+   Stat Row (inline key-value)
+   -------------------------------------------------------------------------- */
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-1) 0;
+  font-size: var(--font-size-sm);
+}
+
+.statLabel {
+  color: var(--color-text-secondary);
+}
+
+.statValue {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   Mobile Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .tabBar {
+    gap: 0;
+  }
+
+  .tab,
+  .tabActive {
+    padding: var(--space-2);
+    font-size: var(--font-size-xs);
+  }
+}

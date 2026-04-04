@@ -160,18 +160,18 @@ Build components only as they are needed by screens. Do not build components spe
 
 ## Phase 10 — Core Screens
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` — Dashboard, Reports, Events screen specs; `ux-blueprint.md` — §2 Player Mental Model, §4 Core Interaction Flows
 
 These three screens are the highest-value and most-used. Build them first.
 
-- [ ] Create `src/ui/screens/dashboard/dashboard.tsx`
-- [ ] Create `src/ui/screens/dashboard/dashboard.module.css`
-- [ ] Create `src/ui/screens/reports/reports.tsx`
-- [ ] Create `src/ui/screens/reports/reports.module.css`
-- [ ] Create `src/ui/screens/events/events.tsx`
-- [ ] Create `src/ui/screens/events/events.module.css`
-- [ ] Verify turn advance flow works end-to-end (dashboard → advance → results)
+- [x] Create `src/ui/screens/dashboard/dashboard.tsx`
+- [x] Create `src/ui/screens/dashboard/dashboard.module.css`
+- [x] Create `src/ui/screens/reports/reports.tsx`
+- [x] Create `src/ui/screens/reports/reports.module.css`
+- [x] Create `src/ui/screens/events/events.tsx`
+- [x] Create `src/ui/screens/events/events.module.css`
+- [x] Verify turn advance flow works end-to-end (dashboard → advance → results)
 
 ---
 
