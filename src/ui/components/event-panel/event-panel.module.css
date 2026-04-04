@@ -47,22 +47,22 @@
 /* Severity color variants */
 .severityNeutral {
   color: var(--color-status-neutral);
-  background: hsla(210, 15%, 55%, 0.15);
+  background: var(--color-status-neutral-bg);
 }
 
 .severityFaith {
   color: var(--color-status-faith);
-  background: hsla(35, 45%, 48%, 0.15);
+  background: var(--color-status-faith-bg);
 }
 
 .severityWarning {
   color: var(--color-status-warning);
-  background: hsla(40, 65%, 50%, 0.15);
+  background: var(--color-status-warning-bg);
 }
 
 .severityCritical {
   color: var(--color-status-critical);
-  background: hsla(0, 55%, 45%, 0.15);
+  background: var(--color-status-critical-bg);
 }
 
 .categoryBadge {
