@@ -12,8 +12,10 @@ import {
 import { useKingdomState } from '../../hooks/use-game-state';
 import { useTurnActions } from '../../hooks/use-turn-actions';
 import { GameContext } from '../../context/game-context';
+import { useRightPanel } from '../../context/right-panel-context';
 import { EVENT_TEXT, STORYLINE_TEXT } from '../../../data/text/events';
 import { EVENT_POOL } from '../../../data/events/index';
+import { EVENT_CHOICE_EFFECTS } from '../../../data/events/effects';
 import { EventPanel, type EventPanelChoice } from '../../components/event-panel/event-panel';
 import styles from './events.module.css';
 
@@ -38,11 +40,14 @@ function buildChoices(event: ActiveEvent): EventPanelChoice[] {
 
   if (!textEntry || !definition) return [];
 
+  const effectsForEvent = EVENT_CHOICE_EFFECTS[event.definitionId];
+
   return definition.choices.map((choice) => ({
     choiceId: choice.choiceId,
     label: textEntry.choices[choice.choiceId] ?? choice.choiceId,
     slotCost: choice.slotCost,
     isFree: choice.isFree,
+    effects: effectsForEvent?.[choice.choiceId],
   }));
 }
 
@@ -54,6 +59,7 @@ export function Events() {
   const kingdom = useKingdomState();
   const { queueAction } = useTurnActions();
   const ctx = useContext(GameContext);
+  const { update: updateRightPanel } = useRightPanel();
   const [actionError, setActionError] = useState<string | null>(null);
 
   const activeEvents = kingdom.activeEvents;
@@ -163,21 +169,26 @@ export function Events() {
         : null;
 
     return (
-      <EventPanel
+      <div
         key={event.id}
-        eventId={event.id}
-        title={textEntry.title}
-        body={textEntry.body}
-        severity={event.severity}
-        category={event.category}
-        choices={choices}
-        affectedClasses={event.affectedClassId ? [event.affectedClassId] : undefined}
-        chainInfo={chainInfo}
-        storylineInfo={storylineInfo}
-        isResolved={event.isResolved}
-        choiceMade={event.choiceMade}
-        onChoiceSelect={handleChoiceSelect}
-      />
+        onMouseEnter={() => updateRightPanel({ selectedEventId: event.id })}
+        onFocus={() => updateRightPanel({ selectedEventId: event.id })}
+      >
+        <EventPanel
+          eventId={event.id}
+          title={textEntry.title}
+          body={textEntry.body}
+          severity={event.severity}
+          category={event.category}
+          choices={choices}
+          affectedClasses={event.affectedClassId ? [event.affectedClassId] : undefined}
+          chainInfo={chainInfo}
+          storylineInfo={storylineInfo}
+          isResolved={event.isResolved}
+          choiceMade={event.choiceMade}
+          onChoiceSelect={handleChoiceSelect}
+        />
+      </div>
     );
   }
 

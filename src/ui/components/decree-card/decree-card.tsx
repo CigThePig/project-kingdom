@@ -1,7 +1,7 @@
 // Phase 9 — Decree Card: decree option display with cost and effect preview.
 // Blueprint Reference: ui-blueprint.md §4.3, §6.4
 
-import type { DecreeCategory, PopulationClass, ResourceType } from '../../../engine/types';
+import type { DecreeCategory, MechanicalEffectDelta, PopulationClass, ResourceType } from '../../../engine/types';
 import {
   DECREE_CATEGORY_LABELS,
   CLASS_LABELS,
@@ -12,7 +12,9 @@ import {
   DECREE_EFFECT_LABEL,
   DECREE_AFFECTED_CLASSES_LABEL,
   DECREE_PREREQUISITES_LABEL,
+  CONSEQUENCE_PREVIEW_HEADER,
 } from '../../../data/text/reports';
+import { ConsequencePreview } from '../consequence-preview/consequence-preview';
 import styles from './decree-card.module.css';
 
 // ============================================================
@@ -28,6 +30,7 @@ interface DecreeCardProps {
   prerequisites?: string[];
   affectedClasses?: PopulationClass[];
   effectPreview: string;
+  consequencePreview?: MechanicalEffectDelta;
   isNew?: boolean;
   isDisabled?: boolean;
   disabledReason?: string;
@@ -69,6 +72,7 @@ export function DecreeCard({
   prerequisites,
   affectedClasses,
   effectPreview,
+  consequencePreview,
   isNew,
   isDisabled,
   disabledReason,
@@ -133,6 +137,14 @@ export function DecreeCard({
         <span className={styles.sectionLabel}>{DECREE_EFFECT_LABEL}</span>
         <p className={styles.effectPreview}>{effectPreview}</p>
       </div>
+
+      {/* Consequence preview — directional impact indicators */}
+      {consequencePreview && (
+        <div className={styles.section}>
+          <span className={styles.sectionLabel}>{CONSEQUENCE_PREVIEW_HEADER}</span>
+          <ConsequencePreview effects={consequencePreview} />
+        </div>
+      )}
 
       {/* Select button */}
       <button

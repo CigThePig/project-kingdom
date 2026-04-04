@@ -148,6 +148,16 @@
   margin-top: var(--space-1);
 }
 
+.choiceWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.choiceEffects {
+  padding-left: var(--space-2);
+}
+
 .choiceButton {
   display: flex;
   align-items: center;

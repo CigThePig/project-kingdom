@@ -665,6 +665,59 @@ export interface CrownBarData {
 }
 
 // ============================================================
+// Section 16b — Turn Summary Items
+// ============================================================
+
+/** Severity tier for turn summary item ordering. */
+export type TurnSummarySeverity = 'critical' | 'notable' | 'routine';
+
+/**
+ * Screen navigation target for cross-screen linking from turn summary items.
+ * Matches the ScreenId union used in the UI layer.
+ */
+export type SummaryTargetScreen =
+  | 'dashboard'
+  | 'reports'
+  | 'decrees'
+  | 'treasury'
+  | 'military'
+  | 'diplomacy'
+  | 'faith'
+  | 'knowledge'
+  | 'regions'
+  | 'espionage'
+  | 'events'
+  | 'archive'
+  | null;
+
+/** Category tag for turn summary items, used for grouping and icon selection. */
+export type SummaryItemCategory =
+  | 'treasury'
+  | 'food'
+  | 'class'
+  | 'faith'
+  | 'military'
+  | 'construction'
+  | 'knowledge'
+  | 'event'
+  | 'storyline'
+  | 'intelligence'
+  | 'diplomacy'
+  | 'conflict'
+  | 'failure';
+
+/**
+ * A structured turn summary entry with navigation target.
+ * Replaces the plain-string approach in the original summary builder.
+ */
+export interface TurnSummaryItem {
+  severity: TurnSummarySeverity;
+  text: string;
+  targetScreen: SummaryTargetScreen;
+  category: SummaryItemCategory;
+}
+
+// ============================================================
 // Section 17 — Save File & Main GameState
 // ============================================================
 

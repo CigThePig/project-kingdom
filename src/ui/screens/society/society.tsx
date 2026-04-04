@@ -13,6 +13,7 @@ import {
   HETERODOXY_SCHISM_THRESHOLD,
 } from '../../../engine/constants';
 import { useKingdomState } from '../../hooks/use-game-state';
+import { useRightPanel } from '../../context/right-panel-context';
 import {
   CLASS_LABELS,
   SATISFACTION_STATUS_LABELS,
@@ -77,8 +78,16 @@ function formatDelta(delta: number): string {
 
 export function Society() {
   const kingdom = useKingdomState();
+  const { update: updateRightPanel } = useRightPanel();
   const [activeTab, setActiveTab] = useState<ActiveTab>('population');
   const [expandedClass, setExpandedClass] = useState<PopulationClass | null>(null);
+
+  function handleExpandClass(cls: PopulationClass | null) {
+    setExpandedClass(cls);
+    if (cls) {
+      updateRightPanel({ selectedClassId: cls });
+    }
+  }
 
   // Find the most critical class (lowest satisfaction)
   const mostCriticalClass = Object.values(PopulationClass).reduce(
@@ -137,7 +146,7 @@ export function Society() {
                   data-expanded={isExpanded ? 'true' : 'false'}
                   data-most-critical={isMostCritical ? 'true' : 'false'}
                   onClick={() =>
-                    setExpandedClass(isExpanded ? null : cls)
+                    handleExpandClass(isExpanded ? null : cls)
                   }
                   role="button"
                   tabIndex={0}
@@ -146,7 +155,7 @@ export function Society() {
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
-                      setExpandedClass(isExpanded ? null : cls);
+                      handleExpandClass(isExpanded ? null : cls);
                     }
                   }}
                 >

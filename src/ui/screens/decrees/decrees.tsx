@@ -13,7 +13,9 @@ import {
 import { useKingdomState } from '../../hooks/use-game-state';
 import { useTurnActions } from '../../hooks/use-turn-actions';
 import { GameContext } from '../../context/game-context';
+import { useRightPanel } from '../../context/right-panel-context';
 import { DECREE_POOL, type DecreeDefinition } from '../../../data/decrees/index';
+import { DECREE_EFFECTS } from '../../../data/decrees/effects';
 import { DecreeCard } from '../../components/decree-card/decree-card';
 import { PolicyCard } from '../../components/policy-card/policy-card';
 import {
@@ -175,6 +177,7 @@ export function Decrees() {
   const { queueAction, removeAction, slotsRemaining, queuedActions, isBudgetExhausted } =
     useTurnActions();
   const ctx = useContext(GameContext);
+  const { update: updateRightPanel } = useRightPanel();
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('decrees');
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
@@ -378,21 +381,27 @@ export function Decrees() {
                 const isNewlyUnlocked =
                   decree.knowledgePrerequisite !== null && !disabled;
                 return (
-                  <DecreeCard
+                  <div
                     key={decree.id}
-                    id={decree.id}
-                    title={decree.title}
-                    category={decree.category}
-                    slotCost={decree.slotCost}
-                    resourceCosts={decree.resourceCosts}
-                    prerequisites={decree.prerequisites}
-                    affectedClasses={decree.affectedClasses}
-                    effectPreview={decree.effectPreview}
-                    isNew={isNewlyUnlocked}
-                    isDisabled={disabled}
-                    disabledReason={reason}
-                    onSelect={handleDecreeSelect}
-                  />
+                    onMouseEnter={() => updateRightPanel({ selectedDecreeId: decree.id })}
+                    onFocus={() => updateRightPanel({ selectedDecreeId: decree.id })}
+                  >
+                    <DecreeCard
+                      id={decree.id}
+                      title={decree.title}
+                      category={decree.category}
+                      slotCost={decree.slotCost}
+                      resourceCosts={decree.resourceCosts}
+                      prerequisites={decree.prerequisites}
+                      affectedClasses={decree.affectedClasses}
+                      effectPreview={decree.effectPreview}
+                      consequencePreview={DECREE_EFFECTS[decree.id]}
+                      isNew={isNewlyUnlocked}
+                      isDisabled={disabled}
+                      disabledReason={reason}
+                      onSelect={handleDecreeSelect}
+                    />
+                  </div>
                 );
               })}
             </div>
