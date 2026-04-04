@@ -212,15 +212,15 @@ These three screens are the highest-value and most-used. Build them first.
 
 ## Phase 13 — Integration & Polish
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ux-blueprint.md` — §10 Save/Load, §10.4 Mobile UX, §10.5 Accessibility; `TECHNICAL.md` — Performance Notes
 
-- [ ] Verify save/load round-trip: save mid-turn, reload page, state restored correctly
-- [ ] Implement code splitting with `React.lazy` for all 12 screens
-- [ ] Verify all 12 screens are fully accessible and operable on mobile viewport
-- [ ] Audit and fix any CSS custom property gaps (no hardcoded hex values in components)
-- [ ] Run `npm run build` and verify bundle is under 200KB gzipped (excluding audio)
-- [ ] Add `vite-plugin-pwa` for offline play (optional — only after above items complete)
+- [x] Verify save/load round-trip: save mid-turn, reload page, state restored correctly
+- [x] Implement code splitting with `React.lazy` for all 12 screens
+- [x] Verify all 12 screens are fully accessible and operable on mobile viewport
+- [x] Audit and fix any CSS custom property gaps (no hardcoded hex values in components)
+- [x] Run `npm run build` and verify bundle is under 200KB gzipped (excluding audio)
+- [x] Add `vite-plugin-pwa` for offline play (optional — only after above items complete)
 
 ---
 
