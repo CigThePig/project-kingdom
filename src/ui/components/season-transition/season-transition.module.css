@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Season Transition Overlay — Brief fullscreen season announcement
+   Source: ui-blueprint.md §2.4; ux-blueprint.md §8 (Phase 8E)
+   ========================================================================== */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: hsla(220, 15%, 8%, 0.85);
+  animation: seasonFadeInOut 2s ease-in-out forwards;
+  pointer-events: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  animation: seasonContentReveal 1.8s ease-out forwards;
+}
+
+.seasonName {
+  margin: 0;
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-seasonal-text, var(--color-text-heading));
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  text-shadow: 0 0 20px var(--color-seasonal-glow, transparent);
+}
+
+.tagline {
+  margin: 0;
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* Seasonal tinting on the icon */
+.overlay[data-season='spring'] .content {
+  --icon-color: hsl(130, 30%, 50%);
+}
+
+.overlay[data-season='summer'] .content {
+  --icon-color: hsl(42, 55%, 55%);
+}
+
+.overlay[data-season='autumn'] .content {
+  --icon-color: hsl(20, 50%, 50%);
+}
+
+.overlay[data-season='winter'] .content {
+  --icon-color: hsl(210, 35%, 55%);
+}
+
+/* --------------------------------------------------------------------------
+   Keyframes
+   -------------------------------------------------------------------------- */
+@keyframes seasonFadeInOut {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes seasonContentReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.9) translateY(8px);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  80% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.02) translateY(-4px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation-duration: 2s;
+  }
+
+  .content {
+    animation: none;
+    opacity: 1;
+  }
+}

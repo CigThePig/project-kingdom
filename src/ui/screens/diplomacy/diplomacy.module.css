@@ -43,9 +43,10 @@
 .neighborCard {
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
   overflow: hidden;
   transition: border-color var(--transition-fast);
 }
@@ -414,6 +415,71 @@
   border-radius: var(--border-radius-sm);
   font-size: var(--font-size-sm);
   color: var(--color-status-critical);
+}
+
+/* --------------------------------------------------------------------------
+   Relationship Gauge
+   -------------------------------------------------------------------------- */
+.relationshipGauge {
+  width: 100%;
+  height: 4px;
+  background: var(--color-bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.relationshipGaugeFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width var(--transition-normal);
+}
+
+.relationshipGaugeFill[data-disposition='hostile'] {
+  background: var(--color-status-critical);
+}
+
+.relationshipGaugeFill[data-disposition='cautious'] {
+  background: var(--color-status-warning);
+}
+
+.relationshipGaugeFill[data-disposition='neutral'] {
+  background: var(--color-status-neutral);
+}
+
+.relationshipGaugeFill[data-disposition='friendly'] {
+  background: var(--color-status-positive);
+}
+
+.dispositionBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.dispositionBadge[data-disposition='hostile'] {
+  color: var(--color-status-critical);
+  background: var(--color-status-critical-bg);
+}
+
+.dispositionBadge[data-disposition='cautious'] {
+  color: var(--color-status-warning);
+  background: var(--color-status-warning-bg);
+}
+
+.dispositionBadge[data-disposition='neutral'] {
+  color: var(--color-status-neutral);
+  background: var(--color-status-neutral-bg);
+}
+
+.dispositionBadge[data-disposition='friendly'] {
+  color: var(--color-status-positive);
+  background: var(--color-status-positive-bg);
 }
 
 /* --------------------------------------------------------------------------

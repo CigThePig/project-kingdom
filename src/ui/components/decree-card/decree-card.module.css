@@ -7,15 +7,20 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
+  border-left: 3px solid var(--color-accent-metallic);
   border-radius: var(--border-radius-md);
   padding: var(--space-4);
-  transition: background var(--transition-fast);
+  box-shadow: var(--surface-base-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
 }
 
 .card:hover {
   background: var(--color-bg-surface-raised);
+  transform: translateY(var(--card-hover-lift));
+  box-shadow: var(--shadow-card-hover);
+  border-left-color: var(--color-seasonal-accent, var(--color-accent-metallic));
 }
 
 .disabled {
@@ -23,7 +28,9 @@
 }
 
 .disabled:hover {
-  background: var(--color-bg-surface);
+  background: var(--surface-base-bg);
+  transform: none;
+  box-shadow: var(--surface-base-shadow);
 }
 
 /* --------------------------------------------------------------------------
@@ -34,6 +41,11 @@
   align-items: center;
   gap: var(--space-2);
   flex-wrap: wrap;
+}
+
+.categoryIcon {
+  flex-shrink: 0;
+  color: var(--color-accent-metallic);
 }
 
 .title {
@@ -197,11 +209,16 @@
   border-radius: var(--border-radius-sm);
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast);
+  transition: background var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
 }
 
 .selectButton:hover:not(:disabled) {
   background: var(--color-bg-tertiary);
+  transform: translateY(-1px);
+}
+
+.selectButton:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .selectButton:disabled {

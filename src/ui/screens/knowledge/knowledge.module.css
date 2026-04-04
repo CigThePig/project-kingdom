@@ -36,9 +36,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
   padding: var(--space-3) var(--space-4);
 }
 
@@ -66,9 +67,10 @@
   gap: var(--space-3);
   margin-top: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
 }
 
 .directiveButton {
@@ -120,9 +122,10 @@
   flex-wrap: wrap;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
 }
 
 .contributorsTitle {
@@ -183,9 +186,10 @@
   gap: var(--space-4);
   align-items: start;
   padding: var(--space-3) var(--space-4);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
+  box-shadow: var(--surface-base-shadow);
   transition: border-color var(--transition-fast);
 }
 
@@ -507,9 +511,10 @@
 .unlockChip {
   font-size: var(--font-size-xs);
   padding: var(--space-1) var(--space-2);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-sm);
+  box-shadow: var(--surface-base-shadow);
   color: var(--color-text-primary);
 }
 

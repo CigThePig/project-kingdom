@@ -7,6 +7,7 @@ import {
   PopulationClass,
   type ActiveEvent,
 } from '../../../engine/types';
+import { Icon } from '../../components/icon/icon';
 import {
   SATISFACTION_BREAKING_POINT,
   SATISFACTION_CRISIS_WARNING,
@@ -52,6 +53,21 @@ const CLASS_ICONS: Record<PopulationClass, string> = {
   [PopulationClass.Commoners]: '\u{1F33E}',
   [PopulationClass.MilitaryCaste]: '\u{1F6E1}',
 };
+
+const CLASS_ICON_NAMES: Record<PopulationClass, string> = {
+  [PopulationClass.Nobility]: 'nobility',
+  [PopulationClass.Clergy]: 'clergy',
+  [PopulationClass.Merchants]: 'merchants',
+  [PopulationClass.Commoners]: 'commoners',
+  [PopulationClass.MilitaryCaste]: 'military-class',
+};
+
+function getSatisfactionLevel(satisfaction: number): string {
+  if (satisfaction < 20) return 'critical';
+  if (satisfaction < 35) return 'restless';
+  if (satisfaction < 50) return 'uneasy';
+  return 'content';
+}
 
 function getSatisfactionStatus(satisfaction: number): string {
   if (satisfaction < SATISFACTION_BREAKING_POINT) return 'critical';
@@ -161,9 +177,7 @@ export function Society() {
                 >
                   {/* Header */}
                   <div className={styles.classHeader}>
-                    <span className={styles.classIcon} aria-hidden="true">
-                      {CLASS_ICONS[cls]}
-                    </span>
+                    <Icon name={CLASS_ICON_NAMES[cls]} size="0.875rem" />
                     <span className={styles.className}>{CLASS_LABELS[cls]}</span>
                   </div>
 
@@ -184,6 +198,13 @@ export function Society() {
                         style={{ width: `${classState.satisfaction}%` }}
                       />
                     </div>
+                  </div>
+                  <div className={styles.satisfactionGauge}>
+                    <div
+                      className={styles.satisfactionGaugeFill}
+                      data-level={getSatisfactionLevel(classState.satisfaction)}
+                      style={{ width: `${Math.min(100, classState.satisfaction)}%` }}
+                    />
                   </div>
 
                   {/* Delta and status */}

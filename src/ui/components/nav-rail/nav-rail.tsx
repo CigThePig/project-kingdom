@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 import type { ScreenId } from '../../../app';
 import { NAV_LABELS } from '../../../data/text/labels';
+import { Icon } from '../icon/icon';
 import styles from './nav-rail.module.css';
 
 // ============================================================
@@ -14,21 +15,38 @@ import styles from './nav-rail.module.css';
 interface NavItem {
   id: ScreenId;
   label: string;
+  icon: string;
 }
 
+/* Map each screen ID to its icon name from the Icon system */
+const SCREEN_ICON_MAP: Record<ScreenId, string> = {
+  dashboard: 'dashboard',
+  reports: 'reports',
+  decrees: 'decrees',
+  faith: 'society',
+  regions: 'regions',
+  military: 'military',
+  treasury: 'trade',
+  diplomacy: 'diplomacy',
+  espionage: 'intelligence',
+  knowledge: 'knowledge',
+  events: 'events',
+  archive: 'archive',
+};
+
 const NAV_ITEMS: NavItem[] = [
-  { id: 'dashboard', label: NAV_LABELS.dashboard },
-  { id: 'reports', label: NAV_LABELS.reports },
-  { id: 'decrees', label: NAV_LABELS.decrees },
-  { id: 'faith', label: NAV_LABELS.faith },
-  { id: 'regions', label: NAV_LABELS.regions },
-  { id: 'military', label: NAV_LABELS.military },
-  { id: 'treasury', label: NAV_LABELS.treasury },
-  { id: 'diplomacy', label: NAV_LABELS.diplomacy },
-  { id: 'espionage', label: NAV_LABELS.espionage },
-  { id: 'knowledge', label: NAV_LABELS.knowledge },
-  { id: 'events', label: NAV_LABELS.events },
-  { id: 'archive', label: NAV_LABELS.archive },
+  { id: 'dashboard', label: NAV_LABELS.dashboard, icon: SCREEN_ICON_MAP.dashboard },
+  { id: 'reports', label: NAV_LABELS.reports, icon: SCREEN_ICON_MAP.reports },
+  { id: 'decrees', label: NAV_LABELS.decrees, icon: SCREEN_ICON_MAP.decrees },
+  { id: 'faith', label: NAV_LABELS.faith, icon: SCREEN_ICON_MAP.faith },
+  { id: 'regions', label: NAV_LABELS.regions, icon: SCREEN_ICON_MAP.regions },
+  { id: 'military', label: NAV_LABELS.military, icon: SCREEN_ICON_MAP.military },
+  { id: 'treasury', label: NAV_LABELS.treasury, icon: SCREEN_ICON_MAP.treasury },
+  { id: 'diplomacy', label: NAV_LABELS.diplomacy, icon: SCREEN_ICON_MAP.diplomacy },
+  { id: 'espionage', label: NAV_LABELS.espionage, icon: SCREEN_ICON_MAP.espionage },
+  { id: 'knowledge', label: NAV_LABELS.knowledge, icon: SCREEN_ICON_MAP.knowledge },
+  { id: 'events', label: NAV_LABELS.events, icon: SCREEN_ICON_MAP.events },
+  { id: 'archive', label: NAV_LABELS.archive, icon: SCREEN_ICON_MAP.archive },
 ];
 
 // Mobile bottom bar shows 5 items: Dashboard, Decrees, Events, Society (faith), More
@@ -76,6 +94,7 @@ export function NavRail({ activeScreen, onNavigate }: NavRailProps) {
               onClick={() => onNavigate(item.id)}
               aria-current={activeScreen === item.id ? 'page' : undefined}
             >
+              <Icon name={item.icon} size="1.25rem" />
               <span className={styles.label}>{item.label}</span>
             </button>
           </li>
@@ -97,6 +116,7 @@ export function NavRail({ activeScreen, onNavigate }: NavRailProps) {
             }}
             aria-current={activeScreen === item.id ? 'page' : undefined}
           >
+            <Icon name={item.icon} size="1.125rem" />
             <span className={styles.mobileLabel}>{item.label}</span>
           </button>
         ))}

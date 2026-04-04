@@ -1,12 +1,15 @@
 import { useState, useEffect, lazy, Suspense, useRef } from 'react';
 
 import { Season } from './engine/types';
-import { useCrownBar, useKingdomState, useIsGameOver, useGameOverConditions, useGameDispatch } from './ui/hooks/use-game-state';
+import { useCrownBar, useKingdomState, useIsGameOver, useGameOverConditions, useGameDispatch, useLastTurnResult } from './ui/hooks/use-game-state';
+import { getMilestoneDefinition } from './data/knowledge';
 import { useSave } from './ui/hooks/use-save';
 import { SCREEN_TITLES } from './data/text/labels';
 import { CrownBar } from './ui/components/crown-bar/crown-bar';
 import { NavRail } from './ui/components/nav-rail/nav-rail';
 import { IntelligencePanel } from './ui/components/intelligence-panel/intelligence-panel';
+import { SeasonTransition } from './ui/components/season-transition/season-transition';
+import { MilestoneCelebration } from './ui/components/milestone-celebration/milestone-celebration';
 import { RightPanelProvider, useRightPanel } from './ui/context/right-panel-context';
 import styles from './app.module.css';
 
@@ -74,6 +77,8 @@ function AppShell() {
   const gameOverConditions = useGameOverConditions();
   const dispatch = useGameDispatch();
   const { update: updateRightPanel } = useRightPanel();
+  const lastTurnResult = useLastTurnResult();
+  const [celebrationMilestone, setCelebrationMilestone] = useState<string | null>(null);
 
   // Sync activeScreen to right panel context.
   useEffect(() => {
@@ -106,6 +111,17 @@ function AppShell() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [save]);
 
+  // Phase 8E: Trigger milestone celebration on newly unlocked milestones.
+  useEffect(() => {
+    if (lastTurnResult && lastTurnResult.newlyUnlockedMilestones.length > 0) {
+      const first = lastTurnResult.newlyUnlockedMilestones[0];
+      const def = getMilestoneDefinition(first.branch, first.milestoneIndex);
+      if (def) {
+        setCelebrationMilestone(def.name);
+      }
+    }
+  }, [lastTurnResult]);
+
   useEffect(() => {
     document.body.classList.remove(...ALL_SEASON_CLASSES);
     document.body.classList.add(SEASON_CLASS_MAP[season]);
@@ -124,9 +140,9 @@ function AppShell() {
 
       <NavRail activeScreen={activeScreen} onNavigate={setActiveScreen} />
 
-      <main className={styles.content}>
+      <main className={styles.content} key={activeScreen}>
         <h1 className={styles.contentTitle}>{SCREEN_TITLES[activeScreen]}</h1>
-        <Suspense fallback={<div className={styles.screenLoader}>Loading…</div>}>
+        <Suspense fallback={<div className={styles.screenLoader}>Preparing your dispatches, Your Majesty…</div>}>
           {activeScreen === 'dashboard' && (
             <Dashboard onNavigate={(screen) => { if (screen) setActiveScreen(screen as ScreenId); }} />
           )}
@@ -147,6 +163,13 @@ function AppShell() {
       <IntelligencePanel
         isOpen={intelPanelOpen}
         onClose={() => setIntelPanelOpen(false)}
+      />
+
+      <SeasonTransition season={season} />
+
+      <MilestoneCelebration
+        milestoneName={celebrationMilestone}
+        onComplete={() => setCelebrationMilestone(null)}
       />
 
       {isGameOver && gameOverConditions.length > 0 && (

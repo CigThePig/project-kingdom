@@ -1,40 +1,99 @@
 /* ==========================================================================
-   Seasonal Color Accents
+   Seasonal Color Accents — Enhanced (Phase 8A)
    Source: ui-blueprint.md §2.4
 
-   Applied to crown bar background, dashboard header, and turn-advance
-   confirmation surfaces. Accents are intentionally subtle — they provide
-   a faint undertone without competing with status colors.
+   Applied to crown bar, dashboard, cards, nav rail, and turn-advance
+   surfaces. Phase 8A upgrade: deeper seasonal theming with background
+   gradients, card tint variations, border accents, and crown bar glow.
 
    Class names align with the Season enum in src/engine/types.ts:
    Spring, Summer, Autumn, Winter → season-spring, etc.
    Applied to <body> via game state context.
    ========================================================================== */
 
-/* Spring — faint warm green undertone */
+/* Spring — warm green undertone, renewal */
 body.season-spring {
-  --color-seasonal-accent: hsl(130, 25%, 28%);
-  --color-seasonal-accent-subtle: hsla(130, 25%, 28%, 0.08);
-  --color-seasonal-text: hsl(130, 15%, 75%);
+  --color-seasonal-accent: hsl(130, 30%, 32%);
+  --color-seasonal-accent-subtle: hsla(130, 30%, 32%, 0.10);
+  --color-seasonal-text: hsl(130, 18%, 75%);
+  --color-seasonal-glow: hsla(130, 35%, 40%, 0.15);
+  --color-seasonal-border: hsla(130, 30%, 40%, 0.25);
+  --color-seasonal-card-tint: hsla(130, 15%, 30%, 0.04);
+  --color-seasonal-gradient: radial-gradient(
+    ellipse at 30% 20%,
+    hsla(130, 20%, 18%, 0.15) 0%,
+    transparent 60%
+  );
 }
 
-/* Summer — faint gold / warm amber undertone */
+/* Summer — warm gold / amber, abundance */
 body.season-summer {
-  --color-seasonal-accent: hsl(42, 40%, 35%);
-  --color-seasonal-accent-subtle: hsla(42, 40%, 35%, 0.08);
-  --color-seasonal-text: hsl(42, 20%, 78%);
+  --color-seasonal-accent: hsl(42, 45%, 38%);
+  --color-seasonal-accent-subtle: hsla(42, 45%, 38%, 0.10);
+  --color-seasonal-text: hsl(42, 22%, 78%);
+  --color-seasonal-glow: hsla(42, 50%, 45%, 0.15);
+  --color-seasonal-border: hsla(42, 40%, 45%, 0.25);
+  --color-seasonal-card-tint: hsla(42, 20%, 35%, 0.04);
+  --color-seasonal-gradient: radial-gradient(
+    ellipse at 60% 15%,
+    hsla(42, 30%, 22%, 0.15) 0%,
+    transparent 60%
+  );
 }
 
-/* Autumn — faint copper / burnt sienna undertone */
+/* Autumn — copper / burnt sienna, harvest and fading */
 body.season-autumn {
-  --color-seasonal-accent: hsl(20, 40%, 32%);
-  --color-seasonal-accent-subtle: hsla(20, 40%, 32%, 0.08);
-  --color-seasonal-text: hsl(20, 18%, 75%);
+  --color-seasonal-accent: hsl(20, 45%, 35%);
+  --color-seasonal-accent-subtle: hsla(20, 45%, 35%, 0.10);
+  --color-seasonal-text: hsl(20, 20%, 75%);
+  --color-seasonal-glow: hsla(20, 50%, 40%, 0.15);
+  --color-seasonal-border: hsla(20, 40%, 40%, 0.25);
+  --color-seasonal-card-tint: hsla(20, 20%, 30%, 0.04);
+  --color-seasonal-gradient: radial-gradient(
+    ellipse at 70% 80%,
+    hsla(20, 25%, 18%, 0.15) 0%,
+    transparent 60%
+  );
 }
 
-/* Winter — faint cool blue / silver undertone */
+/* Winter — cool blue / silver, cold and stillness */
 body.season-winter {
-  --color-seasonal-accent: hsl(210, 25%, 35%);
-  --color-seasonal-accent-subtle: hsla(210, 25%, 35%, 0.08);
-  --color-seasonal-text: hsl(210, 15%, 78%);
+  --color-seasonal-accent: hsl(210, 30%, 38%);
+  --color-seasonal-accent-subtle: hsla(210, 30%, 38%, 0.10);
+  --color-seasonal-text: hsl(210, 18%, 78%);
+  --color-seasonal-glow: hsla(210, 35%, 45%, 0.15);
+  --color-seasonal-border: hsla(210, 30%, 45%, 0.25);
+  --color-seasonal-card-tint: hsla(210, 15%, 30%, 0.04);
+  --color-seasonal-gradient: radial-gradient(
+    ellipse at 40% 60%,
+    hsla(210, 20%, 18%, 0.15) 0%,
+    transparent 60%
+  );
+}
+
+/* ==========================================================================
+   Phase 8E — Expanded Seasonal Surface Treatments
+   Card tints, nav rail active color, crown bar gradient shifts.
+   ========================================================================== */
+
+/* Card surface tint: barely-perceptible warm/cool shift per season */
+body.season-spring {
+  --surface-base-bg: hsl(135, 6%, 17%);
+}
+body.season-summer {
+  --surface-base-bg: hsl(40, 5%, 17%);
+}
+body.season-autumn {
+  --surface-base-bg: hsl(18, 5%, 16%);
+}
+body.season-winter {
+  --surface-base-bg: hsl(215, 8%, 16%);
+}
+
+/* Crown bar top-border glow transition */
+body.season-spring,
+body.season-summer,
+body.season-autumn,
+body.season-winter {
+  --crown-bar-glow: 0 -2px 10px var(--color-seasonal-glow);
 }

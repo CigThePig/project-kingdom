@@ -7,10 +7,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
+  background: var(--surface-base-bg);
+  border: 1px solid var(--surface-base-border);
   border-radius: var(--border-radius-md);
   padding: var(--space-4);
+  box-shadow: var(--surface-base-shadow);
 }
 
 /* --------------------------------------------------------------------------
@@ -66,6 +67,11 @@
   width: 100%;
   height: 100%;
   border-radius: var(--border-radius-sm);
+  transition: width 600ms ease-out;
+}
+
+.barFillAnimated {
+  transition: width 600ms ease-out;
 }
 
 /* Direction color variants */
@@ -102,6 +108,14 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: var(--line-height-normal);
+}
+
+.confidenceOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, hsla(215, 12%, 20%, 0.5) 100%);
+  border-radius: var(--border-radius-sm);
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------

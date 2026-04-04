@@ -11,7 +11,10 @@
     'crown  crown   crown'
     'nav    content intel';
   min-height: 100dvh;
-  background: var(--color-bg-primary);
+  background:
+    var(--color-seasonal-gradient, none),
+    radial-gradient(ellipse at 50% 0%, hsla(215, 20%, 14%, 0.8) 0%, transparent 70%),
+    var(--color-bg-primary);
   color: var(--color-text-primary);
 }
 
@@ -20,6 +23,7 @@
   overflow-y: auto;
   padding: var(--space-6);
   max-width: var(--content-max-width);
+  animation: slideUp 200ms ease-out;
 }
 
 .contentTitle {
@@ -28,6 +32,16 @@
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-heading);
   margin: 0 0 var(--space-4);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid transparent;
+  background-image: linear-gradient(
+    90deg,
+    var(--color-seasonal-accent, var(--color-accent-metallic)) 0%,
+    transparent 60%
+  );
+  background-size: 100% 1px;
+  background-position: bottom;
+  background-repeat: no-repeat;
 }
 
 .contentPlaceholder {
@@ -36,10 +50,17 @@
 }
 
 .screenLoader {
-  color: var(--color-text-secondary);
+  color: var(--color-text-tertiary);
   font-size: var(--font-size-sm);
+  font-style: italic;
   padding: var(--space-8) 0;
   text-align: center;
+  animation: shimmer 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes shimmer {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
 }
 
 /* --------------------------------------------------------------------------

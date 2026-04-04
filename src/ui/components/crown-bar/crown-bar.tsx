@@ -12,6 +12,12 @@ import {
   ACTION_BUDGET_LABEL,
   SAVE_LABEL,
 } from '../../../data/text/labels';
+import {
+  TREASURY_LOW_BALANCE_WARNING,
+  STABILITY_CRITICAL_THRESHOLD,
+} from '../../../engine/constants';
+import { Icon } from '../icon/icon';
+import { ChangeHighlight } from '../change-highlight/change-highlight';
 import styles from './crown-bar.module.css';
 
 // ============================================================
@@ -27,11 +33,23 @@ interface CrownBarProps {
 // Private sub-components
 // ============================================================
 
-function StatChip({ label, value }: { label: string; value: number }) {
+const STAT_ICON_MAP: Record<string, string> = {
+  Treasury: 'treasury',
+  Food: 'food',
+  Stability: 'stability',
+};
+
+function StatChip({ label, value, critical }: { label: string; value: number; critical?: boolean }) {
+  const iconName = STAT_ICON_MAP[label];
   return (
-    <div className={styles.statChip}>
-      <span className={styles.statLabel}>{label}</span>
-      <span className={styles.statValue}>{value}</span>
+    <div className={styles.statChip} data-critical={critical || undefined}>
+      <span className={styles.statLabel}>
+        {iconName && <Icon name={iconName} size="0.75rem" />}
+        {label}
+      </span>
+      <ChangeHighlight value={value}>
+        <span className={styles.statValue}>{value}</span>
+      </ChangeHighlight>
     </div>
   );
 }
@@ -45,6 +63,7 @@ function UrgentBadge({ count, onClick }: { count: number; onClick: () => void })
       onClick={onClick}
       aria-label={`${count} urgent matter${count !== 1 ? 's' : ''} — view dispatches`}
     >
+      <Icon name="warning" size="0.75rem" />
       {count}
     </button>
   );
@@ -97,9 +116,9 @@ export function CrownBar({ onNavigateToEvents, onToggleIntelPanel }: CrownBarPro
       </div>
 
       <div className={styles.centerCluster}>
-        <StatChip label="Treasury" value={crownBar.treasuryBalance} />
-        <StatChip label="Food" value={crownBar.foodReserves} />
-        <StatChip label="Stability" value={crownBar.stabilityRating} />
+        <StatChip label="Treasury" value={crownBar.treasuryBalance} critical={crownBar.treasuryBalance < TREASURY_LOW_BALANCE_WARNING} />
+        <StatChip label="Food" value={crownBar.foodReserves} critical={crownBar.foodReserves < 50} />
+        <StatChip label="Stability" value={crownBar.stabilityRating} critical={crownBar.stabilityRating < STABILITY_CRITICAL_THRESHOLD} />
       </div>
 
       <div className={styles.rightCluster}>
@@ -113,7 +132,7 @@ export function CrownBar({ onNavigateToEvents, onToggleIntelPanel }: CrownBarPro
           onClick={onToggleIntelPanel}
           aria-label="Toggle intelligence panel"
         >
-          Intel
+          <Icon name="intelligence" size="0.875rem" />
         </button>
       </div>
 

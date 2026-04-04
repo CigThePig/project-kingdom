@@ -8,6 +8,7 @@ import {
   CLASS_LABELS,
 } from '../../../data/text/labels';
 import { ConsequencePreview } from '../consequence-preview/consequence-preview';
+import { Icon } from '../icon/icon';
 import styles from './event-panel.module.css';
 
 // ============================================================
@@ -46,6 +47,13 @@ const SEVERITY_STYLE_MAP: Record<EventSeverity, string> = {
   Notable: 'severityFaith',
   Serious: 'severityWarning',
   Critical: 'severityCritical',
+};
+
+const SEVERITY_ICON_MAP: Record<EventSeverity, string> = {
+  Informational: 'events',
+  Notable: 'flame',
+  Serious: 'warning',
+  Critical: 'critical',
 };
 
 // ============================================================
@@ -133,6 +141,7 @@ export function EventPanel({
       {/* Badge row */}
       <div className={styles.badgeRow}>
         <SeverityBadge severity={severity} />
+        <Icon name={SEVERITY_ICON_MAP[severity]} size="1rem" />
         <span className={styles.badge + ' ' + styles.categoryBadge}>
           {EVENT_CATEGORY_LABELS[category]}
         </span>
@@ -141,6 +150,7 @@ export function EventPanel({
       {/* Storyline indicator */}
       {storylineInfo && (
         <div className={styles.storylineIndicator}>
+          <Icon name="scroll" size="1rem" />
           <span className={styles.storylineTitle}>{storylineInfo.storylineTitle}</span>
           <span className={styles.storylineAct}>Act {storylineInfo.actNumber}</span>
         </div>
