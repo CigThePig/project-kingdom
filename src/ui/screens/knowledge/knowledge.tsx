@@ -16,7 +16,6 @@ import {
   KNOWLEDGE_BASE_PROGRESS_PER_TURN,
   KNOWLEDGE_TREASURY_INVESTMENT_RATE,
   KNOWLEDGE_SCHOLARLY_CLERGY_ORDER_BONUS,
-  KNOWLEDGE_INFRASTRUCTURE_BONUS,
   RESEARCH_DIRECTIVE_TREASURY_COST,
   RESEARCH_DIRECTIVE_PROGRESS_BURST,
 } from '../../../engine/constants';
@@ -28,14 +27,11 @@ import {
   KNOWLEDGE_BRANCH_LABELS,
   BUDGET_ERROR_LABELS,
 } from '../../../data/text/labels';
-import { KNOWLEDGE_BRANCH_DESCRIPTIONS } from '../../../data/text/reports';
 import {
   getMilestoneDefinition,
   getDependenciesForNode,
   CROSS_BRANCH_DEPENDENCIES,
   RESEARCH_CONTRIBUTOR_LABELS,
-  type MilestoneDefinition,
-  type CrossBranchDependency,
 } from '../../../data/knowledge';
 import styles from './knowledge.module.css';
 
@@ -124,34 +120,6 @@ BRANCH_ORDER.forEach((b, i) => { BRANCH_INDEX_MAP[b] = i; });
 // ============================================================
 // Sub-components
 // ============================================================
-
-function MilestoneNodeComponent({
-  milestoneIndex,
-  state,
-  isSelected,
-  definition,
-  onClick,
-}: {
-  milestoneIndex: number;
-  state: NodeState;
-  isSelected: boolean;
-  definition: MilestoneDefinition | undefined;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      className={styles.node}
-      data-state={state}
-      data-selected={isSelected ? 'true' : 'false'}
-      onClick={onClick}
-      aria-label={`Milestone ${milestoneIndex + 1}: ${definition?.name ?? 'Unknown'} — ${state}`}
-      title={definition?.name}
-    >
-      {milestoneIndex + 1}
-      <span className={styles.nodeLabel}>{definition?.name ?? `M${milestoneIndex + 1}`}</span>
-    </button>
-  );
-}
 
 function NodeDetailPanel({
   node,
@@ -369,6 +337,7 @@ function CrossBranchLines({
       });
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLines(newLines);
   }, [containerRef, nodeRefs, knowledgeBranches, selectedNode]);
 

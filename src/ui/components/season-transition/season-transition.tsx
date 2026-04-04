@@ -36,6 +36,7 @@ export function SeasonTransition({ season }: SeasonTransitionProps) {
   useEffect(() => {
     if (prevSeasonRef.current !== season) {
       prevSeasonRef.current = season;
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDisplaySeason(season);
       setVisible(true);
 
