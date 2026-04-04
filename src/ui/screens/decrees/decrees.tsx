@@ -7,6 +7,7 @@ import {
   ActionType,
   DecreeCategory,
   PopulationClass,
+  type GameState,
   type QueuedAction,
 } from '../../../engine/types';
 import { useKingdomState } from '../../hooks/use-game-state';
@@ -38,6 +39,7 @@ import {
   FESTIVAL_INVESTMENT_LABELS,
   RECRUITMENT_STANCE_LABELS,
   INTELLIGENCE_FUNDING_LABELS,
+  LABOR_ALLOCATION_LABELS,
 } from '../../../data/text/labels';
 import {
   TAXATION_EFFECT,
@@ -47,6 +49,7 @@ import {
   FESTIVAL_EFFECT,
   RECRUITMENT_EFFECT,
   INTELLIGENCE_FUNDING_EFFECT,
+  LABOR_ALLOCATION_EFFECT,
 } from '../../../data/text/reports';
 import styles from './decrees.module.css';
 
@@ -57,7 +60,8 @@ import styles from './decrees.module.css';
 type ActiveTab = 'decrees' | 'policies';
 type CategoryFilter = 'all' | DecreeCategory;
 
-// Policy keys that have discrete levels (not KnowledgeBranch selectors)
+// Policy keys managed in this Policies tab.
+// laborAllocationPriority uses KnowledgeBranch values + 'none' sentinel for null.
 type LevelPolicyKey =
   | 'taxationLevel'
   | 'tradeOpenness'
@@ -65,7 +69,8 @@ type LevelPolicyKey =
   | 'rationingLevel'
   | 'religiousTolerance'
   | 'festivalInvestmentLevel'
-  | 'intelligenceFundingLevel';
+  | 'intelligenceFundingLevel'
+  | 'laborAllocationPriority';
 
 interface PolicyConfig {
   key: LevelPolicyKey;
@@ -120,6 +125,12 @@ const POLICY_CONFIGS: PolicyConfig[] = [
     labels: INTELLIGENCE_FUNDING_LABELS,
     effects: INTELLIGENCE_FUNDING_EFFECT,
     affectedClasses: [],
+  },
+  {
+    key: 'laborAllocationPriority',
+    labels: LABOR_ALLOCATION_LABELS,
+    effects: LABOR_ALLOCATION_EFFECT,
+    affectedClasses: [PopulationClass.Commoners],
   },
 ];
 
@@ -223,6 +234,9 @@ export function Decrees() {
     (policyKey: LevelPolicyKey, newValue: string) => {
       if (!ctx) return;
 
+      // 'none' is the sentinel for null (used by laborAllocationPriority)
+      const resolvedValue: string | null = newValue === 'none' ? null : newValue;
+
       // Queue a PolicyChange action
       const action: QueuedAction = {
         id: generateActionId(),
@@ -232,7 +246,7 @@ export function Decrees() {
         isFree: false,
         targetRegionId: null,
         targetNeighborId: null,
-        parameters: { policyKey, newValue },
+        parameters: { policyKey, newValue: resolvedValue },
       };
 
       const error = queueAction(action);
@@ -242,14 +256,14 @@ export function Decrees() {
         return;
       }
 
-      // Apply the policy change to game state
+      // Apply the policy change to game state immediately so the UI reflects it
       ctx.dispatch({
         type: 'UPDATE_GAME_STATE',
-        updater: (state) => ({
+        updater: (state: GameState) => ({
           ...state,
           policies: {
             ...state.policies,
-            [policyKey]: newValue,
+            [policyKey]: resolvedValue,
             policyChangedThisTurn: true,
           },
         }),
@@ -392,7 +406,9 @@ export function Decrees() {
       {activeTab === 'policies' && (
         <div className={styles.policyList}>
           {POLICY_CONFIGS.map((config) => {
-            const currentValue = kingdom.policies[config.key] as string;
+            const rawValue = kingdom.policies[config.key];
+            // laborAllocationPriority can be null; map to 'none' sentinel for label lookup
+            const currentValue = rawValue === null ? 'none' : (rawValue as string);
             const currentLabel = config.labels[currentValue] ?? currentValue;
             const currentEffect = config.effects[currentValue] ?? '';
             const isChangeAvailable = !policyUsed;

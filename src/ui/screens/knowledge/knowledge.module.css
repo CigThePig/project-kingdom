@@ -67,17 +67,11 @@
 .branchCard {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
   background: var(--color-bg-surface);
   border: 1px solid var(--color-border-default);
   border-radius: var(--border-radius-md);
-  padding: var(--space-4);
-  cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
-}
-
-.branchCard:hover {
-  background: var(--color-bg-surface-raised);
+  overflow: hidden;
+  transition: border-color var(--transition-fast);
 }
 
 .branchCard[data-focused='true'] {
@@ -90,6 +84,19 @@
 
 .branchCard[data-complete='true'] {
   opacity: 0.85;
+}
+
+.branchSummary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.branchSummary:hover {
+  background: var(--color-bg-surface-raised);
 }
 
 /* --------------------------------------------------------------------------
@@ -183,8 +190,7 @@
   flex-direction: column;
   gap: var(--space-3);
   border-top: 1px solid var(--color-border-default);
-  padding-top: var(--space-3);
-  margin-top: var(--space-1);
+  padding: var(--space-3) var(--space-4) var(--space-4);
 }
 
 .detailSection {
@@ -223,6 +229,135 @@
   padding: var(--space-1) var(--space-2);
   background: var(--color-bg-tertiary);
   border-radius: var(--border-radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Research Directive Section
+   -------------------------------------------------------------------------- */
+.directiveSection {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+}
+
+.directiveButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.directiveButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.slotCost {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  opacity: 0.75;
+  padding: 1px var(--space-1);
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--border-radius-sm);
+}
+
+.directiveCost {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.directiveNote {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  font-style: italic;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Focus Actions (within expanded branch detail)
+   -------------------------------------------------------------------------- */
+.focusActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.focusButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.focusButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.clearFocusButton {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), opacity var(--transition-fast);
+}
+
+.clearFocusButton:hover:not(:disabled) {
+  border-color: var(--color-border-strong);
+}
+
+.clearFocusButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.focusNote {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-style: italic;
+}
+
+/* --------------------------------------------------------------------------
+   Error Message
+   -------------------------------------------------------------------------- */
+.errorMessage {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-status-critical-bg);
+  border: 1px solid var(--color-status-critical);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-status-critical);
 }
 
 /* --------------------------------------------------------------------------

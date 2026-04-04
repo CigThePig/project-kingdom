@@ -308,6 +308,20 @@ export const BUDGET_ERROR_LABELS: Record<string, string> = {
 };
 
 // ============================================================
+// Labor Allocation Labels
+// ============================================================
+
+export const LABOR_ALLOCATION_LABELS: Record<string, string> = {
+  none: 'No Priority',
+  [KnowledgeBranch.Agricultural]: 'Agricultural Production',
+  [KnowledgeBranch.Military]: 'Military Readiness',
+  [KnowledgeBranch.Civic]: 'Civic Works',
+  [KnowledgeBranch.MaritimeTrade]: 'Maritime & Trade',
+  [KnowledgeBranch.CulturalScholarly]: 'Cultural Scholarship',
+  [KnowledgeBranch.NaturalPhilosophy]: 'Natural Philosophy',
+};
+
+// ============================================================
 // Policy Domain Labels
 // ============================================================
 

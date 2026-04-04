@@ -197,6 +197,125 @@
 }
 
 /* --------------------------------------------------------------------------
+   Issue Orders Section
+   -------------------------------------------------------------------------- */
+.orderCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.orderTitle {
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+}
+
+.orderDescription {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-normal);
+  margin: 0;
+}
+
+.postureGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+}
+
+.postureButton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  text-align: left;
+  padding: var(--space-3);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.postureButton:hover:not(:disabled) {
+  border-color: var(--color-accent);
+  background: var(--color-bg-surface);
+}
+
+.postureButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.postureButton[data-current='true'] {
+  border-color: var(--color-accent);
+  background: var(--color-accent-subtle);
+}
+
+.postureLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.postureEffect {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  line-height: var(--line-height-normal);
+}
+
+.actionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-accent);
+  color: var(--color-text-on-accent);
+  border: none;
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+  align-self: flex-start;
+}
+
+.actionButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.slotCost {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-normal);
+  opacity: 0.75;
+  padding: 2px var(--space-2);
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: var(--border-radius-sm);
+}
+
+.effectPreview {
+  font-size: var(--font-size-xs);
+  color: var(--color-status-positive);
+  font-variant-numeric: tabular-nums;
+}
+
+.errorMessage {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-status-critical-bg);
+  border: 1px solid var(--color-status-critical);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-status-critical);
+}
+
+/* --------------------------------------------------------------------------
    Mobile responsive
    -------------------------------------------------------------------------- */
 @media (max-width: 1023px) {
@@ -213,6 +332,10 @@
   }
 
   .detailGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .postureGrid {
     grid-template-columns: 1fr;
   }
 }

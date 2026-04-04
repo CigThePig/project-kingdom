@@ -1,13 +1,22 @@
-// Phase 12 — Trade Screen: treasury and commerce overview.
-// Blueprint Reference: ui-blueprint.md §4.8; ux-blueprint.md §6
+// Phase 5 — Trade Screen: treasury, commerce, and trade agreement management.
+// Blueprint Reference: ui-blueprint.md §4.8; ux-blueprint.md §4, §6
 // Maps to ScreenId 'treasury' in app.tsx.
 
-import { PopulationClass, DiplomaticPosture } from '../../../engine/types';
+import { useState, useCallback } from 'react';
+
+import {
+  ActionType,
+  DiplomaticPosture,
+  PopulationClass,
+  type QueuedAction,
+} from '../../../engine/types';
 import { useKingdomState } from '../../hooks/use-game-state';
+import { useTurnActions } from '../../hooks/use-turn-actions';
 import {
   TRADE_OPENNESS_LABELS,
   NEIGHBOR_LABELS,
   DIPLOMATIC_POSTURE_LABELS,
+  BUDGET_ERROR_LABELS,
 } from '../../../data/text/labels';
 import {
   TREASURY_BALANCE_LINE,
@@ -20,6 +29,12 @@ import styles from './trade.module.css';
 // ============================================================
 // Helpers
 // ============================================================
+
+let actionIdCounter = 0;
+function generateActionId(): string {
+  actionIdCounter += 1;
+  return `action_${Date.now()}_${actionIdCounter}`;
+}
 
 function getNeighborName(id: string): string {
   return NEIGHBOR_LABELS[id] ?? id;
@@ -42,18 +57,77 @@ function formatCoin(value: number): string {
 
 export function Trade() {
   const kingdom = useKingdomState();
+  const { queueAction, slotsRemaining, isBudgetExhausted } = useTurnActions();
   const treasury = kingdom.treasury;
   const tradeOpenness = kingdom.policies.tradeOpenness;
   const merchantState = kingdom.population[PopulationClass.Merchants];
   const neighbors = kingdom.diplomacy.neighbors;
 
-  const friendlyNeighbors = neighbors.filter(
-    (n) => n.relationshipScore > 70,
-  );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [cancelConfirming, setCancelConfirming] = useState<string | null>(null);
+
+  const showError = useCallback((msg: string) => {
+    setErrorMessage(msg);
+    setTimeout(() => setErrorMessage(null), 3000);
+  }, []);
+
+  const canAct = !isBudgetExhausted && slotsRemaining >= 1;
+
+  const friendlyNeighbors = neighbors.filter((n) => n.relationshipScore > 70);
 
   const allAgreements = neighbors.flatMap((n) =>
-    n.activeAgreements.map((a) => ({ ...a, neighborName: getNeighborName(n.id) })),
+    n.activeAgreements.map((a) => ({ ...a, neighborName: getNeighborName(n.id), neighborId: n.id })),
   );
+
+  // ---- Initiate trade agreement ----
+
+  const handleInitiateAgreement = useCallback(
+    (neighborId: string) => {
+      const action: QueuedAction = {
+        id: generateActionId(),
+        type: ActionType.TradeAction,
+        actionDefinitionId: `trade_initiate_${neighborId}`,
+        slotCost: 1,
+        isFree: false,
+        targetRegionId: null,
+        targetNeighborId: neighborId,
+        parameters: { tradeActionType: 'initiate_agreement' },
+      };
+      const error = queueAction(action);
+      if (error) showError(BUDGET_ERROR_LABELS[error.code] ?? 'Trade action could not be queued.');
+    },
+    [queueAction, showError],
+  );
+
+  // ---- Cancel trade agreement ----
+
+  const handleCancelAgreement = useCallback(
+    (neighborId: string, agreementId: string) => {
+      const action: QueuedAction = {
+        id: generateActionId(),
+        type: ActionType.TradeAction,
+        actionDefinitionId: `trade_cancel_${agreementId}`,
+        slotCost: 1,
+        isFree: false,
+        targetRegionId: null,
+        targetNeighborId: neighborId,
+        parameters: { tradeActionType: 'cancel_agreement', agreementId },
+      };
+      const error = queueAction(action);
+      if (error) {
+        showError(BUDGET_ERROR_LABELS[error.code] ?? 'Trade action could not be queued.');
+      }
+      setCancelConfirming(null);
+    },
+    [queueAction, showError],
+  );
+
+  // Neighbors eligible for a new agreement (not at war, no existing agreement)
+  const eligibleForAgreement = neighbors.filter((n) => {
+    const atWar = n.attitudePosture === DiplomaticPosture.War;
+    const hasAgreement = n.activeAgreements.length > 0;
+    return !atWar && !hasAgreement;
+  });
 
   return (
     <div className={styles.screen}>
@@ -67,6 +141,11 @@ export function Trade() {
         <div className={styles.warningBanner} data-level="warning" role="alert">
           <span className={styles.warningText}>{TREASURY_LOW_WARNING}</span>
         </div>
+      )}
+
+      {/* Error Message */}
+      {errorMessage && (
+        <div className={styles.errorMessage} role="alert">{errorMessage}</div>
       )}
 
       {/* Treasury Overview */}
@@ -170,31 +249,72 @@ export function Trade() {
                     ? 'Indefinite'
                     : `${a.turnsRemaining} months remaining`}
                 </span>
+                {cancelConfirming === a.agreementId ? (
+                  <div className={styles.cancelConfirmRow}>
+                    <span className={styles.cancelWarning}>−8 relationship</span>
+                    <button
+                      className={styles.cancelConfirmButton}
+                      onClick={() => handleCancelAgreement(a.neighborId, a.agreementId)}
+                    >
+                      Confirm Cancel
+                    </button>
+                    <button
+                      className={styles.cancelDismissButton}
+                      onClick={() => setCancelConfirming(null)}
+                    >
+                      Keep
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className={styles.cancelButton}
+                    disabled={!canAct}
+                    onClick={() => setCancelConfirming(a.agreementId)}
+                  >
+                    Cancel
+                  </button>
+                )}
               </div>
             ))}
           </div>
         )}
       </section>
 
-      {/* Neighbor Trade Postures */}
+      {/* Trading Partners — initiate agreements */}
       <section>
         <h2 className={styles.sectionLabel}>Trading Partners</h2>
         <div className={styles.partnerGrid}>
-          {neighbors.map((n) => (
-            <div key={n.id} className={styles.partnerCard}>
-              <span className={styles.partnerName}>{getNeighborName(n.id)}</span>
-              <span className={styles.partnerPosture}>
-                {DIPLOMATIC_POSTURE_LABELS[n.attitudePosture]}
-              </span>
-              <div className={styles.partnerRelation}>
-                <span className={styles.factorLabel}>Relationship</span>
-                <span className={styles.factorValue}>{n.relationshipScore}</span>
+          {neighbors.map((n) => {
+            const isEligible = eligibleForAgreement.some((e) => e.id === n.id);
+            return (
+              <div key={n.id} className={styles.partnerCard}>
+                <span className={styles.partnerName}>{getNeighborName(n.id)}</span>
+                <span className={styles.partnerPosture}>
+                  {DIPLOMATIC_POSTURE_LABELS[n.attitudePosture]}
+                </span>
+                <div className={styles.partnerRelation}>
+                  <span className={styles.factorLabel}>Relationship</span>
+                  <span className={styles.factorValue}>{n.relationshipScore}</span>
+                </div>
+                {n.attitudePosture === DiplomaticPosture.War ? (
+                  <span className={styles.warBadge}>Trade Suspended</span>
+                ) : n.activeAgreements.length > 0 ? (
+                  <span className={styles.agreementActiveBadge}>
+                    Agreement Active
+                  </span>
+                ) : isEligible ? (
+                  <button
+                    className={styles.initiateButton}
+                    disabled={!canAct}
+                    onClick={() => handleInitiateAgreement(n.id)}
+                  >
+                    Initiate Agreement
+                    <span className={styles.slotCost}>1 slot</span>
+                  </button>
+                ) : null}
               </div>
-              {n.attitudePosture === DiplomaticPosture.War && (
-                <span className={styles.warBadge}>Trade Suspended</span>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>

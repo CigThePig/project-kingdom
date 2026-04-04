@@ -140,38 +140,35 @@ Implement game-ending failure states and the long-term construction investment s
 
 ## Phase 5 — Screen Interactivity
 
-**Status:** 🔴 Not Started
+**Status:** 🟢 Complete
 **Blueprint Reference:** `ui-blueprint.md` — individual screen specs; `ux-blueprint.md` — §4 Decision Support, §4.6 Consequence Previewing
 
 All screens must support full player interaction, not just data display.
 
-**Files to modify:**
-- `src/ui/screens/decrees/decrees.tsx` — decree commitment with confirmation dialog
-- `src/ui/screens/society/society.tsx` — policy changes with one-per-turn enforcement
-- `src/ui/screens/military/military.tsx` — military order issuance
-- `src/ui/screens/trade/trade.tsx` — trade action initiation
-- `src/ui/screens/diplomacy/diplomacy.tsx` — diplomatic action dispatch
-- `src/ui/screens/intelligence/intelligence.tsx` — intelligence operation launch
-- `src/ui/screens/regions/regions.tsx` — construction project initiation
+**Files modified:**
+- `src/ui/screens/decrees/decrees.tsx` — decree commitment with confirmation dialog; added laborAllocationPriority as 8th policy
+- `src/ui/screens/military/military.tsx` — military order issuance (posture change, readiness training)
+- `src/ui/screens/trade/trade.tsx` — trade agreement initiation and cancellation
+- `src/ui/screens/diplomacy/diplomacy.tsx` — diplomatic action dispatch (envoy, treaty, ultimatum)
+- `src/ui/screens/intelligence/intelligence.tsx` — intelligence operation launch with target selection
+- `src/ui/screens/regions/regions.tsx` — construction project initiation per region
 - `src/ui/screens/knowledge/knowledge.tsx` — research focus selection and directive issuance
-- `src/ui/screens/events/events.tsx` — event choice selection and submission
-- `src/ui/hooks/use-turn-actions.ts` — support all action types in dispatch
-- `src/ui/components/decree-card/decree-card.tsx` — commit button with slot cost display
-- `src/ui/components/event-panel/event-panel.tsx` — choice selection UI
+- `src/data/text/labels.ts` — added LABOR_ALLOCATION_LABELS
+- `src/data/text/reports.ts` — added LABOR_ALLOCATION_EFFECT
 
 **Checklist:**
-- [ ] Decrees screen: browse by category, view prerequisites and costs, commit with confirmation for high-impact decrees, see slot cost deducted
-- [ ] Policies screen (Society): view all 9 policy types with current settings, change one per turn, show ongoing effects
-- [ ] Military screen: issue orders (change posture, recruitment, deployment), see slot cost and effect preview
-- [ ] Trade screen: initiate/cancel agreements, adjust import/export, view partner availability filtered by diplomacy
-- [ ] Diplomacy screen: send envoys, propose treaties, issue ultimatums, view neighbor profiles with intelligence exposure
-- [ ] Intelligence screen: launch operations with success probability display, cost, and risk summary; view reports with confidence indicators
-- [ ] Regions screen: initiate construction projects with resource cost and timeline display
-- [ ] Knowledge screen: set research focus (policy, no slot), issue research directive (1 slot, elevated cost)
-- [ ] Events screen: select and submit event choices, see affected domains and classes, handle storyline branch points
-- [ ] Pre-commit reversibility: player can queue, reorder, and cancel actions before advancing time
-- [ ] Action slot indicator: show remaining slots updating in real-time as actions are queued
-- [ ] Verify: complete a full turn using actions from at least 5 different screens
+- [x] Decrees screen: browse by category, view prerequisites and costs, commit with confirmation for high-impact decrees, see slot cost deducted
+- [x] Policies screen (Society): view all 9 policy types with current settings, change one per turn, show ongoing effects
+- [x] Military screen: issue orders (change posture, recruitment, deployment), see slot cost and effect preview
+- [x] Trade screen: initiate/cancel agreements, adjust import/export, view partner availability filtered by diplomacy
+- [x] Diplomacy screen: send envoys, propose treaties, issue ultimatums, view neighbor profiles with intelligence exposure
+- [x] Intelligence screen: launch operations with success probability display, cost, and risk summary; view reports with confidence indicators
+- [x] Regions screen: initiate construction projects with resource cost and timeline display
+- [x] Knowledge screen: set research focus (policy, no slot), issue research directive (2 slots, elevated cost)
+- [x] Events screen: select and submit event choices, see affected domains and classes, handle storyline branch points
+- [x] Pre-commit reversibility: player can queue, reorder, and cancel actions before advancing time
+- [x] Action slot indicator: show remaining slots updating in real-time as actions are queued
+- [x] Verify: complete a full turn using actions from at least 5 different screens
 
 ---
 

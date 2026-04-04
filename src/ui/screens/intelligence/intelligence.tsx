@@ -1,16 +1,22 @@
-// Phase 12 — Intelligence Screen: espionage network and operations.
-// Blueprint Reference: ui-blueprint.md §4.10; ux-blueprint.md §6
+// Phase 5 — Intelligence Screen: espionage network and operation launch.
+// Blueprint Reference: ui-blueprint.md §4.10; ux-blueprint.md §4, §6
 // Maps to ScreenId 'espionage' in app.tsx.
 // CRITICAL: Never surface isGenuine field from IntelligenceReport.
 
+import { useState, useCallback } from 'react';
+
 import {
+  ActionType,
+  DiplomaticPosture,
   IntelligenceOperationType,
   type IntelligenceReport,
+  type QueuedAction,
 } from '../../../engine/types';
 import {
   ESPIONAGE_BASE_SUCCESS_BY_OP_TYPE,
 } from '../../../engine/constants';
 import { useKingdomState, useIntelligenceReports } from '../../hooks/use-game-state';
+import { useTurnActions } from '../../hooks/use-turn-actions';
 import {
   INTELLIGENCE_FUNDING_LABELS,
   INTELLIGENCE_OP_LABELS,
@@ -18,12 +24,32 @@ import {
   INTELLIGENCE_OP_RISK_LABELS,
   INTELLIGENCE_SUCCESS_TIERS,
   NEIGHBOR_LABELS,
+  BUDGET_ERROR_LABELS,
 } from '../../../data/text/labels';
 import styles from './intelligence.module.css';
 
 // ============================================================
+// Constants
+// ============================================================
+
+// Ops that target the internal kingdom — no neighbor selection needed
+const INTERNAL_OPS = new Set([
+  IntelligenceOperationType.InternalSurveillance,
+  IntelligenceOperationType.CounterEspionageSweep,
+]);
+
+// Upfront treasury cost for external ops
+const EXTERNAL_OP_INITIATION_COST = 10;
+
+// ============================================================
 // Helpers
 // ============================================================
+
+let actionIdCounter = 0;
+function generateActionId(): string {
+  actionIdCounter += 1;
+  return `action_${Date.now()}_${actionIdCounter}`;
+}
 
 function getGaugeStatus(value: number): string {
   if (value >= 70) return 'good';
@@ -62,12 +88,78 @@ function getTargetName(targetId: string): string {
 export function Intelligence() {
   const kingdom = useKingdomState();
   const reports = useIntelligenceReports();
+  const { queueAction, slotsRemaining, isBudgetExhausted } = useTurnActions();
   const espionage = kingdom.espionage;
   const fundingLevel = kingdom.policies.intelligenceFundingLevel;
+  const neighbors = kingdom.diplomacy.neighbors;
+
+  // Launch workflow state
+  const [selectedOpType, setSelectedOpType] = useState<IntelligenceOperationType | null>(null);
+  const [selectedTargetId, setSelectedTargetId] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const canAct = !isBudgetExhausted && slotsRemaining >= 1;
 
   const sortedReports = [...reports].sort(
     (a, b) => b.turnGenerated - a.turnGenerated,
   );
+
+  // Non-war neighbors available as targets
+  const availableTargets = neighbors.filter(
+    (n) => n.attitudePosture !== DiplomaticPosture.War,
+  );
+
+  // ---- Open launch panel ----
+  const handleOpenLaunch = useCallback((opType: IntelligenceOperationType) => {
+    setSelectedOpType(opType);
+    setSelectedTargetId(null);
+    setErrorMessage(null);
+    // Internal ops skip target selection — auto-confirm immediately ready
+  }, []);
+
+  // ---- Cancel launch ----
+  const handleCancelLaunch = useCallback(() => {
+    setSelectedOpType(null);
+    setSelectedTargetId(null);
+    setErrorMessage(null);
+  }, []);
+
+  // ---- Confirm launch ----
+  const handleConfirmLaunch = useCallback(() => {
+    if (selectedOpType === null) return;
+
+    const isInternalOp = INTERNAL_OPS.has(selectedOpType);
+    const targetId = isInternalOp ? null : selectedTargetId;
+
+    if (!isInternalOp && targetId === null) return; // target required
+
+    const initiationCost = isInternalOp ? 0 : EXTERNAL_OP_INITIATION_COST;
+
+    const action: QueuedAction = {
+      id: generateActionId(),
+      type: ActionType.IntelligenceOp,
+      actionDefinitionId: `intel_${selectedOpType}`,
+      slotCost: 1,
+      isFree: false,
+      targetRegionId: null,
+      targetNeighborId: targetId,
+      parameters: {
+        operationType: selectedOpType,
+        ...(initiationCost > 0 ? { initiationCost } : {}),
+      },
+    };
+
+    const error = queueAction(action);
+    if (error) {
+      setErrorMessage(BUDGET_ERROR_LABELS[error.code] ?? 'Operation could not be launched.');
+      return;
+    }
+
+    // Reset launch state on success
+    setSelectedOpType(null);
+    setSelectedTargetId(null);
+    setErrorMessage(null);
+  }, [selectedOpType, selectedTargetId, queueAction]);
 
   return (
     <div className={styles.screen} data-domain="intelligence">
@@ -94,6 +186,11 @@ export function Intelligence() {
         </div>
       </section>
 
+      {/* Error Message */}
+      {errorMessage && (
+        <div className={styles.errorMessage} role="alert">{errorMessage}</div>
+      )}
+
       {/* Available Operations */}
       <section>
         <h2 className={styles.sectionLabel}>Available Operations</h2>
@@ -101,9 +198,15 @@ export function Intelligence() {
           {Object.values(IntelligenceOperationType).map((opType) => {
             const baseProbability = ESPIONAGE_BASE_SUCCESS_BY_OP_TYPE[opType];
             const tier = getSuccessTier(baseProbability);
+            const isExpanded = selectedOpType === opType;
+            const opIsInternal = INTERNAL_OPS.has(opType);
 
             return (
-              <div key={opType} className={styles.opCard}>
+              <div
+                key={opType}
+                className={styles.opCard}
+                data-expanded={isExpanded ? 'true' : 'false'}
+              >
                 <span className={styles.opName}>
                   {INTELLIGENCE_OP_LABELS[opType]}
                 </span>
@@ -114,6 +217,11 @@ export function Intelligence() {
                   <span className={styles.opTier} data-tier={tier}>
                     {INTELLIGENCE_SUCCESS_TIERS[tier]}
                   </span>
+                  {!opIsInternal && (
+                    <span className={styles.opCost}>
+                      {EXTERNAL_OP_INITIATION_COST} coin
+                    </span>
+                  )}
                 </div>
                 <div className={styles.opRisk}>
                   <span className={styles.riskLabel}>Risk on failure:</span>
@@ -121,6 +229,102 @@ export function Intelligence() {
                     {INTELLIGENCE_OP_RISK_LABELS[opType]}
                   </span>
                 </div>
+
+                {/* Launch workflow */}
+                {isExpanded ? (
+                  <div className={styles.launchPanel}>
+                    {opIsInternal ? (
+                      /* Internal ops — no target needed */
+                      <div className={styles.confirmRow}>
+                        <p className={styles.confirmSummary}>
+                          This operation targets the internal kingdom.
+                          No treasury cost. Costs 1 action slot.
+                        </p>
+                        <div className={styles.confirmButtons}>
+                          <button
+                            className={styles.launchButton}
+                            disabled={!canAct}
+                            onClick={handleConfirmLaunch}
+                          >
+                            Launch Operation
+                            <span className={styles.slotCost}>1 slot</span>
+                          </button>
+                          <button
+                            className={styles.cancelText}
+                            onClick={handleCancelLaunch}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      /* External ops — target selection required */
+                      <>
+                        <div className={styles.targetPicker}>
+                          <span className={styles.targetLabel}>Select Target Kingdom:</span>
+                          {availableTargets.length === 0 ? (
+                            <p className={styles.noTargetsNote}>
+                              No available targets. All neighbors are at war.
+                            </p>
+                          ) : (
+                            availableTargets.map((n) => (
+                              <button
+                                key={n.id}
+                                className={styles.targetOption}
+                                data-selected={selectedTargetId === n.id ? 'true' : 'false'}
+                                onClick={() => setSelectedTargetId(n.id)}
+                              >
+                                {getTargetName(n.id)}
+                              </button>
+                            ))
+                          )}
+                        </div>
+                        {selectedTargetId && (
+                          <div className={styles.confirmRow}>
+                            <p className={styles.confirmSummary}>
+                              Target: <strong>{getTargetName(selectedTargetId)}</strong>.
+                              Initiation cost: {EXTERNAL_OP_INITIATION_COST} coin.
+                              Costs 1 action slot.
+                            </p>
+                            <div className={styles.confirmButtons}>
+                              <button
+                                className={styles.launchButton}
+                                disabled={!canAct}
+                                onClick={handleConfirmLaunch}
+                              >
+                                Confirm Launch
+                                <span className={styles.slotCost}>1 slot</span>
+                              </button>
+                              <button
+                                className={styles.cancelText}
+                                onClick={handleCancelLaunch}
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        )}
+                        {!selectedTargetId && (
+                          <button
+                            className={styles.cancelText}
+                            onClick={handleCancelLaunch}
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <button
+                    className={styles.launchButton}
+                    disabled={!canAct}
+                    onClick={() => handleOpenLaunch(opType)}
+                  >
+                    Launch
+                    <span className={styles.slotCost}>1 slot</span>
+                  </button>
+                )}
               </div>
             );
           })}
