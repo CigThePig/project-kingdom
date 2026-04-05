@@ -1,5 +1,6 @@
 /* ==========================================================================
    App Shell — CSS Grid Layout
+   Modern-Retro Tactile: crisp parchment background, ink borders
    Source: ui-blueprint.md §3 Global Screen Architecture
    ========================================================================== */
 
@@ -11,10 +12,7 @@
     'crown  crown   crown'
     'nav    content intel';
   min-height: 100dvh;
-  background:
-    var(--color-seasonal-gradient, none),
-    radial-gradient(ellipse at 50% 0%, hsla(215, 20%, 14%, 0.8) 0%, transparent 70%),
-    var(--color-bg-primary);
+  background: var(--color-bg-primary);
   color: var(--color-text-primary);
 }
 
@@ -33,15 +31,7 @@
   color: var(--color-text-heading);
   margin: 0 0 var(--space-4);
   padding-bottom: var(--space-3);
-  border-bottom: 1px solid transparent;
-  background-image: linear-gradient(
-    90deg,
-    var(--color-seasonal-accent, var(--color-accent-metallic)) 0%,
-    transparent 60%
-  );
-  background-size: 100% 1px;
-  background-position: bottom;
-  background-repeat: no-repeat;
+  border-bottom: 2px solid var(--color-ink);
 }
 
 .contentPlaceholder {
@@ -69,7 +59,7 @@
 @media (max-width: 1023px) {
   .shell {
     grid-template-columns: 1fr;
-    grid-template-rows: var(--crown-bar-height) 1fr auto;
+    grid-template-rows: auto 1fr auto;
     grid-template-areas:
       'crown'
       'content'

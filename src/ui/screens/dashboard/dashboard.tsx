@@ -1,7 +1,7 @@
 // Phase 6 — Dashboard Screen: kingdom overview, turn advance flow, navigable summary.
 // Blueprint Reference: ui-blueprint.md §5.1; ux-blueprint.md §2, §4, §4.10
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import {
   PopulationClass,
@@ -61,6 +61,7 @@ import {
 } from '../../../data/text/reports';
 import { ResourceCard } from '../../components/resource-card/resource-card';
 import { ForecastModule, type ForecastProjection } from '../../components/forecast-module/forecast-module';
+import { BottomSheet } from '../../components/bottom-sheet/bottom-sheet';
 import { Icon } from '../../components/icon/icon';
 import styles from './dashboard.module.css';
 
@@ -361,6 +362,17 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
   const [turnPhase, setTurnPhase] = useState<TurnPhase>('idle');
   const [turnResult, setTurnResult] = useState<TurnResolutionResult | null>(null);
+  const [showContentClasses, setShowContentClasses] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    setIsMobile(mql.matches);
+    function handleChange(e: MediaQueryListEvent) { setIsMobile(e.matches); }
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, []);
+
   // Snapshot previous state before resolution for delta computation
   const [prevSnapshot, setPrevSnapshot] = useState<{
     faithLevel: number;
@@ -501,7 +513,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         />
       </div>
 
-      {/* Class Satisfaction Grid */}
+      {/* Class Satisfaction Grid — Progressive: hide 'Content' classes on mobile */}
       <section>
         <h2 className={styles.sectionLabel}><Icon name="society" size="0.875rem" /> Population Sentiment</h2>
         <div className={styles.classGrid}>
@@ -509,6 +521,11 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             const classState = kingdom.population[cls];
             const status = getSatisfactionStatus(classState.satisfaction);
             const deltaStyleKey = getDeltaStyle(classState.satisfactionDeltaLastTurn);
+
+            // On mobile, hide 'Content' classes unless toggled
+            if (isMobile && !showContentClasses && status.dataStatus === 'content') {
+              return null;
+            }
 
             return (
               <div
@@ -530,41 +547,54 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             );
           })}
         </div>
+        {isMobile && (
+          <button
+            className={styles.sentimentToggle}
+            onClick={() => setShowContentClasses((prev) => !prev)}
+          >
+            {showContentClasses ? 'Show troubled only' : 'Show all classes'}
+          </button>
+        )}
       </section>
 
-      {/* Kingdom Condition Row */}
-      <div className={styles.conditionRow}>
-        <div className={styles.conditionCard}>
-          <span className={styles.conditionLabel}>Faith</span>
-          <span className={styles.conditionValue}>
-            {kingdom.faithCulture.faithLevel}
-          </span>
-          {kingdom.faithCulture.schismActive && (
-            <span className={styles.schismWarning}>Schism Active</span>
-          )}
-        </div>
-        <div className={styles.conditionCard}>
-          <span className={styles.conditionLabel}>Cultural Cohesion</span>
-          <span className={styles.conditionValue}>
-            {kingdom.faithCulture.culturalCohesion}
-          </span>
-        </div>
+      {/* Kingdom Condition Row — accordion on mobile */}
+      <details className={styles.accordion} open={!isMobile || undefined}>
+        <summary className={styles.accordionSummary}>
+          <Icon name="compass" size="0.875rem" /> Kingdom Conditions
+        </summary>
+        <div className={styles.conditionRow}>
+          <div className={styles.conditionCard}>
+            <span className={styles.conditionLabel}>Faith</span>
+            <span className={styles.conditionValue}>
+              {kingdom.faithCulture.faithLevel}
+            </span>
+            {kingdom.faithCulture.schismActive && (
+              <span className={styles.schismWarning}>Schism Active</span>
+            )}
+          </div>
+          <div className={styles.conditionCard}>
+            <span className={styles.conditionLabel}>Cultural Cohesion</span>
+            <span className={styles.conditionValue}>
+              {kingdom.faithCulture.culturalCohesion}
+            </span>
+          </div>
 
-        {activeStorylines.map((storyline) => {
-          const text = STORYLINE_TEXT[storyline.definitionId];
-          return (
-            <div key={storyline.id} className={styles.storylineCard}>
-              <span className={styles.conditionLabel}>Active Storyline</span>
-              <span className={styles.storylineTitle}>
-                {text?.title ?? storyline.definitionId}
-              </span>
-              <span className={styles.storylineNote}>
-                {text?.statusNote ?? ''}
-              </span>
-            </div>
-          );
-        })}
-      </div>
+          {activeStorylines.map((storyline) => {
+            const text = STORYLINE_TEXT[storyline.definitionId];
+            return (
+              <div key={storyline.id} className={styles.storylineCard}>
+                <span className={styles.conditionLabel}>Active Storyline</span>
+                <span className={styles.storylineTitle}>
+                  {text?.title ?? storyline.definitionId}
+                </span>
+                <span className={styles.storylineNote}>
+                  {text?.statusNote ?? ''}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+      </details>
 
       {/* Urgent Matters Banner */}
       {crownBar.unresolvedUrgentMatters > 0 && (
@@ -582,9 +612,11 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </button>
       )}
 
-      {/* Forecast Area */}
-      <section>
-        <h2 className={styles.sectionLabel}><Icon name="compass" size="0.875rem" /> Strategic Forecast</h2>
+      {/* Forecast Area — accordion on mobile */}
+      <details className={styles.accordion} open={!isMobile || undefined}>
+        <summary className={styles.accordionSummary}>
+          <Icon name="compass" size="0.875rem" /> Strategic Forecast
+        </summary>
         <div className={styles.forecastArea}>
           <ForecastModule
             title="Treasury Outlook"
@@ -614,7 +646,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             }
           />
         </div>
-      </section>
+      </details>
 
       {/* Turn Advance Section */}
       <div className={styles.turnAdvance}>
@@ -623,61 +655,61 @@ export function Dashboard({ onNavigate }: DashboardProps) {
         </button>
       </div>
 
-      {/* Confirmation Overlay */}
-      {turnPhase === 'confirming' && (
-        <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
-          <div className={styles.confirmCard}>
-            <h2 className={styles.confirmTitle}>{ADVANCE_TURN_LABEL}</h2>
+      {/* Confirmation — BottomSheet on mobile, centered card on desktop */}
+      <BottomSheet
+        isOpen={turnPhase === 'confirming'}
+        onClose={() => setTurnPhase('idle')}
+        title={ADVANCE_TURN_LABEL}
+      >
+        <p className={styles.confirmSection}>
+          Current season: <strong>{SEASON_LABELS[crownBar.season]}</strong>,
+          Year {crownBar.year}
+        </p>
 
-            <p className={styles.confirmSection}>
-              Current season: <strong>{SEASON_LABELS[crownBar.season]}</strong>,
-              Year {crownBar.year}
-            </p>
-
-            {queuedActions.length > 0 && (
-              <div className={styles.confirmSection}>
-                <strong>Queued actions ({queuedActions.length}):</strong>
-                <ul>
-                  {queuedActions.map((a) => (
-                    <li key={a.id}>{ACTION_TYPE_LABELS[a.type]}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {slotsRemaining > 0 && (
-              <p className={styles.confirmWarning}>
-                {slotsRemaining} action slot{slotsRemaining !== 1 ? 's' : ''} unused this turn.
-              </p>
-            )}
-
-            {crownBar.unresolvedUrgentMatters > 0 && (
-              <p className={styles.confirmWarning}>
-                {crownBar.unresolvedUrgentMatters} urgent matter{crownBar.unresolvedUrgentMatters !== 1 ? 's' : ''} remain unresolved.
-              </p>
-            )}
-
-            <div className={styles.confirmActions}>
-              <button
-                className={styles.cancelButton}
-                onClick={() => setTurnPhase('idle')}
-              >
-                {CANCEL_LABEL}
-              </button>
-              <button className={styles.confirmButton} onClick={handleConfirm}>
-                {CONFIRM_LABEL}
-              </button>
-            </div>
+        {queuedActions.length > 0 && (
+          <div className={styles.confirmSection}>
+            <strong>Queued actions ({queuedActions.length}):</strong>
+            <ul>
+              {queuedActions.map((a) => (
+                <li key={a.id}>{ACTION_TYPE_LABELS[a.type]}</li>
+              ))}
+            </ul>
           </div>
+        )}
+
+        {slotsRemaining > 0 && (
+          <p className={styles.confirmWarning}>
+            {slotsRemaining} action slot{slotsRemaining !== 1 ? 's' : ''} unused this turn.
+          </p>
+        )}
+
+        {crownBar.unresolvedUrgentMatters > 0 && (
+          <p className={styles.confirmWarning}>
+            {crownBar.unresolvedUrgentMatters} urgent matter{crownBar.unresolvedUrgentMatters !== 1 ? 's' : ''} remain unresolved.
+          </p>
+        )}
+
+        <div className={styles.confirmActions}>
+          <button
+            className={styles.cancelButton}
+            onClick={() => setTurnPhase('idle')}
+          >
+            {CANCEL_LABEL}
+          </button>
+          <button className={styles.confirmButton} onClick={handleConfirm}>
+            {CONFIRM_LABEL}
+          </button>
         </div>
-      )}
+      </BottomSheet>
 
-      {/* Turn Summary Overlay */}
-      {turnPhase === 'summary' && grouped && (
-        <div className={styles.summaryOverlay} role="dialog" aria-modal="true">
-          <div className={styles.summaryCard}>
-            <h2 className={styles.summaryTitle}>{TURN_SUMMARY_HEADER}</h2>
-
+      {/* Turn Summary — BottomSheet with swipe-to-dismiss */}
+      <BottomSheet
+        isOpen={turnPhase === 'summary' && grouped !== null}
+        onClose={handleDismissSummary}
+        title={TURN_SUMMARY_HEADER}
+      >
+        {grouped && (
+          <>
             {grouped.critical.length > 0 && (
               <div className={styles.summarySection}>
                 <h3 className={styles.summaryCritical}>
@@ -730,9 +762,9 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             >
               Return to Kingdom
             </button>
-          </div>
-        </div>
-      )}
+          </>
+        )}
+      </BottomSheet>
     </div>
   );
 }

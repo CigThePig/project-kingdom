@@ -1,5 +1,6 @@
 /* ==========================================================================
    Dashboard Screen — Kingdom Overview
+   Modern-Retro Tactile: hard shadows, ink borders, parchment surfaces
    Source: ui-blueprint.md §5.1, ux-blueprint.md §2, §4
    ========================================================================== */
 
@@ -63,10 +64,10 @@
   flex-direction: column;
   gap: var(--space-1);
   background: var(--surface-base-bg);
-  border: 1px solid var(--surface-base-border);
+  border: 2px solid var(--color-border-strong);
   border-radius: var(--border-radius-md);
   padding: var(--space-3);
-  box-shadow: var(--surface-base-shadow);
+  box-shadow: var(--shadow-sm);
   transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
@@ -78,13 +79,37 @@
 .classCard[data-status='critical'] {
   border-color: var(--color-status-critical);
   background: var(--color-status-critical-bg);
-  --pulse-color: hsla(0, 55%, 45%, 0.3);
+  position: relative;
   animation: pulseGlow 3s ease-in-out infinite;
+  --pulse-color: var(--color-status-critical);
+}
+
+/* Dither overlay for critical cards */
+.classCard[data-status='critical']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(var(--color-status-critical-dither) 0% 25%, transparent 0% 50%) 0 0 / var(--dither-size) var(--dither-size);
+  opacity: 0.08;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 .classCard[data-status='restless'] {
   border-color: var(--color-status-warning);
   background: var(--color-status-warning-bg);
+  position: relative;
+}
+
+/* Dither overlay for restless cards */
+.classCard[data-status='restless']::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(var(--color-status-warning-dither) 0% 25%, transparent 0% 50%) 0 0 / var(--dither-size) var(--dither-size);
+  opacity: 0.08;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 .className {
@@ -134,6 +159,88 @@
 .statusRestless { color: var(--color-status-warning); }
 .statusCritical { color: var(--color-status-critical); }
 
+/* Progressive Sentiment Toggle */
+.sentimentToggle {
+  display: block;
+  margin-top: var(--space-2);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--border-radius-sm);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.sentimentToggle:active {
+  transform: translateY(2px);
+  box-shadow: 0px 0px 0px var(--color-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Accordion — chunky <details>/<summary> for collapsible sections
+   -------------------------------------------------------------------------- */
+.accordion {
+  border: 2px solid var(--color-border-strong);
+  border-radius: var(--border-radius-md);
+  background: var(--color-bg-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.accordion[open] {
+  box-shadow: var(--shadow-md);
+}
+
+.accordionSummary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-family-heading);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-heading);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  padding: var(--space-3) var(--space-4);
+  cursor: pointer;
+  background: var(--color-bg-secondary);
+  border-bottom: 2px solid transparent;
+  list-style: none;
+  user-select: none;
+}
+
+.accordionSummary::-webkit-details-marker {
+  display: none;
+}
+
+.accordionSummary::after {
+  content: '\25B6';
+  margin-left: auto;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  transition: transform var(--transition-fast);
+}
+
+.accordion[open] > .accordionSummary {
+  border-bottom-color: var(--color-border-strong);
+}
+
+.accordion[open] > .accordionSummary::after {
+  transform: rotate(90deg);
+}
+
+/* Content inside accordion gets padding */
+.accordion > .conditionRow,
+.accordion > .forecastArea {
+  padding: var(--space-4);
+}
+
 /* --------------------------------------------------------------------------
    Kingdom Condition Row (Faith, Storyline)
    -------------------------------------------------------------------------- */
@@ -141,6 +248,7 @@
   display: flex;
   gap: var(--space-4);
   flex-wrap: wrap;
+  padding: var(--space-4);
 }
 
 .conditionCard {
@@ -150,10 +258,10 @@
   flex-direction: column;
   gap: var(--space-1);
   background: var(--surface-base-bg);
-  border: 1px solid var(--surface-base-border);
+  border: 2px solid var(--color-border-default);
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-4);
-  box-shadow: var(--surface-base-shadow);
+  box-shadow: var(--shadow-sm);
 }
 
 .conditionLabel {
@@ -182,19 +290,13 @@
   flex: 1;
   min-width: 12rem;
   background: var(--surface-base-bg);
-  border: 1px solid var(--color-border-storyline);
+  border: 2px solid var(--color-border-storyline);
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-4);
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  box-shadow: var(--surface-base-shadow), 0 0 12px hsla(38, 30%, 45%, 0.12);
-  animation: storylineBreathing 3.5s ease-in-out infinite;
-}
-
-@keyframes storylineBreathing {
-  0%, 100% { box-shadow: var(--surface-base-shadow), 0 0 8px hsla(38, 30%, 45%, 0.10); }
-  50% { box-shadow: var(--surface-base-shadow), 0 0 18px hsla(38, 30%, 45%, 0.25); }
+  box-shadow: var(--shadow-sm);
 }
 
 .storylineTitle {
@@ -218,17 +320,35 @@
   align-items: center;
   gap: var(--space-3);
   background: var(--color-status-warning-bg);
-  border: 1px solid var(--color-status-warning);
+  border: 2px solid var(--color-status-warning);
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-4);
   cursor: pointer;
-  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: var(--button-shadow);
+  transition: transform 80ms ease, box-shadow 80ms ease;
   animation: slideUp 250ms ease-out;
+  position: relative;
+}
+
+/* Dither overlay for urgent banner */
+.urgentBanner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-conic-gradient(var(--color-status-warning-dither) 0% 25%, transparent 0% 50%) 0 0 / var(--dither-size) var(--dither-size);
+  opacity: 0.06;
+  pointer-events: none;
+  border-radius: inherit;
 }
 
 .urgentBanner:hover {
   background: var(--color-status-warning);
   color: var(--color-text-inverse);
+}
+
+.urgentBanner:active {
+  transform: translateY(var(--button-shadow-offset));
+  box-shadow: 0px 0px 0px var(--color-ink);
 }
 
 .urgentCount {
@@ -249,6 +369,7 @@
   display: flex;
   gap: var(--space-4);
   flex-wrap: wrap;
+  padding: var(--space-4);
 }
 
 .forecastArea > * {
@@ -273,65 +394,29 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-inverse);
-  background: linear-gradient(180deg, hsl(210, 10%, 58%) 0%, hsl(210, 8%, 48%) 100%);
-  border: 1px solid hsl(210, 8%, 62%);
+  background: var(--color-ink);
+  border: 2px solid var(--color-ink);
   border-radius: var(--border-radius-md);
   padding: var(--space-3) var(--space-8);
   cursor: pointer;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
   letter-spacing: var(--letter-spacing-wide);
-  box-shadow: 0 2px 8px hsla(220, 20%, 4%, 0.5), inset 0 1px 0 hsla(210, 20%, 70%, 0.2);
-  text-shadow: 0 1px 2px hsla(220, 20%, 4%, 0.4);
+  box-shadow: var(--button-shadow);
+  transition: transform 80ms ease, box-shadow 80ms ease;
 }
 
 .advanceButton:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px hsla(220, 20%, 4%, 0.6), inset 0 1px 0 hsla(210, 20%, 70%, 0.25);
-  filter: brightness(1.08);
+  box-shadow: calc(var(--button-shadow-offset) + 1px) calc(var(--button-shadow-offset) + 1px) 0px var(--color-ink);
 }
 
 .advanceButton:active {
-  transform: translateY(0);
-  box-shadow: 0 1px 4px hsla(220, 20%, 4%, 0.4), inset 0 1px 3px hsla(220, 20%, 4%, 0.3);
+  transform: translateY(var(--button-shadow-offset));
+  box-shadow: 0px 0px 0px var(--color-ink);
 }
 
 /* --------------------------------------------------------------------------
-   Confirm Overlay
+   Confirm / Cancel Buttons (inside BottomSheet)
    -------------------------------------------------------------------------- */
-.confirmOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-index-overlay);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg-overlay);
-  animation: fadeIn 200ms ease-out;
-}
-
-.confirmCard {
-  background: var(--surface-floating-bg);
-  border: 1px solid var(--surface-floating-border);
-  border-top: 2px solid var(--color-seasonal-accent, var(--color-accent-metallic));
-  border-radius: var(--border-radius-lg);
-  padding: var(--space-6);
-  max-width: 32rem;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  box-shadow: var(--surface-floating-shadow);
-  animation: scaleIn 200ms ease-out;
-}
-
-.confirmTitle {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-heading);
-  margin: 0;
-}
-
 .confirmSection {
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
@@ -348,6 +433,7 @@
   display: flex;
   gap: var(--space-3);
   justify-content: flex-end;
+  padding-top: var(--space-2);
 }
 
 .confirmButton {
@@ -355,83 +441,51 @@
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-inverse);
-  background: linear-gradient(180deg, hsl(210, 10%, 58%) 0%, hsl(210, 8%, 48%) 100%);
-  border: 1px solid hsl(210, 8%, 62%);
+  background: var(--color-ink);
+  border: 2px solid var(--color-ink);
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-6);
   cursor: pointer;
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
-  box-shadow: 0 1px 4px hsla(220, 20%, 4%, 0.4);
+  box-shadow: var(--button-shadow);
+  transition: transform 80ms ease, box-shadow 80ms ease;
 }
 
 .confirmButton:hover {
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px hsla(220, 20%, 4%, 0.5);
-  filter: brightness(1.08);
+  box-shadow: calc(var(--button-shadow-offset) + 1px) calc(var(--button-shadow-offset) + 1px) 0px var(--color-ink);
 }
 
 .confirmButton:active {
-  transform: translateY(0);
-  box-shadow: none;
+  transform: translateY(var(--button-shadow-offset));
+  box-shadow: 0px 0px 0px var(--color-ink);
 }
 
 .cancelButton {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
-  background: transparent;
-  border: 1px solid var(--color-border-default);
+  background: var(--color-bg-surface);
+  border: 2px solid var(--color-border-strong);
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-6);
   cursor: pointer;
-  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  transition: transform 80ms ease, box-shadow 80ms ease;
 }
 
 .cancelButton:hover {
-  background: var(--color-bg-surface);
   color: var(--color-text-primary);
-  border-color: var(--color-border-strong);
+  border-color: var(--color-ink);
+}
+
+.cancelButton:active {
+  transform: translateY(2px);
+  box-shadow: 0px 0px 0px var(--color-ink);
 }
 
 /* --------------------------------------------------------------------------
-   Turn Summary
+   Turn Summary (inside BottomSheet)
    -------------------------------------------------------------------------- */
-.summaryOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-index-overlay);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--color-bg-overlay);
-  animation: fadeIn 300ms ease-out;
-}
-
-.summaryCard {
-  background: var(--surface-floating-bg);
-  border: 1px solid var(--surface-floating-border);
-  border-top: 2px solid var(--color-seasonal-accent, var(--color-accent-metallic));
-  border-radius: var(--border-radius-lg);
-  padding: var(--space-6);
-  max-width: 40rem;
-  width: 90%;
-  max-height: 80dvh;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  box-shadow: var(--surface-floating-shadow);
-  animation: slideUp 300ms ease-out;
-}
-
-.summaryTitle {
-  font-family: var(--font-family-heading);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-heading);
-  margin: 0;
-}
-
 .summarySection {
   display: flex;
   flex-direction: column;
@@ -472,7 +526,7 @@
   color: var(--color-text-primary);
   line-height: var(--line-height-normal);
   padding-left: var(--space-3);
-  border-left: 2px solid var(--color-border-default);
+  border-left: 3px solid var(--color-border-default);
 }
 
 .summaryItemCritical {
@@ -492,7 +546,7 @@
 }
 
 .summaryItemNavigable:hover {
-  background: var(--color-bg-surface);
+  background: var(--color-bg-secondary);
   border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
 }
 
@@ -521,15 +575,17 @@
   align-items: center;
   gap: var(--space-3);
   background: var(--color-status-critical-bg);
-  border: 1px solid var(--color-status-critical);
+  border: 2px solid var(--color-status-critical);
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-4);
   cursor: pointer;
-  transition: background var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  transition: transform 80ms ease, box-shadow 80ms ease;
   font-size: var(--font-size-sm);
   line-height: var(--line-height-normal);
   color: var(--color-text-primary);
+  box-shadow: var(--shadow-sm);
   animation: slideIn 250ms ease-out backwards;
+  position: relative;
 }
 
 .alertItem:nth-child(1) { animation-delay: 0ms; }
@@ -538,15 +594,12 @@
 
 .alertItem:hover {
   transform: translateX(2px);
-  box-shadow: var(--shadow-sm);
 }
 
 .alertItem[data-severity='caution'] {
   background: var(--color-status-warning-bg);
   border-color: var(--color-status-warning);
 }
-
-/* (hover handled above with transform) */
 
 .alertSeverityBadge {
   font-size: var(--font-size-xs);
@@ -574,25 +627,24 @@
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-inverse);
-  background: linear-gradient(180deg, hsl(210, 10%, 58%) 0%, hsl(210, 8%, 48%) 100%);
-  border: 1px solid hsl(210, 8%, 62%);
+  background: var(--color-ink);
+  border: 2px solid var(--color-ink);
   border-radius: var(--border-radius-md);
   padding: var(--space-2) var(--space-6);
   cursor: pointer;
   margin-top: var(--space-2);
-  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
-  box-shadow: 0 1px 4px hsla(220, 20%, 4%, 0.4);
+  box-shadow: var(--button-shadow);
+  transition: transform 80ms ease, box-shadow 80ms ease;
 }
 
 .summaryDismiss:hover {
   transform: translateY(-1px);
-  filter: brightness(1.08);
-  box-shadow: 0 2px 8px hsla(220, 20%, 4%, 0.5);
+  box-shadow: calc(var(--button-shadow-offset) + 1px) calc(var(--button-shadow-offset) + 1px) 0px var(--color-ink);
 }
 
 .summaryDismiss:active {
-  transform: translateY(0);
-  box-shadow: none;
+  transform: translateY(var(--button-shadow-offset));
+  box-shadow: 0px 0px 0px var(--color-ink);
 }
 
 /* --------------------------------------------------------------------------
@@ -611,9 +663,13 @@
     flex-direction: column;
   }
 
-  .confirmCard,
-  .summaryCard {
-    width: 95%;
-    padding: var(--space-4);
+  .confirmActions {
+    flex-direction: column;
+  }
+
+  .confirmButton,
+  .cancelButton {
+    width: 100%;
+    text-align: center;
   }
 }

@@ -3,12 +3,15 @@ import type { SVGIconProps } from '../icon';
 export function FoodIcon({ className }: SVGIconProps) {
   return (
     <svg viewBox="0 0 24 24" className={className} xmlns="http://www.w3.org/2000/svg">
-      <path d="M9 21L12 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M15 21L12 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M12 13L12 3M12 3C12 3 9 5 9 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M12 3C12 3 15 5 15 8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M12 6C12 6 7 7 7 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <path d="M12 6C12 6 17 7 17 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      {/* Chunky wheat sheaf: angular stalks with blocky grain heads */}
+      <line x1="12" y1="21" x2="12" y2="10" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" />
+      <line x1="8" y1="21" x2="12" y2="14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" />
+      <line x1="16" y1="21" x2="12" y2="14" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" />
+      {/* Grain heads — angular chevrons */}
+      <polyline points="12,10 10,7 12,4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter" fill="none" />
+      <polyline points="12,10 14,7 12,4" stroke="currentColor" strokeWidth="2.5" strokeLinecap="square" strokeLinejoin="miter" fill="none" />
+      <polyline points="10,12 7,10 8,7" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" fill="none" />
+      <polyline points="14,12 17,10 16,7" stroke="currentColor" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter" fill="none" />
     </svg>
   );
 }

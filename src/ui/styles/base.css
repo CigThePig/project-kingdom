@@ -267,8 +267,8 @@ button:focus-visible,
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 4px var(--pulse-color, hsla(210, 30%, 50%, 0.2)); }
-  50% { box-shadow: 0 0 16px var(--pulse-color, hsla(210, 30%, 50%, 0.5)); }
+  0%, 100% { box-shadow: 2px 2px 0px var(--pulse-color, var(--color-ink)); }
+  50% { box-shadow: 3px 3px 0px var(--pulse-color, var(--color-ink)), inset 0 0 0 1px var(--pulse-color, var(--color-ink)); }
 }
 
 @keyframes shimmer {
@@ -284,6 +284,27 @@ button:focus-visible,
 @keyframes flashHighlight {
   0% { background-color: var(--flash-color, hsla(210, 30%, 50%, 0.3)); }
   100% { background-color: transparent; }
+}
+
+/* ==========================================================================
+   Mechanical Tactile Button — global utility
+   Apply to any button for hard-shadow press-down effect
+   ========================================================================== */
+
+.tactile-btn {
+  border: 2px solid var(--color-ink);
+  box-shadow: var(--button-shadow);
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+
+.tactile-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: calc(var(--button-shadow-offset) + 1px) calc(var(--button-shadow-offset) + 1px) 0px var(--color-ink);
+}
+
+.tactile-btn:active {
+  transform: translateY(var(--button-shadow-offset));
+  box-shadow: 0px 0px 0px var(--color-ink);
 }
 
 /* ==========================================================================

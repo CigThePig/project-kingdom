@@ -69,10 +69,12 @@ const ALL_SEASON_CLASSES = Object.values(SEASON_CLASS_MAP);
 function AppShell() {
   const [activeScreen, setActiveScreen] = useState<ScreenId>('dashboard');
   const [intelPanelOpen, setIntelPanelOpen] = useState(false);
+  const [crownBarHidden, setCrownBarHidden] = useState(false);
   const { season } = useCrownBar();
   const { save, autosave, load, hasSavedGame } = useSave();
   const { turn } = useKingdomState();
   const prevTurnRef = useRef(turn.turnNumber);
+  const lastScrollY = useRef(0);
   const isGameOver = useIsGameOver();
   const gameOverConditions = useGameOverConditions();
   const dispatch = useGameDispatch();
@@ -131,11 +133,31 @@ function AppShell() {
     };
   }, [season]);
 
+  // Auto-hide crown bar on scroll down (mobile only).
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    if (!mql.matches) return;
+
+    function handleScroll() {
+      const currentY = window.scrollY;
+      if (currentY > lastScrollY.current && currentY > 10) {
+        setCrownBarHidden(true);
+      } else if (currentY < lastScrollY.current) {
+        setCrownBarHidden(false);
+      }
+      lastScrollY.current = currentY;
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <div className={styles.shell}>
       <CrownBar
         onNavigateToEvents={() => setActiveScreen('events')}
         onToggleIntelPanel={() => setIntelPanelOpen((prev) => !prev)}
+        hidden={crownBarHidden}
       />
 
       <NavRail activeScreen={activeScreen} onNavigate={setActiveScreen} />
