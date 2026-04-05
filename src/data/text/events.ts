@@ -24,7 +24,7 @@ export interface StorylineTextEntry {
 }
 
 // ============================================================
-// Event Text — 26 Entries
+// Event Text — 51 Entries
 // ============================================================
 
 export const EVENT_TEXT: Record<string, EventTextEntry> = {
@@ -743,6 +743,263 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
       offer_land_instead: 'Offer Land Grants in Lieu of Pay',
     },
   },
+
+  // ============================================================
+  // PATTERN-REACTIVE EVENTS (4)
+  // ============================================================
+  evt_noble_resentment_merchant_favor: {
+    title: 'Noble Resentment',
+    body: 'The nobility grows openly resentful of policies perceived to favor the merchant class. Noble houses that once competed for commercial advantage now unite in their grievance, and whispers of coordinated resistance circulate through the court. The crown must address the imbalance before it fractures the ruling coalition.',
+    choices: {
+      appease_nobility: 'Appease the Nobility',
+      maintain_merchant_policies: 'Maintain Merchant Policies',
+      mediate_compromise: 'Mediate a Compromise',
+    },
+  },
+  evt_commoner_uprising_neglect: {
+    title: 'Commoner Uprising',
+    body: 'Neglected and hungry, the common folk have taken to the streets in organized demonstrations that border on open revolt. Market squares have become gathering points for angry crowds, and several royal officials have been driven from their posts. The situation demands an immediate response before order collapses entirely.',
+    choices: {
+      emergency_food_distribution: 'Distribute Emergency Food',
+      deploy_military_patrols: 'Deploy Military Patrols',
+      announce_labor_reforms: 'Announce Labor Reforms',
+    },
+  },
+  evt_clergy_power_grab: {
+    title: 'Clerical Overreach',
+    body: 'Emboldened by their growing influence among the faithful, senior clergy have begun asserting authority beyond their traditional bounds. Religious courts now claim jurisdiction over civil matters, and clerical edicts are being enforced as though they carry the weight of royal decree. The crown\'s temporal authority is being tested.',
+    choices: {
+      assert_royal_authority: 'Assert Royal Authority',
+      negotiate_boundaries: 'Negotiate Clear Boundaries',
+      accept_clergy_influence: 'Accept Expanded Influence',
+    },
+  },
+  evt_military_coup_threat: {
+    title: 'Conspiracy in the Barracks',
+    body: 'Intelligence reports have uncovered a conspiracy among senior military officers to seize power from the crown. The plotters command significant loyalty within the ranks and have secured access to key armories. The conspiracy is well-advanced, and delay will only strengthen their position.',
+    choices: {
+      purge_conspirators: 'Purge the Conspirators',
+      bribe_officer_corps: 'Buy the Officers\' Loyalty',
+      address_grievances: 'Address Military Grievances',
+    },
+  },
+
+  // ============================================================
+  // CHAIN: Plague (3)
+  // ============================================================
+  evt_plague_outbreak: {
+    title: 'Plague Strikes',
+    body: 'Disease has appeared in the outer districts. Reports describe a swift and virulent illness that overwhelms the afflicted within days. The contagion spreads through close contact, and the crowded conditions of the lower quarters provide fertile ground. Without immediate action, the plague will reach the inner city.',
+    choices: {
+      immediate_quarantine: 'Impose Immediate Quarantine',
+      mobilize_healers: 'Mobilize the Healers',
+      pray_for_deliverance: 'Pray for Deliverance',
+    },
+  },
+  evt_plague_spread: {
+    title: 'Plague Spreads',
+    body: 'The contagion has breached the inner city despite earlier efforts. Merchant houses are shuttered, laborers refuse to work, and the dead accumulate faster than they can be buried. The kingdom\'s economy and social order are buckling under the weight of the pestilence. Drastic measures are now the only options remaining.',
+    choices: {
+      strict_lockdown: 'Enforce Strict Lockdown',
+      burn_infected_quarters: 'Burn the Infected Quarters',
+      import_foreign_medicine: 'Import Foreign Medicine',
+    },
+  },
+  evt_plague_aftermath: {
+    title: 'Plague\'s End',
+    body: 'The worst has passed. The contagion has burned through the population and finally subsided, leaving behind empty homes, grieving communities, and a kingdom forever changed. Recovery will be long, but the survivors look to the crown for direction. How the realm rebuilds will define its character for a generation.',
+    choices: {
+      rebuild_and_memorialize: 'Rebuild and Memorialize',
+      impose_sanitation_laws: 'Impose Sanitation Laws',
+      exploit_cheap_labor: 'Exploit the Cheap Labor',
+    },
+  },
+
+  // ============================================================
+  // CHAIN: Trade War (3)
+  // ============================================================
+  evt_trade_war_tariffs: {
+    title: 'Trade Dispute',
+    body: 'A neighboring kingdom has imposed harsh new tariffs on goods crossing its borders. The kingdom\'s merchants report significant losses, and trade caravans sit idle at border crossings. The neighbor\'s motives appear to be both economic and political — a calculated provocation that demands a measured response.',
+    choices: {
+      retaliatory_tariffs: 'Impose Retaliatory Tariffs',
+      negotiate_terms: 'Negotiate New Terms',
+      absorb_the_costs: 'Absorb the Costs',
+    },
+  },
+  evt_trade_war_escalation: {
+    title: 'Trade War Deepens',
+    body: 'The trade dispute has escalated beyond tariffs into something resembling economic warfare. Commerce between the two kingdoms has ground to a halt, prices of imported goods have soared, and merchants on both sides suffer. The longer this continues, the deeper the damage to the kingdom\'s prosperity.',
+    choices: {
+      embargo_neighbor: 'Impose Full Embargo',
+      seek_alternative_markets: 'Seek Alternative Markets',
+      capitulate: 'Accept Their Terms',
+    },
+  },
+  evt_trade_war_resolution: {
+    title: 'Trade Settlement',
+    body: 'Both kingdoms have exhausted their appetite for economic conflict. Envoys from the neighboring court have arrived with proposals for resolution, and the kingdom\'s own merchants plead for an end to the disruption. The terms of any settlement will determine the balance of commercial power for years to come.',
+    choices: {
+      favorable_treaty: 'Press for Favorable Treaty',
+      mutual_concessions: 'Offer Mutual Concessions',
+      accept_losses: 'Accept the Losses',
+    },
+  },
+
+  // ============================================================
+  // CHAIN: Succession Crisis (3)
+  // ============================================================
+  evt_succession_question: {
+    title: 'The Succession Question',
+    body: 'Whispers about the line of succession have begun circulating through the court and beyond. The matter of who will inherit the crown — long considered settled — is now the subject of quiet debate among the nobility. Left unaddressed, the uncertainty will erode confidence in the stability of the realm.',
+    choices: {
+      declare_heir: 'Declare the Heir Publicly',
+      convene_council: 'Convene a Royal Council',
+      silence_rumors: 'Silence the Rumors',
+    },
+  },
+  evt_succession_factions: {
+    title: 'Factions Emerge',
+    body: 'The succession question has fractured the court into rival factions, each rallying behind a different claimant. Noble houses are choosing sides, and the competition for influence has grown fierce. The kingdom\'s stability depends on whether this contest can be managed or whether it will consume the ruling class entirely.',
+    choices: {
+      back_eldest_claim: 'Back the Eldest Claim',
+      support_merit_candidate: 'Support a Merit Candidate',
+      play_factions: 'Play the Factions',
+    },
+  },
+  evt_succession_resolution: {
+    title: 'Succession Decided',
+    body: 'The matter of the succession can no longer be deferred. The factions have hardened, alliances have been struck, and the kingdom demands certainty. The crown must render a final judgment that will either unite the realm behind a recognized heir or leave wounds that fester for a generation.',
+    choices: {
+      crown_heir_publicly: 'Crown the Heir Publicly',
+      exile_rivals: 'Exile Rival Claimants',
+      grant_rival_concessions: 'Grant Rivals Concessions',
+    },
+  },
+
+  // ============================================================
+  // CHAIN: Famine (3)
+  // ============================================================
+  evt_food_shortage_warning: {
+    title: 'Stores Run Low',
+    body: 'The royal granaries report alarming shortfalls. Winter approaches, and current reserves will not sustain the population through the cold months at present consumption rates. Agricultural assessments confirm that the harvest fell well below expectations. The kingdom must prepare for lean times ahead.',
+    choices: {
+      impose_strict_rationing: 'Impose Strict Rationing',
+      buy_grain_reserves: 'Purchase Grain Reserves',
+      reduce_military_rations: 'Reduce Military Rations',
+    },
+  },
+  evt_famine_crisis: {
+    title: 'Famine Grips the Kingdom',
+    body: 'The food shortage has become a full crisis. People go hungry in the streets, and desperation drives the weakest to beg at the gates of noble estates and church granaries. Reports of food-related violence grow daily. The crown must act decisively or face the complete unraveling of civil order.',
+    choices: {
+      open_royal_granaries: 'Open the Royal Granaries',
+      commandeer_noble_stores: 'Commandeer Noble Stores',
+      appeal_to_neighbors: 'Appeal to Neighboring Kingdoms',
+    },
+  },
+  evt_famine_recovery: {
+    title: 'The Lean Season Ends',
+    body: 'Food has returned to the markets, and the specter of starvation recedes. The kingdom survived, but at great cost — weakened bodies, depleted reserves, and a populace that will not soon forget. The decisions made now will determine whether the realm emerges stronger or merely staggers into the next crisis.',
+    choices: {
+      invest_in_agriculture: 'Invest in Agriculture',
+      establish_grain_reserves: 'Establish Grain Reserves',
+      celebrate_survival: 'Celebrate the Survival',
+    },
+  },
+
+  // ============================================================
+  // CHAIN: Religious Schism (3)
+  // ============================================================
+  evt_doctrinal_dispute: {
+    title: 'Doctrinal Disagreement',
+    body: 'Scholars within the kingdom\'s religious institutions have fallen into sharp disagreement over matters of doctrine. The dispute, initially confined to seminary halls, has spilled into public sermons and pamphlets. Each side claims the other distorts the true faith. The clergy looks to the crown for guidance before the disagreement hardens into something worse.',
+    choices: {
+      convene_theological_council: 'Convene Theological Council',
+      enforce_orthodox_doctrine: 'Enforce Orthodox Doctrine',
+      allow_scholarly_debate: 'Allow Scholarly Debate',
+    },
+  },
+  evt_schism_factions: {
+    title: 'Faiths Divide',
+    body: 'The doctrinal disagreement has crystallized into opposing factions within the religious establishment. Reformers advocate for new interpretations and broader access to scripture, while traditionalists insist on the authority of established doctrine. Both sides have gathered followers among the common folk, and each demands the crown\'s endorsement.',
+    choices: {
+      support_reformers: 'Support the Reformers',
+      back_traditionalists: 'Back the Traditionalists',
+      remain_neutral: 'Remain Neutral',
+    },
+  },
+  evt_schism_resolution: {
+    title: 'Religious Settlement',
+    body: 'The religious divide has reached a point where resolution — or at least management — is no longer optional. Both factions have entrenched positions, but the strain on the kingdom\'s spiritual cohesion is unsustainable. A path forward exists, though every option carries consequence for the realm\'s faith and unity.',
+    choices: {
+      declare_unified_doctrine: 'Declare Unified Doctrine',
+      formalize_tolerance: 'Formalize Religious Tolerance',
+      suppress_dissent: 'Suppress the Dissent',
+    },
+  },
+
+  // ============================================================
+  // ADDITIONAL FOLLOW-UP EVENTS (3)
+  // ============================================================
+  evt_merchant_permanent_concessions: {
+    title: 'Merchants Press Advantage',
+    body: 'Emboldened by earlier concessions, the merchant class has organized a formal delegation demanding permanent privileges — tax exemptions, exclusive trade rights, and a seat on the royal council. Their wealth gives them leverage, but granting such demands would fundamentally alter the balance of power among the kingdom\'s classes.',
+    choices: {
+      grant_permanent_charter: 'Grant Permanent Charter',
+      reject_demands: 'Reject Their Demands',
+      offer_limited_concession: 'Offer Limited Concession',
+    },
+  },
+  evt_underground_heretical_movement: {
+    title: 'Underground Movement',
+    body: 'The suppression of heterodox beliefs has driven them underground rather than eliminating them. Intelligence reports describe a growing network of secret gatherings, hidden texts, and coded symbols. The movement draws from the disaffected poor and the intellectually restless alike. It grows stronger in darkness than it ever was in daylight.',
+    choices: {
+      infiltrate_movement: 'Infiltrate the Movement',
+      public_amnesty: 'Declare Public Amnesty',
+      double_down_suppression: 'Double Down on Suppression',
+    },
+  },
+  evt_equipment_failure_field: {
+    title: 'Equipment Fails in the Field',
+    body: 'Neglected arms and deteriorating supply lines have produced the worst possible outcome: critical equipment failures during active operations. Weapons break, armor fails, and soldiers find themselves exposed at the moment of greatest need. The military command demands an immediate accounting and a decision on how to proceed.',
+    choices: {
+      emergency_field_repair: 'Order Emergency Field Repairs',
+      retreat_and_regroup: 'Retreat and Regroup',
+      push_through: 'Push Through Regardless',
+    },
+  },
+
+  // ============================================================
+  // HIGH-STAKES STANDALONE (3)
+  // ============================================================
+  evt_golden_age_opportunity: {
+    title: 'A Golden Opportunity',
+    body: 'A rare alignment of prosperity and stability has presented the kingdom with an extraordinary opportunity. The treasury is healthy, the people are content, and the realm is at peace. Advisors counsel that this moment — fleeting by nature — should be seized to invest in the kingdom\'s lasting greatness.',
+    choices: {
+      patron_arts_sciences: 'Patronize Arts and Sciences',
+      host_grand_festival: 'Host a Grand Festival',
+      invest_in_education: 'Invest in Education',
+    },
+  },
+  evt_assassination_attempt: {
+    title: 'The Poisoned Cup',
+    body: 'An attempt on the royal life has been narrowly averted. The method — poison concealed in the evening wine — suggests the involvement of someone with intimate access to the court. The kingdom holds its breath as the investigation begins. Trust within the inner circle has been shattered, and the crown must decide how to respond.',
+    choices: {
+      purge_inner_circle: 'Purge the Inner Circle',
+      increase_royal_guard: 'Increase the Royal Guard',
+      show_mercy: 'Show Measured Mercy',
+    },
+  },
+  evt_foreign_invasion_rumor: {
+    title: 'Armies on the Horizon',
+    body: 'Border patrols have reported unusual troop movements in a neighboring kingdom. The scale and direction of the mobilization suggest preparations for an incursion into the realm\'s territory. Whether this is genuine preparation for war or a calculated display of force remains uncertain, but the threat cannot be ignored.',
+    choices: {
+      mobilize_defenses: 'Mobilize the Defenses',
+      dispatch_scouts: 'Dispatch Forward Scouts',
+      dismiss_as_rumor: 'Dismiss as Rumor',
+    },
+  },
 };
 
 // ============================================================
@@ -923,6 +1180,186 @@ export const STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
       },
       bp_festival_resolution: {
         body: 'The question of foreign cultural influence has been addressed. The kingdom\'s cultural identity has been shaped — for better or worse — by the crown\'s response.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // --- TradeEcon 2 ---
+  sl_merchants_rebellion: {
+    title: 'The Merchant\'s Rebellion',
+    statusNote: 'An organized merchant guild challenges royal economic authority.',
+    branchPoints: {
+      bp_rebellion_opening: {
+        body: 'The wealthiest merchant houses have formed a united guild, presenting the crown with a formal charter demanding self-governance over trade affairs. Their combined wealth rivals the royal treasury, and their networks control supply lines the kingdom depends upon.',
+        choices: {
+          negotiate_guild_charter: 'Negotiate a Charter',
+          crush_the_guild: 'Crush the Guild',
+          co_opt_guild_leaders: 'Co-opt Guild Leaders',
+        },
+      },
+      bp_rebellion_mid: {
+        body: 'The merchant guild has consolidated its position. Markets are disrupted, and the guild\'s influence extends into the lower nobility. The crown must decide whether to accommodate their power or break it decisively.',
+        choices: {
+          grant_trade_monopoly: 'Grant Trade Monopoly',
+          impose_royal_oversight: 'Impose Royal Oversight',
+          pit_factions_against_each_other: 'Divide the Factions',
+        },
+      },
+      bp_rebellion_resolution: {
+        body: 'The question of merchant power has been settled. The relationship between crown and commerce is forever altered by the choices made during this crisis.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // --- Religious 2 ---
+  sl_holy_war: {
+    title: 'The Holy War',
+    statusNote: 'A neighboring kingdom wages religious war against the realm.',
+    branchPoints: {
+      bp_holy_war_opening: {
+        body: 'A neighboring kingdom has declared a holy war, citing the realm\'s tolerance of heretical practices as justification. Their armies gather on the border, their priests preach the righteousness of invasion, and their merchants have already severed trade. The realm must respond.',
+        choices: {
+          defensive_stance: 'Adopt Defensive Posture',
+          launch_counter_crusade: 'Launch a Counter-Crusade',
+          seek_diplomatic_peace: 'Seek Diplomatic Peace',
+        },
+      },
+      bp_holy_war_mid: {
+        body: 'The holy war has entered a critical phase. Internal dissent grows as refugees stream in from border regions. The clergy demands action, the military seeks direction, and the population grows fearful. A decisive strategy must be chosen.',
+        choices: {
+          rally_faithful_defenders: 'Rally the Faithful',
+          forge_interfaith_alliance: 'Forge Interfaith Alliance',
+          scorched_earth_defense: 'Scorched Earth Defense',
+        },
+      },
+      bp_holy_war_resolution: {
+        body: 'The holy war has reached its conclusion. The realm\'s faith, borders, and alliances bear the permanent marks of this conflict.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // --- Political 2 ---
+  sl_prodigal_prince: {
+    title: 'The Prodigal Prince',
+    statusNote: 'A long-lost royal heir has returned with foreign backing.',
+    branchPoints: {
+      bp_prince_opening: {
+        body: 'A figure claiming to be the king\'s long-lost brother has arrived at court, backed by a foreign power\'s gold and soldiers. His claim is plausible, his manners courtly, and the commoners are already singing songs about the returned prince. The court is divided.',
+        choices: {
+          welcome_with_caution: 'Welcome with Caution',
+          investigate_claims: 'Investigate the Claims',
+          denounce_as_impostor: 'Denounce as Impostor',
+        },
+      },
+      bp_prince_mid: {
+        body: 'The prince\'s presence has destabilized the court. Foreign ambassadors press his case, noble factions align behind or against him, and common folk see him as either savior or threat. The crown must resolve this before it tears the kingdom apart.',
+        choices: {
+          offer_advisory_role: 'Offer an Advisory Role',
+          confront_foreign_backers: 'Confront Foreign Backers',
+          appeal_to_popular_opinion: 'Appeal to the People',
+        },
+      },
+      bp_prince_resolution: {
+        body: 'The matter of the prodigal prince has been decided. The kingdom\'s political landscape is permanently reshaped by these events.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // --- Discovery 2 ---
+  sl_plague_ships: {
+    title: 'The Plague Ships',
+    statusNote: 'Trade ships bring exotic goods and an unknown disease.',
+    branchPoints: {
+      bp_plague_ships_opening: {
+        body: 'A fleet of trade ships has arrived bearing extraordinary cargo — rare spices, foreign texts, and exotic animals. But sailors aboard are gravely ill with an unknown disease. The harbor master awaits orders as the sick multiply and the cargo rots on the docks.',
+        choices: {
+          quarantine_the_harbor: 'Quarantine the Harbor',
+          accept_the_cargo: 'Accept the Cargo',
+          burn_the_ships: 'Burn the Ships',
+        },
+      },
+      bp_plague_ships_mid: {
+        body: 'The disease has spread beyond the harbor district. Healers work without rest, the clergy offers prayers and remedies, and fear grips the markets. The crown must decide how to manage an outbreak that threatens the kingdom\'s population and economy alike.',
+        choices: {
+          isolate_and_treat: 'Isolate and Treat',
+          distribute_remedies: 'Distribute Remedies Widely',
+          sacrifice_the_district: 'Sacrifice the District',
+        },
+      },
+      bp_plague_ships_resolution: {
+        body: 'The plague has run its course. The kingdom counts its dead and weighs the costs of the choices that shaped the outcome.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // --- Military 2 ---
+  sl_great_tournament: {
+    title: 'The Great Tournament',
+    statusNote: 'A grand tournament becomes an arena for political maneuvering.',
+    branchPoints: {
+      bp_tournament_opening: {
+        body: 'The crown has agreed to host a grand tournament, drawing knights, diplomats, and merchants from across the realm and beyond. What was intended as a spectacle of martial prowess has become an opportunity for political maneuvering. The court must decide the tournament\'s purpose.',
+        choices: {
+          diplomatic_showcase: 'Use for Diplomacy',
+          military_demonstration: 'Military Showcase',
+          cultural_celebration: 'Cultural Celebration',
+        },
+      },
+      bp_tournament_mid: {
+        body: 'The tournament is underway and the stakes have risen beyond sport. An incident between rival knights has inflamed old tensions, foreign dignitaries angle for advantage, and the common folk are enthralled. The crown must navigate this volatile moment carefully.',
+        choices: {
+          exploit_diplomatic_moment: 'Exploit Diplomatic Moment',
+          handle_tournament_incident: 'Handle the Incident',
+          host_grand_feast: 'Host a Grand Feast',
+        },
+      },
+      bp_tournament_resolution: {
+        body: 'The great tournament has concluded. Its legacy — in alliances forged, rivalries deepened, or bonds strengthened — will shape the kingdom\'s standing for seasons to come.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // --- Cultural 2 ---
+  sl_starving_winter: {
+    title: 'The Starving Winter',
+    statusNote: 'A brutal winter threatens the kingdom with widespread famine.',
+    branchPoints: {
+      bp_winter_opening: {
+        body: 'The first snows have come early and heavy. Reports from the provinces describe livestock dying in the fields, roads becoming impassable, and grain stores falling far short of what is needed. The kingdom faces a winter that may test its very survival.',
+        choices: {
+          ration_harshly: 'Impose Harsh Rationing',
+          seek_foreign_aid: 'Seek Foreign Aid',
+          sacrifice_military_stores: 'Open Military Stores',
+        },
+      },
+      bp_winter_mid: {
+        body: 'The winter deepens. Refugees from outer settlements crowd the cities, the wealthy hoard what remains, and the poor grow desperate. Disease follows hunger. The crown must choose who bears the cost of survival.',
+        choices: {
+          manage_refugee_crisis: 'Manage the Refugees',
+          tax_the_wealthy: 'Tax the Wealthy',
+          abandon_outer_settlements: 'Abandon Outer Settlements',
+        },
+      },
+      bp_winter_resolution: {
+        body: 'Spring arrives at last. The kingdom has survived, but the scars of the starving winter — in lost lives, broken trust, and depleted reserves — will linger long.',
         choices: {
           conclude_arc: 'Conclude the Matter',
         },

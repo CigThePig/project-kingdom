@@ -1,12 +1,13 @@
 // Phase 9 — Event Panel: event and storyline presentation.
 // Blueprint Reference: ui-blueprint.md §6.2, §6.3, §8.7
 
-import type { EventSeverity, EventCategory, MechanicalEffectDelta, PopulationClass } from '../../../engine/types';
+import type { EventSeverity, EventCategory, MechanicalEffectDelta, PopulationClass, OutcomeQuality } from '../../../engine/types';
 import {
   EVENT_SEVERITY_LABELS,
   EVENT_CATEGORY_LABELS,
   CLASS_LABELS,
 } from '../../../data/text/labels';
+import { getOutcomeQualityLabel } from '../../../engine/events/outcome-variance';
 import { ConsequencePreview } from '../consequence-preview/consequence-preview';
 import { Icon } from '../icon/icon';
 import styles from './event-panel.module.css';
@@ -35,6 +36,10 @@ interface EventPanelProps {
   storylineInfo?: { storylineTitle: string; actNumber: number } | null;
   isResolved: boolean;
   choiceMade?: string | null;
+  outcomeQuality?: OutcomeQuality | null;
+  outcomeNarrative?: string | null;
+  isFollowUp?: boolean;
+  followUpSourceTitle?: string | null;
   onChoiceSelect?: (eventId: string, choiceId: string) => void;
 }
 
@@ -54,6 +59,14 @@ const SEVERITY_ICON_MAP: Record<EventSeverity, string> = {
   Notable: 'flame',
   Serious: 'warning',
   Critical: 'critical',
+};
+
+const OUTCOME_STYLE_MAP: Record<string, string> = {
+  Disastrous: 'outcomeDisastrous',
+  Poor: 'outcomePoor',
+  Expected: 'outcomeExpected',
+  Good: 'outcomeGood',
+  Excellent: 'outcomeExcellent',
 };
 
 // ============================================================
@@ -126,6 +139,10 @@ export function EventPanel({
   storylineInfo,
   isResolved,
   choiceMade,
+  outcomeQuality,
+  outcomeNarrative,
+  isFollowUp,
+  followUpSourceTitle,
   onChoiceSelect,
 }: EventPanelProps) {
   const isStoryline = storylineInfo != null;
@@ -178,6 +195,14 @@ export function EventPanel({
         </div>
       )}
 
+      {/* Follow-up indicator */}
+      {isFollowUp && followUpSourceTitle && (
+        <div className={styles.followUpIndicator}>
+          <Icon name="link" size="0.875rem" />
+          <span>Arose from: {followUpSourceTitle}</span>
+        </div>
+      )}
+
       {/* Choice buttons */}
       {choices.length > 0 && (
         <div className={styles.choices}>
@@ -191,6 +216,21 @@ export function EventPanel({
               onSelect={onChoiceSelect}
             />
           ))}
+        </div>
+      )}
+
+      {/* Outcome quality display (shown on resolved events) */}
+      {isResolved && outcomeQuality && outcomeQuality !== 'Expected' && (
+        <div className={styles.outcomeSection}>
+          <span className={
+            styles.outcomeBadge + ' ' +
+            styles[OUTCOME_STYLE_MAP[outcomeQuality] ?? 'outcomeExpected']
+          }>
+            {getOutcomeQualityLabel(outcomeQuality)}
+          </span>
+          {outcomeNarrative && (
+            <p className={styles.outcomeNarrative}>{outcomeNarrative}</p>
+          )}
         </div>
       )}
     </article>

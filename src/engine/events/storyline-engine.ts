@@ -284,18 +284,12 @@ export function evaluateStorylinePool(
   const activeDefinitionIds = new Set(activeStorylines.map((s) => s.definitionId));
   const resolvedSet = new Set(resolvedStorylineIds);
 
-  // Categories already fully resolved in this run — avoid repetition.
-  const resolvedCategories = new Set<StorylineCategory>(
-    storylinePool
-      .filter((def) => resolvedSet.has(def.id))
-      .map((def) => def.category),
-  );
-
+  // With multiple storylines per category, we no longer block an entire category
+  // after one resolves. Instead, we only exclude the exact storyline already resolved.
   const candidates = storylinePool.filter(
     (def) =>
       !activeDefinitionIds.has(def.id) &&
       !resolvedSet.has(def.id) &&
-      !resolvedCategories.has(def.category) &&
       allActivationConditionsPass(def, state, turnNumber),
   );
 
@@ -393,6 +387,7 @@ export function recordBranchDecision(
     branchPointId,
     choiceId,
     turnNumber,
+    outcomeQuality: null, // set by caller after variance roll
   };
 
   // Determine if the chosen path leads to the resolution branch.

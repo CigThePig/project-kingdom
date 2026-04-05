@@ -32,6 +32,8 @@ import {
   OVERTHROW_CONSECUTIVE_TURNS,
 } from '../constants';
 import { advanceEventChains, EventDefinition, surfaceEvents } from '../events/event-engine';
+import { processDueFollowUps, scheduleFollowUps } from '../events/follow-up-tracker';
+import { calculateCategoryWeights, updatePacingForSurfacedEvents, updateClassFavorFromChoice } from '../events/narrative-pacing';
 import {
   advanceStorylines,
   evaluateStorylinePool,
@@ -1018,16 +1020,44 @@ export function resolveTurn(
     eventHistory,
   );
 
+  // Process due follow-up events before standard surfacing.
+  const existingEventIds = new Set([
+    ...chainAdvancedEvents.map((e) => e.definitionId),
+    ...eventHistory.map((e) => e.definitionId),
+  ]);
+  const followUpResult = processDueFollowUps(
+    stateAfterActions.pendingFollowUps ?? [],
+    EVENT_REGISTRY,
+    nextTurnNumber,
+    stateAfterActions,
+    existingEventIds,
+  );
+
   // Surface new standalone events against updated state.
+  // Include follow-up events in the existing event list to avoid duplicates.
+  const eventsWithFollowUps = [...chainAdvancedEvents, ...followUpResult.surfacedEvents];
   const newEvents = surfaceEvents(
     stateAfterActions,
     nextTurnNumber,
     EVENT_REGISTRY,
-    chainAdvancedEvents,
+    eventsWithFollowUps,
     eventHistory,
   );
 
-  const activeEvents = [...chainAdvancedEvents, ...newEvents];
+  const activeEvents = [...eventsWithFollowUps, ...newEvents];
+
+  // Update narrative pacing state for surfaced events.
+  const allNewlyBornEvents = [...followUpResult.surfacedEvents, ...newEvents];
+  const updatedNarrativePacing = updatePacingForSurfacedEvents(
+    stateAfterActions.narrativePacing ?? {
+      recentCategoryTurns: {},
+      recentSeverityCount: { Informational: 0, Notable: 0, Serious: 0, Critical: 0 },
+      dominantClassFavor: null,
+      classChoiceHistory: { Nobility: 0, Clergy: 0, Merchants: 0, Commoners: 0, MilitaryCaste: 0 },
+    },
+    allNewlyBornEvents,
+    nextTurnNumber,
+  );
 
   // Decrement dormant turn counters for active storylines.
   const advancedStorylines = advanceStorylines(stateAfterActions.activeStorylines);
@@ -1055,9 +1085,10 @@ export function resolveTurn(
       // Check if this storyline was resolved this turn (last decision was this turn).
       const lastDecision = storyline.decisionHistory[storyline.decisionHistory.length - 1];
       if (lastDecision.turnNumber === state.turn.turnNumber) {
-        workingState = applyStorylineResolutionEffects(
+        const resResult = applyStorylineResolutionEffects(
           workingState, storyline, STORYLINE_RESOLUTION_EFFECTS,
         );
+        workingState = resResult.state;
         newlyResolvedStorylineIds.push(storyline.definitionId);
         storylineConsequences.push({
           sourceId: storyline.definitionId,
@@ -1377,6 +1408,8 @@ export function resolveTurn(
     consecutiveTurnsOverthrowRisk: nextConsecutiveTurnsOverthrowRisk,
     persistentConsequences: updatedPersistentConsequences,
     activeTemporaryModifiers: stateAfterActions.activeTemporaryModifiers,
+    pendingFollowUps: followUpResult.remainingFollowUps,
+    narrativePacing: updatedNarrativePacing,
     resolvedStorylineIds: allResolvedStorylineIds,
     lastStorylineActivationTurn: updatedLastActivationTurn,
     scenarioId: stateAfterActions.scenarioId,

@@ -107,6 +107,17 @@ export interface EventDefinition {
   affectsRegion: boolean;
   /** Links this event to an active or soon-to-activate storyline. */
   relatedStorylineId: string | null;
+  /**
+   * Optional reactive follow-up events triggered by specific player choices.
+   * When a player selects a matching choiceId, a follow-up event is scheduled
+   * to surface after delayTurns with the given probability.
+   */
+  followUpEvents?: {
+    triggerChoiceId: string;
+    followUpDefinitionId: string;
+    delayTurns: number;
+    probability: number;
+  }[];
 }
 
 // ============================================================
@@ -264,6 +275,9 @@ function buildActiveEvent(
     affectedRegionId: definition.affectsRegion ? pickEligibleRegionId(state) : null,
     affectedClassId: definition.affectsClass,
     relatedStorylineId: definition.relatedStorylineId,
+    outcomeQuality: null,
+    isFollowUp: false,
+    followUpSourceId: null,
   };
 }
 
@@ -392,6 +406,9 @@ export function advanceEventChains(
       affectedRegionId: event.affectedRegionId, // maintain regional context through the chain
       affectedClassId: nextDef.affectsClass,
       relatedStorylineId: nextDef.relatedStorylineId,
+      outcomeQuality: null,
+      isFollowUp: false,
+      followUpSourceId: null,
     };
     newChainEvents.push(nextEvent);
   }

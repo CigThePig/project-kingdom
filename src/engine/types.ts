@@ -120,6 +120,14 @@ export enum StorylineStatus {
   Resolved = 'Resolved',
 }
 
+export enum OutcomeQuality {
+  Disastrous = 'Disastrous',
+  Poor = 'Poor',
+  Expected = 'Expected',
+  Good = 'Good',
+  Excellent = 'Excellent',
+}
+
 // ============================================================
 // Section 6 — Diplomacy Enums
 // ============================================================
@@ -606,6 +614,9 @@ export interface ActiveEvent {
   affectedRegionId: string | null;
   affectedClassId: PopulationClass | null;
   relatedStorylineId: string | null;
+  outcomeQuality: OutcomeQuality | null; // determined when choice is resolved; null if pending
+  isFollowUp: boolean; // true if this event arose from a prior choice
+  followUpSourceId: string | null; // definitionId of the event that spawned this follow-up
 }
 
 // ============================================================
@@ -616,6 +627,7 @@ export interface StorylineBranchDecision {
   branchPointId: string;
   choiceId: string;
   turnNumber: number;
+  outcomeQuality: OutcomeQuality | null; // determined when branch choice is resolved
 }
 
 export interface ActiveStoryline {
@@ -730,6 +742,35 @@ export interface TurnSummaryItem {
 }
 
 // ============================================================
+// Section 16c — Follow-Up & Narrative Pacing
+// ============================================================
+
+/**
+ * A scheduled follow-up event that will surface after a delay.
+ * Created when a player makes a choice that triggers a reactive follow-up.
+ */
+export interface PendingFollowUp {
+  id: string;
+  definitionId: string;       // event definition to surface
+  sourceEventId: string;      // definitionId of the event that spawned this
+  triggerChoiceId: string;    // the choice that triggered this follow-up
+  triggerTurn: number;        // turn the triggering choice was made
+  delayTurns: number;         // turns to wait before surfacing
+  probability: number;        // 0-1, chance it fires when due
+}
+
+/**
+ * Tracks narrative pacing to ensure event variety and detect player behavior patterns.
+ * Updated each turn during event resolution.
+ */
+export interface NarrativePacingState {
+  recentCategoryTurns: Partial<Record<EventCategory, number>>;  // last turn each category fired
+  recentSeverityCount: Record<EventSeverity, number>;            // count in last 5 turns
+  dominantClassFavor: PopulationClass | null;                    // class player consistently favors
+  classChoiceHistory: Record<PopulationClass, number>;           // net favor score per class
+}
+
+// ============================================================
 // Section 17 — Save File & Main GameState
 // ============================================================
 
@@ -783,6 +824,12 @@ export interface GameState {
 
   // Temporary modifiers from event/storyline choices (applied each turn, expire after N turns)
   activeTemporaryModifiers: TemporaryModifier[];
+
+  // Follow-up events scheduled by prior choices
+  pendingFollowUps: PendingFollowUp[];
+
+  // Narrative pacing state for smarter event selection
+  narrativePacing: NarrativePacingState;
 
   // Scenario
   scenarioId: string;

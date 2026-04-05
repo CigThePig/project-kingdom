@@ -7,12 +7,14 @@ import {
   ActiveStoryline,
   GameState,
   MechanicalEffectDelta,
+  OutcomeQuality,
   PopulationClass,
 } from '../types';
 import {
   applyRegionConditionChange,
   applyRegionDevelopmentChange,
 } from '../systems/regions';
+import { applyVariance, rollOutcomeQuality } from './outcome-variance';
 
 // ============================================================
 // Internal Helpers
@@ -220,22 +222,30 @@ export function applyMechanicalEffectDelta(
 
 /**
  * Looks up and applies mechanical effects for a resolved event choice.
+ * Rolls outcome variance to scale effects before application.
  * Returns state unchanged if event is unresolved or has no effect mapping.
+ * Returns { state, outcomeQuality } so the caller can store the quality on the event.
  */
 export function applyEventChoiceEffects(
   state: GameState,
   event: ActiveEvent,
   effectsRegistry: Record<string, Record<string, MechanicalEffectDelta>>,
-): GameState {
-  if (!event.isResolved || event.choiceMade === null) return state;
+): { state: GameState; outcomeQuality: OutcomeQuality | null } {
+  if (!event.isResolved || event.choiceMade === null) return { state, outcomeQuality: null };
 
   const eventEffects = effectsRegistry[event.definitionId];
-  if (!eventEffects) return state;
+  if (!eventEffects) return { state, outcomeQuality: null };
 
   const choiceEffect = eventEffects[event.choiceMade];
-  if (!choiceEffect) return state;
+  if (!choiceEffect) return { state, outcomeQuality: null };
 
-  return applyMechanicalEffectDelta(state, choiceEffect, event.affectedRegionId);
+  const quality = rollOutcomeQuality();
+  const variedEffect = applyVariance(choiceEffect, quality);
+
+  return {
+    state: applyMechanicalEffectDelta(state, variedEffect, event.affectedRegionId),
+    outcomeQuality: quality,
+  };
 }
 
 // ============================================================
@@ -244,44 +254,58 @@ export function applyEventChoiceEffects(
 
 /**
  * Applies mechanical effects for the most recent branch decision in a storyline.
+ * Rolls outcome variance to scale effects before application.
  * Returns state unchanged if no decisions have been made or no effect mapping exists.
  */
 export function applyStorylineBranchEffects(
   state: GameState,
   storyline: ActiveStoryline,
   effectsRegistry: Record<string, Record<string, MechanicalEffectDelta>>,
-): GameState {
-  if (storyline.decisionHistory.length === 0) return state;
+): { state: GameState; outcomeQuality: OutcomeQuality | null } {
+  if (storyline.decisionHistory.length === 0) return { state, outcomeQuality: null };
 
   const latestDecision = storyline.decisionHistory[storyline.decisionHistory.length - 1];
   const storylineEffects = effectsRegistry[storyline.definitionId];
-  if (!storylineEffects) return state;
+  if (!storylineEffects) return { state, outcomeQuality: null };
 
   const choiceEffect = storylineEffects[latestDecision.choiceId];
-  if (!choiceEffect) return state;
+  if (!choiceEffect) return { state, outcomeQuality: null };
 
-  return applyMechanicalEffectDelta(state, choiceEffect, null);
+  const quality = rollOutcomeQuality();
+  const variedEffect = applyVariance(choiceEffect, quality);
+
+  return {
+    state: applyMechanicalEffectDelta(state, variedEffect, null),
+    outcomeQuality: quality,
+  };
 }
 
 /**
  * Applies path-dependent resolution effects for a completed storyline.
  * The path is determined by the opening decision (decisionHistory[0]).
  * Resolution effects are larger magnitude than branch effects.
+ * Rolls outcome variance for the resolution effects.
  * Returns state unchanged if no resolution effect mapping exists.
  */
 export function applyStorylineResolutionEffects(
   state: GameState,
   storyline: ActiveStoryline,
   resolutionRegistry: Record<string, Record<string, MechanicalEffectDelta>>,
-): GameState {
-  if (storyline.decisionHistory.length === 0) return state;
+): { state: GameState; outcomeQuality: OutcomeQuality | null } {
+  if (storyline.decisionHistory.length === 0) return { state, outcomeQuality: null };
 
   const openingDecision = storyline.decisionHistory[0];
   const storylineResolutions = resolutionRegistry[storyline.definitionId];
-  if (!storylineResolutions) return state;
+  if (!storylineResolutions) return { state, outcomeQuality: null };
 
   const resolutionEffect = storylineResolutions[openingDecision.choiceId];
-  if (!resolutionEffect) return state;
+  if (!resolutionEffect) return { state, outcomeQuality: null };
 
-  return applyMechanicalEffectDelta(state, resolutionEffect, null);
+  const quality = rollOutcomeQuality();
+  const variedEffect = applyVariance(resolutionEffect, quality);
+
+  return {
+    state: applyMechanicalEffectDelta(state, variedEffect, null),
+    outcomeQuality: quality,
+  };
 }

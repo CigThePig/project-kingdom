@@ -113,6 +113,19 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
       const gameState = {
         ...save.gameState,
         activeTemporaryModifiers: save.gameState.activeTemporaryModifiers ?? [],
+        pendingFollowUps: save.gameState.pendingFollowUps ?? [],
+        narrativePacing: save.gameState.narrativePacing ?? {
+          recentCategoryTurns: {},
+          recentSeverityCount: { Informational: 0, Notable: 0, Serious: 0, Critical: 0 },
+          dominantClassFavor: null,
+          classChoiceHistory: { Nobility: 0, Clergy: 0, Merchants: 0, Commoners: 0, MilitaryCaste: 0 },
+        },
+        activeEvents: (save.gameState.activeEvents ?? []).map((e: Record<string, unknown>) => ({
+          ...e,
+          outcomeQuality: e.outcomeQuality ?? null,
+          isFollowUp: e.isFollowUp ?? false,
+          followUpSourceId: e.followUpSourceId ?? null,
+        })),
       };
       return {
         gameState,

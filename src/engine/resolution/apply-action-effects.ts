@@ -678,8 +678,19 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
 
   let updatedState = { ...state, activeEvents: updatedEvents };
 
-  // Apply mechanical effects for the player's choice.
-  updatedState = applyEventChoiceEffects(updatedState, resolvedEvent, EVENT_CHOICE_EFFECTS);
+  // Apply mechanical effects for the player's choice (with outcome variance).
+  const eventResult = applyEventChoiceEffects(updatedState, resolvedEvent, EVENT_CHOICE_EFFECTS);
+  updatedState = eventResult.state;
+
+  // Store outcome quality on the resolved event.
+  if (eventResult.outcomeQuality !== null) {
+    updatedState = {
+      ...updatedState,
+      activeEvents: updatedState.activeEvents.map((e) =>
+        e.id === eventId ? { ...e, outcomeQuality: eventResult.outcomeQuality } : e,
+      ),
+    };
+  }
 
   // Record a persistent consequence.
   const consequence: PersistentConsequence = {
@@ -737,8 +748,27 @@ function applyStorylineBranchDecision(state: GameState, action: QueuedAction): G
 
   let updatedState = { ...state, activeStorylines: updatedStorylines };
 
-  // Apply mechanical effects for the branch choice.
-  updatedState = applyStorylineBranchEffects(updatedState, updatedStoryline, STORYLINE_CHOICE_EFFECTS);
+  // Apply mechanical effects for the branch choice (with outcome variance).
+  const branchResult = applyStorylineBranchEffects(updatedState, updatedStoryline, STORYLINE_CHOICE_EFFECTS);
+  updatedState = branchResult.state;
+
+  // Store outcome quality on the latest branch decision.
+  if (branchResult.outcomeQuality !== null) {
+    const storyWithQuality = {
+      ...updatedStoryline,
+      decisionHistory: updatedStoryline.decisionHistory.map((d, i) =>
+        i === updatedStoryline.decisionHistory.length - 1
+          ? { ...d, outcomeQuality: branchResult.outcomeQuality }
+          : d,
+      ),
+    };
+    updatedState = {
+      ...updatedState,
+      activeStorylines: updatedState.activeStorylines.map((s) =>
+        s.id === storylineId ? storyWithQuality : s,
+      ),
+    };
+  }
 
   // Record persistent consequence.
   const consequence: PersistentConsequence = {

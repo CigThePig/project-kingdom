@@ -21,7 +21,7 @@ import {
 // Block 1 — Action Budget (gameplay-blueprint.md §5.1)
 // ============================================================
 
-export const ACTION_BUDGET_BASE = 3;
+export const ACTION_BUDGET_BASE = 5;
 export const POLICY_CHANGES_PER_TURN = 1;
 export const SLOT_COST_FREE = 0;
 export const SLOT_COST_STANDARD = 1;

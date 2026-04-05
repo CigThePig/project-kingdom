@@ -1,5 +1,5 @@
 // gameplay-blueprint.md §7 — Event Pool Definitions
-// 26 events: 2 per EventCategory, mixed severities, 1 two-step chain.
+// 52 events: base pool + pattern-reactive, chain events (plague, trade war, succession, famine, schism), follow-ups, and high-stakes standalone.
 
 import type { EventDefinition } from '../../engine/events/event-engine';
 import {
@@ -32,6 +32,9 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    followUpEvents: [
+      { triggerChoiceId: 'offer_tax_relief', followUpDefinitionId: 'evt_merchant_permanent_concessions', delayTurns: 3, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_treasury_windfall',
@@ -121,6 +124,9 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    followUpEvents: [
+      { triggerChoiceId: 'defer_to_next_month', followUpDefinitionId: 'evt_equipment_failure_field', delayTurns: 2, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_military_equipment_shortage_2',
@@ -301,6 +307,9 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    followUpEvents: [
+      { triggerChoiceId: 'suppress_immediately', followUpDefinitionId: 'evt_underground_heretical_movement', delayTurns: 3, probability: 0.5 },
+    ],
   },
   {
     id: 'evt_schism_crisis',
@@ -1669,6 +1678,553 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'institutionalize_pay_scale', slotCost: 1, isFree: false },
       { choiceId: 'revert_to_standard_pay', slotCost: 1, isFree: false },
       { choiceId: 'offer_land_instead', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.MilitaryCaste,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // ============================================================
+  // PATTERN-REACTIVE EVENTS (4)
+  // ============================================================
+  {
+    id: 'evt_noble_resentment_merchant_favor',
+    severity: EventSeverity.Serious,
+    category: EventCategory.ClassConflict,
+    triggerConditions: [
+      { type: 'class_satisfaction_above', classTarget: PopulationClass.Merchants, threshold: 70 },
+      { type: 'class_satisfaction_below', classTarget: PopulationClass.Nobility, threshold: 45 },
+    ],
+    weight: 1.2,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'appease_nobility', slotCost: 1, isFree: false },
+      { choiceId: 'maintain_merchant_policies', slotCost: 1, isFree: false },
+      { choiceId: 'mediate_compromise', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Nobility,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_commoner_uprising_neglect',
+    severity: EventSeverity.Critical,
+    category: EventCategory.PublicOrder,
+    triggerConditions: [
+      { type: 'class_satisfaction_below', classTarget: PopulationClass.Commoners, threshold: 25 },
+    ],
+    weight: 1.5,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'emergency_food_distribution', slotCost: 1, isFree: false },
+      { choiceId: 'deploy_military_patrols', slotCost: 1, isFree: false },
+      { choiceId: 'announce_labor_reforms', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_clergy_power_grab',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'class_satisfaction_above', classTarget: PopulationClass.Clergy, threshold: 80 },
+      { type: 'faith_above', threshold: 70 },
+    ],
+    weight: 1.2,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'assert_royal_authority', slotCost: 1, isFree: false },
+      { choiceId: 'negotiate_boundaries', slotCost: 1, isFree: false },
+      { choiceId: 'accept_clergy_influence', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_military_coup_threat',
+    severity: EventSeverity.Critical,
+    category: EventCategory.Kingdom,
+    triggerConditions: [
+      { type: 'class_satisfaction_below', classTarget: PopulationClass.MilitaryCaste, threshold: 25 },
+      { type: 'military_readiness_below', threshold: 40 },
+    ],
+    weight: 1.5,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'purge_conspirators', slotCost: 2, isFree: false },
+      { choiceId: 'bribe_officer_corps', slotCost: 1, isFree: false },
+      { choiceId: 'address_grievances', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.MilitaryCaste,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // ============================================================
+  // CHAIN: Plague (3 steps) — chain_plague
+  // ============================================================
+  {
+    id: 'evt_plague_outbreak',
+    severity: EventSeverity.Critical,
+    category: EventCategory.Region,
+    triggerConditions: [
+      { type: 'season_is', season: Season.Autumn },
+      { type: 'random_chance', probability: 0.15 },
+    ],
+    weight: 1.5,
+    chainId: 'chain_plague',
+    chainStep: 1,
+    chainNextDefinitionId: 'evt_plague_spread',
+    choices: [
+      { choiceId: 'immediate_quarantine', slotCost: 1, isFree: false },
+      { choiceId: 'mobilize_healers', slotCost: 1, isFree: false },
+      { choiceId: 'pray_for_deliverance', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: true,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_plague_spread',
+    severity: EventSeverity.Critical,
+    category: EventCategory.Region,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_plague',
+    chainStep: 2,
+    chainNextDefinitionId: 'evt_plague_aftermath',
+    choices: [
+      { choiceId: 'strict_lockdown', slotCost: 1, isFree: false },
+      { choiceId: 'burn_infected_quarters', slotCost: 1, isFree: false },
+      { choiceId: 'import_foreign_medicine', slotCost: 2, isFree: false },
+    ],
+    affectsClass: null,
+    affectsRegion: true,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_plague_aftermath',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Region,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_plague',
+    chainStep: 3,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'rebuild_and_memorialize', slotCost: 1, isFree: false },
+      { choiceId: 'impose_sanitation_laws', slotCost: 1, isFree: false },
+      { choiceId: 'exploit_cheap_labor', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: true,
+    relatedStorylineId: null,
+  },
+
+  // ============================================================
+  // CHAIN: Trade War (3 steps) — chain_trade_war
+  // ============================================================
+  {
+    id: 'evt_trade_war_tariffs',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Economy,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 6 },
+      { type: 'random_chance', probability: 0.2 },
+    ],
+    weight: 1.0,
+    chainId: 'chain_trade_war',
+    chainStep: 1,
+    chainNextDefinitionId: 'evt_trade_war_escalation',
+    choices: [
+      { choiceId: 'retaliatory_tariffs', slotCost: 1, isFree: false },
+      { choiceId: 'negotiate_terms', slotCost: 1, isFree: false },
+      { choiceId: 'absorb_the_costs', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Merchants,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_trade_war_escalation',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Economy,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_trade_war',
+    chainStep: 2,
+    chainNextDefinitionId: 'evt_trade_war_resolution',
+    choices: [
+      { choiceId: 'embargo_neighbor', slotCost: 1, isFree: false },
+      { choiceId: 'seek_alternative_markets', slotCost: 1, isFree: false },
+      { choiceId: 'capitulate', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Merchants,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_trade_war_resolution',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Economy,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_trade_war',
+    chainStep: 3,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'favorable_treaty', slotCost: 1, isFree: false },
+      { choiceId: 'mutual_concessions', slotCost: 1, isFree: false },
+      { choiceId: 'accept_losses', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Merchants,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // ============================================================
+  // CHAIN: Succession Crisis (3 steps) — chain_succession
+  // ============================================================
+  {
+    id: 'evt_succession_question',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Kingdom,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 10 },
+      { type: 'random_chance', probability: 0.15 },
+      { type: 'stability_below', threshold: 50 },
+    ],
+    weight: 1.3,
+    chainId: 'chain_succession',
+    chainStep: 1,
+    chainNextDefinitionId: 'evt_succession_factions',
+    choices: [
+      { choiceId: 'declare_heir', slotCost: 1, isFree: false },
+      { choiceId: 'convene_council', slotCost: 1, isFree: false },
+      { choiceId: 'silence_rumors', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_succession_factions',
+    severity: EventSeverity.Critical,
+    category: EventCategory.Kingdom,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_succession',
+    chainStep: 2,
+    chainNextDefinitionId: 'evt_succession_resolution',
+    choices: [
+      { choiceId: 'back_eldest_claim', slotCost: 1, isFree: false },
+      { choiceId: 'support_merit_candidate', slotCost: 1, isFree: false },
+      { choiceId: 'play_factions', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_succession_resolution',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Kingdom,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_succession',
+    chainStep: 3,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'crown_heir_publicly', slotCost: 1, isFree: false },
+      { choiceId: 'exile_rivals', slotCost: 1, isFree: false },
+      { choiceId: 'grant_rival_concessions', slotCost: 1, isFree: false },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // ============================================================
+  // CHAIN: Famine (3 steps) — chain_famine
+  // ============================================================
+  {
+    id: 'evt_food_shortage_warning',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Food,
+    triggerConditions: [
+      { type: 'food_below', threshold: 50 },
+      { type: 'season_is', season: Season.Winter },
+    ],
+    weight: 1.2,
+    chainId: 'chain_famine',
+    chainStep: 1,
+    chainNextDefinitionId: 'evt_famine_crisis',
+    choices: [
+      { choiceId: 'impose_strict_rationing', slotCost: 1, isFree: false },
+      { choiceId: 'buy_grain_reserves', slotCost: 1, isFree: false },
+      { choiceId: 'reduce_military_rations', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_famine_crisis',
+    severity: EventSeverity.Critical,
+    category: EventCategory.Food,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_famine',
+    chainStep: 2,
+    chainNextDefinitionId: 'evt_famine_recovery',
+    choices: [
+      { choiceId: 'open_royal_granaries', slotCost: 1, isFree: false },
+      { choiceId: 'commandeer_noble_stores', slotCost: 1, isFree: false },
+      { choiceId: 'appeal_to_neighbors', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_famine_recovery',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Food,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_famine',
+    chainStep: 3,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'invest_in_agriculture', slotCost: 1, isFree: false },
+      { choiceId: 'establish_grain_reserves', slotCost: 1, isFree: false },
+      { choiceId: 'celebrate_survival', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // ============================================================
+  // CHAIN: Religious Schism (3 steps) — chain_schism
+  // ============================================================
+  {
+    id: 'evt_doctrinal_dispute',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'heterodoxy_above', threshold: 40 },
+      { type: 'random_chance', probability: 0.2 },
+    ],
+    weight: 1.0,
+    chainId: 'chain_schism',
+    chainStep: 1,
+    chainNextDefinitionId: 'evt_schism_factions',
+    choices: [
+      { choiceId: 'convene_theological_council', slotCost: 1, isFree: false },
+      { choiceId: 'enforce_orthodox_doctrine', slotCost: 1, isFree: false },
+      { choiceId: 'allow_scholarly_debate', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_schism_factions',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_schism',
+    chainStep: 2,
+    chainNextDefinitionId: 'evt_schism_resolution',
+    choices: [
+      { choiceId: 'support_reformers', slotCost: 1, isFree: false },
+      { choiceId: 'back_traditionalists', slotCost: 1, isFree: false },
+      { choiceId: 'remain_neutral', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_schism_resolution',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: 'chain_schism',
+    chainStep: 3,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'declare_unified_doctrine', slotCost: 1, isFree: false },
+      { choiceId: 'formalize_tolerance', slotCost: 1, isFree: false },
+      { choiceId: 'suppress_dissent', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // ============================================================
+  // FOLLOW-UP & CHOICE-TRIGGERED EVENTS (4)
+  // ============================================================
+  {
+    id: 'evt_merchant_permanent_concessions',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Economy,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'grant_permanent_charter', slotCost: 1, isFree: false },
+      { choiceId: 'reject_demands', slotCost: 1, isFree: false },
+      { choiceId: 'offer_limited_concession', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Merchants,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_underground_heretical_movement',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'infiltrate_movement', slotCost: 1, isFree: false },
+      { choiceId: 'public_amnesty', slotCost: 1, isFree: false },
+      { choiceId: 'double_down_suppression', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_equipment_failure_field',
+    severity: EventSeverity.Critical,
+    category: EventCategory.Military,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'emergency_field_repair', slotCost: 1, isFree: false },
+      { choiceId: 'retreat_and_regroup', slotCost: 1, isFree: false },
+      { choiceId: 'push_through', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.MilitaryCaste,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_golden_age_opportunity',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Culture,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 8 },
+      { type: 'stability_above', threshold: 65 },
+      { type: 'treasury_above', threshold: 600 },
+      { type: 'random_chance', probability: 0.15 },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'patron_arts_sciences', slotCost: 2, isFree: false },
+      { choiceId: 'host_grand_festival', slotCost: 1, isFree: false },
+      { choiceId: 'invest_in_education', slotCost: 1, isFree: false },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // ============================================================
+  // HIGH-STAKES STANDALONE EVENTS (2)
+  // ============================================================
+  {
+    id: 'evt_assassination_attempt',
+    severity: EventSeverity.Critical,
+    category: EventCategory.Kingdom,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 8 },
+      { type: 'stability_below', threshold: 35 },
+      { type: 'random_chance', probability: 0.1 },
+    ],
+    weight: 1.5,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'purge_inner_circle', slotCost: 2, isFree: false },
+      { choiceId: 'increase_royal_guard', slotCost: 1, isFree: false },
+      { choiceId: 'show_mercy', slotCost: 1, isFree: false },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_foreign_invasion_rumor',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Military,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 5 },
+      { type: 'random_chance', probability: 0.2 },
+    ],
+    weight: 1.2,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'mobilize_defenses', slotCost: 1, isFree: false },
+      { choiceId: 'dispatch_scouts', slotCost: 1, isFree: false },
+      { choiceId: 'dismiss_as_rumor', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,

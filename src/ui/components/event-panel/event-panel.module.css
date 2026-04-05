@@ -216,6 +216,75 @@
 }
 
 /* --------------------------------------------------------------------------
+   Follow-up indicator
+   -------------------------------------------------------------------------- */
+.followUpIndicator {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  font-style: italic;
+  padding: var(--space-1) 0;
+}
+
+/* --------------------------------------------------------------------------
+   Outcome display
+   -------------------------------------------------------------------------- */
+.outcomeSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--surface-base-border);
+  margin-top: var(--space-1);
+}
+
+.outcomeBadge {
+  display: inline-flex;
+  align-self: flex-start;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+}
+
+.outcomeDisastrous {
+  color: var(--color-status-critical);
+  background: var(--color-status-critical-bg);
+}
+
+.outcomePoor {
+  color: var(--color-status-warning);
+  background: var(--color-status-warning-bg);
+}
+
+.outcomeExpected {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+}
+
+.outcomeGood {
+  color: var(--color-status-positive);
+  background: var(--color-status-positive-bg, hsla(145, 40%, 40%, 0.12));
+}
+
+.outcomeExcellent {
+  color: var(--color-status-faith);
+  background: var(--color-status-faith-bg);
+}
+
+.outcomeNarrative {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  line-height: var(--line-height-relaxed);
+}
+
+/* --------------------------------------------------------------------------
    Mobile responsive
    -------------------------------------------------------------------------- */
 @media (max-width: 1023px) {
