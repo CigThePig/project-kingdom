@@ -16,6 +16,7 @@ import { useRightPanel } from '../../context/right-panel-context';
 import { EVENT_TEXT, STORYLINE_TEXT } from '../../../data/text/events';
 import { EVENT_POOL } from '../../../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../../../data/events/effects';
+import { getOutcomeNarrative } from '../../../data/text/outcome-narratives';
 import { EventPanel, type EventPanelChoice } from '../../components/event-panel/event-panel';
 import styles from './events.module.css';
 
@@ -186,6 +187,18 @@ export function Events() {
           storylineInfo={storylineInfo}
           isResolved={event.isResolved}
           choiceMade={event.choiceMade}
+          outcomeQuality={event.outcomeQuality}
+          outcomeNarrative={
+            event.isResolved && event.outcomeQuality
+              ? getOutcomeNarrative(event.category, event.outcomeQuality)
+              : null
+          }
+          isFollowUp={event.isFollowUp}
+          followUpSourceTitle={
+            event.isFollowUp && event.followUpSourceId
+              ? (EVENT_TEXT[event.followUpSourceId]?.title ?? null)
+              : null
+          }
           onChoiceSelect={handleChoiceSelect}
         />
       </div>

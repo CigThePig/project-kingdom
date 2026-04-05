@@ -12,6 +12,7 @@ import {
   RESOURCE_STARTING_STOCKPILES,
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
+import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -330,6 +331,8 @@ export function createFrozenMarchScenario(): GameState {
     // --- Persistent History ---
     persistentConsequences: [],
     activeTemporaryModifiers: [],
+    pendingFollowUps: [],
+    narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,
 

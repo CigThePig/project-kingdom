@@ -91,6 +91,78 @@ export const STORYLINE_CHOICE_EFFECTS: Record<string, Record<string, MechanicalE
     host_synthesis_festival:     { culturalCohesionDelta: +2, faithDelta: +2, commonerSatDelta: +3, treasuryDelta: -30 },
     reassert_traditional_values: { culturalCohesionDelta: +4, clergySatDelta: +3, merchantSatDelta: -4, faithDelta: +3 },
   },
+
+  // ============================================================
+  // TradeEcon 2 — The Merchant's Rebellion
+  // ============================================================
+  sl_merchants_rebellion: {
+    negotiate_guild_charter:   { merchantSatDelta: +3, nobilitySatDelta: -2, stabilityDelta: +2, treasuryDelta: -20 },
+    crush_the_guild:           { merchantSatDelta: -6, nobilitySatDelta: +4, militaryCasteSatDelta: +2, stabilityDelta: -3 },
+    co_opt_guild_leaders:      { merchantSatDelta: +1, nobilitySatDelta: -1, treasuryDelta: -30, espionageNetworkDelta: +3 },
+    grant_trade_monopoly:      { merchantSatDelta: +5, commonerSatDelta: -3, nobilitySatDelta: -4, treasuryDelta: +30 },
+    impose_royal_oversight:    { merchantSatDelta: -3, nobilitySatDelta: +3, stabilityDelta: +2, treasuryDelta: -15 },
+    pit_factions_against_each_other: { merchantSatDelta: -2, stabilityDelta: -2, espionageNetworkDelta: +5 },
+  },
+
+  // ============================================================
+  // Religious 2 — The Holy War
+  // ============================================================
+  sl_holy_war: {
+    defensive_stance:          { militaryReadinessDelta: +5, faithDelta: +3, treasuryDelta: -30, commonerSatDelta: -2 },
+    launch_counter_crusade:    { militaryReadinessDelta: +8, militaryMoraleDelta: +5, treasuryDelta: -60, faithDelta: +5, commonerSatDelta: -4 },
+    seek_diplomatic_peace:     { stabilityDelta: +3, treasuryDelta: -20, clergySatDelta: -3, nobilitySatDelta: +2 },
+    rally_faithful_defenders:  { faithDelta: +4, militaryCasteSatDelta: +4, clergySatDelta: +3, treasuryDelta: -40 },
+    forge_interfaith_alliance: { faithDelta: -3, culturalCohesionDelta: +3, stabilityDelta: +3, heterodoxyDelta: +4 },
+    scorched_earth_defense:    { regionConditionDelta: -8, militaryReadinessDelta: +6, commonerSatDelta: -5, stabilityDelta: -3 },
+  },
+
+  // ============================================================
+  // Political 2 — The Prodigal Prince
+  // ============================================================
+  sl_prodigal_prince: {
+    welcome_with_caution:   { nobilitySatDelta: +2, commonerSatDelta: +3, stabilityDelta: +1, treasuryDelta: -20 },
+    investigate_claims:     { espionageNetworkDelta: +5, nobilitySatDelta: -1, treasuryDelta: -25 },
+    denounce_as_impostor:   { nobilitySatDelta: -3, commonerSatDelta: -2, stabilityDelta: -2 },
+    offer_advisory_role:    { nobilitySatDelta: +3, stabilityDelta: +2, treasuryDelta: -15 },
+    confront_foreign_backers: { espionageNetworkDelta: +4, nobilitySatDelta: +2, treasuryDelta: -30, stabilityDelta: +1 },
+    appeal_to_popular_opinion: { commonerSatDelta: +4, nobilitySatDelta: -3, stabilityDelta: -1 },
+  },
+
+  // ============================================================
+  // Discovery 2 — The Plague Ships
+  // ============================================================
+  sl_plague_ships: {
+    quarantine_the_harbor:  { merchantSatDelta: -4, commonerSatDelta: -2, treasuryDelta: -20, stabilityDelta: +2 },
+    accept_the_cargo:       { merchantSatDelta: +4, treasuryDelta: +30, commonerSatDelta: -3, regionConditionDelta: -3 },
+    burn_the_ships:         { merchantSatDelta: -5, treasuryDelta: -15, stabilityDelta: +1, faithDelta: +2 },
+    isolate_and_treat:      { treasuryDelta: -40, commonerSatDelta: +3, clergySatDelta: +2 },
+    distribute_remedies:    { treasuryDelta: -30, commonerSatDelta: +4, merchantSatDelta: +2 },
+    sacrifice_the_district: { commonerSatDelta: -6, regionConditionDelta: -5, stabilityDelta: +3 },
+  },
+
+  // ============================================================
+  // Military 2 — The Great Tournament
+  // ============================================================
+  sl_great_tournament: {
+    diplomatic_showcase:      { nobilitySatDelta: +3, treasuryDelta: -40, stabilityDelta: +2 },
+    military_demonstration:   { militaryCasteSatDelta: +4, militaryMoraleDelta: +3, treasuryDelta: -35, nobilitySatDelta: +2 },
+    cultural_celebration:     { commonerSatDelta: +4, culturalCohesionDelta: +3, treasuryDelta: -30 },
+    exploit_diplomatic_moment: { nobilitySatDelta: +2, stabilityDelta: +2, treasuryDelta: -20 },
+    handle_tournament_incident: { militaryCasteSatDelta: +2, stabilityDelta: -2, nobilitySatDelta: -1 },
+    host_grand_feast:         { commonerSatDelta: +3, merchantSatDelta: +2, treasuryDelta: -50, faithDelta: +2 },
+  },
+
+  // ============================================================
+  // Cultural 2 — The Starving Winter
+  // ============================================================
+  sl_starving_winter: {
+    ration_harshly:            { commonerSatDelta: -5, foodDelta: +15, stabilityDelta: +1 },
+    seek_foreign_aid:          { treasuryDelta: -40, foodDelta: +20, merchantSatDelta: +2 },
+    sacrifice_military_stores: { militaryCasteSatDelta: -4, foodDelta: +15, militaryMoraleDelta: -3 },
+    manage_refugee_crisis:     { commonerSatDelta: +3, treasuryDelta: -25, stabilityDelta: +2 },
+    tax_the_wealthy:           { nobilitySatDelta: -5, merchantSatDelta: -3, treasuryDelta: +40, commonerSatDelta: +2 },
+    abandon_outer_settlements: { regionConditionDelta: -5, commonerSatDelta: -4, stabilityDelta: -3, foodDelta: +10 },
+  },
 };
 
 /**
@@ -152,5 +224,59 @@ export const STORYLINE_RESOLUTION_EFFECTS: Record<string, Record<string, Mechani
     establish_cultural_quarter:  { culturalCohesionDelta: -4, merchantSatDelta: +6, treasuryDelta: +40, commonerSatDelta: +3 },
     host_synthesis_festival:     { culturalCohesionDelta: +4, faithDelta: +3, commonerSatDelta: +4, stabilityDelta: +3 },
     reassert_traditional_values: { culturalCohesionDelta: +6, clergySatDelta: +4, merchantSatDelta: -5, faithDelta: +4 },
+  },
+
+  // ============================================================
+  // TradeEcon 2 — The Merchant's Rebellion
+  // ============================================================
+  sl_merchants_rebellion: {
+    grant_trade_monopoly:      { merchantSatDelta: +8, commonerSatDelta: -5, nobilitySatDelta: -6, treasuryDelta: +50, stabilityDelta: -2 },
+    impose_royal_oversight:    { merchantSatDelta: -4, nobilitySatDelta: +5, stabilityDelta: +5, treasuryDelta: +20 },
+    pit_factions_against_each_other: { merchantSatDelta: -3, stabilityDelta: -4, espionageNetworkDelta: +8, treasuryDelta: +30 },
+  },
+
+  // ============================================================
+  // Religious 2 — The Holy War
+  // ============================================================
+  sl_holy_war: {
+    rally_faithful_defenders:  { faithDelta: +8, militaryCasteSatDelta: +6, clergySatDelta: +5, stabilityDelta: +4, treasuryDelta: -50 },
+    forge_interfaith_alliance: { faithDelta: -2, culturalCohesionDelta: +6, stabilityDelta: +5, heterodoxyDelta: +6, commonerSatDelta: +3 },
+    scorched_earth_defense:    { regionConditionDelta: -12, militaryReadinessDelta: +10, stabilityDelta: -5, commonerSatDelta: -6, faithDelta: +4 },
+  },
+
+  // ============================================================
+  // Political 2 — The Prodigal Prince
+  // ============================================================
+  sl_prodigal_prince: {
+    offer_advisory_role:    { nobilitySatDelta: +5, stabilityDelta: +4, commonerSatDelta: +3, treasuryDelta: -20 },
+    confront_foreign_backers: { espionageNetworkDelta: +8, nobilitySatDelta: +4, stabilityDelta: +3, treasuryDelta: -40 },
+    appeal_to_popular_opinion: { commonerSatDelta: +6, nobilitySatDelta: -5, stabilityDelta: +2, faithDelta: +2 },
+  },
+
+  // ============================================================
+  // Discovery 2 — The Plague Ships
+  // ============================================================
+  sl_plague_ships: {
+    isolate_and_treat:      { commonerSatDelta: +5, clergySatDelta: +4, stabilityDelta: +3, treasuryDelta: -50 },
+    distribute_remedies:    { commonerSatDelta: +6, merchantSatDelta: +4, treasuryDelta: -40, stabilityDelta: +2 },
+    sacrifice_the_district: { commonerSatDelta: -8, stabilityDelta: +5, regionConditionDelta: -8, merchantSatDelta: +3 },
+  },
+
+  // ============================================================
+  // Military 2 — The Great Tournament
+  // ============================================================
+  sl_great_tournament: {
+    exploit_diplomatic_moment: { nobilitySatDelta: +5, stabilityDelta: +4, treasuryDelta: -30, militaryCasteSatDelta: +3 },
+    handle_tournament_incident: { militaryCasteSatDelta: +4, stabilityDelta: +2, nobilitySatDelta: -2, militaryMoraleDelta: +5 },
+    host_grand_feast:         { commonerSatDelta: +5, merchantSatDelta: +4, faithDelta: +3, culturalCohesionDelta: +4, treasuryDelta: -60 },
+  },
+
+  // ============================================================
+  // Cultural 2 — The Starving Winter
+  // ============================================================
+  sl_starving_winter: {
+    manage_refugee_crisis:     { commonerSatDelta: +6, stabilityDelta: +4, faithDelta: +3, treasuryDelta: -40 },
+    tax_the_wealthy:           { nobilitySatDelta: -8, merchantSatDelta: -5, treasuryDelta: +60, commonerSatDelta: +4, stabilityDelta: -2 },
+    abandon_outer_settlements: { regionConditionDelta: -10, commonerSatDelta: -6, stabilityDelta: -5, foodDelta: +20, treasuryDelta: +30 },
   },
 };

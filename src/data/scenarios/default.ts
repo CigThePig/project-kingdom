@@ -20,6 +20,7 @@ import {
   TREASURY_STARTING_BALANCE,
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
+import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -338,6 +339,8 @@ export function createDefaultScenario(): GameState {
     // --- Persistent History ---
     persistentConsequences: [],
     activeTemporaryModifiers: [],
+    pendingFollowUps: [],
+    narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,
 

@@ -428,4 +428,422 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
     ],
     initialTurnsUntilFirstBranchPoint: 2,
   },
+
+  // ============================================================
+  // TradeEcon 2 — The Merchant's Rebellion
+  // ============================================================
+  {
+    id: 'sl_merchants_rebellion',
+    category: StorylineCategory.TradeEcon,
+    activationConditions: [
+      { type: 'turn_min', threshold: 7 },
+      { type: 'class_satisfaction_above', classTarget: PopulationClass.Merchants, threshold: 70 },
+      { type: 'random_chance', probability: 0.35 },
+    ],
+    openingBranchId: 'bp_rebellion_opening',
+    branches: [
+      {
+        branchId: 'bp_rebellion_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'negotiate_guild_charter',
+            nextBranchId: 'bp_rebellion_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'crush_the_guild',
+            nextBranchId: 'bp_rebellion_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'co_opt_guild_leaders',
+            nextBranchId: 'bp_rebellion_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_rebellion_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'grant_trade_monopoly',
+            nextBranchId: 'bp_rebellion_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'impose_royal_oversight',
+            nextBranchId: 'bp_rebellion_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'pit_factions_against_each_other',
+            nextBranchId: 'bp_rebellion_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_rebellion_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
+
+  // ============================================================
+  // Religious 2 — The Holy War
+  // ============================================================
+  {
+    id: 'sl_holy_war',
+    category: StorylineCategory.Religious,
+    activationConditions: [
+      { type: 'turn_min', threshold: 8 },
+      { type: 'faith_above', threshold: 55 },
+      { type: 'random_chance', probability: 0.25 },
+    ],
+    openingBranchId: 'bp_holy_war_opening',
+    branches: [
+      {
+        branchId: 'bp_holy_war_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'defensive_stance',
+            nextBranchId: 'bp_holy_war_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'launch_counter_crusade',
+            nextBranchId: 'bp_holy_war_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'seek_diplomatic_peace',
+            nextBranchId: 'bp_holy_war_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_holy_war_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'rally_faithful_defenders',
+            nextBranchId: 'bp_holy_war_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'forge_interfaith_alliance',
+            nextBranchId: 'bp_holy_war_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'scorched_earth_defense',
+            nextBranchId: 'bp_holy_war_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_holy_war_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
+
+  // ============================================================
+  // Political 2 — The Prodigal Prince
+  // ============================================================
+  {
+    id: 'sl_prodigal_prince',
+    category: StorylineCategory.Political,
+    activationConditions: [
+      { type: 'turn_min', threshold: 9 },
+      { type: 'stability_below', threshold: 55 },
+      { type: 'random_chance', probability: 0.3 },
+    ],
+    openingBranchId: 'bp_prince_opening',
+    branches: [
+      {
+        branchId: 'bp_prince_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'welcome_with_caution',
+            nextBranchId: 'bp_prince_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'investigate_claims',
+            nextBranchId: 'bp_prince_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'denounce_as_impostor',
+            nextBranchId: 'bp_prince_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_prince_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'offer_advisory_role',
+            nextBranchId: 'bp_prince_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'confront_foreign_backers',
+            nextBranchId: 'bp_prince_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'appeal_to_popular_opinion',
+            nextBranchId: 'bp_prince_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_prince_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
+
+  // ============================================================
+  // Discovery 2 — The Plague Ships
+  // ============================================================
+  {
+    id: 'sl_plague_ships',
+    category: StorylineCategory.Discovery,
+    activationConditions: [
+      { type: 'turn_min', threshold: 6 },
+      { type: 'random_chance', probability: 0.3 },
+    ],
+    openingBranchId: 'bp_plague_ships_opening',
+    branches: [
+      {
+        branchId: 'bp_plague_ships_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'quarantine_the_harbor',
+            nextBranchId: 'bp_plague_ships_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'accept_the_cargo',
+            nextBranchId: 'bp_plague_ships_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'burn_the_ships',
+            nextBranchId: 'bp_plague_ships_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_plague_ships_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'isolate_and_treat',
+            nextBranchId: 'bp_plague_ships_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'distribute_remedies',
+            nextBranchId: 'bp_plague_ships_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'sacrifice_the_district',
+            nextBranchId: 'bp_plague_ships_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_plague_ships_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
+
+  // ============================================================
+  // Military 2 — The Great Tournament
+  // ============================================================
+  {
+    id: 'sl_great_tournament',
+    category: StorylineCategory.Military,
+    activationConditions: [
+      { type: 'turn_min', threshold: 7 },
+      { type: 'stability_above', threshold: 40 },
+      { type: 'random_chance', probability: 0.35 },
+    ],
+    openingBranchId: 'bp_tournament_opening',
+    branches: [
+      {
+        branchId: 'bp_tournament_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'diplomatic_showcase',
+            nextBranchId: 'bp_tournament_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'military_demonstration',
+            nextBranchId: 'bp_tournament_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'cultural_celebration',
+            nextBranchId: 'bp_tournament_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_tournament_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'exploit_diplomatic_moment',
+            nextBranchId: 'bp_tournament_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'handle_tournament_incident',
+            nextBranchId: 'bp_tournament_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'host_grand_feast',
+            nextBranchId: 'bp_tournament_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_tournament_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
+
+  // ============================================================
+  // Cultural 2 — The Starving Winter
+  // ============================================================
+  {
+    id: 'sl_starving_winter',
+    category: StorylineCategory.Cultural,
+    activationConditions: [
+      { type: 'turn_min', threshold: 5 },
+      { type: 'random_chance', probability: 0.3 },
+    ],
+    openingBranchId: 'bp_winter_opening',
+    branches: [
+      {
+        branchId: 'bp_winter_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'ration_harshly',
+            nextBranchId: 'bp_winter_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'seek_foreign_aid',
+            nextBranchId: 'bp_winter_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'sacrifice_military_stores',
+            nextBranchId: 'bp_winter_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_winter_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'manage_refugee_crisis',
+            nextBranchId: 'bp_winter_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'tax_the_wealthy',
+            nextBranchId: 'bp_winter_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'abandon_outer_settlements',
+            nextBranchId: 'bp_winter_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_winter_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
 ];
