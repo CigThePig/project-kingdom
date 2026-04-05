@@ -289,9 +289,9 @@ const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   }],
 
   ['diplomatic_envoy', (state, action) => {
+    if (action.targetNeighborId === null) return state;
     const eff = DECREE_EFFECTS.diplomatic_envoy;
     const pop = satDelta(state, eff);
-    if (action.targetNeighborId === null) return { ...state, population: pop };
     return {
       ...state,
       population: pop,
@@ -303,9 +303,9 @@ const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   }],
 
   ['trade_agreement', (state, action) => {
+    if (action.targetNeighborId === null) return state;
     const eff = DECREE_EFFECTS.trade_agreement;
     const pop = satDelta(state, eff);
-    if (action.targetNeighborId === null) return { ...state, population: pop };
     return {
       ...state,
       population: pop,
@@ -317,9 +317,9 @@ const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   }],
 
   ['royal_marriage', (state, action) => {
+    if (action.targetNeighborId === null) return state;
     const eff = DECREE_EFFECTS.royal_marriage;
     const pop = satDelta(state, eff);
-    if (action.targetNeighborId === null) return { ...state, population: pop };
     return {
       ...state,
       population: pop,
