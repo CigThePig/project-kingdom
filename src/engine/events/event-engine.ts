@@ -316,7 +316,7 @@ export function surfaceEvents(
   // Exclude chain events — they are managed by advanceEventChains.
   const candidates = eventPool.filter(
     (def) =>
-      def.chainId === null &&
+      (def.chainId === null || def.chainStep === 1) &&
       !seenDefinitionIds.has(def.id) &&
       allConditionsPass(def, state, turnNumber),
   );

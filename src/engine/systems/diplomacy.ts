@@ -290,7 +290,54 @@ export function generateNeighborActions(
     100,
   );
 
-  // --- At War: consider peace offer ---
+  // --- Espionage detection (§9.2) — can fire regardless of war status ---
+  const espionageExposureChance = clamp(
+    (neighbor.espionageCapability - playerEspionage.networkStrength) * 0.005,
+    0,
+    0.15,
+  );
+  if (espionageExposureChance > 0 && rng < espionageExposureChance) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.EspionageRetaliation,
+      turnGenerated: currentTurn,
+      parameters: { severity: 'detected' },
+    });
+  }
+
+  // --- Religious pressure — can fire regardless of war status ---
+  const faithMismatch = neighbor.religiousProfile !== kingdomFaith;
+  if (
+    faithMismatch &&
+    (neighbor.disposition === NeighborDisposition.Aggressive ||
+      neighbor.disposition === NeighborDisposition.Cautious) &&
+    rng < 0.1
+  ) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.ReligiousPressure,
+      turnGenerated: currentTurn,
+      parameters: { heterodoxyDelta: NEIGHBOR_AI_RELIGIOUS_PRESSURE_HETERODOXY_DELTA },
+    });
+  }
+
+  // --- Cultural pressure — can fire regardless of war status ---
+  const cultureMismatch = neighbor.culturalIdentity !== kingdomCulture;
+  if (
+    cultureMismatch &&
+    (neighbor.disposition === NeighborDisposition.Aggressive ||
+      neighbor.disposition === NeighborDisposition.Opportunistic) &&
+    rng < 0.08
+  ) {
+    actions.push({
+      neighborId: neighbor.id,
+      actionType: NeighborActionType.BorderTension,
+      turnGenerated: currentTurn,
+      parameters: { cause: 'cultural_mismatch' },
+    });
+  }
+
+  // --- At War: consider peace offer, then stop ---
   if (neighbor.isAtWarWithPlayer && inConflict) {
     if (neighbor.warWeariness >= NEIGHBOR_AI_PEACE_OFFER_WAR_WEARINESS) {
       actions.push({
@@ -299,9 +346,8 @@ export function generateNeighborActions(
         turnGenerated: currentTurn,
         parameters: { warWeariness: neighbor.warWeariness },
       });
-      return actions;
     }
-    return actions; // at war, no other actions
+    return actions;
   }
 
   // --- War Declaration ---
@@ -394,56 +440,6 @@ export function generateNeighborActions(
       });
       return actions;
     }
-  }
-
-  // --- Religious pressure ---
-  const faithMismatch = neighbor.religiousProfile !== kingdomFaith;
-  if (
-    faithMismatch &&
-    (neighbor.disposition === NeighborDisposition.Aggressive ||
-      neighbor.disposition === NeighborDisposition.Cautious) &&
-    rng < 0.1
-  ) {
-    actions.push({
-      neighborId: neighbor.id,
-      actionType: NeighborActionType.ReligiousPressure,
-      turnGenerated: currentTurn,
-      parameters: { heterodoxyDelta: NEIGHBOR_AI_RELIGIOUS_PRESSURE_HETERODOXY_DELTA },
-    });
-    return actions;
-  }
-
-  // --- Cultural pressure ---
-  const cultureMismatch = neighbor.culturalIdentity !== kingdomCulture;
-  if (
-    cultureMismatch &&
-    (neighbor.disposition === NeighborDisposition.Aggressive ||
-      neighbor.disposition === NeighborDisposition.Opportunistic) &&
-    rng < 0.08
-  ) {
-    actions.push({
-      neighborId: neighbor.id,
-      actionType: NeighborActionType.BorderTension,
-      turnGenerated: currentTurn,
-      parameters: { cause: 'cultural_mismatch' },
-    });
-    return actions;
-  }
-
-  // --- Espionage detection (§9.2) ---
-  const espionageExposureChance = clamp(
-    (playerEspionage.networkStrength - neighbor.espionageCapability) * 0.005,
-    0,
-    0.15,
-  );
-  if (espionageExposureChance > 0 && rng < espionageExposureChance) {
-    actions.push({
-      neighborId: neighbor.id,
-      actionType: NeighborActionType.EspionageRetaliation,
-      turnGenerated: currentTurn,
-      parameters: { severity: 'detected' },
-    });
-    return actions;
   }
 
   return actions;

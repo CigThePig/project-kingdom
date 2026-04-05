@@ -267,12 +267,6 @@ export function resolveTurn(
     getAgriculturalBonus(state.knowledge),
   );
 
-  // Compute readiness delta early; needed in Phase 4 (nobility satisfaction driver).
-  // Military training order detection deferred to data layer; defaulting to false.
-  const readinessDecay = calculateReadinessDecay(state.military.deploymentPosture);
-  const readinessGain = calculateReadinessGain(state.military.militaryCasteQuality, false);
-  const readinessDelta = readinessGain - readinessDecay;
-
   // ---- Phase 2: Action Execution ----
   // Pass updated resources into action effects so actions can read the current stockpiles.
   let stateAfterActions = applyActionEffects(
@@ -295,6 +289,11 @@ export function resolveTurn(
       .map((m) => ({ ...m, turnsRemaining: m.turnsRemaining - 1 }))
       .filter((m) => m.turnsRemaining > 0),
   };
+
+  // Compute readiness delta after actions so deploymentPosture changes take effect.
+  const readinessDecay = calculateReadinessDecay(stateAfterActions.military.deploymentPosture);
+  const readinessGain = calculateReadinessGain(stateAfterActions.military.militaryCasteQuality, false);
+  const readinessDelta = readinessGain - readinessDecay;
 
   // ---- Phase 3: Upkeep and Consumption ----
   // Construction gold cost: placeholder 0 until data layer defines per-project gold costs.
@@ -676,7 +675,7 @@ export function resolveTurn(
     // Exposure probability: higher if target's espionage capability exceeds our counter-intel.
     const exposureRoll = Math.random();
     const exposureChance = clamp(
-      (targetNeighbor.espionageCapability - updatedEspionage.counterIntelligenceLevel) * 0.01,
+      (targetNeighbor.espionageCapability - updatedEspionage.networkStrength) * 0.01,
       0.05,
       0.4,
     );
@@ -1168,7 +1167,7 @@ export function resolveTurn(
     : lastActivationTurn;
 
   const activeStorylines = [
-    ...advancedStorylines,
+    ...advancedStorylines.filter((s) => s.status !== StorylineStatus.Resolved),
     ...newStorylines,
   ];
 
@@ -1277,29 +1276,13 @@ export function resolveTurn(
       continue;
     }
 
-    // Spread remaining resource cost evenly over remaining turns.
+    // Resource costs are paid upfront in applyConstructionEffect (Phase 2).
+    // Just decrement the turn counter.
     if (project.turnsRemaining <= 0) continue;
-    const updatedCostRemaining: Partial<Record<ResourceType, number>> = {};
-    for (const resourceType of Object.keys(project.resourceCostRemaining) as ResourceType[]) {
-      const remaining = project.resourceCostRemaining[resourceType];
-      if (remaining === undefined || remaining <= 0) continue;
-
-      const perTurnCost = Math.ceil(remaining / project.turnsRemaining);
-      updatedCostRemaining[resourceType] = Math.max(0, remaining - perTurnCost);
-
-      workingResources = {
-        ...workingResources,
-        [resourceType]: {
-          ...workingResources[resourceType],
-          stockpile: Math.max(0, workingResources[resourceType].stockpile - perTurnCost),
-        },
-      };
-    }
 
     updatedConstructionProjects.push({
       ...project,
       turnsRemaining: project.turnsRemaining - 1,
-      resourceCostRemaining: updatedCostRemaining,
     });
   }
 
