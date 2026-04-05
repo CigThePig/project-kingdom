@@ -619,6 +619,130 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
       let_dissenters_leave: 'Let the Dissenters Leave',
     },
   },
+
+  // ============================================================
+  // FOLLOW-UP EVENTS (12)
+  // ============================================================
+
+  evt_scholarly_discovery: {
+    title: 'Research Yields a Discovery',
+    body: 'The scholars whose research the crown funded have produced a genuine breakthrough — a new technique with immediate applications. The discovery has attracted attention from merchants eager to profit, clergy scholars who see theological implications, and military advisors who recognize strategic potential. The crown must decide who benefits.',
+    choices: {
+      patent_discovery: 'Patent and License the Discovery',
+      share_with_clergy: 'Share Findings with the Clergy',
+      apply_to_military: 'Direct Application to Military Use',
+    },
+  },
+
+  evt_practical_innovation_success: {
+    title: 'Practical Applications Bear Fruit',
+    body: 'The decision to apply scholarly findings to practical ends has produced tangible results. New methods have improved workshop output in the affected region, and word has spread among artisan communities. Several proposals have arrived at court for how to build on this momentum.',
+    choices: {
+      expand_workshops: 'Expand Regional Workshops',
+      train_artisans: 'Sponsor Artisan Training',
+      present_to_court: 'Present Achievements at Court',
+    },
+  },
+
+  evt_merchant_demands_escalate: {
+    title: 'Merchants Press for Further Concessions',
+    body: 'The tax relief granted to stem the capital flight has stabilized the merchant class, but they now view the crown as amenable to pressure. A delegation of senior guild masters has arrived with a list of further demands, citing the precedent of the earlier concessions. The nobility watches with barely concealed displeasure.',
+    choices: {
+      hold_firm_on_terms: 'Hold Firm on Current Terms',
+      extend_concessions: 'Grant Further Concessions',
+      impose_trade_conditions: 'Impose Reciprocal Trade Conditions',
+    },
+  },
+
+  evt_merchant_underground_economy: {
+    title: 'Shadow Economy Emerges',
+    body: 'The capital controls imposed to halt merchant flight have produced an unintended consequence: a thriving underground economy. Goods are moving through unofficial channels, customs revenues are declining, and intelligence reports suggest organized smuggling networks are taking root. The crown must decide how to respond to this parallel commerce.',
+    choices: {
+      raid_smuggling_networks: 'Raid the Smuggling Networks',
+      legitimize_shadow_trade: 'Legitimize the Shadow Trade',
+      increase_enforcement: 'Increase Border Enforcement',
+    },
+  },
+
+  evt_noble_backlash_labor: {
+    title: 'Nobility Objects to Labor Concessions',
+    body: 'The crown\'s decision to side with laborers in the recent dispute has provoked a sharp response from the landed nobility. Several powerful houses have reduced their contributions to the treasury, and rumors circulate of a coordinated effort to reassert aristocratic authority over the working classes. The commoners, meanwhile, look to the crown for continued support.',
+    choices: {
+      appease_nobles: 'Offer the Nobility Compensation',
+      stand_firm: 'Reaffirm Support for Laborers',
+      offer_compromise: 'Broker a Compromise',
+    },
+  },
+
+  evt_commoner_work_slowdown: {
+    title: 'Workers Resist Through Slowdown',
+    body: 'The enforcement of existing labor contracts has not resolved the underlying grievances. Workers across several industries have begun a coordinated slowdown — not outright refusal, but a deliberate reduction in output. Productivity has dropped noticeably, and merchants are beginning to feel the impact on their supply chains.',
+    choices: {
+      impose_work_quotas: 'Impose Mandatory Work Quotas',
+      open_dialogue: 'Open a Formal Dialogue',
+      hire_foreign_labor: 'Recruit Foreign Laborers',
+    },
+  },
+
+  evt_theological_schism_brewing: {
+    title: 'Theological Tensions Reach a Breaking Point',
+    body: 'The open debate the crown permitted has not resolved doctrinal disagreements — it has deepened them. Two distinct theological camps have formed, each claiming scriptural authority and accusing the other of heresy. Clergy aligned with each faction are beginning to preach against the other, and the faithful are being forced to choose sides. Without intervention, a formal schism appears inevitable.',
+    choices: {
+      host_grand_debate: 'Convene a Grand Theological Debate',
+      quietly_suppress: 'Quietly Suppress the Dissenting Faction',
+      embrace_new_thought: 'Embrace Theological Pluralism',
+    },
+  },
+
+  evt_intelligence_network_payoff: {
+    title: 'Counter-Intelligence Yields Results',
+    body: 'The intelligence network established to investigate noble intrigues has uncovered far more than anticipated. A web of secret alliances, hidden debts, and covert communications between powerful houses has been mapped. The information is politically explosive — it could be used to neutralize threats, secure loyalties, or strengthen diplomatic relationships.',
+    choices: {
+      expose_conspiracy: 'Publicly Expose the Conspiracy',
+      leverage_for_loyalty: 'Use Information to Secure Loyalty',
+      share_with_allies: 'Share Intelligence with Allies',
+    },
+  },
+
+  evt_foreign_grain_dependency: {
+    title: 'Kingdom Grows Reliant on Foreign Grain',
+    body: 'The emergency grain purchases that averted famine have created an uncomfortable dependency. Foreign merchants now supply a significant portion of the kingdom\'s food, and they have begun raising prices. Advisors warn that this reliance leaves the realm vulnerable to supply disruptions, trade disputes, or deliberate economic pressure from neighboring kingdoms.',
+    choices: {
+      invest_in_domestic_agriculture: 'Invest in Domestic Agriculture',
+      negotiate_long_term_supply: 'Negotiate a Long-Term Supply Agreement',
+      accept_dependency: 'Accept the Current Arrangement',
+    },
+  },
+
+  evt_resource_boom: {
+    title: 'Resource Extraction Yields a Boom',
+    body: 'The crown\'s investment in resource extraction has paid off handsomely. The operation is producing far beyond initial estimates, attracting workers, merchants, and speculators to the region. The local economy is transforming rapidly. Questions arise about who should benefit most from this windfall and whether the boom can be sustained without exploiting the labor force.',
+    choices: {
+      expand_operations: 'Expand Mining Operations',
+      tax_windfall: 'Tax the Windfall Profits',
+      establish_workers_rights: 'Establish Worker Protections',
+    },
+  },
+
+  evt_clergy_healing_reputation: {
+    title: 'Clergy Healers Gain Popular Reverence',
+    body: 'The clergy mobilized to combat the plague have earned deep gratitude from the common people. Healers are being celebrated as living saints, and demand for permanent healing services has surged. The clergy leadership sees an opportunity to strengthen the faith\'s role in daily life, while some advisors caution against allowing the church to accumulate too much popular influence.',
+    choices: {
+      establish_permanent_hospice: 'Establish a Permanent Royal Hospice',
+      leverage_piety: 'Channel the Piety to Strengthen Faith',
+      return_to_normal: 'Allow Things to Settle Naturally',
+    },
+  },
+
+  evt_military_pay_expectation: {
+    title: 'Soldiers Expect Permanent Pay Increase',
+    body: 'The temporary pay increase that halted the desertion crisis has created a new expectation. The military rank and file now view the higher wages as their due, and officers report that any attempt to revert to previous rates would trigger immediate unrest. The treasury bears the ongoing burden, and the nobility has begun to question the growing cost of maintaining the armed forces.',
+    choices: {
+      institutionalize_pay_scale: 'Make the Pay Scale Permanent',
+      revert_to_standard_pay: 'Gradually Revert to Standard Rates',
+      offer_land_instead: 'Offer Land Grants in Lieu of Pay',
+    },
+  },
 };
 
 // ============================================================

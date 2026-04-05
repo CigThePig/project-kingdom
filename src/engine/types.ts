@@ -571,6 +571,18 @@ export interface PersistentConsequence {
   tag: string;             // internal identifier, e.g. 'evt_merchant_capital_flight:offer_tax_relief'
 }
 
+/**
+ * A time-limited effect applied each turn until it expires.
+ * Created by event/storyline choices that produce ongoing consequences.
+ */
+export interface TemporaryModifier {
+  id: string;
+  sourceTag: string;            // links back to the consequence tag that created it
+  turnsRemaining: number;       // decremented each turn; removed when 0
+  turnApplied: number;
+  effectPerTurn: MechanicalEffectDelta;  // applied once per turn during resolution
+}
+
 // ============================================================
 // Section 13 — Event Types
 // ============================================================
@@ -768,6 +780,9 @@ export interface GameState {
   persistentConsequences: PersistentConsequence[];
   resolvedStorylineIds: string[];       // definitionIds of resolved storylines
   lastStorylineActivationTurn: number;  // turn number of most recent storyline activation
+
+  // Temporary modifiers from event/storyline choices (applied each turn, expire after N turns)
+  activeTemporaryModifiers: TemporaryModifier[];
 
   // Scenario
   scenarioId: string;

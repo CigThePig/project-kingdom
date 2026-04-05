@@ -1367,4 +1367,311 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
   },
+
+  // ============================================================
+  // FOLLOW-UP EVENTS (12) — Consequence-triggered by prior choices
+  // ============================================================
+
+  // 1. Scholarly Breakthrough → Fund Further Research
+  {
+    id: 'evt_scholarly_discovery',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Knowledge,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_scholarly_breakthrough:fund_further_research', minTurnsSinceConsequence: 3 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_scholarly_discovery:patent_discovery' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_scholarly_discovery:share_with_clergy' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_scholarly_discovery:apply_to_military' },
+    ],
+    weight: 1.2,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'patent_discovery', slotCost: 1, isFree: false },
+      { choiceId: 'share_with_clergy', slotCost: 1, isFree: false },
+      { choiceId: 'apply_to_military', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // 2. Scholarly Breakthrough → Apply Practical Findings
+  {
+    id: 'evt_practical_innovation_success',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Knowledge,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_scholarly_breakthrough:apply_practical_findings', minTurnsSinceConsequence: 2 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_practical_innovation_success:expand_workshops' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_practical_innovation_success:train_artisans' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_practical_innovation_success:present_to_court' },
+    ],
+    weight: 1.1,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'expand_workshops', slotCost: 1, isFree: false },
+      { choiceId: 'train_artisans', slotCost: 1, isFree: false },
+      { choiceId: 'present_to_court', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: true,
+    relatedStorylineId: null,
+  },
+
+  // 3. Merchant Capital Flight → Offer Tax Relief
+  {
+    id: 'evt_merchant_demands_escalate',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Economy,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_merchant_capital_flight:offer_tax_relief', minTurnsSinceConsequence: 3 },
+      { type: 'class_satisfaction_above', classTarget: PopulationClass.Merchants, threshold: 40 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_merchant_demands_escalate:hold_firm_on_terms' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_merchant_demands_escalate:extend_concessions' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_merchant_demands_escalate:impose_trade_conditions' },
+    ],
+    weight: 1.1,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'hold_firm_on_terms', slotCost: 1, isFree: false },
+      { choiceId: 'extend_concessions', slotCost: 1, isFree: false },
+      { choiceId: 'impose_trade_conditions', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Merchants,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // 4. Merchant Capital Flight → Enforce Capital Controls
+  {
+    id: 'evt_merchant_underground_economy',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Economy,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_merchant_capital_flight:enforce_capital_controls', minTurnsSinceConsequence: 2 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_merchant_underground_economy:raid_smuggling_networks' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_merchant_underground_economy:legitimize_shadow_trade' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_merchant_underground_economy:increase_enforcement' },
+    ],
+    weight: 1.2,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'raid_smuggling_networks', slotCost: 1, isFree: false },
+      { choiceId: 'legitimize_shadow_trade', slotCost: 1, isFree: false },
+      { choiceId: 'increase_enforcement', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Merchants,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // 5. Commoner Labor Dispute → Side with Laborers
+  {
+    id: 'evt_noble_backlash_labor',
+    severity: EventSeverity.Notable,
+    category: EventCategory.ClassConflict,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_commoner_labor_dispute:side_with_laborers', minTurnsSinceConsequence: 2 },
+      { type: 'class_satisfaction_below', classTarget: PopulationClass.Nobility, threshold: 50 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_noble_backlash_labor:appease_nobles' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_noble_backlash_labor:stand_firm' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_noble_backlash_labor:offer_compromise' },
+    ],
+    weight: 1.1,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'appease_nobles', slotCost: 1, isFree: false },
+      { choiceId: 'stand_firm', slotCost: 1, isFree: false },
+      { choiceId: 'offer_compromise', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Nobility,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // 6. Commoner Labor Dispute → Enforce Existing Contracts
+  {
+    id: 'evt_commoner_work_slowdown',
+    severity: EventSeverity.Notable,
+    category: EventCategory.PublicOrder,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_commoner_labor_dispute:enforce_existing_contracts', minTurnsSinceConsequence: 2 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_commoner_work_slowdown:impose_work_quotas' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_commoner_work_slowdown:open_dialogue' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_commoner_work_slowdown:hire_foreign_labor' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'impose_work_quotas', slotCost: 1, isFree: false },
+      { choiceId: 'open_dialogue', slotCost: 1, isFree: false },
+      { choiceId: 'hire_foreign_labor', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // 7. Heresy Emergence → Permit Theological Debate
+  {
+    id: 'evt_theological_schism_brewing',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_heresy_emergence:permit_theological_debate', minTurnsSinceConsequence: 3 },
+      { type: 'heterodoxy_above', threshold: 45 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_theological_schism_brewing:host_grand_debate' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_theological_schism_brewing:quietly_suppress' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_theological_schism_brewing:embrace_new_thought' },
+    ],
+    weight: 1.3,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'host_grand_debate', slotCost: 2, isFree: false },
+      { choiceId: 'quietly_suppress', slotCost: 1, isFree: false },
+      { choiceId: 'embrace_new_thought', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // 8. Noble Intrigue Discovered → Launch Counter Intelligence
+  {
+    id: 'evt_intelligence_network_payoff',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Espionage,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_noble_intrigue_discovered:launch_counter_intelligence', minTurnsSinceConsequence: 3 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_intelligence_network_payoff:expose_conspiracy' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_intelligence_network_payoff:leverage_for_loyalty' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_intelligence_network_payoff:share_with_allies' },
+    ],
+    weight: 1.2,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'expose_conspiracy', slotCost: 1, isFree: false },
+      { choiceId: 'leverage_for_loyalty', slotCost: 1, isFree: false },
+      { choiceId: 'share_with_allies', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Nobility,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // 9. Harvest Blight → Purchase Foreign Grain
+  {
+    id: 'evt_foreign_grain_dependency',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Food,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_harvest_blight:purchase_foreign_grain', minTurnsSinceConsequence: 3 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_foreign_grain_dependency:invest_in_domestic_agriculture' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_foreign_grain_dependency:negotiate_long_term_supply' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_foreign_grain_dependency:accept_dependency' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'invest_in_domestic_agriculture', slotCost: 1, isFree: false },
+      { choiceId: 'negotiate_long_term_supply', slotCost: 1, isFree: false },
+      { choiceId: 'accept_dependency', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: true,
+    relatedStorylineId: null,
+  },
+
+  // 10. Region Resource Discovery → Fund Extraction
+  {
+    id: 'evt_resource_boom',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Region,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_region_resource_discovery:fund_extraction', minTurnsSinceConsequence: 4 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_resource_boom:expand_operations' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_resource_boom:tax_windfall' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_resource_boom:establish_workers_rights' },
+    ],
+    weight: 1.1,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'expand_operations', slotCost: 1, isFree: false },
+      { choiceId: 'tax_windfall', slotCost: 1, isFree: false },
+      { choiceId: 'establish_workers_rights', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Merchants,
+    affectsRegion: true,
+    relatedStorylineId: null,
+  },
+
+  // 11. Commoner Plague Outbreak → Mobilize Clergy Healers
+  {
+    id: 'evt_clergy_healing_reputation',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_commoner_plague_outbreak:mobilize_clergy_healers', minTurnsSinceConsequence: 2 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_clergy_healing_reputation:establish_permanent_hospice' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_clergy_healing_reputation:leverage_piety' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_clergy_healing_reputation:return_to_normal' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'establish_permanent_hospice', slotCost: 1, isFree: false },
+      { choiceId: 'leverage_piety', slotCost: 1, isFree: false },
+      { choiceId: 'return_to_normal', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+
+  // 12. Military Desertion Crisis → Increase Military Pay
+  {
+    id: 'evt_military_pay_expectation',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Military,
+    triggerConditions: [
+      { type: 'consequence_tag_present', consequenceTag: 'evt_military_desertion_crisis:increase_military_pay', minTurnsSinceConsequence: 3 },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_military_pay_expectation:institutionalize_pay_scale' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_military_pay_expectation:revert_to_standard_pay' },
+      { type: 'consequence_tag_absent', consequenceTag: 'evt_military_pay_expectation:offer_land_instead' },
+    ],
+    weight: 1.1,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'institutionalize_pay_scale', slotCost: 1, isFree: false },
+      { choiceId: 'revert_to_standard_pay', slotCost: 1, isFree: false },
+      { choiceId: 'offer_land_instead', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.MilitaryCaste,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
 ];

@@ -109,8 +109,13 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
 
     case 'LOAD_SAVE': {
       const { save } = action;
+      // Migrate saves that predate the temporary modifiers system.
+      const gameState = {
+        ...save.gameState,
+        activeTemporaryModifiers: save.gameState.activeTemporaryModifiers ?? [],
+      };
       return {
-        gameState: save.gameState,
+        gameState,
         turnHistory: save.turnHistory,
         eventHistory: save.eventHistory,
         intelligenceReports: save.intelligenceReports,

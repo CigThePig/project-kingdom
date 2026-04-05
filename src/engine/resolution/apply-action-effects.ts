@@ -24,6 +24,7 @@ import {
   PersistentConsequence,
   PopulationClass,
   QueuedAction,
+  TemporaryModifier,
   RationingLevel,
   ReligiousOrder,
   ReligiousOrderType,
@@ -35,7 +36,7 @@ import {
   TradeOpenness,
 } from '../types';
 import { DECREE_POOL } from '../../data/decrees/index';
-import { EVENT_CHOICE_EFFECTS } from '../../data/events/effects';
+import { EVENT_CHOICE_EFFECTS, EVENT_CHOICE_TEMPORARY_MODIFIERS } from '../../data/events/effects';
 import { STORYLINE_CHOICE_EFFECTS } from '../../data/storylines/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
 import { applyDiplomaticActionEffect as applyNeighborRelDelta } from '../systems/diplomacy';
@@ -692,6 +693,22 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
     ...updatedState,
     persistentConsequences: [...updatedState.persistentConsequences, consequence],
   };
+
+  // Create a temporary modifier if the choice specifies one.
+  const modifierSpec = EVENT_CHOICE_TEMPORARY_MODIFIERS[event.definitionId]?.[choiceId];
+  if (modifierSpec) {
+    const modifier: TemporaryModifier = {
+      id: `tmod-${event.definitionId}-${choiceId}-${Math.random().toString(36).slice(2, 8)}`,
+      sourceTag: consequence.tag,
+      turnsRemaining: modifierSpec.durationTurns,
+      turnApplied: state.turn.turnNumber,
+      effectPerTurn: modifierSpec.effectPerTurn,
+    };
+    updatedState = {
+      ...updatedState,
+      activeTemporaryModifiers: [...updatedState.activeTemporaryModifiers, modifier],
+    };
+  }
 
   return updatedState;
 }
