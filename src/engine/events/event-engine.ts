@@ -303,6 +303,7 @@ export function surfaceEvents(
   eventPool: EventDefinition[],
   existingActive: ActiveEvent[],
   eventHistory: ActiveEvent[],
+  categoryWeights?: Partial<Record<EventCategory, number>>,
 ): ActiveEvent[] {
   if (eventPool.length === 0) return [];
 
@@ -320,11 +321,13 @@ export function surfaceEvents(
       allConditionsPass(def, state, turnNumber),
   );
 
-  // Sort by severity (desc) then weight (desc).
+  // Sort by severity (desc) then weight (desc), with optional category multipliers.
   candidates.sort((a, b) => {
     const severityDiff = SEVERITY_SCORE[b.severity] - SEVERITY_SCORE[a.severity];
     if (severityDiff !== 0) return severityDiff;
-    return b.weight - a.weight;
+    const wa = a.weight * (categoryWeights?.[a.category] ?? 1.0);
+    const wb = b.weight * (categoryWeights?.[b.category] ?? 1.0);
+    return wb - wa;
   });
 
   const result: ActiveEvent[] = [];

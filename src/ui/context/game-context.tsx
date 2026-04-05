@@ -120,7 +120,7 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
           dominantClassFavor: null,
           classChoiceHistory: { Nobility: 0, Clergy: 0, Merchants: 0, Commoners: 0, MilitaryCaste: 0 },
         },
-        activeEvents: (save.gameState.activeEvents ?? []).map((e: Record<string, unknown>) => ({
+        activeEvents: (save.gameState.activeEvents ?? []).map((e: ActiveEvent) => ({
           ...e,
           outcomeQuality: e.outcomeQuality ?? null,
           isFollowUp: e.isFollowUp ?? false,
