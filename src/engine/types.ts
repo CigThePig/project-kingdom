@@ -401,7 +401,7 @@ export interface NeighborState {
   culturalIdentity: string; // internal culture ID
   espionageCapability: number; // 0–100
   lastActionTurn: number; // turn of last autonomous AI action
-  warWeariness: number; // 0��100, accumulates during conflicts
+  warWeariness: number; // 0–100, accumulates during conflicts
   isAtWarWithPlayer: boolean; // convenience flag derived from posture
 }
 

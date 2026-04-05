@@ -14,6 +14,7 @@ import {
   applyRegionConditionChange,
   applyRegionDevelopmentChange,
 } from '../systems/regions';
+import { deriveDiplomaticPosture } from '../systems/diplomacy';
 import { applyVariance, rollOutcomeQuality } from './outcome-variance';
 
 // ============================================================
@@ -194,11 +195,15 @@ export function applyMechanicalEffectDelta(
   if (delta.diplomacyDeltas !== undefined) {
     let neighbors = s.diplomacy.neighbors;
     for (const [neighborId, relDelta] of Object.entries(delta.diplomacyDeltas)) {
-      neighbors = neighbors.map((n) =>
-        n.id === neighborId
-          ? { ...n, relationshipScore: clamp(n.relationshipScore + relDelta, -100, 100) }
-          : n,
-      );
+      neighbors = neighbors.map((n) => {
+        if (n.id !== neighborId) return n;
+        const newScore = clamp(n.relationshipScore + relDelta, 0, 100);
+        return {
+          ...n,
+          relationshipScore: newScore,
+          attitudePosture: deriveDiplomaticPosture(newScore),
+        };
+      });
     }
     s = { ...s, diplomacy: { ...s.diplomacy, neighbors } };
   }

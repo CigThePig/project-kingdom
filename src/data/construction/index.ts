@@ -70,7 +70,7 @@ export const CONSTRUCTION_POOL: ConstructionProjectDefinition[] = [
     turnsTotal: 5,
     resourceCosts: { [ResourceType.Wood]: 30, [ResourceType.Iron]: 10 },
     knowledgePrerequisite: {
-      branch: KnowledgeBranch.Agricultural,
+      branch: KnowledgeBranch.NaturalPhilosophy,
       milestoneIndex: 1,
     },
     effectDescription:

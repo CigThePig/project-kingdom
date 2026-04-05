@@ -1278,6 +1278,7 @@ export function resolveTurn(
     }
 
     // Spread remaining resource cost evenly over remaining turns.
+    if (project.turnsRemaining <= 0) continue;
     const updatedCostRemaining: Partial<Record<ResourceType, number>> = {};
     for (const resourceType of Object.keys(project.resourceCostRemaining) as ResourceType[]) {
       const remaining = project.resourceCostRemaining[resourceType];
