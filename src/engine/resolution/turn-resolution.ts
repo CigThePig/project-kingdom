@@ -33,7 +33,7 @@ import {
 } from '../constants';
 import { advanceEventChains, EventDefinition, surfaceEvents } from '../events/event-engine';
 import { processDueFollowUps, scheduleFollowUps } from '../events/follow-up-tracker';
-import { calculateCategoryWeights, updatePacingForSurfacedEvents, updateClassFavorFromChoice } from '../events/narrative-pacing';
+import { calculateCategoryWeights, createInitialPacingState, updateClassFavorFromChoice, updatePacingForSurfacedEvents } from '../events/narrative-pacing';
 import {
   advanceStorylines,
   evaluateStorylinePool,
@@ -125,6 +125,7 @@ import {
   applyConflictConsequences,
 } from '../systems/military';
 import { EVENT_POOL } from '../../data/events/index';
+import { EVENT_CHOICE_EFFECTS } from '../../data/events/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
 import { findConstructionDefinition } from '../../data/construction/index';
 
@@ -1012,6 +1013,34 @@ export function resolveTurn(
   const EVENT_REGISTRY: EventDefinition[] = EVENT_POOL;
   const STORYLINE_REGISTRY: StorylineDefinition[] = STORYLINE_POOL;
 
+  // Apply mechanical effects, schedule follow-ups, and update class-favor tracking
+  // for all events the player resolved since the last turn.
+  const currentPacing = stateAfterActions.narrativePacing ?? createInitialPacingState();
+  let pacingWithChoiceFavor = currentPacing;
+  let pendingFollowUpsAfterChoices = stateAfterActions.pendingFollowUps ?? [];
+
+  for (const event of stateAfterActions.activeEvents) {
+    if (!event.isResolved || event.choiceMade === null) continue;
+    const effectDelta = EVENT_CHOICE_EFFECTS[event.definitionId]?.[event.choiceMade];
+    if (effectDelta) {
+      stateAfterActions = applyMechanicalEffectDelta(
+        stateAfterActions, effectDelta, event.affectedRegionId,
+      );
+      pacingWithChoiceFavor = updateClassFavorFromChoice(pacingWithChoiceFavor, effectDelta);
+    }
+    pendingFollowUpsAfterChoices = scheduleFollowUps(
+      pendingFollowUpsAfterChoices,
+      event,
+      EVENT_REGISTRY,
+      state.turn.turnNumber,
+    );
+  }
+
+  stateAfterActions = {
+    ...stateAfterActions,
+    pendingFollowUps: pendingFollowUpsAfterChoices,
+  };
+
   // Advance existing event chains (resolved chain events produce their next-step event).
   const chainAdvancedEvents = advanceEventChains(
     stateAfterActions.activeEvents,
@@ -1036,12 +1065,14 @@ export function resolveTurn(
   // Surface new standalone events against updated state.
   // Include follow-up events in the existing event list to avoid duplicates.
   const eventsWithFollowUps = [...chainAdvancedEvents, ...followUpResult.surfacedEvents];
+  const categoryWeights = calculateCategoryWeights(pacingWithChoiceFavor, nextTurnNumber);
   const newEvents = surfaceEvents(
     stateAfterActions,
     nextTurnNumber,
     EVENT_REGISTRY,
     eventsWithFollowUps,
     eventHistory,
+    categoryWeights,
   );
 
   const activeEvents = [...eventsWithFollowUps, ...newEvents];
@@ -1049,12 +1080,7 @@ export function resolveTurn(
   // Update narrative pacing state for surfaced events.
   const allNewlyBornEvents = [...followUpResult.surfacedEvents, ...newEvents];
   const updatedNarrativePacing = updatePacingForSurfacedEvents(
-    stateAfterActions.narrativePacing ?? {
-      recentCategoryTurns: {},
-      recentSeverityCount: { Informational: 0, Notable: 0, Serious: 0, Critical: 0 },
-      dominantClassFavor: null,
-      classChoiceHistory: { Nobility: 0, Clergy: 0, Merchants: 0, Commoners: 0, MilitaryCaste: 0 },
-    },
+    pacingWithChoiceFavor,
     allNewlyBornEvents,
     nextTurnNumber,
   );
