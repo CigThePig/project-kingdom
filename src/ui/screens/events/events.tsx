@@ -101,6 +101,12 @@ export function Events() {
       const choiceDef = definition.choices.find((c) => c.choiceId === choiceId);
       if (!choiceDef) return;
 
+      // Look up the related storyline so the resolution engine can route
+      // this action to the storyline branch decision handler.
+      const relatedStoryline = event.relatedStorylineId
+        ? activeStorylines.find((s) => s.id === event.relatedStorylineId)
+        : null;
+
       // Queue the action
       const action: QueuedAction = {
         id: `${eventId}_${choiceId}_${Date.now()}`,
@@ -110,7 +116,14 @@ export function Events() {
         isFree: choiceDef.isFree,
         targetRegionId: event.affectedRegionId,
         targetNeighborId: null,
-        parameters: { eventId, choiceId },
+        parameters: {
+          eventId,
+          choiceId,
+          ...(relatedStoryline ? {
+            storylineId: relatedStoryline.id,
+            branchPointId: relatedStoryline.currentBranchId,
+          } : {}),
+        },
       };
 
       const error = queueAction(action);
@@ -134,7 +147,7 @@ export function Events() {
         });
       }
     },
-    [activeEvents, queueAction, ctx],
+    [activeEvents, activeStorylines, queueAction, ctx],
   );
 
   // ---- Helper to resolve storyline info for an event ----
