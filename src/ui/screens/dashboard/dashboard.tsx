@@ -363,11 +363,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
   const [turnPhase, setTurnPhase] = useState<TurnPhase>('idle');
   const [turnResult, setTurnResult] = useState<TurnResolutionResult | null>(null);
   const [showContentClasses, setShowContentClasses] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 1023px)').matches);
 
   useEffect(() => {
     const mql = window.matchMedia('(max-width: 1023px)');
-    setIsMobile(mql.matches);
     function handleChange(e: MediaQueryListEvent) { setIsMobile(e.matches); }
     mql.addEventListener('change', handleChange);
     return () => mql.removeEventListener('change', handleChange);

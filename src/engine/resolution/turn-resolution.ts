@@ -1180,7 +1180,7 @@ export function resolveTurn(
   // ---- Phase 10: Construction Progress ----
   // Decrement turn counters, remove completed projects, apply completion effects,
   // and deduct per-turn resource costs.
-  let workingResources = stateAfterActions.resources;
+  const workingResources = stateAfterActions.resources;
   let constructionRegions = stateAfterActions.regions;
   let constructionTreasury = updatedTreasury;
   let constructionFood = updatedFood;
