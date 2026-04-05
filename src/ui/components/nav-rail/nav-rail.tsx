@@ -1,4 +1,4 @@
-// Phase 8 — Navigation Rail: left rail (desktop) / bottom bar (mobile).
+// Phase 8 — Navigation Rail: left rail (desktop) / retro-RPG grid nav (mobile).
 // Blueprint Reference: ui-blueprint.md §3.5, ux-blueprint.md §5
 
 import { useState } from 'react';
@@ -49,15 +49,11 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'archive', label: NAV_LABELS.archive, icon: SCREEN_ICON_MAP.archive },
 ];
 
-// Mobile bottom bar shows 5 items: Dashboard, Decrees, Events, Society (faith), More
-const MOBILE_PRIMARY_IDS: ScreenId[] = ['dashboard', 'decrees', 'events', 'faith'];
+// Mobile quick-access: 3 primary + 1 menu button
+const MOBILE_QUICK_IDS: ScreenId[] = ['dashboard', 'decrees', 'events'];
 
-const MOBILE_PRIMARY_ITEMS = NAV_ITEMS.filter((item) =>
-  MOBILE_PRIMARY_IDS.includes(item.id),
-);
-
-const MOBILE_OVERFLOW_ITEMS = NAV_ITEMS.filter(
-  (item) => !MOBILE_PRIMARY_IDS.includes(item.id),
+const MOBILE_QUICK_ITEMS = NAV_ITEMS.filter((item) =>
+  MOBILE_QUICK_IDS.includes(item.id),
 );
 
 // ============================================================
@@ -74,7 +70,12 @@ interface NavRailProps {
 // ============================================================
 
 export function NavRail({ activeScreen, onNavigate }: NavRailProps) {
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [gridOpen, setGridOpen] = useState(false);
+
+  function handleGridSelect(screen: ScreenId) {
+    onNavigate(screen);
+    setGridOpen(false);
+  }
 
   return (
     <nav
@@ -101,9 +102,9 @@ export function NavRail({ activeScreen, onNavigate }: NavRailProps) {
         ))}
       </ul>
 
-      {/* Mobile: bottom bar with 5 items */}
+      {/* Mobile: 3 quick-access + Menu button */}
       <div className={styles.mobileBar}>
-        {MOBILE_PRIMARY_ITEMS.map((item) => (
+        {MOBILE_QUICK_ITEMS.map((item) => (
           <button
             key={item.id}
             className={
@@ -112,7 +113,7 @@ export function NavRail({ activeScreen, onNavigate }: NavRailProps) {
             }
             onClick={() => {
               onNavigate(item.id);
-              setMoreMenuOpen(false);
+              setGridOpen(false);
             }}
             aria-current={activeScreen === item.id ? 'page' : undefined}
           >
@@ -121,42 +122,49 @@ export function NavRail({ activeScreen, onNavigate }: NavRailProps) {
           </button>
         ))}
 
-        <div className={styles.moreContainer}>
-          <button
-            className={
-              styles.mobileItem +
-              (moreMenuOpen ? ' ' + styles.active : '')
-            }
-            onClick={() => setMoreMenuOpen((prev) => !prev)}
-            aria-expanded={moreMenuOpen}
-            aria-haspopup="true"
-          >
-            <span className={styles.mobileLabel}>More</span>
-          </button>
-
-          {moreMenuOpen && (
-            <ul className={styles.moreMenu} role="list">
-              {MOBILE_OVERFLOW_ITEMS.map((item) => (
-                <li key={item.id}>
-                  <button
-                    className={
-                      styles.moreMenuItem +
-                      (activeScreen === item.id ? ' ' + styles.active : '')
-                    }
-                    onClick={() => {
-                      onNavigate(item.id);
-                      setMoreMenuOpen(false);
-                    }}
-                    aria-current={activeScreen === item.id ? 'page' : undefined}
-                  >
-                    {item.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <button
+          className={
+            styles.menuButton +
+            (gridOpen ? ' ' + styles.active : '')
+          }
+          onClick={() => setGridOpen((prev) => !prev)}
+          aria-expanded={gridOpen}
+          aria-haspopup="true"
+        >
+          <Icon name="dashboard" size="1.25rem" />
+          <span className={styles.mobileLabel}>Menu</span>
+        </button>
       </div>
+
+      {/* Full-screen 3x4 grid overlay */}
+      {gridOpen && (
+        <div
+          className={styles.gridOverlay}
+          onClick={() => setGridOpen(false)}
+        >
+          <div
+            className={styles.gridPanel}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.gridContainer}>
+              {NAV_ITEMS.map((item) => (
+                <button
+                  key={item.id}
+                  className={
+                    styles.gridCell +
+                    (activeScreen === item.id ? ' ' + styles.gridCellActive : '')
+                  }
+                  onClick={() => handleGridSelect(item.id)}
+                  aria-current={activeScreen === item.id ? 'page' : undefined}
+                >
+                  <Icon name={item.icon} size="1.5rem" />
+                  <span className={styles.gridLabel}>{item.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

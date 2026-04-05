@@ -27,6 +27,7 @@ import styles from './crown-bar.module.css';
 interface CrownBarProps {
   onNavigateToEvents: () => void;
   onToggleIntelPanel: () => void;
+  hidden?: boolean;
 }
 
 // ============================================================
@@ -92,14 +93,14 @@ function ActionSlots({ used, total }: { used: number; total: number }) {
 // Crown Bar
 // ============================================================
 
-export function CrownBar({ onNavigateToEvents, onToggleIntelPanel }: CrownBarProps) {
+export function CrownBar({ onNavigateToEvents, onToggleIntelPanel, hidden }: CrownBarProps) {
   const crownBar = useCrownBar();
   const actionBudget = useActionBudget();
   const [expanded, setExpanded] = useState(false);
 
   return (
     <header
-      className={`${styles.crownBar} ${expanded ? styles.expanded : ''}`}
+      className={`${styles.crownBar} ${expanded ? styles.expanded : ''} ${hidden ? styles.hidden : ''}`}
       style={{ gridArea: 'crown' }}
     >
       <div className={styles.leftCluster}>

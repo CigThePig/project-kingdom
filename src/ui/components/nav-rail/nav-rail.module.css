@@ -1,5 +1,6 @@
 /* ==========================================================================
-   Nav Rail — Left Rail (Desktop) / Bottom Bar (Mobile)
+   Nav Rail — Left Rail (Desktop) / Retro-RPG Grid Nav (Mobile)
+   Modern-Retro Tactile: ink borders, hard shadows, chunky grid
    Source: ui-blueprint.md §3.5, ux-blueprint.md §5
    ========================================================================== */
 
@@ -9,9 +10,8 @@
 .rail {
   grid-area: nav;
   background: var(--color-bg-secondary);
-  border-right: 1px solid var(--color-border-default);
+  border-right: 2px solid var(--color-ink);
   overflow-y: auto;
-  box-shadow: 1px 0 8px hsla(220, 20%, 4%, 0.3);
 }
 
 .desktopList {
@@ -45,11 +45,9 @@
 }
 
 .navItem.active {
-  background: hsla(var(--color-seasonal-accent), 0.08);
-  background: var(--color-seasonal-accent-subtle, var(--color-bg-surface));
+  background: var(--color-seasonal-accent-subtle);
   color: var(--color-seasonal-text);
   border-left-color: var(--color-seasonal-accent);
-  box-shadow: inset 3px 0 8px -3px var(--color-seasonal-accent);
 }
 
 .label {
@@ -68,13 +66,18 @@
   display: none;
 }
 
+/* Grid overlay hidden on desktop */
+.gridOverlay {
+  display: none;
+}
+
 /* --------------------------------------------------------------------------
-   Mobile: fixed bottom tab bar
+   Mobile: fixed bottom bar with 3 quick + Menu button
    -------------------------------------------------------------------------- */
 @media (max-width: 1023px) {
   .rail {
     border-right: none;
-    border-top: 1px solid var(--color-border-default);
+    border-top: 2px solid var(--color-ink);
     overflow: visible;
   }
 
@@ -107,65 +110,125 @@
 
   .mobileItem:hover,
   .mobileItem.active {
-    color: var(--color-seasonal-text);
+    color: var(--color-text-heading);
   }
 
   .mobileItem.active {
-    border-top: 2px solid var(--color-seasonal-accent);
+    border-top: 3px solid var(--color-ink);
   }
 
   .mobileLabel {
     font-family: var(--font-family-body);
     font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-semibold);
     line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-caps);
+    text-transform: uppercase;
   }
 
-  /* More menu popup */
-  .moreContainer {
-    position: relative;
-    flex: 1;
+  /* Central Menu button — prominent */
+  .menuButton {
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    flex: 1;
     height: 100%;
-  }
-
-  .moreMenu {
-    position: absolute;
-    bottom: 100%;
-    right: 0;
-    list-style: none;
-    margin: 0;
-    padding: var(--space-2) 0;
-    background: var(--color-bg-surface-raised);
-    border: 1px solid var(--color-border-default);
-    border-radius: var(--border-radius-lg);
-    box-shadow: var(--shadow-lg);
-    z-index: var(--z-dropdown);
-    min-width: 10rem;
-  }
-
-  .moreMenuItem {
-    display: block;
-    width: 100%;
-    padding: var(--space-2) var(--space-4);
     background: none;
     border: none;
-    text-align: left;
     cursor: pointer;
-    font-family: var(--font-family-body);
-    font-size: var(--font-size-sm);
     color: var(--color-text-secondary);
-    transition: background var(--transition-fast), color var(--transition-fast);
+    transition: color var(--transition-fast);
+    padding: var(--space-1);
+    position: relative;
   }
 
-  .moreMenuItem:hover {
-    background: var(--color-bg-tertiary);
+  .menuButton:hover,
+  .menuButton.active {
+    color: var(--color-text-heading);
+  }
+
+  .menuButton.active {
+    border-top: 3px solid var(--color-seasonal-accent);
+  }
+
+  /* --------------------------------------------------------------------------
+     Full-Screen 3x4 Grid Overlay
+     -------------------------------------------------------------------------- */
+  .gridOverlay {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    background: var(--color-bg-overlay);
+    align-items: flex-end;
+    animation: fadeIn 150ms ease-out;
+  }
+
+  .gridPanel {
+    width: 100%;
+    background: var(--color-bg-secondary);
+    border-top: 4px solid var(--color-ink);
+    padding: var(--space-4);
+    padding-bottom: calc(3.5rem + var(--space-4));
+    animation: sheetSlideUp 200ms ease-out;
+  }
+
+  @keyframes sheetSlideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .gridContainer {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-3);
+  }
+
+  .gridCell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-1);
+    padding: var(--space-3) var(--space-2);
+    background: var(--color-bg-surface);
+    border: 2px solid var(--color-border-strong);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    box-shadow: var(--shadow-sm);
+    transition: transform 80ms ease, box-shadow 80ms ease, background var(--transition-fast);
+  }
+
+  .gridCell:hover {
     color: var(--color-text-primary);
+    border-color: var(--color-ink);
   }
 
-  .moreMenuItem.active {
-    color: var(--color-seasonal-text);
-    background: var(--color-seasonal-accent-subtle);
+  .gridCell:active {
+    transform: translateY(2px);
+    box-shadow: 0px 0px 0px var(--color-ink);
+  }
+
+  .gridCellActive {
+    background: var(--color-ink);
+    color: var(--color-text-inverse);
+    border-color: var(--color-ink);
+    box-shadow: var(--shadow-md);
+  }
+
+  .gridCellActive:hover {
+    color: var(--color-text-inverse);
+  }
+
+  .gridLabel {
+    font-family: var(--font-family-body);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    text-align: center;
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-caps);
+    text-transform: uppercase;
   }
 }

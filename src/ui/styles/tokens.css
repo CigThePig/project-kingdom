@@ -1,83 +1,96 @@
 /* ==========================================================================
    Design Tokens — CSS Custom Properties
    Source: ui-blueprint.md §2 Visual Language
+   Modern-Retro Tactile: Crisp Ledger theme with hard shadows & dither
    ========================================================================== */
 
 :root {
   /* ========================================================================
      Colors — Base Surfaces
-     Dark slate / charcoal / iron-blue palette (§2.3)
+     Crisp Ledger: off-white parchment / paper palette
      ======================================================================== */
-  --color-bg-primary: hsl(220, 15%, 10%);
-  --color-bg-secondary: hsl(220, 12%, 14%);
-  --color-bg-tertiary: hsl(215, 14%, 18%);
-  --color-bg-surface: hsl(215, 12%, 20%);
-  --color-bg-surface-raised: hsl(215, 10%, 24%);
-  --color-bg-overlay: hsla(220, 20%, 6%, 0.85);
-  --color-bg-parchment: hsl(38, 15%, 82%);
+  --color-bg-primary: hsl(40, 25%, 94%);
+  --color-bg-secondary: hsl(40, 20%, 90%);
+  --color-bg-tertiary: hsl(40, 15%, 86%);
+  --color-bg-surface: hsl(40, 10%, 96%);
+  --color-bg-surface-raised: hsl(40, 12%, 99%);
+  --color-bg-overlay: hsla(30, 10%, 10%, 0.6);
+  --color-bg-parchment: hsl(38, 20%, 88%);
+
+  /* Ink — dominant dark for text, borders, shadows */
+  --color-ink: #111;
 
   /* ========================================================================
      Colors — Text
      ======================================================================== */
-  --color-text-primary: hsl(210, 10%, 88%);
-  --color-text-secondary: hsl(210, 8%, 62%);
-  --color-text-tertiary: hsl(210, 6%, 44%);
-  --color-text-inverse: hsl(220, 15%, 12%);
-  --color-text-heading: hsl(210, 12%, 92%);
+  --color-text-primary: hsl(0, 0%, 8%);
+  --color-text-secondary: hsl(0, 0%, 30%);
+  --color-text-tertiary: hsl(0, 0%, 50%);
+  --color-text-inverse: hsl(40, 25%, 94%);
+  --color-text-heading: hsl(0, 0%, 6%);
 
   /* ========================================================================
      Colors — Borders and Accents
      ======================================================================== */
-  --color-border-default: hsl(215, 10%, 22%);
-  --color-border-strong: hsl(215, 10%, 30%);
-  --color-border-storyline: hsl(38, 30%, 45%);
-  --color-accent-metallic: hsl(210, 8%, 55%);
+  --color-border-default: hsl(0, 0%, 75%);
+  --color-border-strong: hsl(0, 0%, 12%);
+  --color-border-storyline: hsl(38, 40%, 40%);
+  --color-accent-metallic: hsl(0, 0%, 20%);
 
   /* ========================================================================
      Colors — Status (§2.3)
      ======================================================================== */
 
   /* Warning: muted amber */
-  --color-status-warning: hsl(40, 65%, 50%);
-  --color-status-warning-bg: hsla(40, 65%, 50%, 0.12);
-  --color-status-warning-border: hsla(40, 65%, 50%, 0.35);
+  --color-status-warning: hsl(40, 65%, 42%);
+  --color-status-warning-bg: hsl(40, 25%, 92%);
+  --color-status-warning-border: hsl(40, 50%, 55%);
+  --color-status-warning-dither: hsl(40, 65%, 50%);
 
   /* Critical: restrained deep red */
-  --color-status-critical: hsl(0, 55%, 45%);
-  --color-status-critical-bg: hsla(0, 55%, 45%, 0.12);
-  --color-status-critical-border: hsla(0, 55%, 45%, 0.35);
+  --color-status-critical: hsl(0, 55%, 40%);
+  --color-status-critical-bg: hsl(0, 15%, 93%);
+  --color-status-critical-border: hsl(0, 45%, 55%);
+  --color-status-critical-dither: hsl(0, 55%, 45%);
 
   /* Positive: desaturated green/teal */
-  --color-status-positive: hsl(165, 35%, 45%);
-  --color-status-positive-bg: hsla(165, 35%, 45%, 0.12);
-  --color-status-positive-border: hsla(165, 35%, 45%, 0.35);
+  --color-status-positive: hsl(165, 40%, 32%);
+  --color-status-positive-bg: hsl(160, 12%, 92%);
+  --color-status-positive-border: hsl(165, 30%, 50%);
+  --color-status-positive-dither: hsl(165, 35%, 45%);
 
   /* Neutral change: soft blue-gray */
-  --color-status-neutral: hsl(210, 15%, 55%);
-  --color-status-neutral-bg: hsla(210, 15%, 55%, 0.12);
-  --color-status-neutral-border: hsla(210, 15%, 55%, 0.35);
+  --color-status-neutral: hsl(210, 15%, 40%);
+  --color-status-neutral-bg: hsl(210, 8%, 92%);
+  --color-status-neutral-border: hsl(210, 12%, 60%);
 
   /* Locked/unavailable: reduced opacity muted overlay */
-  --color-status-locked: hsla(220, 10%, 40%, 0.5);
+  --color-status-locked: hsla(0, 0%, 40%, 0.45);
 
   /* Covert/intelligence: muted indigo/deep violet */
-  --color-status-covert: hsl(245, 25%, 40%);
-  --color-status-covert-bg: hsla(245, 25%, 40%, 0.10);
+  --color-status-covert: hsl(245, 30%, 35%);
+  --color-status-covert-bg: hsl(245, 12%, 92%);
 
   /* Faith/cultural: warm bronze/antique gold */
-  --color-status-faith: hsl(35, 45%, 48%);
-  --color-status-faith-bg: hsla(35, 45%, 48%, 0.12);
+  --color-status-faith: hsl(35, 50%, 38%);
+  --color-status-faith-bg: hsl(35, 18%, 92%);
 
   /* Selection highlight */
-  --color-selection: hsla(210, 30%, 40%, 0.4);
+  --color-selection: hsla(40, 40%, 60%, 0.35);
+
+  /* ========================================================================
+     Dither Pattern Tokens
+     Used via ::before pseudo-elements for retro pixel-checkerboard overlays
+     ======================================================================== */
+  --dither-size: 4px;
 
   /* ========================================================================
      Colors — Seasonal Accents (§2.4)
      Defaults; overridden by seasonal.css body class selectors
      ======================================================================== */
-  --color-seasonal-accent: hsl(215, 14%, 18%);
-  --color-seasonal-accent-subtle: hsla(215, 14%, 18%, 0.08);
-  --color-seasonal-text: hsl(210, 10%, 88%);
+  --color-seasonal-accent: hsl(0, 0%, 20%);
+  --color-seasonal-accent-subtle: hsla(0, 0%, 20%, 0.06);
+  --color-seasonal-text: hsl(0, 0%, 8%);
 
   /* ========================================================================
      Typography (§2.2)
@@ -137,30 +150,30 @@
   --intel-panel-width: 22rem;
   --content-max-width: 72rem;
 
-  /* Border radii */
-  --border-radius-sm: 0.25rem;
-  --border-radius-md: 0.5rem;
-  --border-radius-lg: 0.75rem;
-  --border-radius-xl: 1rem;
+  /* Border radii — kept small for crisp/angular feel */
+  --border-radius-sm: 0.125rem;
+  --border-radius-md: 0.25rem;
+  --border-radius-lg: 0.375rem;
+  --border-radius-xl: 0.5rem;
 
   /* ========================================================================
-     Surface Elevation Levels (Phase 8A)
-     4 distinct levels: recessed < base < raised < floating
+     Surface Elevation Levels
+     Hard-shadow tactile system: recessed < base < raised < floating
      ======================================================================== */
   --surface-recessed-bg: var(--color-bg-primary);
   --surface-recessed-border: var(--color-border-default);
   --surface-recessed-shadow: var(--shadow-inset);
 
   --surface-base-bg: var(--color-bg-surface);
-  --surface-base-border: hsl(215, 10%, 24%);
+  --surface-base-border: var(--color-border-default);
   --surface-base-shadow: var(--shadow-sm);
 
   --surface-raised-bg: var(--color-bg-surface-raised);
   --surface-raised-border: var(--color-border-strong);
   --surface-raised-shadow: var(--shadow-md);
 
-  --surface-floating-bg: hsl(215, 10%, 26%);
-  --surface-floating-border: hsl(215, 10%, 32%);
+  --surface-floating-bg: hsl(40, 12%, 98%);
+  --surface-floating-border: var(--color-border-strong);
   --surface-floating-shadow: var(--shadow-elevated);
 
   /* Card interaction tokens */
@@ -169,16 +182,22 @@
   --card-border-top-accent: 2px;
 
   /* ========================================================================
-     Shadows — Enriched Scale (Phase 8A)
+     Shadows — Hard Offset (0-blur, tactile cardstock feel)
      ======================================================================== */
-  --shadow-sm: 0 1px 2px hsla(220, 20%, 4%, 0.4);
-  --shadow-md: 0 2px 6px hsla(220, 20%, 4%, 0.5);
-  --shadow-lg: 0 4px 12px hsla(220, 20%, 4%, 0.6);
-  --shadow-elevated: 0 6px 20px hsla(220, 20%, 4%, 0.7), 0 2px 6px hsla(220, 20%, 4%, 0.4);
-  --shadow-inset: inset 0 1px 3px hsla(220, 20%, 4%, 0.5);
-  --shadow-glow: 0 0 12px hsla(210, 30%, 40%, 0.3);
-  --shadow-glow-seasonal: 0 0 12px var(--color-seasonal-accent-subtle);
-  --shadow-card-hover: 0 6px 16px hsla(220, 20%, 4%, 0.6), 0 2px 4px hsla(220, 20%, 4%, 0.3);
+  --shadow-sm: 2px 2px 0px var(--color-ink);
+  --shadow-md: 3px 3px 0px var(--color-ink);
+  --shadow-lg: 4px 4px 0px var(--color-ink);
+  --shadow-elevated: 5px 5px 0px var(--color-ink);
+  --shadow-inset: inset 2px 2px 0px hsla(0, 0%, 0%, 0.08);
+  --shadow-glow: 3px 3px 0px var(--color-ink);
+  --shadow-glow-seasonal: 3px 3px 0px var(--color-seasonal-accent);
+  --shadow-card-hover: 5px 5px 0px var(--color-ink);
+
+  /* ========================================================================
+     Mechanical Button Tokens
+     ======================================================================== */
+  --button-shadow-offset: 4px;
+  --button-shadow: var(--button-shadow-offset) var(--button-shadow-offset) 0px var(--color-ink);
 
   /* ========================================================================
      Transitions (§2.8 — minimal, document-like)
