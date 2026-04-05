@@ -345,6 +345,7 @@ export function createMerchantsGambitScenario(): GameState {
 
     // --- Persistent History ---
     persistentConsequences: [],
+    activeTemporaryModifiers: [],
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,
 

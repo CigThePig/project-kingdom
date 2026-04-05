@@ -68,11 +68,11 @@ export function useTurnActions(): TurnActionsAPI {
     (applyActionEffects: ApplyActionEffectsFn = applyRealActionEffects): TurnResolutionResult => {
       // Run the engine's turn resolution outside the reducer to keep
       // the reducer pure (resolveTurn uses Math.random internally).
-      const result = resolveTurn(state.gameState, applyActionEffects);
+      const result = resolveTurn(state.gameState, applyActionEffects, state.eventHistory);
       dispatch({ type: 'TURN_RESOLVED', result });
       return result;
     },
-    [state.gameState, dispatch],
+    [state.gameState, state.eventHistory, dispatch],
   );
 
   return {

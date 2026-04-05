@@ -42,6 +42,8 @@ export interface EventTriggerCondition {
     | 'season_is'
     | 'turn_range'
     | 'random_chance'
+    | 'consequence_tag_present'
+    | 'consequence_tag_absent'
     | 'always';
   /** Numeric threshold for above/below condition types. */
   threshold?: number;
@@ -55,6 +57,10 @@ export interface EventTriggerCondition {
   maxTurn?: number;
   /** Required for random_chance condition: probability 0–1. */
   probability?: number;
+  /** Required for consequence_tag_present / consequence_tag_absent conditions. */
+  consequenceTag?: string;
+  /** Optional: minimum turns elapsed since the consequence was recorded. */
+  minTurnsSinceConsequence?: number;
 }
 
 /**
@@ -190,6 +196,25 @@ function evaluateCondition(
 
     case 'random_chance':
       return condition.probability !== undefined && Math.random() < condition.probability;
+
+    case 'consequence_tag_present': {
+      if (condition.consequenceTag === undefined) return false;
+      const match = state.persistentConsequences.find(
+        (c) => c.tag === condition.consequenceTag,
+      );
+      if (!match) return false;
+      if (condition.minTurnsSinceConsequence !== undefined) {
+        return (turnNumber - match.turnApplied) >= condition.minTurnsSinceConsequence;
+      }
+      return true;
+    }
+
+    case 'consequence_tag_absent': {
+      if (condition.consequenceTag === undefined) return false;
+      return !state.persistentConsequences.some(
+        (c) => c.tag === condition.consequenceTag,
+      );
+    }
 
     default:
       return false;

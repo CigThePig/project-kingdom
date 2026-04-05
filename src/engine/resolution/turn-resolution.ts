@@ -4,6 +4,7 @@
 
 import {
   ActionType,
+  ActiveEvent,
   ConflictState,
   ConstructionProject,
   CrownBarData,
@@ -36,7 +37,7 @@ import {
   evaluateStorylinePool,
   StorylineDefinition,
 } from '../events/storyline-engine';
-import { applyStorylineResolutionEffects } from '../events/apply-event-effects';
+import { applyMechanicalEffectDelta, applyStorylineResolutionEffects } from '../events/apply-event-effects';
 import { STORYLINE_RESOLUTION_EFFECTS } from '../../data/storylines/effects';
 import { resetActionBudgetForNextTurn } from './action-budget';
 import { summarizeRegionalOutputs, checkTotalConquest, getOccupiedFraction, applyRegionDevelopmentChange } from '../systems/regions';
@@ -198,6 +199,7 @@ function isIntelligenceOperationType(value: unknown): value is IntelligenceOpera
 export function resolveTurn(
   state: GameState,
   applyActionEffects: ApplyActionEffectsFn,
+  eventHistory: ActiveEvent[] = [],
 ): TurnResolutionResult {
   // ---- Phase 1: Income and Production ----
   // Compute all regional outputs in one pass; reused by downstream calculations.
@@ -270,10 +272,26 @@ export function resolveTurn(
 
   // ---- Phase 2: Action Execution ----
   // Pass updated resources into action effects so actions can read the current stockpiles.
-  const stateAfterActions = applyActionEffects(
+  let stateAfterActions = applyActionEffects(
     { ...state, resources: phase1Resources },
     state.actionBudget.queuedActions,
   );
+
+  // ---- Phase 2b: Temporary Modifier Tick ----
+  // Apply ongoing effects from temporary modifiers, then decrement and expire.
+  for (const modifier of stateAfterActions.activeTemporaryModifiers) {
+    stateAfterActions = applyMechanicalEffectDelta(
+      stateAfterActions,
+      modifier.effectPerTurn,
+      null,
+    );
+  }
+  stateAfterActions = {
+    ...stateAfterActions,
+    activeTemporaryModifiers: stateAfterActions.activeTemporaryModifiers
+      .map((m) => ({ ...m, turnsRemaining: m.turnsRemaining - 1 }))
+      .filter((m) => m.turnsRemaining > 0),
+  };
 
   // ---- Phase 3: Upkeep and Consumption ----
   // Construction gold cost: placeholder 0 until data layer defines per-project gold costs.
@@ -997,7 +1015,7 @@ export function resolveTurn(
     stateAfterActions.activeEvents,
     nextTurnNumber,
     EVENT_REGISTRY,
-    [], // eventHistory is scoped to SaveFile, not available here; chains work with active set
+    eventHistory,
   );
 
   // Surface new standalone events against updated state.
@@ -1006,7 +1024,7 @@ export function resolveTurn(
     nextTurnNumber,
     EVENT_REGISTRY,
     chainAdvancedEvents,
-    [],
+    eventHistory,
   );
 
   const activeEvents = [...chainAdvancedEvents, ...newEvents];
@@ -1358,6 +1376,7 @@ export function resolveTurn(
     activeFailureConditions: triggeredFailureConditions,
     consecutiveTurnsOverthrowRisk: nextConsecutiveTurnsOverthrowRisk,
     persistentConsequences: updatedPersistentConsequences,
+    activeTemporaryModifiers: stateAfterActions.activeTemporaryModifiers,
     resolvedStorylineIds: allResolvedStorylineIds,
     lastStorylineActivationTurn: updatedLastActivationTurn,
     scenarioId: stateAfterActions.scenarioId,

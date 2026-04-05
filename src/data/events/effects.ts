@@ -401,4 +401,134 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     close_borders:             { commonerSatDelta: -4, stabilityDelta: +2, merchantSatDelta: -3 },
     let_dissenters_leave:      { commonerSatDelta: -2, stabilityDelta: -4, merchantSatDelta: -1 },
   },
+
+  // ============================================================
+  // FOLLOW-UP EVENTS (12)
+  // ============================================================
+
+  // 1. Scholarly Discovery (follow-up to fund_further_research)
+  evt_scholarly_discovery: {
+    patent_discovery:    { treasuryDelta: +25, merchantSatDelta: +2 },
+    share_with_clergy:   { clergySatDelta: +4, faithDelta: +3 },
+    apply_to_military:   { militaryReadinessDelta: +5, militaryEquipmentDelta: +3 },
+  },
+
+  // 2. Practical Innovation Success (follow-up to apply_practical_findings)
+  evt_practical_innovation_success: {
+    expand_workshops:    { regionDevelopmentDelta: +3, treasuryDelta: -30, merchantSatDelta: +2 },
+    train_artisans:      { commonerSatDelta: +2, merchantSatDelta: +2, stabilityDelta: +1 },
+    present_to_court:    { nobilitySatDelta: +2, stabilityDelta: +1 },
+  },
+
+  // 3. Merchant Demands Escalate (follow-up to offer_tax_relief)
+  evt_merchant_demands_escalate: {
+    hold_firm_on_terms:      { merchantSatDelta: -3, stabilityDelta: +2 },
+    extend_concessions:      { treasuryDelta: -30, merchantSatDelta: +4, nobilitySatDelta: -2 },
+    impose_trade_conditions: { treasuryDelta: +15, merchantSatDelta: -2, stabilityDelta: +1 },
+  },
+
+  // 4. Merchant Underground Economy (follow-up to enforce_capital_controls)
+  evt_merchant_underground_economy: {
+    raid_smuggling_networks: { espionageNetworkDelta: +4, treasuryDelta: +20, merchantSatDelta: -3 },
+    legitimize_shadow_trade: { merchantSatDelta: +2, treasuryDelta: -15, heterodoxyDelta: +3 },
+    increase_enforcement:    { treasuryDelta: -25, stabilityDelta: +3, merchantSatDelta: -2 },
+  },
+
+  // 5. Noble Backlash (follow-up to side_with_laborers)
+  evt_noble_backlash_labor: {
+    appease_nobles:    { treasuryDelta: -40, nobilitySatDelta: +3, commonerSatDelta: -2 },
+    stand_firm:        { nobilitySatDelta: -4, commonerSatDelta: +3, stabilityDelta: +2 },
+    offer_compromise:  { treasuryDelta: -20, nobilitySatDelta: +1, commonerSatDelta: +1 },
+  },
+
+  // 6. Commoner Work Slowdown (follow-up to enforce_existing_contracts)
+  evt_commoner_work_slowdown: {
+    impose_work_quotas:  { commonerSatDelta: -3, merchantSatDelta: +2, treasuryDelta: +15 },
+    open_dialogue:       { commonerSatDelta: +2, merchantSatDelta: -1, treasuryDelta: -15 },
+    hire_foreign_labor:  { treasuryDelta: -25, merchantSatDelta: +1, culturalCohesionDelta: -2 },
+  },
+
+  // 7. Theological Schism Brewing (follow-up to permit_theological_debate)
+  evt_theological_schism_brewing: {
+    host_grand_debate:   { treasuryDelta: -50, culturalCohesionDelta: +4, heterodoxyDelta: +3, clergySatDelta: +2 },
+    quietly_suppress:    { clergySatDelta: -3, heterodoxyDelta: -5, commonerSatDelta: -2 },
+    embrace_new_thought: { heterodoxyDelta: +5, culturalCohesionDelta: +3, faithDelta: -3 },
+  },
+
+  // 8. Intelligence Network Payoff (follow-up to launch_counter_intelligence)
+  evt_intelligence_network_payoff: {
+    expose_conspiracy:     { stabilityDelta: +5, nobilitySatDelta: -6, commonerSatDelta: +3 },
+    leverage_for_loyalty:  { nobilitySatDelta: +4, espionageNetworkDelta: +3, stabilityDelta: -2 },
+    share_with_allies:     { espionageNetworkDelta: +2, stabilityDelta: +2 },
+  },
+
+  // 9. Foreign Grain Dependency (follow-up to purchase_foreign_grain)
+  evt_foreign_grain_dependency: {
+    invest_in_domestic_agriculture: { treasuryDelta: -60, regionDevelopmentDelta: +3, commonerSatDelta: +2 },
+    negotiate_long_term_supply:     { treasuryDelta: -30, merchantSatDelta: +2, foodDelta: +15 },
+    accept_dependency:              { stabilityDelta: -2, merchantSatDelta: +1 },
+  },
+
+  // 10. Resource Boom (follow-up to fund_extraction)
+  evt_resource_boom: {
+    expand_operations:        { treasuryDelta: -40, regionDevelopmentDelta: +5, merchantSatDelta: +3 },
+    tax_windfall:             { treasuryDelta: +50, merchantSatDelta: -2, commonerSatDelta: +2 },
+    establish_workers_rights: { commonerSatDelta: +3, merchantSatDelta: -1, stabilityDelta: +2 },
+  },
+
+  // 11. Clergy Healing Reputation (follow-up to mobilize_clergy_healers)
+  evt_clergy_healing_reputation: {
+    establish_permanent_hospice: { treasuryDelta: -40, clergySatDelta: +4, commonerSatDelta: +3, faithDelta: +3 },
+    leverage_piety:              { faithDelta: +2, clergySatDelta: +1, heterodoxyDelta: -1 },
+    return_to_normal:            { clergySatDelta: -1, commonerSatDelta: -1 },
+  },
+
+  // 12. Military Pay Expectation (follow-up to increase_military_pay)
+  evt_military_pay_expectation: {
+    institutionalize_pay_scale: { militaryMoraleDelta: +5, militaryCasteSatDelta: +3, treasuryDelta: -20 },
+    revert_to_standard_pay:    { militaryCasteSatDelta: -4, militaryMoraleDelta: -3, treasuryDelta: +30 },
+    offer_land_instead:        { militaryCasteSatDelta: +2, nobilitySatDelta: -2, regionDevelopmentDelta: +2 },
+  },
+};
+
+// ============================================================
+// Temporary Modifier Specs — Ongoing effects from event choices
+// ============================================================
+
+export interface TemporaryModifierSpec {
+  durationTurns: number;
+  effectPerTurn: MechanicalEffectDelta;
+}
+
+export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, TemporaryModifierSpec>> = {
+  evt_merchant_capital_flight: {
+    // Tax relief reduces revenue for 4 turns
+    offer_tax_relief: { durationTurns: 4, effectPerTurn: { treasuryDelta: -8 } },
+  },
+  evt_scholarly_breakthrough: {
+    // Ongoing research funding costs
+    fund_further_research: { durationTurns: 3, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_region_resource_discovery: {
+    // Extraction yields income over time
+    fund_extraction: { durationTurns: 5, effectPerTurn: { treasuryDelta: +10 } },
+  },
+  evt_summer_trade_season: {
+    // Trade fair attracts commerce over several turns
+    host_trade_fair: { durationTurns: 3, effectPerTurn: { treasuryDelta: +8, merchantSatDelta: +1 } },
+  },
+  evt_commoner_labor_dispute: {
+    // Siding with laborers creates lasting class tension
+    side_with_laborers: { durationTurns: 3, effectPerTurn: { commonerSatDelta: +1, nobilitySatDelta: -1 } },
+    // Enforcing contracts breeds resentment among workers
+    enforce_existing_contracts: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1, merchantSatDelta: +1 } },
+  },
+  evt_military_desertion_crisis: {
+    // Higher pay is an ongoing expense
+    increase_military_pay: { durationTurns: 4, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_heresy_emergence: {
+    // Open debate allows heterodox ideas to spread
+    permit_theological_debate: { durationTurns: 3, effectPerTurn: { heterodoxyDelta: +1 } },
+  },
 };
