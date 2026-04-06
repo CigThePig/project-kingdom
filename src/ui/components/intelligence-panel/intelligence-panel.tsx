@@ -18,6 +18,7 @@ import { ForecastModule } from '../forecast-module/forecast-module';
 import { ConsequencePreview } from '../consequence-preview/consequence-preview';
 import { DECREE_POOL } from '../../../data/decrees/index';
 import { DECREE_EFFECTS } from '../../../data/decrees/effects';
+import { getDecreeAvailability, getChainDecrees } from '../../../engine/systems/decree-progression';
 import { EVENT_TEXT, STORYLINE_TEXT } from '../../../data/text/events';
 import { EVENT_CHOICE_EFFECTS } from '../../../data/events/effects';
 import {
@@ -27,6 +28,8 @@ import {
   INTELLIGENCE_OP_LABELS,
   INTELLIGENCE_OP_DESCRIPTIONS,
   INTELLIGENCE_OP_RISK_LABELS,
+  DECREE_CHAIN_LABELS,
+  DECREE_ENACTED_LABEL,
 } from '../../../data/text/labels';
 import {
   CLASS_SATISFACTION_FACTORS,
@@ -150,6 +153,7 @@ function DashboardContext() {
 
 function DecreesContext() {
   const { data } = useRightPanel();
+  const kingdom = useKingdomState();
   const selectedId = data.selectedDecreeId;
 
   if (!selectedId) {
@@ -160,11 +164,19 @@ function DecreesContext() {
   if (!decree) return null;
 
   const effects = DECREE_EFFECTS[selectedId];
+  const progression = getDecreeAvailability(decree, kingdom.issuedDecrees, kingdom.turn.turnNumber);
+  const chainDecrees = decree.chainId ? getChainDecrees(decree.chainId) : [];
 
   return (
     <section className={styles.contextSection}>
       <h3 className={styles.contextSectionTitle}>{RIGHT_PANEL_CONSEQUENCE_HEADER}</h3>
       <p className={styles.contextItemTitle}>{decree.title}</p>
+      {progression.status === 'enacted' && (
+        <span className={styles.classChip}>{DECREE_ENACTED_LABEL}</span>
+      )}
+      {progression.status === 'cooldown' && (
+        <span className={styles.classChip}>{progression.reason}</span>
+      )}
       <p className={styles.contextItemBody}>{decree.effectPreview}</p>
       {effects && <ConsequencePreview effects={effects} />}
       {decree.affectedClasses.length > 0 && (
@@ -180,6 +192,26 @@ function DecreesContext() {
           {decree.prerequisites.map((p) => (
             <span key={p} className={styles.prerequisiteItem}>{p}</span>
           ))}
+        </div>
+      )}
+      {/* Chain progression display */}
+      {chainDecrees.length > 1 && (
+        <div className={styles.prerequisitesList}>
+          <span className={styles.contextItemLabel}>
+            {decree.chainId ? (DECREE_CHAIN_LABELS[decree.chainId] ?? 'Progression') : 'Progression'}:
+          </span>
+          {chainDecrees.map((cd) => {
+            const cdIssued = kingdom.issuedDecrees.some((d) => d.decreeId === cd.id);
+            return (
+              <span
+                key={cd.id}
+                className={styles.prerequisiteItem}
+                style={{ opacity: cdIssued ? 0.5 : 1, textDecoration: cdIssued ? 'line-through' : 'none' }}
+              >
+                {cd.tier}. {cd.title}{cd.id === decree.id ? ' (current)' : ''}
+              </span>
+            );
+          })}
         </div>
       )}
     </section>

@@ -18,6 +18,7 @@ import {
   FestivalInvestmentLevel,
   GameState,
   IntelligenceFundingLevel,
+  IssuedDecree,
   KnowledgeBranch,
   MilitaryPosture,
   MilitaryRecruitmentStance,
@@ -188,162 +189,142 @@ function satDelta(
   return pop;
 }
 
+// Helper: apply satisfaction + treasury delta from an effect constant.
+function applySatAndTreasury(state: GameState, eff: typeof DECREE_EFFECTS[keyof typeof DECREE_EFFECTS]): GameState {
+  let s = { ...state, population: satDelta(state, eff) };
+  if ('treasuryDelta' in eff && eff.treasuryDelta) {
+    s = { ...s, treasury: { ...s.treasury, balance: s.treasury.balance + eff.treasuryDelta } };
+  }
+  return s;
+}
+
+// Helper: apply readiness + morale deltas to military state.
+function applyMilitaryDeltas(
+  state: GameState,
+  eff: Record<string, number>,
+): GameState {
+  let mil = state.military;
+  if ('readinessDelta' in eff) mil = { ...mil, readiness: clamp(mil.readiness + (eff.readinessDelta ?? 0), 0, 100) };
+  if ('moraleDelta' in eff) mil = { ...mil, morale: clamp(mil.morale + (eff.moraleDelta ?? 0), 0, 100) };
+  if ('equipmentDelta' in eff) mil = { ...mil, equipmentCondition: clamp(mil.equipmentCondition + (eff.equipmentDelta ?? 0), 0, 100) };
+  return { ...mil === state.military ? state : { ...state, military: mil } };
+}
+
+// Helper: apply faith/heterodoxy deltas.
+function applyFaithDeltas(state: GameState, eff: Record<string, number>): GameState {
+  let fc = state.faithCulture;
+  if ('faithDelta' in eff) fc = { ...fc, faithLevel: clamp(fc.faithLevel + (eff.faithDelta ?? 0), 0, 100) };
+  if ('heterodoxyDelta' in eff) fc = { ...fc, heterodoxy: clamp(fc.heterodoxy + (eff.heterodoxyDelta ?? 0), 0, 100) };
+  return fc === state.faithCulture ? state : { ...state, faithCulture: fc };
+}
+
+// Helper: apply diplomatic relationship delta.
+function applyDiplomacyEffect(state: GameState, action: QueuedAction, eff: typeof DECREE_EFFECTS[keyof typeof DECREE_EFFECTS]): GameState {
+  if (action.targetNeighborId === null) return state;
+  const relDelta = 'relationshipDelta' in eff ? (eff as Record<string, number>).relationshipDelta : 0;
+  if (!relDelta) return state;
+  return {
+    ...state,
+    diplomacy: {
+      ...state.diplomacy,
+      neighbors: applyNeighborRelDelta(state.diplomacy.neighbors, action.targetNeighborId, relDelta),
+    },
+  };
+}
+
+// Combined effect applicator for decrees that only need sat + treasury + military + faith.
+function applyFullDecreeDeltas(state: GameState, action: QueuedAction, eff: typeof DECREE_EFFECTS[keyof typeof DECREE_EFFECTS]): GameState {
+  let s = applySatAndTreasury(state, eff);
+  const effRecord = eff as Record<string, number>;
+  // Military
+  if ('readinessDelta' in eff || 'moraleDelta' in eff || 'equipmentDelta' in eff) {
+    let mil = s.military;
+    if (effRecord.readinessDelta) mil = { ...mil, readiness: clamp(mil.readiness + effRecord.readinessDelta, 0, 100) };
+    if (effRecord.moraleDelta) mil = { ...mil, morale: clamp(mil.morale + effRecord.moraleDelta, 0, 100) };
+    if (effRecord.equipmentDelta) mil = { ...mil, equipmentCondition: clamp(mil.equipmentCondition + effRecord.equipmentDelta, 0, 100) };
+    s = { ...s, military: mil };
+  }
+  // Faith/Heterodoxy
+  if ('faithDelta' in eff || 'heterodoxyDelta' in eff) {
+    let fc = s.faithCulture;
+    if (effRecord.faithDelta) fc = { ...fc, faithLevel: clamp(fc.faithLevel + effRecord.faithDelta, 0, 100) };
+    if (effRecord.heterodoxyDelta) fc = { ...fc, heterodoxy: clamp(fc.heterodoxy + effRecord.heterodoxyDelta, 0, 100) };
+    s = { ...s, faithCulture: fc };
+  }
+  // Diplomacy
+  if ('relationshipDelta' in eff && action.targetNeighborId !== null) {
+    s = {
+      ...s,
+      diplomacy: {
+        ...s.diplomacy,
+        neighbors: applyNeighborRelDelta(s.diplomacy.neighbors, action.targetNeighborId, effRecord.relationshipDelta),
+      },
+    };
+  }
+  return s;
+}
+
 const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
-  ['market_charter', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.market_charter),
-  })],
-
-  ['emergency_levy', (state) => {
-    const eff = DECREE_EFFECTS.emergency_levy;
-    return {
-      ...state,
-      treasury: { ...state.treasury, balance: state.treasury.balance + eff.treasuryDelta },
-      population: satDelta(state, eff),
-    };
-  }],
-
-  ['trade_subsidies', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.trade_subsidies),
-  })],
-
-  ['fortify_borders', (state) => {
-    const eff = DECREE_EFFECTS.fortify_borders;
-    return {
-      ...state,
-      population: satDelta(state, eff),
-      military: {
-        ...state.military,
-        readiness: clamp(state.military.readiness + eff.readinessDelta, 0, 100),
-      },
-    };
-  }],
-
-  ['arms_commission', (state) => {
-    const eff = DECREE_EFFECTS.arms_commission;
-    return {
-      ...state,
-      population: satDelta(state, eff),
-      military: {
-        ...state.military,
-        equipmentCondition: clamp(state.military.equipmentCondition + eff.equipmentDelta, 0, 100),
-      },
-    };
-  }],
-
-  ['general_mobilization', (state) => {
-    const eff = DECREE_EFFECTS.general_mobilization;
-    return {
-      ...state,
-      population: satDelta(state, eff),
-      military: {
-        ...state.military,
-        readiness: clamp(state.military.readiness + eff.readinessDelta, 0, 100),
-      },
-    };
-  }],
-
-  ['road_improvement', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.road_improvement),
-  })],
-
-  ['census', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.census),
-  })],
-
-  ['administrative_reform', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.administrative_reform),
-  })],
-
-  ['call_festival', (state) => {
-    const eff = DECREE_EFFECTS.call_festival;
-    return {
-      ...state,
-      population: satDelta(state, eff),
-      faithCulture: {
-        ...state.faithCulture,
-        faithLevel: clamp(state.faithCulture.faithLevel + eff.faithDelta, 0, 100),
-      },
-    };
-  }],
-
-  ['invest_religious_order', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.invest_religious_order),
-  })],
-
-  ['suppress_heresy', (state) => {
-    const eff = DECREE_EFFECTS.suppress_heresy;
-    return {
-      ...state,
-      population: satDelta(state, eff),
-      faithCulture: {
-        ...state.faithCulture,
-        heterodoxy: clamp(state.faithCulture.heterodoxy + eff.heterodoxyDelta, 0, 100),
-      },
-    };
-  }],
-
-  ['diplomatic_envoy', (state, action) => {
-    if (action.targetNeighborId === null) return state;
-    const eff = DECREE_EFFECTS.diplomatic_envoy;
-    const pop = satDelta(state, eff);
-    return {
-      ...state,
-      population: pop,
-      diplomacy: {
-        ...state.diplomacy,
-        neighbors: applyNeighborRelDelta(state.diplomacy.neighbors, action.targetNeighborId, eff.relationshipDelta),
-      },
-    };
-  }],
-
-  ['trade_agreement', (state, action) => {
-    if (action.targetNeighborId === null) return state;
-    const eff = DECREE_EFFECTS.trade_agreement;
-    const pop = satDelta(state, eff);
-    return {
-      ...state,
-      population: pop,
-      diplomacy: {
-        ...state.diplomacy,
-        neighbors: applyNeighborRelDelta(state.diplomacy.neighbors, action.targetNeighborId, eff.relationshipDelta),
-      },
-    };
-  }],
-
-  ['royal_marriage', (state, action) => {
-    if (action.targetNeighborId === null) return state;
-    const eff = DECREE_EFFECTS.royal_marriage;
-    const pop = satDelta(state, eff);
-    return {
-      ...state,
-      population: pop,
-      diplomacy: {
-        ...state.diplomacy,
-        neighbors: applyNeighborRelDelta(state.diplomacy.neighbors, action.targetNeighborId, eff.relationshipDelta),
-      },
-    };
-  }],
-
-  ['public_granary', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.public_granary),
-  })],
-
-  ['labor_rights', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.labor_rights),
-  })],
-
-  ['land_redistribution', (state) => ({
-    ...state,
-    population: satDelta(state, DECREE_EFFECTS.land_redistribution),
-  })],
+  // --- Market Chain ---
+  ['market_charter', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.market_charter)],
+  ['trade_guild_expansion', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_guild_expansion)],
+  ['merchant_republic_charter', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.merchant_republic_charter)],
+  // --- Trade Chain ---
+  ['trade_subsidies', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_subsidies)],
+  ['trade_monopoly', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_monopoly)],
+  ['international_trade_empire', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.international_trade_empire)],
+  // --- Emergency Levy ---
+  ['emergency_levy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.emergency_levy)],
+  // --- Fortification Chain ---
+  ['fortify_borders', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.fortify_borders)],
+  ['integrated_defense_network', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.integrated_defense_network)],
+  ['fortress_kingdom', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.fortress_kingdom)],
+  // --- Arms Chain ---
+  ['arms_commission', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.arms_commission)],
+  ['royal_arsenal', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.royal_arsenal)],
+  ['war_machine_industry', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.war_machine_industry)],
+  // --- General Mobilization ---
+  ['general_mobilization', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.general_mobilization)],
+  // --- Roads Chain ---
+  ['road_improvement', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.road_improvement)],
+  ['provincial_highway_system', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.provincial_highway_system)],
+  ['kingdom_transit_network', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.kingdom_transit_network)],
+  // --- Census ---
+  ['census', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.census)],
+  // --- Admin Chain ---
+  ['administrative_reform', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.administrative_reform)],
+  ['royal_bureaucracy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.royal_bureaucracy)],
+  ['centralized_governance', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.centralized_governance)],
+  // --- Call Festival ---
+  ['call_festival', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.call_festival)],
+  // --- Faith Chain ---
+  ['invest_religious_order', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.invest_religious_order)],
+  ['expand_religious_authority', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.expand_religious_authority)],
+  ['theocratic_council', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.theocratic_council)],
+  // --- Heresy Chain ---
+  ['suppress_heresy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.suppress_heresy)],
+  ['inquisitorial_authority', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.inquisitorial_authority)],
+  ['religious_unification', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.religious_unification)],
+  // --- Envoy Chain ---
+  ['diplomatic_envoy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.diplomatic_envoy)],
+  ['permanent_embassy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.permanent_embassy)],
+  ['diplomatic_supremacy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.diplomatic_supremacy)],
+  // --- Trade Agreement ---
+  ['trade_agreement', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_agreement)],
+  // --- Marriage Chain ---
+  ['royal_marriage', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.royal_marriage)],
+  ['dynasty_alliance', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.dynasty_alliance)],
+  ['imperial_confederation', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.imperial_confederation)],
+  // --- Granary Chain ---
+  ['public_granary', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.public_granary)],
+  ['regional_food_distribution', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.regional_food_distribution)],
+  ['kingdom_breadbasket', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.kingdom_breadbasket)],
+  // --- Labor Chain ---
+  ['labor_rights', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.labor_rights)],
+  ['workers_guild_charter', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.workers_guild_charter)],
+  ['social_contract', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.social_contract)],
+  // --- Land Redistribution ---
+  ['land_redistribution', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.land_redistribution)],
 ]);
 
 // ============================================================
@@ -361,9 +342,18 @@ function applyDecreeEffect(state: GameState, action: QueuedAction): GameState {
   // 2. Strip 'decree_' prefix to get registry key
   const registryKey = decree.id.replace(/^decree_/, '');
   const effectFn = DECREE_EFFECT_REGISTRY.get(registryKey);
-  if (!effectFn) return stateAfterCosts; // no immediate effect defined
+  const stateAfterEffects = effectFn ? effectFn(stateAfterCosts, action) : stateAfterCosts;
 
-  return effectFn(stateAfterCosts, action);
+  // 3. Record the enacted decree for progression tracking
+  const issuedRecord: IssuedDecree = {
+    decreeId: decree.id,
+    turnIssued: state.turn.turnNumber,
+  };
+
+  return {
+    ...stateAfterEffects,
+    issuedDecrees: [...stateAfterEffects.issuedDecrees, issuedRecord],
+  };
 }
 
 function applyPolicyChangeEffect(state: GameState, action: QueuedAction): GameState {

@@ -332,6 +332,7 @@ export function createFrozenMarchScenario(): GameState {
     persistentConsequences: [],
     activeTemporaryModifiers: [],
     pendingFollowUps: [],
+    issuedDecrees: [],
     narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,

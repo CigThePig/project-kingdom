@@ -307,6 +307,28 @@ export const BUDGET_ERROR_LABELS: Record<string, string> = {
   POLICY_LIMIT_REACHED: 'Only one policy change is permitted per turn.',
 };
 
+// Decree progression labels
+export const DECREE_ENACTED_LABEL = 'Enacted';
+export const DECREE_LOCKED_LABEL = 'Locked';
+export const DECREE_COOLDOWN_LABEL = 'Cooldown';
+export const DECREE_UNLOCKED_LABEL = 'Unlocked';
+export const DECREE_TIER_LABEL = 'Tier';
+
+export const DECREE_CHAIN_LABELS: Record<string, string> = {
+  chain_market: 'Market Progression',
+  chain_trade: 'Trade Progression',
+  chain_fortify: 'Fortification Progression',
+  chain_arms: 'Armament Progression',
+  chain_roads: 'Infrastructure Progression',
+  chain_admin: 'Administration Progression',
+  chain_faith: 'Faith Progression',
+  chain_heresy: 'Orthodoxy Progression',
+  chain_envoy: 'Diplomacy Progression',
+  chain_marriage: 'Dynasty Progression',
+  chain_granary: 'Food Security Progression',
+  chain_labor: 'Labor Reform Progression',
+};
+
 // ============================================================
 // Labor Allocation Labels
 // ============================================================

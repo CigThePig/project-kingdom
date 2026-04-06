@@ -340,6 +340,7 @@ export function createDefaultScenario(): GameState {
     persistentConsequences: [],
     activeTemporaryModifiers: [],
     pendingFollowUps: [],
+    issuedDecrees: [],
     narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,

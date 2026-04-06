@@ -237,6 +237,116 @@
 }
 
 /* --------------------------------------------------------------------------
+   Progression states
+   -------------------------------------------------------------------------- */
+
+/* Enacted — decree already issued, greyed out with desaturation */
+.enacted {
+  opacity: 0.55;
+  filter: saturate(0.5);
+  border-left-color: var(--color-text-tertiary);
+}
+
+.enacted:hover {
+  transform: none;
+  box-shadow: var(--surface-base-shadow);
+  filter: saturate(0.5);
+}
+
+.enactedBadge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  background: var(--color-text-tertiary);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Chain locked — previous tier not yet enacted */
+.chainLocked {
+  opacity: 0.4;
+  border-left-color: var(--color-border-default);
+}
+
+.chainLocked:hover {
+  transform: none;
+  box-shadow: var(--surface-base-shadow);
+}
+
+/* Cooldown — repeatable decree waiting period */
+.cooldown {
+  opacity: 0.6;
+  border-left-color: var(--color-status-caution, var(--color-accent-metallic));
+}
+
+.cooldown:hover {
+  transform: none;
+  box-shadow: var(--surface-base-shadow);
+}
+
+/* Unlocked — newly available tier */
+.unlockedBadge {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  background: var(--color-seasonal-accent, var(--color-accent-metallic));
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--border-radius-sm);
+  letter-spacing: var(--letter-spacing-caps);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   Chain progress indicator
+   -------------------------------------------------------------------------- */
+.chainRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tierLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  font-weight: var(--font-weight-medium);
+}
+
+.chainProgress {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.chainDotComplete,
+.chainDotCurrent,
+.chainDotFuture {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+}
+
+.chainDotComplete {
+  background: var(--color-status-positive);
+}
+
+.chainDotCurrent {
+  background: var(--color-seasonal-accent, var(--color-accent-metallic));
+  box-shadow: 0 0 3px var(--color-seasonal-accent, var(--color-accent-metallic));
+}
+
+.chainDotFuture {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-strong);
+}
+
+/* --------------------------------------------------------------------------
    Mobile responsive
    -------------------------------------------------------------------------- */
 @media (max-width: 1023px) {

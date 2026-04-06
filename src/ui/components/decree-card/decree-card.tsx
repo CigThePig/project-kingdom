@@ -1,12 +1,16 @@
-// Phase 9 — Decree Card: decree option display with cost and effect preview.
+// Decree Card: decree option display with cost, effect preview, and progression state.
 // Blueprint Reference: ui-blueprint.md §4.3, §6.4
 
 import { DecreeCategory } from '../../../engine/types';
 import type { MechanicalEffectDelta, PopulationClass, ResourceType } from '../../../engine/types';
+import type { DecreeStatus } from '../../../engine/systems/decree-progression';
 import {
   DECREE_CATEGORY_LABELS,
   CLASS_LABELS,
   RESOURCE_TYPE_LABELS,
+  DECREE_ENACTED_LABEL,
+  DECREE_UNLOCKED_LABEL,
+  DECREE_TIER_LABEL,
 } from '../../../data/text/labels';
 import {
   DECREE_SLOT_COST_LABEL,
@@ -46,6 +50,14 @@ interface DecreeCardProps {
   isDisabled?: boolean;
   disabledReason?: string;
   onSelect?: (id: string) => void;
+  /** Progression status of this decree. */
+  progressionStatus?: DecreeStatus;
+  /** Turns remaining before a repeatable decree can be re-issued. */
+  cooldownTurnsRemaining?: number;
+  /** Chain progress: how far through the chain the player has progressed. */
+  chainProgress?: { currentTier: number; maxTier: number } | null;
+  /** This decree's tier within its chain (1-based). */
+  tier?: number;
 }
 
 // ============================================================
@@ -70,6 +82,23 @@ function SlotCostDots({ cost, maxSlots }: { cost: number; maxSlots: number }) {
   );
 }
 
+function ChainProgressDots({ currentTier, maxTier }: { currentTier: number; maxTier: number }) {
+  const dots = [];
+  for (let i = 1; i <= maxTier; i++) {
+    let dotClass = styles.chainDotFuture;
+    if (i <= currentTier) dotClass = styles.chainDotComplete;
+    else if (i === currentTier + 1) dotClass = styles.chainDotCurrent;
+    dots.push(
+      <span key={i} className={dotClass} aria-hidden="true" />,
+    );
+  }
+  return (
+    <span className={styles.chainProgress} aria-label={`${DECREE_TIER_LABEL} ${currentTier} of ${maxTier}`}>
+      {dots}
+    </span>
+  );
+}
+
 // ============================================================
 // Decree Card
 // ============================================================
@@ -88,20 +117,55 @@ export function DecreeCard({
   isDisabled,
   disabledReason,
   onSelect,
+  progressionStatus,
+  cooldownTurnsRemaining,
+  chainProgress,
+  tier,
 }: DecreeCardProps) {
   const resourceCostEntries = resourceCosts
     ? (Object.entries(resourceCosts) as [ResourceType, number][]).filter(([, v]) => v > 0)
     : [];
 
+  const isEnacted = progressionStatus === 'enacted';
+  const isLocked = progressionStatus === 'locked';
+  const isCooldown = progressionStatus === 'cooldown';
+  const isUnlocked = progressionStatus === 'unlocked';
+
+  const cardClasses = [
+    styles.card,
+    isDisabled || isEnacted || isLocked || isCooldown ? styles.disabled : '',
+    isEnacted ? styles.enacted : '',
+    isLocked ? styles.chainLocked : '',
+    isCooldown ? styles.cooldown : '',
+  ].filter(Boolean).join(' ');
+
+  const buttonLabel = isEnacted
+    ? DECREE_ENACTED_LABEL
+    : isCooldown && cooldownTurnsRemaining
+      ? `${cooldownTurnsRemaining} turn${cooldownTurnsRemaining !== 1 ? 's' : ''}`
+      : 'Select';
+
+  const effectivelyDisabled = isDisabled || isEnacted || isLocked || isCooldown;
+
   return (
-    <div className={styles.card + (isDisabled ? ' ' + styles.disabled : '')}>
+    <div className={cardClasses}>
       {/* Header row */}
       <div className={styles.header}>
         <Icon name={CATEGORY_ICON_MAP[category] ?? 'decrees'} size="1.25em" className={styles.categoryIcon} />
         <h3 className={styles.title}>{title}</h3>
         <span className={styles.categoryBadge}>{DECREE_CATEGORY_LABELS[category]}</span>
-        {isNew && <span className={styles.newBadge}>New</span>}
+        {isEnacted && <span className={styles.enactedBadge}>{DECREE_ENACTED_LABEL}</span>}
+        {isUnlocked && <span className={styles.unlockedBadge}>{DECREE_UNLOCKED_LABEL}</span>}
+        {isNew && !isEnacted && !isUnlocked && <span className={styles.newBadge}>New</span>}
       </div>
+
+      {/* Chain progress + tier indicator */}
+      {chainProgress && chainProgress.maxTier > 1 && (
+        <div className={styles.chainRow}>
+          <span className={styles.tierLabel}>{DECREE_TIER_LABEL} {tier ?? 1}</span>
+          <ChainProgressDots currentTier={chainProgress.currentTier} maxTier={chainProgress.maxTier} />
+        </div>
+      )}
 
       {/* Slot cost */}
       <div className={styles.costRow}>
@@ -158,17 +222,17 @@ export function DecreeCard({
         </div>
       )}
 
-      {/* Select button */}
+      {/* Select / Enacted / Cooldown button */}
       <button
         className={styles.selectButton}
-        disabled={isDisabled}
+        disabled={effectivelyDisabled}
         onClick={() => onSelect?.(id)}
-        aria-label={isDisabled ? `${title} — ${disabledReason}` : `Select decree: ${title}`}
+        aria-label={effectivelyDisabled ? `${title} — ${disabledReason ?? progressionStatus}` : `Select decree: ${title}`}
       >
-        Select
+        {buttonLabel}
       </button>
 
-      {isDisabled && disabledReason && (
+      {effectivelyDisabled && disabledReason && (
         <span className={styles.disabledReason}>{disabledReason}</span>
       )}
     </div>
