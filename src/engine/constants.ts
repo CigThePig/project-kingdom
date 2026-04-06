@@ -500,24 +500,66 @@ export const DIPLOMACY_POSTURE_THRESHOLDS: Record<DiplomaticPosture, number> = {
 // All satisfaction values are within SATISFACTION_MAX_DELTA_PER_TURN (5).
 // Keys match decree IDs with the 'decree_' prefix stripped.
 export const DECREE_EFFECTS = {
-  market_charter:        { merchantSat: +4, commonerSat: +2 },
-  emergency_levy:        { treasuryDelta: +120, merchantSat: -4, commonerSat: -3, nobilitySat: -2 },
-  trade_subsidies:       { merchantSat: +5 },
-  fortify_borders:       { militaryCasteSat: +3, readinessDelta: +5 },
-  arms_commission:       { militaryCasteSat: +4, merchantSat: +2, equipmentDelta: +8 },
-  general_mobilization:  { militaryCasteSat: +5, commonerSat: -4, readinessDelta: +10 },
-  road_improvement:      { merchantSat: +3, commonerSat: +2 },
-  census:                { nobilitySat: -2, commonerSat: +1 },
-  administrative_reform: { nobilitySat: -3, clergySat: -2 },
-  call_festival:         { clergySat: +4, commonerSat: +4, faithDelta: +5 },
-  invest_religious_order:{ clergySat: +4 },
-  suppress_heresy:       { clergySat: +2, commonerSat: -2, heterodoxyDelta: -10 },
-  diplomatic_envoy:      { nobilitySat: +2, relationshipDelta: +5 },
-  trade_agreement:       { merchantSat: +3, nobilitySat: +1, relationshipDelta: +8 },
-  royal_marriage:        { nobilitySat: +4, clergySat: +2, relationshipDelta: +20 },
-  public_granary:        { commonerSat: +5 },
-  labor_rights:          { commonerSat: +5, merchantSat: -3, nobilitySat: -2 },
-  land_redistribution:   { commonerSat: +5, nobilitySat: -5, clergySat: -3 },
+  // --- Market Chain ---
+  market_charter:              { merchantSat: +4, commonerSat: +2 },
+  trade_guild_expansion:       { merchantSat: +6, commonerSat: +3, treasuryDelta: +30 },
+  merchant_republic_charter:   { merchantSat: +8, commonerSat: +4, treasuryDelta: +60, nobilitySat: -4 },
+  // --- Trade Chain ---
+  trade_subsidies:             { merchantSat: +5 },
+  trade_monopoly:              { merchantSat: +6, treasuryDelta: +50, nobilitySat: -3 },
+  international_trade_empire:  { merchantSat: +8, commonerSat: +3, treasuryDelta: +80, nobilitySat: -4 },
+  // --- Emergency Levy (repeatable) ---
+  emergency_levy:              { treasuryDelta: +120, merchantSat: -4, commonerSat: -3, nobilitySat: -2 },
+  // --- Fortification Chain ---
+  fortify_borders:             { militaryCasteSat: +3, readinessDelta: +5 },
+  integrated_defense_network:  { militaryCasteSat: +4, readinessDelta: +10, moraleDelta: +4, commonerSat: -2 },
+  fortress_kingdom:            { militaryCasteSat: +5, readinessDelta: +15, moraleDelta: +6, commonerSat: -4, nobilitySat: -2 },
+  // --- Arms Chain ---
+  arms_commission:             { militaryCasteSat: +4, merchantSat: +2, equipmentDelta: +8 },
+  royal_arsenal:               { militaryCasteSat: +5, merchantSat: +3, equipmentDelta: +15, treasuryDelta: -20 },
+  war_machine_industry:        { militaryCasteSat: +5, merchantSat: +4, equipmentDelta: +20, commonerSat: -3, treasuryDelta: -40 },
+  // --- General Mobilization (repeatable) ---
+  general_mobilization:        { militaryCasteSat: +5, commonerSat: -4, readinessDelta: +10 },
+  // --- Roads Chain ---
+  road_improvement:            { merchantSat: +3, commonerSat: +2 },
+  provincial_highway_system:   { merchantSat: +4, commonerSat: +3, treasuryDelta: -20 },
+  kingdom_transit_network:     { merchantSat: +6, commonerSat: +4, militaryCasteSat: +2, treasuryDelta: -40 },
+  // --- Census (repeatable) ---
+  census:                      { nobilitySat: -2, commonerSat: +1 },
+  // --- Admin Chain ---
+  administrative_reform:       { nobilitySat: -3, clergySat: -2 },
+  royal_bureaucracy:           { nobilitySat: -4, clergySat: -3, commonerSat: +2 },
+  centralized_governance:      { nobilitySat: -6, clergySat: -4, commonerSat: +4 },
+  // --- Call Festival (repeatable) ---
+  call_festival:               { clergySat: +4, commonerSat: +4, faithDelta: +5 },
+  // --- Faith Chain ---
+  invest_religious_order:      { clergySat: +4 },
+  expand_religious_authority:  { clergySat: +5, faithDelta: +5, nobilitySat: -3 },
+  theocratic_council:          { clergySat: +6, faithDelta: +8, nobilitySat: -5, commonerSat: -2 },
+  // --- Heresy Chain ---
+  suppress_heresy:             { clergySat: +2, commonerSat: -2, heterodoxyDelta: -10 },
+  inquisitorial_authority:     { clergySat: +3, commonerSat: -5, nobilitySat: -2, heterodoxyDelta: -15 },
+  religious_unification:       { clergySat: +5, commonerSat: -8, nobilitySat: -4, heterodoxyDelta: -25 },
+  // --- Envoy Chain ---
+  diplomatic_envoy:            { nobilitySat: +2, relationshipDelta: +5 },
+  permanent_embassy:           { nobilitySat: +3, merchantSat: +2, relationshipDelta: +10 },
+  diplomatic_supremacy:        { nobilitySat: +4, merchantSat: +3, clergySat: +1, relationshipDelta: +15 },
+  // --- Trade Agreement (standalone) ---
+  trade_agreement:             { merchantSat: +3, nobilitySat: +1, relationshipDelta: +8 },
+  // --- Marriage Chain ---
+  royal_marriage:              { nobilitySat: +4, clergySat: +2, relationshipDelta: +20 },
+  dynasty_alliance:            { nobilitySat: +5, clergySat: +3, relationshipDelta: +25 },
+  imperial_confederation:      { nobilitySat: +6, clergySat: +3, merchantSat: +4, relationshipDelta: +30, treasuryDelta: -50 },
+  // --- Granary Chain ---
+  public_granary:              { commonerSat: +5 },
+  regional_food_distribution:  { commonerSat: +6, merchantSat: +2 },
+  kingdom_breadbasket:         { commonerSat: +8, merchantSat: +3, clergySat: +1 },
+  // --- Labor Chain ---
+  labor_rights:                { commonerSat: +5, merchantSat: -3, nobilitySat: -2 },
+  workers_guild_charter:       { commonerSat: +7, merchantSat: -3, nobilitySat: -3 },
+  social_contract:             { commonerSat: +10, merchantSat: -4, nobilitySat: -5, clergySat: -3 },
+  // --- Land Redistribution (standalone) ---
+  land_redistribution:         { commonerSat: +5, nobilitySat: -5, clergySat: -3 },
 } as const;
 
 // Research directive burst (§5.10)

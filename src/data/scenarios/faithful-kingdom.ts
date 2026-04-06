@@ -334,6 +334,7 @@ export function createFaithfulKingdomScenario(): GameState {
     persistentConsequences: [],
     activeTemporaryModifiers: [],
     pendingFollowUps: [],
+    issuedDecrees: [],
     narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,

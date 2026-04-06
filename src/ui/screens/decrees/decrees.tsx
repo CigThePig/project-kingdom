@@ -16,6 +16,7 @@ import { GameContext } from '../../context/game-context';
 import { useRightPanel } from '../../context/right-panel-context';
 import { DECREE_POOL, type DecreeDefinition } from '../../../data/decrees/index';
 import { DECREE_EFFECTS } from '../../../data/decrees/effects';
+import { getDecreeAvailability, type DecreeAvailability } from '../../../engine/systems/decree-progression';
 import { DecreeCard } from '../../components/decree-card/decree-card';
 import { PolicyCard } from '../../components/policy-card/policy-card';
 import {
@@ -147,18 +148,34 @@ function generateActionId(): string {
   return `action_${Date.now()}_${actionIdCounter}`;
 }
 
-function isDecreeDisabled(
+/** Progression sort order: available/unlocked first, cooldown/locked middle, enacted last. */
+const STATUS_SORT_ORDER: Record<string, number> = {
+  unlocked: 0,
+  available: 1,
+  cooldown: 2,
+  locked: 3,
+  enacted: 4,
+};
+
+function getDecreeDisabledState(
   decree: DecreeDefinition,
+  progression: DecreeAvailability,
   slotsRemaining: number,
   isBudgetExhausted: boolean,
   kingdom: ReturnType<typeof useKingdomState>,
 ): { disabled: boolean; reason: string } {
+  // Progression-based disabling takes priority
+  if (!progression.available) {
+    return { disabled: true, reason: progression.reason };
+  }
+  // Budget checks
   if (isBudgetExhausted) {
     return { disabled: true, reason: BUDGET_ERROR_LABELS.BUDGET_EXHAUSTED };
   }
   if (decree.slotCost > slotsRemaining) {
     return { disabled: true, reason: BUDGET_ERROR_LABELS.INSUFFICIENT_SLOTS };
   }
+  // Knowledge prerequisite check
   if (decree.knowledgePrerequisite) {
     const branch = kingdom.knowledge.branches[decree.knowledgePrerequisite.branch];
     if (branch.currentMilestoneIndex <= decree.knowledgePrerequisite.milestoneIndex) {
@@ -278,12 +295,25 @@ export function Decrees() {
     [ctx, queueAction],
   );
 
-  // ---- Filtered decrees ----
+  // ---- Filtered and sorted decrees ----
 
-  const filteredDecrees =
+  const currentTurn = kingdom.turn.turnNumber;
+  const issuedDecrees = kingdom.issuedDecrees;
+
+  const filteredDecrees = (
     categoryFilter === 'all'
       ? DECREE_POOL
-      : DECREE_POOL.filter((d) => d.category === categoryFilter);
+      : DECREE_POOL.filter((d) => d.category === categoryFilter)
+  ).slice().sort((a, b) => {
+    const aProgression = getDecreeAvailability(a, issuedDecrees, currentTurn);
+    const bProgression = getDecreeAvailability(b, issuedDecrees, currentTurn);
+    const aOrder = STATUS_SORT_ORDER[aProgression.status] ?? 1;
+    const bOrder = STATUS_SORT_ORDER[bProgression.status] ?? 1;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    // Within same status, sort by chain then tier
+    if (a.chainId && b.chainId && a.chainId === b.chainId) return a.tier - b.tier;
+    return 0;
+  });
 
   // ---- Render helpers ----
 
@@ -372,14 +402,16 @@ export function Decrees() {
           {filteredDecrees.length > 0 ? (
             <div className={styles.decreeGrid}>
               {filteredDecrees.map((decree) => {
-                const { disabled, reason } = isDecreeDisabled(
+                const progression = getDecreeAvailability(decree, issuedDecrees, currentTurn);
+                const { disabled, reason } = getDecreeDisabledState(
                   decree,
+                  progression,
                   slotsRemaining,
                   isBudgetExhausted,
                   kingdom,
                 );
                 const isNewlyUnlocked =
-                  decree.knowledgePrerequisite !== null && !disabled;
+                  decree.knowledgePrerequisite !== null && !disabled && progression.status === 'available';
                 return (
                   <div
                     key={decree.id}
@@ -400,6 +432,10 @@ export function Decrees() {
                       isDisabled={disabled}
                       disabledReason={reason}
                       onSelect={handleDecreeSelect}
+                      progressionStatus={progression.status}
+                      cooldownTurnsRemaining={progression.cooldownTurnsRemaining}
+                      chainProgress={progression.chainProgress}
+                      tier={decree.tier}
                     />
                   </div>
                 );

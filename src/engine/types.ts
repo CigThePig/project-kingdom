@@ -759,6 +759,19 @@ export interface PendingFollowUp {
   probability: number;        // 0-1, chance it fires when due
 }
 
+// ============================================================
+// Section 16d — Decree Progression Tracking
+// ============================================================
+
+/**
+ * Records that a decree has been enacted.
+ * Used to enforce one-time issuance and cooldown logic.
+ */
+export interface IssuedDecree {
+  decreeId: string;        // matches DecreeDefinition.id
+  turnIssued: number;
+}
+
 /**
  * Tracks narrative pacing to ensure event variety and detect player behavior patterns.
  * Updated each turn during event resolution.
@@ -827,6 +840,9 @@ export interface GameState {
 
   // Follow-up events scheduled by prior choices
   pendingFollowUps: PendingFollowUp[];
+
+  // Decree progression: tracks all enacted decrees for one-time/cooldown logic
+  issuedDecrees: IssuedDecree[];
 
   // Narrative pacing state for smarter event selection
   narrativePacing: NarrativePacingState;

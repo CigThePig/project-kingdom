@@ -125,6 +125,9 @@ export const DECREE_EFFECT_LABEL = 'Projected Effects';
 export const DECREE_AFFECTED_CLASSES_LABEL = 'Affected Classes';
 export const DECREE_SLOT_COST_LABEL = 'Action Cost';
 export const DECREE_PREREQUISITES_LABEL = 'Prerequisites';
+export const DECREE_PROGRESSION_LABEL = 'Progression';
+export const DECREE_ENACTED_DESCRIPTION = 'This decree has been enacted and its effects are in force.';
+export const DECREE_COOLDOWN_DESCRIPTION = 'This decree was recently enacted and requires time before it can be issued again.';
 
 // ============================================================
 // Turn Summary Section Headers
