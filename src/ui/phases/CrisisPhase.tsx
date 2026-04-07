@@ -5,59 +5,14 @@ import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
-import type { EffectHint } from '../types';
+import type { CrisisPhaseData } from '../../bridge/crisisCardGenerator';
 
 interface CrisisPhaseProps {
   onComplete: (crisisResponse: string) => void;
+  crisisData?: CrisisPhaseData;
 }
 
-interface ResponseCard {
-  id: string;
-  title: string;
-  body: string;
-  effects: EffectHint[];
-}
-
-const CRISIS = {
-  title: 'Border Incursion',
-  body: 'Raiders from the northern marches have crossed the border in force. Villages burn and your captains await orders. How will the crown respond?',
-  effects: [
-    { label: 'Military -10', type: 'negative' as const },
-    { label: 'Stability', type: 'warning' as const },
-  ],
-};
-
-const RESPONSES: ResponseCard[] = [
-  {
-    id: 'crisis-resp-1',
-    title: 'Mobilize the Garrison',
-    body: 'Send the border garrison to intercept. Swift action, but costly.',
-    effects: [
-      { label: 'Treasury -80', type: 'negative' },
-      { label: 'Military +15', type: 'positive' },
-    ],
-  },
-  {
-    id: 'crisis-resp-2',
-    title: 'Rally the Militia',
-    body: 'Call upon the local peasantry to defend their homes. Cheap but risky.',
-    effects: [
-      { label: 'Commoners -5', type: 'negative' },
-      { label: 'Military +5', type: 'positive' },
-    ],
-  },
-  {
-    id: 'crisis-resp-3',
-    title: 'Negotiate Terms',
-    body: 'Send an envoy to parley with the raiders. Perhaps gold will satisfy them.',
-    effects: [
-      { label: 'Treasury -40', type: 'negative' },
-      { label: 'Stability +3', type: 'positive' },
-    ],
-  },
-];
-
-export function CrisisPhase({ onComplete }: CrisisPhaseProps) {
+export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   function handleResponseClick(id: string) {
@@ -68,19 +23,72 @@ export function CrisisPhase({ onComplete }: CrisisPhaseProps) {
     }
   }
 
+  // If no real data yet, show a loading placeholder
+  if (!crisisData) {
+    return (
+      <div
+        style={{
+          textAlign: 'center',
+          padding: '40px 0',
+          fontFamily: 'var(--font-family-mono)',
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: 2,
+          textTransform: 'uppercase',
+          color: 'var(--color-text-disabled)',
+        }}
+      >
+        NO CRISIS THIS TURN
+      </div>
+    );
+  }
+
+  const { crisisCard, responses } = crisisData;
+
+  // Fallback: if event has no choices, show a single acknowledge button
+  if (responses.length === 0) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div style={{ animation: 'slideUp 400ms ease both' }}>
+          <Card family="crisis">
+            <CardTitle>{crisisCard.title}</CardTitle>
+            <CardBody>{crisisCard.body}</CardBody>
+            <EffectStrip effects={crisisCard.effects} />
+          </Card>
+        </div>
+        <div
+          onClick={() => onComplete('acknowledge')}
+          style={{
+            padding: '12px 0',
+            textAlign: 'center',
+            fontFamily: 'var(--font-family-mono)',
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: 2,
+            textTransform: 'uppercase',
+            color: 'var(--color-accent-response)',
+            cursor: 'pointer',
+          }}
+        >
+          ACKNOWLEDGE
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
       {/* Crisis card */}
       <div style={{ animation: 'slideUp 400ms ease both' }}>
         <Card family="crisis">
-          <CardTitle>{CRISIS.title}</CardTitle>
-          <CardBody>{CRISIS.body}</CardBody>
-          <EffectStrip effects={CRISIS.effects} />
+          <CardTitle>{crisisCard.title}</CardTitle>
+          <CardBody>{crisisCard.body}</CardBody>
+          <EffectStrip effects={crisisCard.effects} />
         </Card>
       </div>
 
       {/* Response cards */}
-      {RESPONSES.map((resp, i) => (
+      {responses.map((resp, i) => (
         <div
           key={resp.id}
           style={{ animation: `slideUp 400ms ease ${(i + 1) * 80}ms both` }}
@@ -95,7 +103,6 @@ export function CrisisPhase({ onComplete }: CrisisPhaseProps) {
             }
           >
             <CardTitle>{resp.title}</CardTitle>
-            <CardBody>{resp.body}</CardBody>
             <EffectStrip effects={resp.effects} />
             {selectedId === resp.id && <SelectionBadge />}
           </Card>

@@ -7,9 +7,11 @@ import { EffectStrip } from '../components/EffectStrip';
 import { GameContext } from '../../context/game-context';
 import { Season } from '../../engine/types';
 import type { EffectHint } from '../types';
+import type { AdvisorBriefing } from '../../bridge/advisorGenerator';
 
 interface SeasonDawnProps {
   onComplete: () => void;
+  advisorBriefing?: AdvisorBriefing;
 }
 
 const SEASON_TEXT: Record<Season, string> = {
@@ -38,14 +40,14 @@ const SEASON_EFFECTS: Record<Season, EffectHint[]> = {
   ],
 };
 
-export function SeasonDawn({ onComplete }: SeasonDawnProps) {
+export function SeasonDawn({ onComplete, advisorBriefing }: SeasonDawnProps) {
   const ctx = useContext(GameContext);
   if (!ctx) throw new Error('SeasonDawn must be inside GameProvider');
 
   const { season, year } = ctx.state.gameState.turn;
 
   return (
-    <div style={{ animation: 'slideUp 400ms ease both' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12, animation: 'slideUp 400ms ease both' }}>
       <Card family="season">
         <CardTitle>{season}, Year {year}</CardTitle>
         <CardBody>{SEASON_TEXT[season]}</CardBody>
@@ -69,6 +71,27 @@ export function SeasonDawn({ onComplete }: SeasonDawnProps) {
           TAP TO BEGIN
         </div>
       </Card>
+
+      {advisorBriefing && advisorBriefing.lines.length > 0 && (
+        <Card family="advisor">
+          <CardTitle>Advisor Briefing</CardTitle>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '4px 0' }}>
+            {advisorBriefing.lines.map((line, i) => (
+              <div
+                key={i}
+                style={{
+                  fontFamily: 'var(--font-family-body)',
+                  fontSize: 13,
+                  color: 'var(--color-text-secondary)',
+                  lineHeight: 1.4,
+                }}
+              >
+                {line}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
     </div>
   );
 }

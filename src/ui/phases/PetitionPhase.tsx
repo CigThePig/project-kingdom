@@ -1,55 +1,38 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { useSwipe } from '../hooks/useSwipe';
-import type { EffectHint } from '../types';
+import type { PetitionCardData } from '../../bridge/petitionCardGenerator';
 
 interface PetitionPhaseProps {
   onComplete: (decisions: { cardId: string; granted: boolean }[]) => void;
+  petitionCards?: PetitionCardData[];
 }
 
-interface PetitionCard {
-  id: string;
-  title: string;
-  body: string;
-  effects: EffectHint[];
-}
-
-const PETITIONS: PetitionCard[] = [
-  {
-    id: 'petition-1',
-    title: 'Merchant Guild Request',
-    body: 'The merchants seek lower tariffs on eastern trade routes. Granting this would please them greatly.',
-    effects: [
-      { label: 'Merchants +5', type: 'positive' },
-      { label: 'Treasury -20', type: 'negative' },
-    ],
-  },
-  {
-    id: 'petition-2',
-    title: "Farmers' Appeal",
-    body: 'The farming villages request a temporary reduction in grain tax for the coming season.',
-    effects: [
-      { label: 'Commoners +3', type: 'positive' },
-      { label: 'Treasury -15', type: 'negative' },
-    ],
-  },
-];
-
-export function PetitionPhase({ onComplete }: PetitionPhaseProps) {
+export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [results, setResults] = useState<{ cardId: string; granted: boolean }[]>([]);
   const [key, setKey] = useState(0);
 
+  const petitions = petitionCards ?? [];
+
+  // Auto-complete if there are no petitions
+  useEffect(() => {
+    if (petitions.length === 0) {
+      const timer = setTimeout(() => onComplete([]), 200);
+      return () => clearTimeout(timer);
+    }
+  }, [petitions.length, onComplete]);
+
   const handleDecision = useCallback(
     (granted: boolean) => {
-      const petition = PETITIONS[currentIndex];
-      const newResults = [...results, { cardId: petition.id, granted }];
+      const petition = petitions[currentIndex];
+      const newResults = [...results, { cardId: petition.eventId, granted }];
 
-      if (currentIndex >= PETITIONS.length - 1) {
+      if (currentIndex >= petitions.length - 1) {
         // All petitions resolved
         setTimeout(() => onComplete(newResults), 400);
       } else {
@@ -60,7 +43,7 @@ export function PetitionPhase({ onComplete }: PetitionPhaseProps) {
         }, 400);
       }
     },
-    [currentIndex, results, onComplete],
+    [currentIndex, results, petitions, onComplete],
   );
 
   const { ref, handlers } = useSwipe({
@@ -68,7 +51,27 @@ export function PetitionPhase({ onComplete }: PetitionPhaseProps) {
     onSwipeRight: () => handleDecision(true),
   });
 
-  if (currentIndex >= PETITIONS.length) {
+  if (petitions.length === 0) {
+    return (
+      <div
+        style={{
+          textAlign: 'center',
+          padding: '40px 0',
+          fontFamily: 'var(--font-family-mono)',
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: 2,
+          textTransform: 'uppercase',
+          color: 'var(--color-text-disabled)',
+          animation: 'pop 300ms ease both',
+        }}
+      >
+        NO PETITIONS THIS TURN
+      </div>
+    );
+  }
+
+  if (currentIndex >= petitions.length) {
     return (
       <div
         style={{
@@ -88,7 +91,7 @@ export function PetitionPhase({ onComplete }: PetitionPhaseProps) {
     );
   }
 
-  const petition = PETITIONS[currentIndex];
+  const petition = petitions[currentIndex];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -104,7 +107,7 @@ export function PetitionPhase({ onComplete }: PetitionPhaseProps) {
           color: 'var(--color-text-disabled)',
         }}
       >
-        PETITION {currentIndex + 1} OF {PETITIONS.length}
+        PETITION {currentIndex + 1} OF {petitions.length}
       </div>
 
       {/* Swipeable petition card */}
@@ -148,7 +151,7 @@ export function PetitionPhase({ onComplete }: PetitionPhaseProps) {
           <Card family="petition">
             <CardTitle>{petition.title}</CardTitle>
             <CardBody>{petition.body}</CardBody>
-            <EffectStrip effects={petition.effects} />
+            <EffectStrip effects={petition.grantEffects} />
           </Card>
         </div>
       </div>

@@ -3,18 +3,20 @@ import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import type { PhaseDecisions } from '../types';
+import type { SummaryData } from '../../bridge/summaryGenerator';
 
 interface SummaryPhaseProps {
   decisions: PhaseDecisions;
   onComplete: () => void;
+  summaryData?: SummaryData;
 }
 
-export function SummaryPhase({ decisions, onComplete }: SummaryPhaseProps) {
+export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhaseProps) {
   const petitionsGranted = decisions.petitionDecisions.filter((d) => d.granted).length;
   const petitionsDenied = decisions.petitionDecisions.filter((d) => !d.granted).length;
   const decreeCount = decisions.selectedDecrees.length;
 
-  const narrative = [
+  const narrative = summaryData?.narrative ?? [
     decisions.crisisResponse
       ? 'The court addressed the crisis decisively.'
       : 'The crisis passed without royal intervention.',
@@ -26,6 +28,16 @@ export function SummaryPhase({ decisions, onComplete }: SummaryPhaseProps) {
       : 'The council adjourned without issuing decrees.',
     'The kingdom endures. Your decisions ripple outward.',
   ].join(' ');
+
+  const effects = summaryData?.effectPreview ?? [
+    { label: 'Turn Complete', type: 'neutral' as const },
+    ...(decreeCount > 0
+      ? [{ label: `${decreeCount} Decree${decreeCount !== 1 ? 's' : ''}` as string, type: 'positive' as const }]
+      : []),
+    ...(petitionsGranted > 0
+      ? [{ label: `${petitionsGranted} Granted` as string, type: 'positive' as const }]
+      : []),
+  ];
 
   return (
     <div
@@ -39,17 +51,7 @@ export function SummaryPhase({ decisions, onComplete }: SummaryPhaseProps) {
       <Card family="summary">
         <CardTitle>Court Summary</CardTitle>
         <CardBody>{narrative}</CardBody>
-        <EffectStrip
-          effects={[
-            { label: 'Turn Complete', type: 'neutral' },
-            ...(decreeCount > 0
-              ? [{ label: `${decreeCount} Decree${decreeCount !== 1 ? 's' : ''}` as string, type: 'positive' as const }]
-              : []),
-            ...(petitionsGranted > 0
-              ? [{ label: `${petitionsGranted} Granted` as string, type: 'positive' as const }]
-              : []),
-          ]}
-        />
+        <EffectStrip effects={effects} />
 
         <div
           onClick={onComplete}
