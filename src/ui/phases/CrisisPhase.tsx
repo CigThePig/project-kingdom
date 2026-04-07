@@ -23,22 +23,31 @@ export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
     }
   }
 
-  // If no real data yet, show a loading placeholder
+  // No crisis this turn — show a tappable peaceful court card
   if (!crisisData) {
     return (
-      <div
-        style={{
-          textAlign: 'center',
-          padding: '40px 0',
-          fontFamily: 'var(--font-family-mono)',
-          fontSize: 11,
-          fontWeight: 700,
-          letterSpacing: 2,
-          textTransform: 'uppercase',
-          color: 'var(--color-text-disabled)',
-        }}
-      >
-        NO CRISIS THIS TURN
+      <div style={{ animation: 'slideUp 400ms ease both' }}>
+        <Card family="crisis">
+          <CardTitle>Morning Court — Peaceful</CardTitle>
+          <CardBody>No urgent matters reach the throne this morning. The court is quiet, the kingdom at ease.</CardBody>
+          <div
+            onClick={() => onComplete('no-crisis')}
+            style={{
+              marginTop: 16,
+              padding: '12px 0',
+              textAlign: 'center',
+              fontFamily: 'var(--font-family-mono)',
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: 2,
+              textTransform: 'uppercase',
+              color: 'var(--color-accent-response)',
+              cursor: 'pointer',
+            }}
+          >
+            CONTINUE
+          </div>
+        </Card>
       </div>
     );
   }
