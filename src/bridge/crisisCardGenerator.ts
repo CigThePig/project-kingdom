@@ -1,0 +1,141 @@
+// Bridge Layer — Crisis Card Generator
+// Translates a crisis-severity ActiveEvent into CrisisPhaseData for the UI.
+
+import type { ActiveEvent, MechanicalEffectDelta } from '../engine/types';
+import { EventSeverity } from '../engine/types';
+import type { EffectHint } from '../ui/types';
+import { EVENT_TEXT } from '../data/text/events';
+import { EVENT_POOL } from '../data/events/index';
+import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
+
+// ============================================================
+// Shared utility — MechanicalEffectDelta → EffectHint[]
+// Exported so other bridge modules can reuse it.
+// ============================================================
+
+function fmt(n: number): string {
+  return n >= 0 ? `+${n}` : `${n}`;
+}
+
+export function mechDeltaToEffectHints(delta: MechanicalEffectDelta): EffectHint[] {
+  const hints: EffectHint[] = [];
+
+  function push(label: string, value: number, forceWarning?: boolean) {
+    if (value === 0) return;
+    const type: EffectHint['type'] = forceWarning
+      ? 'warning'
+      : value > 0
+      ? 'positive'
+      : 'negative';
+    hints.push({ label: `${label} ${fmt(value)}`, type });
+  }
+
+  if (delta.treasuryDelta !== undefined) push('Treasury', delta.treasuryDelta);
+  if (delta.foodDelta !== undefined) push('Food', delta.foodDelta);
+  if (delta.stabilityDelta !== undefined) push('Stability', delta.stabilityDelta);
+  if (delta.faithDelta !== undefined) push('Faith', delta.faithDelta);
+  if (delta.heterodoxyDelta !== undefined) push('Heterodoxy', delta.heterodoxyDelta, delta.heterodoxyDelta > 0);
+  if (delta.culturalCohesionDelta !== undefined) push('Culture', delta.culturalCohesionDelta);
+  if (delta.militaryReadinessDelta !== undefined) push('Readiness', delta.militaryReadinessDelta);
+  if (delta.militaryEquipmentDelta !== undefined) push('Equipment', delta.militaryEquipmentDelta);
+  if (delta.militaryMoraleDelta !== undefined) push('Morale', delta.militaryMoraleDelta);
+  if (delta.militaryForceSizeDelta !== undefined) push('Force Size', delta.militaryForceSizeDelta);
+  if (delta.espionageNetworkDelta !== undefined) push('Intel', delta.espionageNetworkDelta);
+  if (delta.nobilitySatDelta !== undefined) push('Nobility', delta.nobilitySatDelta);
+  if (delta.clergySatDelta !== undefined) push('Clergy', delta.clergySatDelta);
+  if (delta.merchantSatDelta !== undefined) push('Merchants', delta.merchantSatDelta);
+  if (delta.commonerSatDelta !== undefined) push('Commoners', delta.commonerSatDelta);
+  if (delta.militaryCasteSatDelta !== undefined) push('Military Caste', delta.militaryCasteSatDelta);
+  if (delta.regionDevelopmentDelta !== undefined) push('Region Dev', delta.regionDevelopmentDelta);
+  if (delta.regionConditionDelta !== undefined) push('Region', delta.regionConditionDelta);
+
+  if (delta.diplomacyDeltas) {
+    for (const [neighborId, value] of Object.entries(delta.diplomacyDeltas)) {
+      if (value !== 0) {
+        hints.push({
+          label: `Relations (${neighborId}) ${fmt(value)}`,
+          type: value > 0 ? 'positive' : 'negative',
+        });
+      }
+    }
+  }
+
+  return hints;
+}
+
+// ============================================================
+// Card data types
+// ============================================================
+
+export interface CrisisCardData {
+  eventId: string;
+  definitionId: string;
+  title: string;
+  body: string;
+  effects: EffectHint[];
+}
+
+export interface ResponseCardData {
+  id: string;        // `${eventId}:${choiceId}`
+  choiceId: string;
+  title: string;
+  effects: EffectHint[];
+  slotCost: number;
+  isFree: boolean;
+}
+
+export interface CrisisPhaseData {
+  crisisCard: CrisisCardData;
+  responses: ResponseCardData[];
+}
+
+// ============================================================
+// Generator
+// ============================================================
+
+function severityLabel(severity: EventSeverity): EffectHint {
+  switch (severity) {
+    case EventSeverity.Critical:
+      return { label: 'CRITICAL', type: 'negative' };
+    case EventSeverity.Serious:
+      return { label: 'SERIOUS', type: 'warning' };
+    default:
+      return { label: 'EVENT', type: 'neutral' };
+  }
+}
+
+export function generateCrisisPhaseData(event: ActiveEvent): CrisisPhaseData {
+  const textEntry = EVENT_TEXT[event.definitionId];
+  const def = EVENT_POOL.find((e) => e.id === event.definitionId);
+
+  const title = textEntry?.title ?? 'CRISIS';
+  const body = textEntry?.body ?? 'The court faces an urgent matter requiring your decision.';
+
+  const crisisCard: CrisisCardData = {
+    eventId: event.id,
+    definitionId: event.definitionId,
+    title,
+    body,
+    effects: [severityLabel(event.severity)],
+  };
+
+  if (!def || !textEntry) {
+    return { crisisCard, responses: [] };
+  }
+
+  const choiceEffects = EVENT_CHOICE_EFFECTS[event.definitionId] ?? {};
+
+  const responses: ResponseCardData[] = def.choices.map((choice) => {
+    const delta = choiceEffects[choice.choiceId] ?? {};
+    return {
+      id: `${event.id}:${choice.choiceId}`,
+      choiceId: choice.choiceId,
+      title: textEntry.choices[choice.choiceId] ?? choice.choiceId,
+      effects: mechDeltaToEffectHints(delta),
+      slotCost: choice.slotCost,
+      isFree: choice.isFree,
+    };
+  });
+
+  return { crisisCard, responses };
+}

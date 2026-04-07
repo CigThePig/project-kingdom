@@ -5,64 +5,17 @@ import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
-import type { EffectHint } from '../types';
+import type { DecreeCardData } from '../../bridge/decreeCardGenerator';
 
 interface DecreePhaseProps {
   onComplete: (selectedDecrees: string[]) => void;
+  decreeCards?: DecreeCardData[];
 }
 
-interface DecreeCard {
-  id: string;
-  title: string;
-  body: string;
-  effects: EffectHint[];
-}
-
-const DECREES: DecreeCard[] = [
-  {
-    id: 'decree-1',
-    title: 'Market Charter',
-    body: 'Establish an official market charter granting merchant rights in the capital district.',
-    effects: [
-      { label: 'Merchants +4', type: 'positive' },
-      { label: 'Commoners +2', type: 'positive' },
-      { label: '1 Slot', type: 'neutral' },
-    ],
-  },
-  {
-    id: 'decree-2',
-    title: 'Fortify Borders',
-    body: 'Commission new watchtowers and palisades along the northern frontier.',
-    effects: [
-      { label: 'Military +8', type: 'positive' },
-      { label: 'Treasury -60', type: 'negative' },
-      { label: '1 Slot', type: 'neutral' },
-    ],
-  },
-  {
-    id: 'decree-3',
-    title: 'Festival of Plenty',
-    body: 'Declare a week of feasting and celebration to lift the spirits of the common folk.',
-    effects: [
-      { label: 'Commoners +6', type: 'positive' },
-      { label: 'Food -30', type: 'negative' },
-      { label: '1 Slot', type: 'neutral' },
-    ],
-  },
-  {
-    id: 'decree-4',
-    title: 'Tax Reform',
-    body: 'Restructure the tax code to shift the burden from peasants to the merchant class.',
-    effects: [
-      { label: 'Commoners +4', type: 'positive' },
-      { label: 'Merchants -3', type: 'negative' },
-      { label: 'Treasury +20', type: 'positive' },
-    ],
-  },
-];
-
-export function DecreePhase({ onComplete }: DecreePhaseProps) {
+export function DecreePhase({ onComplete, decreeCards }: DecreePhaseProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  const decrees = decreeCards ?? [];
 
   function toggleDecree(id: string) {
     setSelected((prev) => {
@@ -94,16 +47,16 @@ export function DecreePhase({ onComplete }: DecreePhaseProps) {
       </div>
 
       {/* Decree cards */}
-      {DECREES.map((decree, i) => (
+      {decrees.map((decree, i) => (
         <div
-          key={decree.id}
+          key={decree.decreeId}
           style={{ animation: `slideUp 400ms ease ${i * 60}ms both` }}
         >
           <Card
             family="decree"
-            onClick={() => toggleDecree(decree.id)}
+            onClick={() => toggleDecree(decree.decreeId)}
             style={
-              selected.has(decree.id)
+              selected.has(decree.decreeId)
                 ? { borderColor: 'var(--color-accent-decree)' }
                 : undefined
             }
@@ -111,7 +64,7 @@ export function DecreePhase({ onComplete }: DecreePhaseProps) {
             <CardTitle>{decree.title}</CardTitle>
             <CardBody>{decree.body}</CardBody>
             <EffectStrip effects={decree.effects} />
-            {selected.has(decree.id) && <SelectionBadge />}
+            {selected.has(decree.decreeId) && <SelectionBadge />}
           </Card>
         </div>
       ))}
