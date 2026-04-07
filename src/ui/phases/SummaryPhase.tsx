@@ -55,11 +55,13 @@ export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhas
       </Card>
 
       {summaryData?.legacyCards?.map((legacy, i) => (
-        <Card key={`legacy-${i}`} family="legacy">
-          <CardTitle>{legacy.title}</CardTitle>
-          <CardBody>{legacy.body}</CardBody>
-          <EffectStrip effects={legacy.effects} />
-        </Card>
+        <div key={`legacy-${i}`}>
+          <Card family="legacy">
+            <CardTitle>{legacy.title}</CardTitle>
+            <CardBody>{legacy.body}</CardBody>
+            <EffectStrip effects={legacy.effects} />
+          </Card>
+        </div>
       ))}
 
       <div
