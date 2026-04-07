@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Design Tokens — ui-ux-blueprint.md §2
+   ============================================================ */
+
+@theme {
+  /* Background */
+  --color-bg-primary: #1a1714;
+  --color-bg-card: #2a2520;
+  --color-bg-card-elevated: #322c26;
+  --color-bg-parchment: #342e28;
+
+  /* Borders */
+  --color-border-default: #3d3630;
+  --color-border-active: #5a5048;
+
+  /* Text */
+  --color-text-primary: #e8dcc8;
+  --color-text-secondary: #9e9484;
+  --color-text-disabled: #5a5248;
+
+  /* Accent — Card Families */
+  --color-accent-crisis: #a83232;
+  --color-accent-response: #c9a84c;
+  --color-accent-petition: #3a6b8a;
+  --color-accent-decree: #4a7a3a;
+  --color-accent-advisor: #7a4a8a;
+  --color-accent-legacy: #c0b8a8;
+  --color-accent-status: #8a7434;
+
+  /* Feedback */
+  --color-positive: #6aaa5a;
+  --color-negative: #aa5a5a;
+  --color-warning: #c9a84c;
+  --color-neutral: #9e9484;
+
+  /* Typography */
+  --font-family-heading: Georgia, 'Times New Roman', serif;
+  --font-family-body: Georgia, 'Times New Roman', serif;
+  --font-family-mono: 'Courier New', monospace;
+
+  /* Shadows */
+  --shadow-card-default: 0 8px 32px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-card-elevated: 0 12px 36px rgba(0,0,0,0.7);
+  --shadow-card-lifted: 0 16px 48px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5);
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+
+body {
+  margin: 0;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ============================================================
+   CSS Keyframes — ui-ux-blueprint.md §7.2
+   ============================================================ */
+
+@keyframes slideUp {
+  from { transform: translateY(40px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(30px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+@keyframes barFill {
+  from { width: 0; }
+  to   { width: var(--bar-fill-target, 100%); }
+}
+
+/* ============================================================
+   Reduced Motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

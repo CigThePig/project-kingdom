@@ -1422,6 +1422,7 @@ export function resolveTurn(
     narrativePacing: updatedNarrativePacing,
     resolvedStorylineIds: allResolvedStorylineIds,
     lastStorylineActivationTurn: updatedLastActivationTurn,
+    issuedDecrees: stateAfterActions.issuedDecrees,
     scenarioId: stateAfterActions.scenarioId,
   };
 
