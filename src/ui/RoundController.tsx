@@ -10,6 +10,7 @@ import { SummaryPhase } from './phases/SummaryPhase';
 import { GameContext } from '../context/game-context';
 import { resolveTurn } from '../engine/resolution/turn-resolution';
 import { surfaceEvents } from '../engine/events/event-engine';
+import { calculateCategoryWeights } from '../engine/events/narrative-pacing';
 import { EVENT_POOL } from '../data/events/index';
 import type { ActiveEvent, GameState } from '../engine/types';
 import type { RoundPhase, PhaseDecisions } from './types';
@@ -52,18 +53,23 @@ export function RoundController() {
   // Pre-generate card pools when the season dawn phase begins
   useEffect(() => {
     if (currentPhase === 'seasonDawn') {
-      prepareRound(ctx.state.gameState);
+      prepareRound(ctx.state.gameState, ctx.state.eventHistory);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPhase]);
 
-  function prepareRound(gameState: GameState) {
+  function prepareRound(gameState: GameState, eventHistory: ActiveEvent[]) {
+    const categoryWeights = calculateCategoryWeights(
+      gameState.narrativePacing,
+      gameState.turn.turnNumber,
+    );
     const events = surfaceEvents(
       gameState,
       gameState.turn.turnNumber,
       EVENT_POOL,
       gameState.activeEvents,
-      [],
+      eventHistory,
+      categoryWeights,
     );
     setSurfacedEvents(events);
 
