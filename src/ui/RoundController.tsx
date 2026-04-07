@@ -49,6 +49,10 @@ export function RoundController() {
   const [decreeCards, setDecreeCards] = useState<DecreeCardData[]>([]);
   const [advisorBriefing, setAdvisorBriefing] = useState<AdvisorBriefing | null>(null);
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
+  // Random selections for Season Dawn — computed in prepareRound (inside a useEffect)
+  // so Math.random() is never called during the render phase.
+  const [seasonPhraseIndex, setSeasonPhraseIndex] = useState(0);
+  const [seasonEffectOrder, setSeasonEffectOrder] = useState<[number, number, number]>([0, 1, 2]);
 
   // Pre-generate card pools when the season dawn phase begins
   useEffect(() => {
@@ -82,6 +86,15 @@ export function RoundController() {
     setDecreeCards(generateDecreeCards(gameState));
     setAdvisorBriefing(generateAdvisorBriefing(gameState));
     setSummaryData(null);
+
+    // Randomize Season Dawn display — safe here because prepareRound runs inside a useEffect
+    setSeasonPhraseIndex(Math.floor(Math.random() * 3));
+    const order = [0, 1, 2] as [number, number, number];
+    for (let i = 2; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+    setSeasonEffectOrder(order);
   }
 
   const advancePhase = useCallback(
@@ -161,6 +174,8 @@ export function RoundController() {
       {currentPhase === 'seasonDawn' && (
         <SeasonDawn
           advisorBriefing={advisorBriefing ?? undefined}
+          phraseIndex={seasonPhraseIndex}
+          effectOrder={seasonEffectOrder}
           onComplete={() => advancePhase()}
         />
       )}
