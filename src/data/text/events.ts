@@ -5,6 +5,8 @@
 // Every StorylineDefinition.id must have a matching key in STORYLINE_TEXT,
 // with entries for every branchId and every choiceId.
 
+import { FACTION_REQUEST_TEXT as FACTION_REQUEST_TEXT_ENTRIES } from './faction-requests';
+
 export interface EventTextEntry {
   title: string;
   body: string;
@@ -437,6 +439,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
     choices: {
       sponsor_planting_rites: 'Sponsor the Planting Rites',
       attend_ceremonies: 'Attend the Ceremonies',
+      decline_involvement: 'Decline Royal Involvement',
     },
   },
   evt_spring_river_thaw: {
@@ -534,6 +537,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
     choices: {
       send_royal_blessing: 'Send Royal Blessing',
       attend_in_person: 'Attend in Person',
+      ignore_the_festivities: 'Ignore the Festivities',
     },
   },
   evt_region_resource_discovery: {
@@ -1000,6 +1004,9 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
       dismiss_as_rumor: 'Dismiss as Rumor',
     },
   },
+
+  // Phase 6.5 — Faction Request Text
+  ...FACTION_REQUEST_TEXT_ENTRIES,
 };
 
 // ============================================================
