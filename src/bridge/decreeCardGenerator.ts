@@ -5,7 +5,10 @@ import type { GameState } from '../engine/types';
 import type { EffectHint } from '../ui/types';
 import { DECREE_POOL } from '../data/decrees/index';
 import { DECREE_EFFECTS } from '../data/decrees/effects';
+import { DECREE_STYLE_TAGS } from '../data/ruling-style/flavor-tags';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
+import { getDominantAxes } from '../engine/systems/ruling-style';
+import { StyleAxis } from '../engine/types';
 
 // ============================================================
 // Card data type
@@ -61,9 +64,15 @@ export function generateDecreeCards(gameState: GameState): DecreeCardData[] {
     return true;
   });
 
-  // Sort: lower tier first, then alphabetically by category
+  // Style-based weighting: favor decrees aligned with dominant ruling style
+  const dominantAxes = getDominantAxes(gameState.rulingStyle.axes);
+
+  // Sort: lower tier first, then by style alignment (descending), then by category
   available.sort((a, b) => {
     if (a.tier !== b.tier) return a.tier - b.tier;
+    const alignA = getDecreeStyleAlignment(a.id, dominantAxes);
+    const alignB = getDecreeStyleAlignment(b.id, dominantAxes);
+    if (alignA !== alignB) return alignB - alignA;
     return a.category.localeCompare(b.category);
   });
 
@@ -77,4 +86,27 @@ export function generateDecreeCards(gameState: GameState): DecreeCardData[] {
     slotCost: decree.slotCost,
     isHighImpact: decree.isHighImpact,
   }));
+}
+
+// ============================================================
+// Style Alignment Helper
+// ============================================================
+
+/**
+ * Returns a score indicating how well a decree aligns with the player's
+ * dominant style axes. Higher score = more aligned = shown earlier in spread.
+ */
+function getDecreeStyleAlignment(decreeId: string, dominantAxes: StyleAxis[]): number {
+  if (dominantAxes.length === 0) return 0;
+  const tags = DECREE_STYLE_TAGS[decreeId];
+  if (!tags) return 0;
+
+  let score = 0;
+  for (const axis of dominantAxes) {
+    const delta = tags[axis];
+    if (delta !== undefined && delta > 0) {
+      score += delta;
+    }
+  }
+  return score;
 }

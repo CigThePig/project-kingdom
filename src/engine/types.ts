@@ -784,6 +784,31 @@ export interface NarrativePacingState {
 }
 
 // ============================================================
+// Section 16e — Ruling Style Tracking
+// ============================================================
+
+export enum StyleAxis {
+  Authority = 'Authority',   // Permissive (−) ↔ Authoritarian (+)
+  Economy = 'Economy',       // Populist (−) ↔ Mercantilist (+)
+  Military = 'Military',     // Pacifist (−) ↔ Martial (+)
+  Faith = 'Faith',           // Secular (−) ↔ Theocratic (+)
+}
+
+export interface StyleDecision {
+  source: 'event' | 'decree' | 'petition';
+  sourceId: string;
+  choiceId: string;
+  turnApplied: number;
+  axisDeltas: Partial<Record<StyleAxis, number>>;
+}
+
+export interface RulingStyleState {
+  axes: Record<StyleAxis, number>;              // each −50 to +50
+  recentDecisions: StyleDecision[];             // rolling window of last 20
+  crossedThresholds: Record<string, boolean>;   // e.g. "Authority_+30", prevents re-triggering
+}
+
+// ============================================================
 // Section 17 — Save File & Main GameState
 // ============================================================
 
@@ -846,6 +871,9 @@ export interface GameState {
 
   // Narrative pacing state for smarter event selection
   narrativePacing: NarrativePacingState;
+
+  // Ruling style tracking
+  rulingStyle: RulingStyleState;
 
   // Scenario
   scenarioId: string;

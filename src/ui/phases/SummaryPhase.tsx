@@ -52,25 +52,33 @@ export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhas
         <CardTitle>Court Summary</CardTitle>
         <CardBody>{narrative}</CardBody>
         <EffectStrip effects={effects} />
-
-        <div
-          onClick={onComplete}
-          style={{
-            marginTop: 16,
-            padding: '12px 0',
-            textAlign: 'center',
-            fontFamily: 'var(--font-family-mono)',
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: 2,
-            textTransform: 'uppercase',
-            color: 'var(--color-accent-response)',
-            cursor: 'pointer',
-          }}
-        >
-          NEXT ROUND
-        </div>
       </Card>
+
+      {summaryData?.legacyCards?.map((legacy, i) => (
+        <Card key={`legacy-${i}`} family="legacy">
+          <CardTitle>{legacy.title}</CardTitle>
+          <CardBody>{legacy.body}</CardBody>
+          <EffectStrip effects={legacy.effects} />
+        </Card>
+      ))}
+
+      <div
+        onClick={onComplete}
+        style={{
+          marginTop: 4,
+          padding: '12px 0',
+          textAlign: 'center',
+          fontFamily: 'var(--font-family-mono)',
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: 2,
+          textTransform: 'uppercase',
+          color: 'var(--color-accent-response)',
+          cursor: 'pointer',
+        }}
+      >
+        NEXT ROUND
+      </div>
     </div>
   );
 }

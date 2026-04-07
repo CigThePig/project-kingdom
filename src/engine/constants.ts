@@ -13,6 +13,7 @@ import {
   ReligiousTolerance,
   ResourceType,
   Season,
+  StyleAxis,
   TaxationLevel,
   TradeOpenness,
 } from './types';
@@ -304,6 +305,24 @@ export const FAILURE_CONSECUTIVE_TURNS = {
   insolvency: TREASURY_CONSECUTIVE_TURNS_INSOLVENT,
   collapse: STABILITY_CONSECUTIVE_TURNS_FOR_COLLAPSE,
 } as const;
+
+// ============================================================
+// Block 13b — Ruling Style (Phase 5)
+// ============================================================
+
+export const RULING_STYLE_AXIS_MIN = -50;
+export const RULING_STYLE_AXIS_MAX = 50;
+export const RULING_STYLE_WINDOW_SIZE = 20;
+export const RULING_STYLE_LEGACY_THRESHOLDS = [30, 45] as const;
+export const RULING_STYLE_DOMINANT_AXIS_THRESHOLD = 20;
+
+/** Mapping from each style axis to the population classes it favors (positive) and disfavors (negative). */
+export const RULING_STYLE_CLASS_AFFINITY: Record<StyleAxis, { favors: PopulationClass; disfavors: PopulationClass }> = {
+  [StyleAxis.Authority]: { favors: PopulationClass.Nobility, disfavors: PopulationClass.Commoners },
+  [StyleAxis.Economy]:   { favors: PopulationClass.Merchants, disfavors: PopulationClass.Commoners },
+  [StyleAxis.Military]:  { favors: PopulationClass.MilitaryCaste, disfavors: PopulationClass.Commoners },
+  [StyleAxis.Faith]:     { favors: PopulationClass.Clergy, disfavors: PopulationClass.Merchants },
+};
 
 // ============================================================
 // Block 14 — Knowledge Branch Starting State (§4.13)

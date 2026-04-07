@@ -90,8 +90,9 @@ export function RoundController() {
           // Generate summary data when transitioning to summary phase
           if (nextPhase === 'summary') {
             const finalDecisions = updated;
+            const prevStyle = ctx.state.gameState.rulingStyle;
             setSummaryData(
-              generateSummaryData(finalDecisions, crisisData, petitionCards),
+              generateSummaryData(finalDecisions, crisisData, petitionCards, prevStyle, prevStyle),
             );
           }
 
@@ -101,7 +102,7 @@ export function RoundController() {
         return updated;
       });
     },
-    [currentPhase, crisisData, petitionCards],
+    [currentPhase, crisisData, petitionCards, ctx.state.gameState.rulingStyle],
   );
 
   const handleRoundComplete = useCallback(() => {

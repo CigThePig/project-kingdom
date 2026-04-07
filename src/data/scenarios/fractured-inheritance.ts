@@ -16,6 +16,7 @@ import {
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
+import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -339,6 +340,10 @@ export function createFracturedInheritanceScenario(): GameState {
     narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,
+
+    // --- Scenario ---
+    // --- Ruling Style ---
+    rulingStyle: createInitialRulingStyleState(),
 
     // --- Scenario ---
     scenarioId: FRACTURED_INHERITANCE_SCENARIO_ID,
