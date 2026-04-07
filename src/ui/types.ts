@@ -14,6 +14,12 @@ export type CardFamily =
 
 export type RoundPhase = 'seasonDawn' | 'crisis' | 'petition' | 'decree' | 'summary';
 
+export interface PhaseDecisions {
+  crisisResponse: string | null;
+  petitionDecisions: { cardId: string; granted: boolean }[];
+  selectedDecrees: string[];
+}
+
 export interface EffectHint {
   label: string;
   type: 'positive' | 'negative' | 'warning' | 'neutral';
