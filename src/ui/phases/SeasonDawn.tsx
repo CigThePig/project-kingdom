@@ -1,4 +1,4 @@
-import { useContext, useRef } from 'react';
+import { useContext, useState, useEffect } from 'react';
 
 import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
@@ -6,6 +6,7 @@ import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { GameContext } from '../../context/game-context';
 import { MONTH_PHRASES, MONTH_EFFECT_POOLS, MONTH_NAMES } from '../../data/text/month-openings';
+import type { EffectHint } from '../types';
 import type { AdvisorBriefing } from '../../bridge/advisorGenerator';
 
 interface SeasonDawnProps {
@@ -29,13 +30,23 @@ export function SeasonDawn({ onComplete, advisorBriefing }: SeasonDawnProps) {
 
   const { month, year } = ctx.state.gameState.turn;
 
-  // Stable randomization for the component's lifetime — picks new values on each mount
-  const phraseIndex = useRef(Math.floor(Math.random() * 3));
-  const effectOrder = useRef(shuffleIndices(3));
+  // Initialized to deterministic defaults; randomized in useEffect (after render)
+  // so Math.random() is never called during the render phase.
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [effects, setEffects] = useState<EffectHint[]>([
+    MONTH_EFFECT_POOLS[month][0],
+    MONTH_EFFECT_POOLS[month][1],
+  ]);
 
-  const phrase = MONTH_PHRASES[month][phraseIndex.current];
-  const pool = MONTH_EFFECT_POOLS[month];
-  const effects = [pool[effectOrder.current[0]], pool[effectOrder.current[1]]];
+  useEffect(() => {
+    const idx = Math.floor(Math.random() * 3);
+    const order = shuffleIndices(3);
+    const pool = MONTH_EFFECT_POOLS[month];
+    setPhraseIndex(idx);
+    setEffects([pool[order[0]], pool[order[1]]]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const phrase = MONTH_PHRASES[month][phraseIndex];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, animation: 'slideUp 400ms ease both' }}>
