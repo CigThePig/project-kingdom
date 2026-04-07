@@ -198,40 +198,6 @@ function applySatAndTreasury(state: GameState, eff: typeof DECREE_EFFECTS[keyof 
   return s;
 }
 
-// Helper: apply readiness + morale deltas to military state.
-function applyMilitaryDeltas(
-  state: GameState,
-  eff: Record<string, number>,
-): GameState {
-  let mil = state.military;
-  if ('readinessDelta' in eff) mil = { ...mil, readiness: clamp(mil.readiness + (eff.readinessDelta ?? 0), 0, 100) };
-  if ('moraleDelta' in eff) mil = { ...mil, morale: clamp(mil.morale + (eff.moraleDelta ?? 0), 0, 100) };
-  if ('equipmentDelta' in eff) mil = { ...mil, equipmentCondition: clamp(mil.equipmentCondition + (eff.equipmentDelta ?? 0), 0, 100) };
-  return { ...mil === state.military ? state : { ...state, military: mil } };
-}
-
-// Helper: apply faith/heterodoxy deltas.
-function applyFaithDeltas(state: GameState, eff: Record<string, number>): GameState {
-  let fc = state.faithCulture;
-  if ('faithDelta' in eff) fc = { ...fc, faithLevel: clamp(fc.faithLevel + (eff.faithDelta ?? 0), 0, 100) };
-  if ('heterodoxyDelta' in eff) fc = { ...fc, heterodoxy: clamp(fc.heterodoxy + (eff.heterodoxyDelta ?? 0), 0, 100) };
-  return fc === state.faithCulture ? state : { ...state, faithCulture: fc };
-}
-
-// Helper: apply diplomatic relationship delta.
-function applyDiplomacyEffect(state: GameState, action: QueuedAction, eff: typeof DECREE_EFFECTS[keyof typeof DECREE_EFFECTS]): GameState {
-  if (action.targetNeighborId === null) return state;
-  const relDelta = 'relationshipDelta' in eff ? (eff as Record<string, number>).relationshipDelta : 0;
-  if (!relDelta) return state;
-  return {
-    ...state,
-    diplomacy: {
-      ...state.diplomacy,
-      neighbors: applyNeighborRelDelta(state.diplomacy.neighbors, action.targetNeighborId, relDelta),
-    },
-  };
-}
-
 // Combined effect applicator for decrees that only need sat + treasury + military + faith.
 function applyFullDecreeDeltas(state: GameState, action: QueuedAction, eff: typeof DECREE_EFFECTS[keyof typeof DECREE_EFFECTS]): GameState {
   let s = applySatAndTreasury(state, eff);
