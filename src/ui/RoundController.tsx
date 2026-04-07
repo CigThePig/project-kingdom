@@ -91,7 +91,7 @@ export function RoundController() {
           if (nextPhase === 'summary') {
             const finalDecisions = updated;
             setSummaryData(
-              generateSummaryData(finalDecisions, crisisData, petitionCards, decreeCards),
+              generateSummaryData(finalDecisions, crisisData, petitionCards),
             );
           }
 
@@ -101,7 +101,7 @@ export function RoundController() {
         return updated;
       });
     },
-    [currentPhase, crisisData, petitionCards, decreeCards],
+    [currentPhase, crisisData, petitionCards],
   );
 
   const handleRoundComplete = useCallback(() => {

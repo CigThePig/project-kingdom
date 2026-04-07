@@ -4,7 +4,6 @@
 import type { PhaseDecisions, EffectHint } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData } from './petitionCardGenerator';
-import type { DecreeCardData } from './decreeCardGenerator';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { DECREE_EFFECTS } from '../data/decrees/effects';
@@ -18,7 +17,6 @@ export function generateSummaryData(
   decisions: PhaseDecisions,
   crisisData: CrisisPhaseData | null,
   petitionCards: PetitionCardData[],
-  _decreeCards: DecreeCardData[],
 ): SummaryData {
   const parts: string[] = [];
   const allEffects: EffectHint[] = [];
