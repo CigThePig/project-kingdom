@@ -64,20 +64,17 @@ export function generateDecreeCards(gameState: GameState): DecreeCardData[] {
     return true;
   });
 
-  // Style-based weighting: favor decrees aligned with dominant ruling style
+  // Weighted random sampling: favor lower tiers and style-aligned decrees
+  // while ensuring variety across rounds.
   const dominantAxes = getDominantAxes(gameState.rulingStyle.axes);
 
-  // Sort: lower tier first, then by style alignment (descending), then by category
-  available.sort((a, b) => {
-    if (a.tier !== b.tier) return a.tier - b.tier;
-    const alignA = getDecreeStyleAlignment(a.id, dominantAxes);
-    const alignB = getDecreeStyleAlignment(b.id, dominantAxes);
-    if (alignA !== alignB) return alignB - alignA;
-    return a.category.localeCompare(b.category);
+  const selected = weightedSample(available, 6, (decree) => {
+    const tierWeight = 1 / decree.tier; // tier 1 = 1.0, tier 2 = 0.5, tier 3 = 0.33
+    const alignment = getDecreeStyleAlignment(decree.id, dominantAxes);
+    return 1.0 + tierWeight + alignment * 0.5;
   });
 
-  // Return up to 6 decree cards
-  return available.slice(0, 6).map((decree) => ({
+  return selected.map((decree) => ({
     decreeId: decree.id,
     title: decree.title,
     category: decree.category,
@@ -86,6 +83,46 @@ export function generateDecreeCards(gameState: GameState): DecreeCardData[] {
     slotCost: decree.slotCost,
     isHighImpact: decree.isHighImpact,
   }));
+}
+
+// ============================================================
+// Weighted Random Sampling
+// ============================================================
+
+/**
+ * Selects up to `count` items from `pool` without replacement, using
+ * weighted random selection. Higher-weighted items are more likely to
+ * be picked, but every item has a chance.
+ */
+function weightedSample<T>(
+  pool: T[],
+  count: number,
+  weightFn: (item: T) => number,
+): T[] {
+  if (pool.length <= count) return pool;
+
+  const indices = pool.map((_, i) => i);
+  const result: T[] = [];
+
+  for (let i = 0; i < count && indices.length > 0; i++) {
+    const weights = indices.map((idx) => Math.max(0.1, weightFn(pool[idx])));
+    const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+    let r = Math.random() * totalWeight;
+
+    let picked = indices.length - 1;
+    for (let j = 0; j < weights.length; j++) {
+      r -= weights[j];
+      if (r <= 0) {
+        picked = j;
+        break;
+      }
+    }
+
+    result.push(pool[indices[picked]]);
+    indices.splice(picked, 1);
+  }
+
+  return result;
 }
 
 // ============================================================
