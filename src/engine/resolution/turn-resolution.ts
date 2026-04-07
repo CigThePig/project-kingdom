@@ -64,6 +64,7 @@ import {
   calculateMerchantsSatisfactionDelta,
   calculateCommonersSatisfactionDelta,
   calculateMilitaryCasteSatisfactionDelta,
+  calculateStyleSatisfactionModifiers,
   applyPopulationSatisfactionDeltas,
   updateNobilityIntrigueRisk,
   calculateStability,
@@ -128,6 +129,9 @@ import { EVENT_POOL } from '../../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../../data/events/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
 import { findConstructionDefinition } from '../../data/construction/index';
+import { accumulateStyleDecision, createInitialRulingStyleState } from '../systems/ruling-style';
+import { EVENT_CHOICE_STYLE_TAGS, DECREE_STYLE_TAGS } from '../../data/ruling-style/flavor-tags';
+import type { StyleDecision } from '../types';
 
 // ============================================================
 // Public Types
@@ -363,6 +367,12 @@ export function resolveTurn(
       stateAfterActions.military,
     ),
   };
+
+  // Apply ruling style satisfaction modifiers (Phase 5 — Ruling Style).
+  const styleModifiers = calculateStyleSatisfactionModifiers(stateAfterActions.rulingStyle.axes);
+  for (const cls of Object.values(PopulationClass)) {
+    satisfactionDeltas[cls] += styleModifiers[cls];
+  }
 
   const populationAfterDeltas = applyPopulationSatisfactionDeltas(
     stateAfterActions.population,
@@ -1286,6 +1296,42 @@ export function resolveTurn(
     });
   }
 
+  // ---- Phase 11a: Ruling Style Accumulation ----
+  let updatedRulingStyle = stateAfterActions.rulingStyle ?? createInitialRulingStyleState();
+
+  // Accumulate from resolved events
+  for (const event of stateAfterActions.activeEvents) {
+    if (!event.isResolved || event.choiceMade === null) continue;
+    const styleTags = EVENT_CHOICE_STYLE_TAGS[event.definitionId]?.[event.choiceMade];
+    if (styleTags) {
+      const decision: StyleDecision = {
+        source: 'event',
+        sourceId: event.definitionId,
+        choiceId: event.choiceMade,
+        turnApplied: state.turn.turnNumber,
+        axisDeltas: styleTags,
+      };
+      updatedRulingStyle = accumulateStyleDecision(updatedRulingStyle, decision);
+    }
+  }
+
+  // Accumulate from enacted decrees
+  for (const action of stateAfterActions.actionBudget.queuedActions) {
+    if (action.type === ActionType.Decree) {
+      const styleTags = DECREE_STYLE_TAGS[action.actionDefinitionId];
+      if (styleTags) {
+        const decision: StyleDecision = {
+          source: 'decree',
+          sourceId: action.actionDefinitionId,
+          choiceId: action.actionDefinitionId,
+          turnApplied: state.turn.turnNumber,
+          axisDeltas: styleTags,
+        };
+        updatedRulingStyle = accumulateStyleDecision(updatedRulingStyle, decision);
+      }
+    }
+  }
+
   // ---- Phase 11: State Snapshot and Bookkeeping ----
   // Advance the calendar. (nextTurnNumber hoisted to Phase 9.)
   const nextMonth = state.turn.month === 12 ? 1 : state.turn.month + 1;
@@ -1423,6 +1469,7 @@ export function resolveTurn(
     resolvedStorylineIds: allResolvedStorylineIds,
     lastStorylineActivationTurn: updatedLastActivationTurn,
     issuedDecrees: stateAfterActions.issuedDecrees,
+    rulingStyle: updatedRulingStyle,
     scenarioId: stateAfterActions.scenarioId,
   };
 

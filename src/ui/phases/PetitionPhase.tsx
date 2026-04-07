@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 
 import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
@@ -17,7 +17,7 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
   const [results, setResults] = useState<{ cardId: string; granted: boolean }[]>([]);
   const [key, setKey] = useState(0);
 
-  const petitions = petitionCards ?? [];
+  const petitions = useMemo(() => petitionCards ?? [], [petitionCards]);
 
   // Auto-complete if there are no petitions
   useEffect(() => {

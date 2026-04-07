@@ -13,6 +13,7 @@ import {
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
+import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -336,6 +337,10 @@ export function createFrozenMarchScenario(): GameState {
     narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,
+
+    // --- Scenario ---
+    // --- Ruling Style ---
+    rulingStyle: createInitialRulingStyleState(),
 
     // --- Scenario ---
     scenarioId: FROZEN_MARCH_SCENARIO_ID,

@@ -12,6 +12,7 @@ import {
   PopulationState,
   ReligiousTolerance,
   StabilityState,
+  StyleAxis,
   TaxationLevel,
   TradeOpenness,
 } from '../types';
@@ -202,6 +203,42 @@ export function clampSatisfactionDelta(current: number, delta: number): number {
   // Further clamp so satisfaction never exceeds [0, 100]
   const newSatisfaction = clamp(current + clamped, 0, 100);
   return newSatisfaction - current;
+}
+
+// ============================================================
+// Exported Ruling Style Satisfaction Modifier
+// ============================================================
+
+/**
+ * Returns a per-class satisfaction modifier based on the current ruling style axes.
+ * Each axis favors one class and disfavors another (see RULING_STYLE_CLASS_AFFINITY).
+ * The modifier is additive and typically ranges from −2 to +2.
+ */
+export function calculateStyleSatisfactionModifiers(
+  axes: Record<StyleAxis, number>,
+): Record<PopulationClass, number> {
+  const modifiers = {} as Record<PopulationClass, number>;
+  for (const cls of Object.values(PopulationClass)) {
+    modifiers[cls] = 0;
+  }
+
+  // Authority: Nobility favors authoritarian (+), Commoners disfavor
+  modifiers[PopulationClass.Nobility]     += (axes[StyleAxis.Authority] / 50) * 2;
+  modifiers[PopulationClass.Commoners]    -= (axes[StyleAxis.Authority] / 50) * 2;
+
+  // Economy: Merchants favor mercantilist (+), Commoners disfavor
+  modifiers[PopulationClass.Merchants]    += (axes[StyleAxis.Economy] / 50) * 2;
+  modifiers[PopulationClass.Commoners]    -= (axes[StyleAxis.Economy] / 50) * 2;
+
+  // Military: MilitaryCaste favors martial (+), Commoners disfavor
+  modifiers[PopulationClass.MilitaryCaste] += (axes[StyleAxis.Military] / 50) * 2;
+  modifiers[PopulationClass.Commoners]     -= (axes[StyleAxis.Military] / 50) * 2;
+
+  // Faith: Clergy favors theocratic (+), Merchants disfavor
+  modifiers[PopulationClass.Clergy]       += (axes[StyleAxis.Faith] / 50) * 2;
+  modifiers[PopulationClass.Merchants]    -= (axes[StyleAxis.Faith] / 50) * 2;
+
+  return modifiers;
 }
 
 // ============================================================

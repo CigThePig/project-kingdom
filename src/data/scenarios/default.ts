@@ -21,6 +21,7 @@ import {
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
+import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -344,6 +345,9 @@ export function createDefaultScenario(): GameState {
     narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,
+
+    // --- Ruling Style ---
+    rulingStyle: createInitialRulingStyleState(),
 
     // --- Scenario ---
     scenarioId: DEFAULT_SCENARIO_ID,

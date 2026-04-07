@@ -4,21 +4,35 @@
 import type { PhaseDecisions, EffectHint } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData } from './petitionCardGenerator';
-import type { DecreeCardData } from './decreeCardGenerator';
+import type { RulingStyleState, StyleAxis } from '../engine/types';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { DECREE_EFFECTS } from '../data/decrees/effects';
+import { checkThresholdCrossings, markThresholdsCrossed } from '../engine/systems/ruling-style';
+import { LEGACY_TEXT } from '../data/text/legacy-text';
+
+export interface LegacyCardData {
+  title: string;
+  body: string;
+  axis: StyleAxis;
+  threshold: number;
+  effects: EffectHint[];
+}
 
 export interface SummaryData {
   narrative: string;
   effectPreview: EffectHint[];
+  legacyCards: LegacyCardData[];
+  /** Updated ruling style state with newly crossed thresholds marked. */
+  updatedRulingStyle?: RulingStyleState;
 }
 
 export function generateSummaryData(
   decisions: PhaseDecisions,
   crisisData: CrisisPhaseData | null,
   petitionCards: PetitionCardData[],
-  _decreeCards: DecreeCardData[],
+  prevRulingStyle?: RulingStyleState,
+  currentRulingStyle?: RulingStyleState,
 ): SummaryData {
   const parts: string[] = [];
   const allEffects: EffectHint[] = [];
@@ -83,8 +97,34 @@ export function generateSummaryData(
     }
   }
 
+  // Generate legacy cards from ruling style threshold crossings
+  const legacyCards: LegacyCardData[] = [];
+  let updatedRulingStyle: RulingStyleState | undefined;
+
+  if (prevRulingStyle && currentRulingStyle) {
+    const crossings = checkThresholdCrossings(prevRulingStyle, currentRulingStyle);
+    for (const crossing of crossings) {
+      const textKey = `${crossing.axis}_${crossing.direction}_${crossing.threshold}`;
+      const text = LEGACY_TEXT[textKey as keyof typeof LEGACY_TEXT];
+      if (text) {
+        legacyCards.push({
+          title: text.title,
+          body: text.body,
+          axis: crossing.axis,
+          threshold: crossing.threshold,
+          effects: [{ label: `${crossing.axis} ${crossing.direction === 'positive' ? '+' : '-'}${crossing.threshold}`, type: 'neutral' }],
+        });
+      }
+    }
+    if (crossings.length > 0) {
+      updatedRulingStyle = markThresholdsCrossed(currentRulingStyle, crossings);
+    }
+  }
+
   return {
     narrative: parts.join(' '),
     effectPreview: dedupedEffects,
+    legacyCards,
+    updatedRulingStyle,
   };
 }
