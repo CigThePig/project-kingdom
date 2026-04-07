@@ -8,6 +8,7 @@ import {
   PopulationClass,
   Season,
 } from '../../engine/types';
+import { FACTION_REQUEST_POOL } from './faction-requests';
 
 export const EVENT_POOL: EventDefinition[] = [
   // ============================================================
@@ -953,6 +954,7 @@ export const EVENT_POOL: EventDefinition[] = [
     choices: [
       { choiceId: 'sponsor_planting_rites', slotCost: 1, isFree: false },
       { choiceId: 'attend_ceremonies', slotCost: 0, isFree: true },
+      { choiceId: 'decline_involvement', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
@@ -1165,7 +1167,7 @@ export const EVENT_POOL: EventDefinition[] = [
   },
   {
     id: 'evt_region_local_festival',
-    severity: EventSeverity.Informational,
+    severity: EventSeverity.Notable,
     category: EventCategory.Region,
     triggerConditions: [
       { type: 'faith_above', threshold: 50 },
@@ -1178,6 +1180,7 @@ export const EVENT_POOL: EventDefinition[] = [
     choices: [
       { choiceId: 'send_royal_blessing', slotCost: 0, isFree: true },
       { choiceId: 'attend_in_person', slotCost: 1, isFree: false },
+      { choiceId: 'ignore_the_festivities', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
     affectsRegion: true,
@@ -2230,4 +2233,11 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
   },
+
+  // ============================================================
+  // Phase 6.5 — Faction Request Petitions (15)
+  // Imported from faction-requests.ts and spread into the main pool
+  // so the event engine can surface them through the standard pipeline.
+  // ============================================================
+  ...FACTION_REQUEST_POOL,
 ];

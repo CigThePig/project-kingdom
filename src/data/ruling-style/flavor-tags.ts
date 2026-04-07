@@ -266,6 +266,7 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   evt_spring_planting_festival: {
     sponsor_planting_rites: { [StyleAxis.Faith]: 1 },
     attend_ceremonies:      {},
+    decline_involvement:    { [StyleAxis.Faith]: -1 },
   },
   evt_spring_river_thaw: {
     reinforce_riverbanks: { [StyleAxis.Economy]: 1 },
@@ -315,8 +316,9 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     reroute_trade:            { [StyleAxis.Economy]: 1 },
   },
   evt_region_local_festival: {
-    send_royal_blessing: { [StyleAxis.Faith]: 1 },
-    attend_in_person:    { [StyleAxis.Authority]: -1 },
+    send_royal_blessing:    { [StyleAxis.Faith]: 1 },
+    attend_in_person:       { [StyleAxis.Authority]: -1 },
+    ignore_the_festivities: { [StyleAxis.Authority]: 1 },
   },
   evt_region_resource_discovery: {
     fund_extraction: { [StyleAxis.Economy]: 3 },

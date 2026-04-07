@@ -3,6 +3,7 @@
 // Each choice represents a genuine tradeoff; no strictly dominant options.
 
 import type { MechanicalEffectDelta } from '../../engine/types';
+import { FACTION_REQUEST_EFFECTS } from './faction-request-effects';
 
 export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffectDelta>> = {
   // ============================================================
@@ -286,6 +287,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   evt_spring_planting_festival: {
     sponsor_planting_rites:  { faithDelta: +2, commonerSatDelta: +3, foodDelta: +5, treasuryDelta: -15 },
     attend_ceremonies:       { commonerSatDelta: +1, faithDelta: +1 },
+    decline_involvement:     { commonerSatDelta: -1 },
   },
   evt_spring_river_thaw: {
     reinforce_riverbanks:        { treasuryDelta: -35, regionConditionDelta: +3, commonerSatDelta: +2 },
@@ -351,6 +353,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   evt_region_local_festival: {
     send_royal_blessing:  { faithDelta: +1, commonerSatDelta: +1, regionConditionDelta: +1 },
     attend_in_person:     { faithDelta: +2, commonerSatDelta: +3, nobilitySatDelta: +1, treasuryDelta: -15 },
+    ignore_the_festivities: { commonerSatDelta: -1, faithDelta: -1 },
   },
   evt_region_resource_discovery: {
     fund_extraction:   { treasuryDelta: -50, regionDevelopmentDelta: +6, merchantSatDelta: +2 },
@@ -646,6 +649,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     dispatch_scouts:     { espionageNetworkDelta: +5, treasuryDelta: -20 },
     dismiss_as_rumor:    { stabilityDelta: -1 },
   },
+
+  // Phase 6.5 — Faction Request Effects
+  ...FACTION_REQUEST_EFFECTS,
 };
 
 // ============================================================
