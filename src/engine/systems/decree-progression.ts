@@ -1,8 +1,8 @@
 // Decree Progression System — availability logic for one-time, cooldown, and chain decrees.
 // Pure TypeScript — no React imports.
 
-import type { IssuedDecree } from '../types';
-import { DECREE_POOL, type DecreeDefinition } from '../../data/decrees/index';
+import type { GameState, IssuedDecree } from '../types';
+import { DECREE_POOL, type DecreeDefinition, type DecreeStateCondition } from '../../data/decrees/index';
 
 // ============================================================
 // Types
@@ -34,6 +34,7 @@ export function getDecreeAvailability(
   decree: DecreeDefinition,
   issuedDecrees: ReadonlyArray<IssuedDecree>,
   currentTurn: number,
+  state?: GameState,
 ): DecreeAvailability {
   const chainProgress = getChainProgress(decree, issuedDecrees);
 
@@ -102,6 +103,32 @@ export function getDecreeAvailability(
     }
   }
 
+  // --- Turn minimum not met ---
+  if (decree.turnMinimum !== null && currentTurn < decree.turnMinimum) {
+    return {
+      status: 'locked',
+      available: false,
+      reason: `Available from turn ${decree.turnMinimum}`,
+      cooldownTurnsRemaining: 0,
+      chainProgress,
+    };
+  }
+
+  // --- State prerequisites not met ---
+  if (decree.statePrerequisites !== null && state) {
+    for (const condition of decree.statePrerequisites) {
+      if (!evaluateDecreeCondition(condition, state)) {
+        return {
+          status: 'locked',
+          available: false,
+          reason: getDecreeConditionFailureReason(condition),
+          cooldownTurnsRemaining: 0,
+          chainProgress,
+        };
+      }
+    }
+  }
+
   // --- Available ---
   return {
     status: 'available',
@@ -148,4 +175,73 @@ function getChainProgress(
   }
 
   return { currentTier: highestEnacted, maxTier };
+}
+
+// ============================================================
+// State prerequisite evaluation
+// ============================================================
+
+/** Ordered from worst to best for comparison purposes. */
+const POSTURE_RANK: Record<string, number> = {
+  War: 0,
+  Hostile: 1,
+  Tense: 2,
+  Neutral: 3,
+  Friendly: 4,
+};
+
+/**
+ * Evaluates a single decree state condition against the current game state.
+ */
+function evaluateDecreeCondition(condition: DecreeStateCondition, state: GameState): boolean {
+  switch (condition.type) {
+    case 'stability_above':
+      return state.stability.value >= (condition.threshold ?? 0);
+    case 'treasury_above':
+      return state.treasury.balance >= (condition.threshold ?? 0);
+    case 'faith_above':
+      return state.faithCulture.faithLevel >= (condition.threshold ?? 0);
+    case 'military_readiness_above':
+      return state.military.readiness >= (condition.threshold ?? 0);
+    case 'neighbor_disposition_above': {
+      if (!condition.dispositionMinimum) return true;
+      const requiredRank = POSTURE_RANK[condition.dispositionMinimum as string] ?? 0;
+      return state.diplomacy.neighbors.some(
+        (n) => POSTURE_RANK[n.attitudePosture] >= requiredRank,
+      );
+    }
+    case 'turn_range':
+      return state.turn.turnNumber >= (condition.minTurn ?? 1);
+    case 'consequence_tag_present':
+      if (!condition.consequenceTag) return true;
+      return state.persistentConsequences.some(
+        (c) => c.tag === condition.consequenceTag,
+      );
+    default:
+      return true;
+  }
+}
+
+/**
+ * Returns a human-readable reason when a decree state condition fails.
+ */
+function getDecreeConditionFailureReason(condition: DecreeStateCondition): string {
+  switch (condition.type) {
+    case 'stability_above':
+      return `Requires stability above ${condition.threshold}`;
+    case 'treasury_above':
+      return `Requires treasury above ${condition.threshold}`;
+    case 'faith_above':
+      return `Requires faith above ${condition.threshold}`;
+    case 'military_readiness_above':
+      return `Requires military readiness above ${condition.threshold}`;
+    case 'neighbor_disposition_above':
+      return `Requires ${condition.dispositionMinimum ?? 'Neutral'} relations with a neighbor`;
+    case 'turn_range':
+      return `Available from turn ${condition.minTurn}`;
+    case 'consequence_tag_present':
+      return 'Requires a prior decision';
+    default:
+      return 'Requirements not met';
+  }
 }

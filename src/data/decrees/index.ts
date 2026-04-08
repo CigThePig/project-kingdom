@@ -3,10 +3,31 @@
 
 import {
   DecreeCategory,
+  DiplomaticPosture,
   KnowledgeBranch,
   PopulationClass,
   ResourceType,
 } from '../../engine/types';
+
+// ============================================================
+// Decree State Condition — world-state prerequisites for decree availability
+// ============================================================
+
+export interface DecreeStateCondition {
+  type:
+    | 'stability_above'
+    | 'treasury_above'
+    | 'faith_above'
+    | 'military_readiness_above'
+    | 'neighbor_disposition_above'
+    | 'turn_range'
+    | 'consequence_tag_present';
+  threshold?: number;
+  /** For neighbor_disposition_above: minimum diplomatic posture required. */
+  dispositionMinimum?: DiplomaticPosture;
+  consequenceTag?: string;
+  minTurn?: number;
+}
 
 // ============================================================
 // Decree Definition Type
@@ -36,6 +57,13 @@ export interface DecreeDefinition {
   chainId: string | null;
   /** Position within a chain: 1 = base, 2 = upgrade, 3 = mastery. 1 for standalone. */
   tier: number;
+  /** Minimum turn number before this decree becomes available. Null = no restriction. */
+  turnMinimum: number | null;
+  /**
+   * Optional world-state conditions that must ALL pass for this decree to be available.
+   * Null = no state requirements.
+   */
+  statePrerequisites: DecreeStateCondition[] | null;
 }
 
 // ============================================================
@@ -63,6 +91,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_market',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_trade_guild_expansion',
@@ -81,6 +111,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_market_charter',
     chainId: 'chain_market',
     tier: 2,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
   {
     id: 'decree_merchant_republic_charter',
@@ -99,6 +131,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_trade_guild_expansion',
     chainId: 'chain_market',
     tier: 3,
+    turnMinimum: 8,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -121,6 +155,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_trade',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_trade_monopoly',
@@ -139,6 +175,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_trade_subsidies',
     chainId: 'chain_trade',
     tier: 2,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
   {
     id: 'decree_international_trade_empire',
@@ -157,6 +195,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_trade_monopoly',
     chainId: 'chain_trade',
     tier: 3,
+    turnMinimum: 8,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -183,6 +223,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -205,6 +247,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_fortify',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_integrated_defense_network',
@@ -223,6 +267,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_fortify_borders',
     chainId: 'chain_fortify',
     tier: 2,
+    turnMinimum: 6,
+    statePrerequisites: null,
   },
   {
     id: 'decree_fortress_kingdom',
@@ -241,6 +287,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_integrated_defense_network',
     chainId: 'chain_fortify',
     tier: 3,
+    turnMinimum: 10,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -263,6 +311,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_arms',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_royal_arsenal',
@@ -281,6 +331,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_arms_commission',
     chainId: 'chain_arms',
     tier: 2,
+    turnMinimum: 6,
+    statePrerequisites: null,
   },
   {
     id: 'decree_war_machine_industry',
@@ -299,6 +351,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_royal_arsenal',
     chainId: 'chain_arms',
     tier: 3,
+    turnMinimum: 10,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -324,6 +378,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -346,6 +402,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_roads',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_provincial_highway_system',
@@ -364,6 +422,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_road_improvement',
     chainId: 'chain_roads',
     tier: 2,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
   {
     id: 'decree_kingdom_transit_network',
@@ -382,6 +442,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_provincial_highway_system',
     chainId: 'chain_roads',
     tier: 3,
+    turnMinimum: 8,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -404,6 +466,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_administrative_reform',
@@ -425,6 +489,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_admin',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_royal_bureaucracy',
@@ -446,6 +512,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_administrative_reform',
     chainId: 'chain_admin',
     tier: 2,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_centralized_governance',
@@ -467,6 +535,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_royal_bureaucracy',
     chainId: 'chain_admin',
     tier: 3,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -489,6 +559,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -511,6 +583,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_faith',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_expand_religious_authority',
@@ -529,6 +603,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_invest_religious_order',
     chainId: 'chain_faith',
     tier: 2,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
   {
     id: 'decree_theocratic_council',
@@ -547,6 +623,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_expand_religious_authority',
     chainId: 'chain_faith',
     tier: 3,
+    turnMinimum: 8,
+    statePrerequisites: [{ type: 'faith_above', threshold: 50 }],
   },
 
   // ====================
@@ -569,6 +647,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_heresy',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_inquisitorial_authority',
@@ -587,6 +667,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_suppress_heresy',
     chainId: 'chain_heresy',
     tier: 2,
+    turnMinimum: 6,
+    statePrerequisites: [{ type: 'faith_above', threshold: 40 }],
   },
   {
     id: 'decree_religious_unification',
@@ -605,6 +687,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_inquisitorial_authority',
     chainId: 'chain_heresy',
     tier: 3,
+    turnMinimum: 10,
+    statePrerequisites: [{ type: 'faith_above', threshold: 40 }],
   },
 
   // ====================
@@ -627,6 +711,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_envoy',
     tier: 1,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
   {
     id: 'decree_permanent_embassy',
@@ -645,6 +731,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_diplomatic_envoy',
     chainId: 'chain_envoy',
     tier: 2,
+    turnMinimum: 6,
+    statePrerequisites: [{ type: 'neighbor_disposition_above', dispositionMinimum: DiplomaticPosture.Neutral }],
   },
   {
     id: 'decree_diplomatic_supremacy',
@@ -663,6 +751,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_permanent_embassy',
     chainId: 'chain_envoy',
     tier: 3,
+    turnMinimum: 10,
+    statePrerequisites: [{ type: 'neighbor_disposition_above', dispositionMinimum: DiplomaticPosture.Neutral }],
   },
 
   // ====================
@@ -685,6 +775,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
   {
     id: 'decree_royal_marriage',
@@ -703,6 +795,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_marriage',
     tier: 1,
+    turnMinimum: 4,
+    statePrerequisites: [{ type: 'neighbor_disposition_above', dispositionMinimum: DiplomaticPosture.Neutral }],
   },
   {
     id: 'decree_dynasty_alliance',
@@ -721,6 +815,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_royal_marriage',
     chainId: 'chain_marriage',
     tier: 2,
+    turnMinimum: 8,
+    statePrerequisites: null,
   },
   {
     id: 'decree_imperial_confederation',
@@ -739,6 +835,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_dynasty_alliance',
     chainId: 'chain_marriage',
     tier: 3,
+    turnMinimum: 12,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -761,6 +859,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_granary',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_regional_food_distribution',
@@ -779,6 +879,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_public_granary',
     chainId: 'chain_granary',
     tier: 2,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
   {
     id: 'decree_kingdom_breadbasket',
@@ -797,6 +899,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_regional_food_distribution',
     chainId: 'chain_granary',
     tier: 3,
+    turnMinimum: 8,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -823,6 +927,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: 'chain_labor',
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_workers_guild_charter',
@@ -845,6 +951,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_labor_rights',
     chainId: 'chain_labor',
     tier: 2,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
   {
     id: 'decree_social_contract',
@@ -868,6 +976,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: 'decree_workers_guild_charter',
     chainId: 'chain_labor',
     tier: 3,
+    turnMinimum: 8,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -894,6 +1004,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: 4,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -919,6 +1031,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_irrigation_works',
@@ -940,6 +1054,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -965,6 +1081,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_elite_training_program',
@@ -986,6 +1104,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -1011,6 +1131,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_provincial_governance',
@@ -1032,6 +1154,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -1057,6 +1181,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_trade_fleet_commission',
@@ -1078,6 +1204,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -1103,6 +1231,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_diplomatic_academy',
@@ -1124,6 +1254,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 
   // ====================
@@ -1149,6 +1281,8 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
   {
     id: 'decree_medical_reforms',
@@ -1170,5 +1304,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     previousTierDecreeId: null,
     chainId: null,
     tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
   },
 ];
