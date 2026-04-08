@@ -1130,7 +1130,7 @@ export function resolveTurn(
           sourceType: 'storyline',
           choiceMade: lastDecision.choiceId,
           turnApplied: state.turn.turnNumber,
-          tag: `${storyline.definitionId}:resolution:${storyline.decisionHistory[0].choiceId}`,
+          tag: `${storyline.definitionId}:resolution:${lastDecision.choiceId}`,
         });
         hadResolutions = true;
       }
