@@ -13,7 +13,7 @@ import {
 
 export interface ConstructionCompletionEffect {
   regionDevelopmentDelta: number;
-  treasuryIncomeDelta?: number;
+  treasuryBonusDelta?: number;
   foodProductionDelta?: number;
   militaryReadinessDelta?: number;
   militaryEquipmentDelta?: number;
@@ -77,7 +77,7 @@ export const CONSTRUCTION_POOL: ConstructionProjectDefinition[] = [
       'Establish a new iron extraction site, boosting iron availability and treasury income from mineral exports.',
     completionEffect: {
       regionDevelopmentDelta: 8,
-      treasuryIncomeDelta: 15,
+      treasuryBonusDelta: 15,
     },
   },
   {
@@ -202,7 +202,7 @@ export const CONSTRUCTION_POOL: ConstructionProjectDefinition[] = [
       'Establish a centralized administrative complex, improving governance efficiency and treasury collection.',
     completionEffect: {
       regionDevelopmentDelta: 10,
-      treasuryIncomeDelta: 10,
+      treasuryBonusDelta: 10,
       stabilityDelta: 4,
     },
   },
@@ -345,7 +345,7 @@ export const CONSTRUCTION_POOL: ConstructionProjectDefinition[] = [
     completionEffect: {
       regionDevelopmentDelta: 6,
       tradeIncomeDelta: 15,
-      treasuryIncomeDelta: 8,
+      treasuryBonusDelta: 8,
     },
   },
   {
@@ -363,7 +363,7 @@ export const CONSTRUCTION_POOL: ConstructionProjectDefinition[] = [
     completionEffect: {
       regionDevelopmentDelta: 12,
       tradeIncomeDelta: 25,
-      treasuryIncomeDelta: 12,
+      treasuryBonusDelta: 12,
       militaryReadinessDelta: 3,
     },
   },

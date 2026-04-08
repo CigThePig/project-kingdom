@@ -126,6 +126,15 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
           isFollowUp: e.isFollowUp ?? false,
           followUpSourceId: e.followUpSourceId ?? null,
         })),
+        // Migrate saves that predate the pending proposals system.
+        diplomacy: {
+          ...save.gameState.diplomacy,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          neighbors: (save.gameState.diplomacy?.neighbors ?? []).map((n: any) => ({
+            ...n,
+            pendingProposals: n.pendingProposals ?? [],
+          })),
+        },
       };
       return {
         gameState,
@@ -200,8 +209,9 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
     case 'TURN_RESOLVED': {
       const { result } = action;
 
-      // Move resolved events from the previous turn into event history.
-      const newlyResolved = state.gameState.activeEvents.filter((e) => e.isResolved);
+      // Move resolved events into event history. The engine captures these
+      // during resolution before chain advancement drops them.
+      const newlyResolved = result.resolvedEvents;
 
       const hasFailure = result.triggeredFailureConditions.length > 0;
 

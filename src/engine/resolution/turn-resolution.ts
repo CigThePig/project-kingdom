@@ -31,7 +31,7 @@ import {
   SEASON_MONTHS,
   OVERTHROW_CONSECUTIVE_TURNS,
 } from '../constants';
-import { advanceEventChains, EventDefinition, surfaceEvents } from '../events/event-engine';
+import { advanceEventChains, EventDefinition, resolveEventChoice, surfaceEvents } from '../events/event-engine';
 import { processDueFollowUps, scheduleFollowUps } from '../events/follow-up-tracker';
 import { calculateCategoryWeights, createInitialPacingState, updateClassFavorFromChoice, updatePacingForSurfacedEvents } from '../events/narrative-pacing';
 import {
@@ -154,6 +154,9 @@ export interface TurnResolutionResult {
   triggeredFailureConditions: FailureCondition[];
   failureWarnings: FailureWarning[];
   completedConstructionIds: string[];
+  // Events resolved by the player this turn. The context layer archives these
+  // into eventHistory so they are excluded from future surfacing.
+  resolvedEvents: ActiveEvent[];
   // Intelligence reports generated this turn. The hook layer appends these to
   // SaveFile.intelligenceReports so the player can review operation outcomes.
   generatedReports: IntelligenceReport[];
@@ -208,9 +211,38 @@ export function resolveTurn(
   applyActionEffects: ApplyActionEffectsFn,
   eventHistory: ActiveEvent[] = [],
 ): TurnResolutionResult {
+  // ---- Phase 0: Accept pending diplomatic proposals ----
+  // Proposals from the previous turn auto-accept if the player did not reject them.
+  // This gives the player one turn of visibility before proposals take effect.
+  let stateWithAcceptedProposals = state;
+  const hasAnyPendingProposals = state.diplomacy.neighbors.some(
+    (n) => n.pendingProposals && n.pendingProposals.length > 0,
+  );
+  if (hasAnyPendingProposals) {
+    stateWithAcceptedProposals = {
+      ...state,
+      diplomacy: {
+        ...state.diplomacy,
+        neighbors: state.diplomacy.neighbors.map((n) => {
+          if (!n.pendingProposals || n.pendingProposals.length === 0) return n;
+          // Treaty proposals grant +5 relationship on acceptance.
+          const treatyBonus = n.pendingProposals.filter(
+            (p) => p.agreementId.startsWith('treaty_'),
+          ).length * 5;
+          return {
+            ...n,
+            activeAgreements: [...n.activeAgreements, ...n.pendingProposals],
+            pendingProposals: [],
+            relationshipScore: clamp(n.relationshipScore + treatyBonus, 0, 100),
+          };
+        }),
+      },
+    };
+  }
+
   // ---- Phase 1: Income and Production ----
   // Compute all regional outputs in one pass; reused by downstream calculations.
-  const regionalSummary = summarizeRegionalOutputs(state.regions);
+  const regionalSummary = summarizeRegionalOutputs(stateWithAcceptedProposals.regions);
 
   // Update resource stockpiles from regional extraction this turn.
   const phase1Resources: ResourceState = {
@@ -240,9 +272,9 @@ export function resolveTurn(
     },
   };
 
-  // Calculate income from pre-action state.
+  // Calculate income from pre-action state (using accepted proposals).
   const neighborRelScores: Record<string, number> = {};
-  for (const n of state.diplomacy.neighbors) {
+  for (const n of stateWithAcceptedProposals.diplomacy.neighbors) {
     neighborRelScores[n.id] = n.relationshipScore;
   }
 
@@ -272,14 +304,17 @@ export function resolveTurn(
   );
 
   // ---- Phase 2: Action Execution ----
-  // Pass updated resources into action effects so actions can read the current stockpiles.
+  // Pass updated resources and accepted proposals into action effects.
   let stateAfterActions = applyActionEffects(
-    { ...state, resources: phase1Resources },
-    state.actionBudget.queuedActions,
+    { ...stateWithAcceptedProposals, resources: phase1Resources },
+    stateWithAcceptedProposals.actionBudget.queuedActions,
   );
 
   // ---- Phase 2b: Temporary Modifier Tick ----
   // Apply ongoing effects from temporary modifiers, then decrement and expire.
+  // Snapshot stability before modifiers so the delta can be re-applied after
+  // Phase 8's from-scratch recalculation (Bug 11 fix).
+  const stabilityBeforeModifiers = stateAfterActions.stability.value;
   for (const modifier of stateAfterActions.activeTemporaryModifiers) {
     stateAfterActions = applyMechanicalEffectDelta(
       stateAfterActions,
@@ -287,6 +322,7 @@ export function resolveTurn(
       null,
     );
   }
+  const tempModifierStabilityDelta = stateAfterActions.stability.value - stabilityBeforeModifiers;
   stateAfterActions = {
     ...stateAfterActions,
     activeTemporaryModifiers: stateAfterActions.activeTemporaryModifiers
@@ -550,14 +586,15 @@ export function resolveTurn(
           typeof action.parameters['agreementTurns'] === 'number'
             ? action.parameters['agreementTurns']
             : 12;
+        // Store as pending proposal rather than auto-accepting.
         updatedDiplomacy = {
           ...updatedDiplomacy,
           neighbors: updatedDiplomacy.neighbors.map((n) =>
             n.id === action.neighborId
               ? {
                   ...n,
-                  activeAgreements: [
-                    ...n.activeAgreements,
+                  pendingProposals: [
+                    ...n.pendingProposals,
                     {
                       agreementId: `trade_${action.neighborId}_t${state.turn.turnNumber}`,
                       neighborId: action.neighborId,
@@ -587,21 +624,22 @@ export function resolveTurn(
         break;
       }
       case NeighborActionType.TreatyProposal: {
+        // Store as pending proposal rather than auto-accepting.
+        // Relationship bonus deferred until proposal is accepted.
         updatedDiplomacy = {
           ...updatedDiplomacy,
           neighbors: updatedDiplomacy.neighbors.map((n) =>
             n.id === action.neighborId
               ? {
                   ...n,
-                  activeAgreements: [
-                    ...n.activeAgreements,
+                  pendingProposals: [
+                    ...n.pendingProposals,
                     {
                       agreementId: `treaty_${action.neighborId}_t${state.turn.turnNumber}`,
                       neighborId: action.neighborId,
                       turnsRemaining: null,
                     },
                   ],
-                  relationshipScore: clamp(n.relationshipScore + 5, 0, 100),
                 }
               : n,
           ),
@@ -676,9 +714,13 @@ export function resolveTurn(
   // Check if any intel op targeted a neighbor and failed — approximate with
   // counter-intelligence exceeding network strength for the target.
   for (const op of intelOps) {
-    if (op.targetNeighborId === null) continue;
+    // Use the same target lookup fallback as the main intel resolution (Phase 5a).
+    const espTargetId: string | null =
+      op.targetNeighborId ??
+      (typeof op.parameters['targetId'] === 'string' ? op.parameters['targetId'] : null);
+    if (espTargetId === null) continue;
     const targetNeighbor = updatedDiplomacy.neighbors.find(
-      (n) => n.id === op.targetNeighborId,
+      (n) => n.id === espTargetId,
     );
     if (!targetNeighbor) continue;
 
@@ -718,6 +760,8 @@ export function resolveTurn(
   // ---- Phase 5d: Conflict Initiation & Resolution ----
   // Check for new conflicts from war declarations.
   let activeConflicts: ConflictState[] = [...stateAfterActions.activeConflicts];
+  // Track newly initiated conflicts so they skip combat this turn (Bug 9 fix).
+  const newlyInitiatedNeighborIds = new Set<string>();
 
   for (const action of allNeighborActions) {
     if (action.actionType === NeighborActionType.WarDeclaration) {
@@ -736,6 +780,7 @@ export function resolveTurn(
             targetRegion?.id ?? null,
           ),
         );
+        newlyInitiatedNeighborIds.add(action.neighborId);
       }
     }
   }
@@ -756,6 +801,7 @@ export function resolveTurn(
           targetRegion?.id ?? null,
         ),
       );
+      newlyInitiatedNeighborIds.add(neighbor.id);
     }
   }
 
@@ -764,6 +810,11 @@ export function resolveTurn(
   const ongoingConflicts: ConflictState[] = [];
 
   for (const conflict of activeConflicts) {
+    // Newly declared wars don't fight combat until next turn.
+    if (newlyInitiatedNeighborIds.has(conflict.neighborId)) {
+      ongoingConflicts.push(conflict);
+      continue;
+    }
     const neighbor = updatedDiplomacy.neighbors.find((n) => n.id === conflict.neighborId);
     if (!neighbor) {
       ongoingConflicts.push(conflict);
@@ -842,6 +893,7 @@ export function resolveTurn(
   // reference them before Phases 6 and 8 recalculate the final figures.
   let updatedFaithCulture = stateAfterActions.faithCulture;
   let updatedStability = stateAfterActions.stability;
+  let updatedRegions = stateAfterActions.regions;
 
   // Apply consequences of resolved conflicts.
   for (const resolved of resolvedConflicts) {
@@ -879,6 +931,7 @@ export function resolveTurn(
     updatedMilitary = afterConsequences.military;
     updatedDiplomacy = afterConsequences.diplomacy;
     updatedStability = afterConsequences.stability;
+    updatedRegions = afterConsequences.regions;
   }
 
   activeConflicts = ongoingConflicts;
@@ -1002,6 +1055,15 @@ export function resolveTurn(
     stateAfterActions.stability,
   );
 
+  // Re-apply temporary modifier stability delta that was computed in Phase 2b
+  // but lost when calculateStability recalculated from scratch.
+  if (tempModifierStabilityDelta !== 0) {
+    updatedStability = {
+      ...updatedStability,
+      value: clamp(updatedStability.value + tempModifierStabilityDelta, 0, 100),
+    };
+  }
+
   // Apply stability penalty from active conflicts (§6.2).
   if (activeConflicts.length > 0) {
     const conflictStabilityPenalty = activeConflicts.reduce(
@@ -1022,11 +1084,47 @@ export function resolveTurn(
   const EVENT_REGISTRY: EventDefinition[] = EVENT_POOL;
   const STORYLINE_REGISTRY: StorylineDefinition[] = STORYLINE_POOL;
 
+  // ---- Phase 9a: Resolve events based on player crisis/petition responses ----
+  // CrisisResponse actions carry eventId + choiceId in parameters. Match them to
+  // active events and mark resolved so the effects loop below can process them.
+  const crisisActions = stateAfterActions.actionBudget.queuedActions.filter(
+    (a) => a.type === ActionType.CrisisResponse,
+  );
+  if (crisisActions.length > 0) {
+    stateAfterActions = {
+      ...stateAfterActions,
+      activeEvents: stateAfterActions.activeEvents.map((event) => {
+        const action = crisisActions.find(
+          (a) => a.parameters['eventId'] === event.id,
+        );
+        if (action && typeof action.parameters['choiceId'] === 'string') {
+          return resolveEventChoice(event, action.parameters['choiceId']);
+        }
+        return event;
+      }),
+    };
+  }
+
+  // Capture resolved events before chain advancement drops them.
+  const resolvedEvents = stateAfterActions.activeEvents.filter((e) => e.isResolved);
+
   // Apply mechanical effects, schedule follow-ups, and update class-favor tracking
   // for all events the player resolved since the last turn.
   const currentPacing = stateAfterActions.narrativePacing ?? createInitialPacingState();
   let pacingWithChoiceFavor = currentPacing;
   let pendingFollowUpsAfterChoices = stateAfterActions.pendingFollowUps ?? [];
+
+  // Snapshot pre-event state so we can forward deltas to the phase variables
+  // (which were computed in Phases 3-8 from the original stateAfterActions).
+  const preEventTreasuryBalance = stateAfterActions.treasury.balance;
+  const preEventFoodReserves = stateAfterActions.food.reserves;
+  const preEventStabilityValue = stateAfterActions.stability.value;
+  const preEventMilitary = stateAfterActions.military;
+  const preEventFaithCulture = stateAfterActions.faithCulture;
+  const preEventEspionageNetwork = stateAfterActions.espionage.networkStrength;
+  const preEventPopulation = stateAfterActions.population;
+  const preEventDiplomacy = stateAfterActions.diplomacy;
+  const preEventRegions = stateAfterActions.regions;
 
   for (const event of stateAfterActions.activeEvents) {
     if (!event.isResolved || event.choiceMade === null) continue;
@@ -1043,6 +1141,100 @@ export function resolveTurn(
       EVENT_REGISTRY,
       state.turn.turnNumber,
     );
+  }
+
+  // Forward event effect deltas to phase variables so workingState doesn't
+  // overwrite them with stale Phases 3-8 values.
+  const eventTreasuryDelta = stateAfterActions.treasury.balance - preEventTreasuryBalance;
+  const eventFoodDelta = stateAfterActions.food.reserves - preEventFoodReserves;
+  const eventStabilityDelta = stateAfterActions.stability.value - preEventStabilityValue;
+  if (eventTreasuryDelta !== 0) {
+    updatedTreasury = { ...updatedTreasury, balance: Math.max(0, updatedTreasury.balance + eventTreasuryDelta) };
+  }
+  if (eventFoodDelta !== 0) {
+    updatedFood = { ...updatedFood, reserves: Math.max(0, updatedFood.reserves + eventFoodDelta) };
+  }
+  if (eventStabilityDelta !== 0) {
+    updatedStability = { ...updatedStability, value: clamp(updatedStability.value + eventStabilityDelta, 0, 100) };
+  }
+  // Military deltas
+  if (stateAfterActions.military !== preEventMilitary) {
+    const milReadinessDelta = stateAfterActions.military.readiness - preEventMilitary.readiness;
+    const milMoraleDelta = stateAfterActions.military.morale - preEventMilitary.morale;
+    const milEquipDelta = stateAfterActions.military.equipmentCondition - preEventMilitary.equipmentCondition;
+    const milForceDelta = stateAfterActions.military.forceSize - preEventMilitary.forceSize;
+    if (milReadinessDelta !== 0 || milMoraleDelta !== 0 || milEquipDelta !== 0 || milForceDelta !== 0) {
+      updatedMilitary = {
+        ...updatedMilitary,
+        readiness: clamp(updatedMilitary.readiness + milReadinessDelta, 0, 100),
+        morale: clamp(updatedMilitary.morale + milMoraleDelta, 0, 100),
+        equipmentCondition: clamp(updatedMilitary.equipmentCondition + milEquipDelta, 0, 100),
+        forceSize: Math.max(0, updatedMilitary.forceSize + milForceDelta),
+      };
+    }
+  }
+  // Faith/culture deltas
+  if (stateAfterActions.faithCulture !== preEventFaithCulture) {
+    const faithDeltaEvt = stateAfterActions.faithCulture.faithLevel - preEventFaithCulture.faithLevel;
+    const heterDeltaEvt = stateAfterActions.faithCulture.heterodoxy - preEventFaithCulture.heterodoxy;
+    const cohDeltaEvt = stateAfterActions.faithCulture.culturalCohesion - preEventFaithCulture.culturalCohesion;
+    if (faithDeltaEvt !== 0 || heterDeltaEvt !== 0 || cohDeltaEvt !== 0) {
+      updatedFaithCulture = {
+        ...updatedFaithCulture,
+        faithLevel: clamp(updatedFaithCulture.faithLevel + faithDeltaEvt, 0, 100),
+        heterodoxy: clamp(updatedFaithCulture.heterodoxy + heterDeltaEvt, 0, 100),
+        culturalCohesion: clamp(updatedFaithCulture.culturalCohesion + cohDeltaEvt, 0, 100),
+      };
+    }
+  }
+  // Espionage delta
+  const eventEspDelta = stateAfterActions.espionage.networkStrength - preEventEspionageNetwork;
+  if (eventEspDelta !== 0) {
+    updatedEspionage = {
+      ...updatedEspionage,
+      networkStrength: clamp(updatedEspionage.networkStrength + eventEspDelta, 0, 100),
+    };
+  }
+  // Population satisfaction deltas
+  if (stateAfterActions.population !== preEventPopulation) {
+    for (const cls of Object.values(PopulationClass)) {
+      const satDelta = stateAfterActions.population[cls].satisfaction - preEventPopulation[cls].satisfaction;
+      if (satDelta !== 0) {
+        updatedPopulation = {
+          ...updatedPopulation,
+          [cls]: {
+            ...updatedPopulation[cls],
+            satisfaction: clamp(updatedPopulation[cls].satisfaction + satDelta, 0, 100),
+          },
+        };
+      }
+    }
+  }
+  // Diplomacy deltas
+  if (stateAfterActions.diplomacy !== preEventDiplomacy) {
+    updatedDiplomacy = {
+      ...updatedDiplomacy,
+      neighbors: updatedDiplomacy.neighbors.map((n) => {
+        const preN = preEventDiplomacy.neighbors.find((pn) => pn.id === n.id);
+        const postN = stateAfterActions.diplomacy.neighbors.find((pn) => pn.id === n.id);
+        if (!preN || !postN || preN.relationshipScore === postN.relationshipScore) return n;
+        const relDelta = postN.relationshipScore - preN.relationshipScore;
+        return { ...n, relationshipScore: clamp(n.relationshipScore + relDelta, 0, 100) };
+      }),
+    };
+  }
+  // Region deltas (development/condition changes from event effects)
+  if (stateAfterActions.regions !== preEventRegions) {
+    updatedRegions = stateAfterActions.regions.map((postR) => {
+      const preR = preEventRegions.find((r) => r.id === postR.id);
+      const curR = updatedRegions.find((r) => r.id === postR.id);
+      if (!preR || !curR) return curR ?? postR;
+      const devDelta = postR.developmentLevel - preR.developmentLevel;
+      if (devDelta !== 0) {
+        return { ...curR, developmentLevel: Math.max(0, curR.developmentLevel + devDelta) };
+      }
+      return curR;
+    });
   }
 
   stateAfterActions = {
@@ -1110,6 +1302,7 @@ export function resolveTurn(
     faithCulture: updatedFaithCulture,
     diplomacy: updatedDiplomacy,
     espionage: updatedEspionage,
+    regions: updatedRegions,
   };
   const newlyResolvedStorylineIds: string[] = [];
   const storylineConsequences: PersistentConsequence[] = [];
@@ -1147,6 +1340,7 @@ export function resolveTurn(
     updatedFaithCulture = workingState.faithCulture;
     updatedDiplomacy = workingState.diplomacy;
     updatedEspionage = workingState.espionage;
+    updatedRegions = workingState.regions;
   }
 
   // Track resolved storyline IDs and last activation turn for pool evaluation.
@@ -1191,7 +1385,7 @@ export function resolveTurn(
   // Decrement turn counters, remove completed projects, apply completion effects,
   // and deduct per-turn resource costs.
   const workingResources = stateAfterActions.resources;
-  let constructionRegions = stateAfterActions.regions;
+  let constructionRegions = updatedRegions;
   let constructionTreasury = updatedTreasury;
   let constructionFood = updatedFood;
   let constructionMilitary = updatedMilitary;
@@ -1216,11 +1410,11 @@ export function resolveTurn(
             fx.regionDevelopmentDelta,
           );
         }
-        // Treasury income bonus (applied as immediate balance bump; persistent via development)
-        if (fx.treasuryIncomeDelta) {
+        // Treasury bonus (one-time balance bump on completion; persistent income via development)
+        if (fx.treasuryBonusDelta) {
           constructionTreasury = {
             ...constructionTreasury,
-            balance: constructionTreasury.balance + fx.treasuryIncomeDelta,
+            balance: constructionTreasury.balance + fx.treasuryBonusDelta,
           };
         }
         // Food production bonus
@@ -1253,20 +1447,25 @@ export function resolveTurn(
             faithLevel: clamp(constructionFaithCulture.faithLevel + fx.faithDelta, 0, 100),
           };
         }
-        // Knowledge progress bonus (applied to focused branch if any)
-        if (fx.knowledgeProgressDelta && stateAfterActions.policies.researchFocus) {
-          const focusBranch = stateAfterActions.policies.researchFocus;
-          const currentBranch = constructionKnowledge.branches[focusBranch];
-          constructionKnowledge = {
-            ...constructionKnowledge,
-            branches: {
-              ...constructionKnowledge.branches,
-              [focusBranch]: {
-                ...currentBranch,
-                progressValue: currentBranch.progressValue + fx.knowledgeProgressDelta,
+        // Knowledge progress bonus (applied to focused branch, or highest-progress fallback)
+        if (fx.knowledgeProgressDelta) {
+          const focusBranch = stateAfterActions.policies.researchFocus
+            ?? Object.values(constructionKnowledge.branches)
+                .sort((a, b) => b.progressValue - a.progressValue)[0]?.branch
+            ?? null;
+          if (focusBranch) {
+            const currentBranch = constructionKnowledge.branches[focusBranch];
+            constructionKnowledge = {
+              ...constructionKnowledge,
+              branches: {
+                ...constructionKnowledge.branches,
+                [focusBranch]: {
+                  ...currentBranch,
+                  progressValue: currentBranch.progressValue + fx.knowledgeProgressDelta,
+                },
               },
-            },
-          };
+            };
+          }
         }
         // Stability bonus
         if (fx.stabilityDelta) {
@@ -1480,6 +1679,7 @@ export function resolveTurn(
     triggeredFailureConditions,
     failureWarnings,
     completedConstructionIds,
+    resolvedEvents,
     generatedReports,
   };
 }

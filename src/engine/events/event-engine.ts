@@ -108,6 +108,12 @@ export interface EventDefinition {
   /** Links this event to an active or soon-to-activate storyline. */
   relatedStorylineId: string | null;
   /**
+   * When true, this event definition can fire multiple times across a playthrough.
+   * Non-repeatable events (default) are permanently excluded from surfacing once
+   * they appear in eventHistory.
+   */
+  repeatable?: boolean;
+  /**
    * Optional reactive follow-up events triggered by specific player choices.
    * When a player selects a matching choiceId, a follow-up event is scheduled
    * to surface after delayTurns with the given probability.
@@ -308,9 +314,16 @@ export function surfaceEvents(
   if (eventPool.length === 0) return [];
 
   // Build a set of already-seen definitionIds to prevent re-surfacing.
+  // Repeatable events are only blocked by existingActive (to prevent same-turn duplicates),
+  // not by eventHistory (so they can recur across turns).
+  const repeatableIds = new Set<string>(
+    eventPool.filter((d) => d.repeatable).map((d) => d.id),
+  );
   const seenDefinitionIds = new Set<string>([
     ...existingActive.map((e) => e.definitionId),
-    ...eventHistory.map((e) => e.definitionId),
+    ...eventHistory
+      .filter((e) => !repeatableIds.has(e.definitionId))
+      .map((e) => e.definitionId),
   ]);
 
   // Exclude chain events — they are managed by advanceEventChains.
@@ -406,7 +419,7 @@ export function advanceEventChains(
       chainId: nextDef.chainId,
       chainStep: nextDef.chainStep,
       turnSurfaced: turnNumber,
-      affectedRegionId: event.affectedRegionId, // maintain regional context through the chain
+      affectedRegionId: nextDef.affectsRegion ? event.affectedRegionId : null,
       affectedClassId: nextDef.affectsClass,
       relatedStorylineId: nextDef.relatedStorylineId,
       outcomeQuality: null,

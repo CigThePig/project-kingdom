@@ -394,6 +394,8 @@ export interface NeighborState {
   relationshipScore: number; // 0–100
   attitudePosture: DiplomaticPosture;
   activeAgreements: DiplomaticAgreement[];
+  /** Proposals awaiting player acceptance. Accepted at start of next turn if not rejected. */
+  pendingProposals: DiplomaticAgreement[];
   outstandingTensions: string[]; // internal tension IDs; not player-facing text
   disposition: NeighborDisposition;
   militaryStrength: number; // 0–100
