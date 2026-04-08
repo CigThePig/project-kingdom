@@ -7,6 +7,7 @@ import { DECREE_POOL } from '../data/decrees/index';
 import { DECREE_EFFECTS } from '../data/decrees/effects';
 import { DECREE_STYLE_TAGS } from '../data/ruling-style/flavor-tags';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
+import { getDecreeAvailability } from '../engine/systems/decree-progression';
 import { getDominantAxes } from '../engine/systems/ruling-style';
 import { StyleAxis } from '../engine/types';
 
@@ -30,29 +31,18 @@ export interface DecreeCardData {
 
 export function generateDecreeCards(gameState: GameState): DecreeCardData[] {
   const currentTurn = gameState.turn.turnNumber;
-  const issuedIds = new Set(gameState.issuedDecrees.map((d) => d.decreeId));
-  const issuedTurnMap = new Map<string, number>(
-    gameState.issuedDecrees.map((d) => [d.decreeId, d.turnIssued]),
-  );
 
   const available = DECREE_POOL.filter((decree) => {
-    // 1. One-time decrees that have already been issued
-    if (!decree.isRepeatable && issuedIds.has(decree.id)) return false;
+    // Use centralized availability check (one-time, cooldown, chain, turn, state prereqs)
+    const availability = getDecreeAvailability(
+      decree,
+      gameState.issuedDecrees,
+      currentTurn,
+      gameState,
+    );
+    if (!availability.available) return false;
 
-    // 2. Repeatable decrees on cooldown
-    if (decree.isRepeatable && decree.cooldownTurns > 0) {
-      const lastIssued = issuedTurnMap.get(decree.id);
-      if (lastIssued !== undefined && currentTurn < lastIssued + decree.cooldownTurns) {
-        return false;
-      }
-    }
-
-    // 3. Chain prerequisite not yet issued
-    if (decree.previousTierDecreeId !== null && !issuedIds.has(decree.previousTierDecreeId)) {
-      return false;
-    }
-
-    // 4. Knowledge prerequisite not yet reached
+    // Knowledge prerequisites are checked here in the bridge layer
     if (decree.knowledgePrerequisite !== null) {
       const { branch, milestoneIndex } = decree.knowledgePrerequisite;
       const branchState = gameState.knowledge.branches[branch];

@@ -14,6 +14,7 @@ import {
   MAX_CRITICAL_EVENTS_PER_TURN,
   MAX_EVENTS_PER_TURN,
   MAX_SERIOUS_EVENTS_PER_TURN,
+  PHASE_TURN_RANGES,
 } from '../constants';
 
 // ============================================================
@@ -113,6 +114,15 @@ export interface EventDefinition {
    * they appear in eventHistory.
    */
   repeatable?: boolean;
+  /**
+   * Narrative phase gating. Events are only eligible when the current turn
+   * falls within the phase's turn range.
+   * - 'opening': turns 1–3 (fresh kingdom, introductory tensions)
+   * - 'developing': turns 4–8 (player choices creating consequences)
+   * - 'established': turns 9+ (accumulated history, escalations)
+   * - 'any': no turn restriction (default for backward compat)
+   */
+  phase: 'opening' | 'developing' | 'established' | 'any';
   /**
    * Optional reactive follow-up events triggered by specific player choices.
    * When a player selects a matching choiceId, a follow-up event is scheduled
@@ -327,19 +337,32 @@ export function surfaceEvents(
   ]);
 
   // Exclude chain events — they are managed by advanceEventChains.
+  // Phase gating prevents narrative-inappropriate events from surfacing too early.
   const candidates = eventPool.filter(
     (def) =>
       (def.chainId === null || def.chainStep === 1) &&
       !seenDefinitionIds.has(def.id) &&
+      (def.phase === 'any' || (
+        turnNumber >= PHASE_TURN_RANGES[def.phase].min &&
+        turnNumber <= PHASE_TURN_RANGES[def.phase].max
+      )) &&
       allConditionsPass(def, state, turnNumber),
   );
 
   // Sort by severity (desc) then weight (desc), with optional category multipliers.
+  // Add variety jitter so equal-weight events don't always sort identically.
+  // Jitter range ±20% preserves intentional weight differences while
+  // randomizing ties.
+  const jitterMap = new Map<string, number>();
+  for (const c of candidates) {
+    jitterMap.set(c.id, 0.8 + Math.random() * 0.4); // 0.8–1.2
+  }
+
   candidates.sort((a, b) => {
     const severityDiff = SEVERITY_SCORE[b.severity] - SEVERITY_SCORE[a.severity];
     if (severityDiff !== 0) return severityDiff;
-    const wa = a.weight * (categoryWeights?.[a.category] ?? 1.0);
-    const wb = b.weight * (categoryWeights?.[b.category] ?? 1.0);
+    const wa = a.weight * (categoryWeights?.[a.category] ?? 1.0) * (jitterMap.get(a.id) ?? 1.0);
+    const wb = b.weight * (categoryWeights?.[b.category] ?? 1.0) * (jitterMap.get(b.id) ?? 1.0);
     return wb - wa;
   });
 

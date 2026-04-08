@@ -125,7 +125,7 @@ import {
   initiateConflict,
   applyConflictConsequences,
 } from '../systems/military';
-import { EVENT_POOL } from '../../data/events/index';
+import { EVENT_POOL, FOLLOW_UP_POOL } from '../../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../../data/events/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
 import { findConstructionDefinition } from '../../data/construction/index';
@@ -1081,7 +1081,11 @@ export function resolveTurn(
   const nextTurnNumber = state.turn.turnNumber + 1;
 
   // Phase 5 data layer provides the event and storyline pools.
+  // EVENT_REGISTRY is used by surfaceEvents() — only the main pool.
+  // FOLLOW_UP_REGISTRY merges both pools so processDueFollowUps can
+  // resolve follow-up-only events by id.
   const EVENT_REGISTRY: EventDefinition[] = EVENT_POOL;
+  const FOLLOW_UP_REGISTRY: EventDefinition[] = [...EVENT_POOL, ...FOLLOW_UP_POOL];
   const STORYLINE_REGISTRY: StorylineDefinition[] = STORYLINE_POOL;
 
   // ---- Phase 9a: Resolve events based on player crisis/petition responses ----
@@ -1257,7 +1261,7 @@ export function resolveTurn(
   ]);
   const followUpResult = processDueFollowUps(
     stateAfterActions.pendingFollowUps ?? [],
-    EVENT_REGISTRY,
+    FOLLOW_UP_REGISTRY,
     nextTurnNumber,
     stateAfterActions,
     existingEventIds,

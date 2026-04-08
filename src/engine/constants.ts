@@ -227,6 +227,15 @@ export const MAX_EVENTS_PER_TURN = 3;
 export const MAX_CRITICAL_EVENTS_PER_TURN = 1;
 export const MAX_SERIOUS_EVENTS_PER_TURN = 1;
 
+// Narrative phase turn boundaries for event gating.
+// Events tagged with a phase will only surface during the corresponding turn range.
+export const PHASE_TURN_RANGES = {
+  opening: { min: 1, max: 3 },
+  developing: { min: 4, max: 8 },
+  established: { min: 9, max: Infinity },
+  any: { min: 1, max: Infinity },
+} as const;
+
 // Maximum number of storylines that may be active simultaneously.
 export const MAX_ACTIVE_STORYLINES = 2;
 
