@@ -103,6 +103,12 @@ Since the game is mobile-first and gesture-heavy, testing requires actually play
 ## Current Conversion Phase
 Check `PHASES.md` for the current phase of the conversion. Always complete the current phase before starting the next one. Each phase produces a testable result.
 
+## Event Pool Rules
+- Events with `triggerConditions: [{ type: 'always' }]` that are standalone (chainId: null, chainStep: null) MUST live in `FOLLOW_UP_POOL`, never `EVENT_POOL`.
+- `EVENT_POOL` events must have at least one meaningful trigger condition beyond `always`.
+- `FOLLOW_UP_POOL` events are only surfaced by the follow-up tracker, never by `surfaceEvents()`.
+- When adding a new follow-up event, always add the corresponding `followUpEvents` entry on the parent event definition.
+
 ## Common Pitfalls
 - **Don't add animation libraries.** CSS keyframes + transitions + JS touch events handle everything.
 - **Don't modify engine resolution order.** The 11-phase pipeline is carefully sequenced. If you need to add card-system logic, add it in Phase 11 (bookkeeping) or as a post-resolution step.

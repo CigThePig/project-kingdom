@@ -2101,68 +2101,11 @@ export const EVENT_POOL: EventDefinition[] = [
   },
 
   // ============================================================
-  // FOLLOW-UP & CHOICE-TRIGGERED EVENTS (4)
+  // FOLLOW-UP & CHOICE-TRIGGERED EVENTS
+  // NOTE: Follow-up-only events (always-trigger, no chain) have been
+  // moved to FOLLOW_UP_POOL below. Only chain step 2+ events and
+  // properly-gated standalone events remain here.
   // ============================================================
-  {
-    id: 'evt_merchant_permanent_concessions',
-    severity: EventSeverity.Notable,
-    category: EventCategory.Economy,
-    triggerConditions: [
-      { type: 'always' },
-    ],
-    weight: 1.0,
-    chainId: null,
-    chainStep: null,
-    chainNextDefinitionId: null,
-    choices: [
-      { choiceId: 'grant_permanent_charter', slotCost: 1, isFree: false },
-      { choiceId: 'reject_demands', slotCost: 1, isFree: false },
-      { choiceId: 'offer_limited_concession', slotCost: 1, isFree: false },
-    ],
-    affectsClass: PopulationClass.Merchants,
-    affectsRegion: false,
-    relatedStorylineId: null,
-  },
-  {
-    id: 'evt_underground_heretical_movement',
-    severity: EventSeverity.Serious,
-    category: EventCategory.Religion,
-    triggerConditions: [
-      { type: 'always' },
-    ],
-    weight: 1.0,
-    chainId: null,
-    chainStep: null,
-    chainNextDefinitionId: null,
-    choices: [
-      { choiceId: 'infiltrate_movement', slotCost: 1, isFree: false },
-      { choiceId: 'public_amnesty', slotCost: 1, isFree: false },
-      { choiceId: 'double_down_suppression', slotCost: 1, isFree: false },
-    ],
-    affectsClass: PopulationClass.Clergy,
-    affectsRegion: false,
-    relatedStorylineId: null,
-  },
-  {
-    id: 'evt_equipment_failure_field',
-    severity: EventSeverity.Critical,
-    category: EventCategory.Military,
-    triggerConditions: [
-      { type: 'always' },
-    ],
-    weight: 1.0,
-    chainId: null,
-    chainStep: null,
-    chainNextDefinitionId: null,
-    choices: [
-      { choiceId: 'emergency_field_repair', slotCost: 1, isFree: false },
-      { choiceId: 'retreat_and_regroup', slotCost: 1, isFree: false },
-      { choiceId: 'push_through', slotCost: 0, isFree: true },
-    ],
-    affectsClass: PopulationClass.MilitaryCaste,
-    affectsRegion: false,
-    relatedStorylineId: null,
-  },
   {
     id: 'evt_golden_age_opportunity',
     severity: EventSeverity.Notable,
@@ -2240,4 +2183,74 @@ export const EVENT_POOL: EventDefinition[] = [
   // so the event engine can surface them through the standard pipeline.
   // ============================================================
   ...FACTION_REQUEST_POOL,
+];
+
+// ============================================================
+// FOLLOW-UP POOL — events surfaced only by the follow-up tracker.
+// These use triggerConditions: [{ type: 'always' }] which is safe
+// because the follow-up tracker bypasses trigger checks. They must
+// NEVER be in EVENT_POOL, where surfaceEvents() would fire them
+// unconditionally every turn.
+// ============================================================
+export const FOLLOW_UP_POOL: EventDefinition[] = [
+  {
+    id: 'evt_merchant_permanent_concessions',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Economy,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'grant_permanent_charter', slotCost: 1, isFree: false },
+      { choiceId: 'reject_demands', slotCost: 1, isFree: false },
+      { choiceId: 'offer_limited_concession', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Merchants,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_underground_heretical_movement',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'infiltrate_movement', slotCost: 1, isFree: false },
+      { choiceId: 'public_amnesty', slotCost: 1, isFree: false },
+      { choiceId: 'double_down_suppression', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
+  {
+    id: 'evt_equipment_failure_field',
+    severity: EventSeverity.Critical,
+    category: EventCategory.Military,
+    triggerConditions: [
+      { type: 'always' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'emergency_field_repair', slotCost: 1, isFree: false },
+      { choiceId: 'retreat_and_regroup', slotCost: 1, isFree: false },
+      { choiceId: 'push_through', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.MilitaryCaste,
+    affectsRegion: false,
+    relatedStorylineId: null,
+  },
 ];
