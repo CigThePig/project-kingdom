@@ -485,10 +485,10 @@ function applyDiplomaticActionEffect(state: GameState, action: QueuedAction): Ga
   const delta = DIPLOMATIC_ACTION_DELTAS[subType] ?? 0;
   let updatedNeighbors = applyNeighborRelDelta(state.diplomacy.neighbors, targetNeighborId, delta);
 
-  // Clear all active agreements when breaking relations
+  // Clear all active agreements and pending proposals when breaking relations
   if (subType === 'break_agreement') {
     updatedNeighbors = updatedNeighbors.map((n) =>
-      n.id === targetNeighborId ? { ...n, activeAgreements: [] } : n,
+      n.id === targetNeighborId ? { ...n, activeAgreements: [], pendingProposals: [] } : n,
     );
   }
 
