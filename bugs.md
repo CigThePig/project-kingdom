@@ -127,12 +127,3 @@
 ### 22. Randomness During Render Loop Mitigation Note
 * **Location:** `src/ui/RoundController.tsx`
 * **Description:** `setSeasonPhraseIndex` was correctly moved to a `useEffect`, but because updates trigger async re-renders, the UI might display a single-frame flash of the previous turn's phrase/order before updating.
-
-***
-
-## Recommended Immediate Actions
-
-1.  **Centralize Event Generation:** Completely remove `surfaceEvents` from `RoundController.tsx`. The engine's `turn-resolution.ts` must be the sole author of new events, and the UI should strictly read from `ctx.state.gameState.activeEvents`.
-2.  **Fix State Extraction:** In `turn-resolution.ts`, review Phases 9 and 11. Ensure that `regions`, `knowledge`, and `policies` are properly extracted from `workingState` and `stateAfterActions` before compiling `nextState`.
-3.  **Preserve the Action Queue:** In `RoundController.tsx`, update `handleRoundComplete` to *append* or *merge* card decisions into `ctx.state.gameState.actionBudget.queuedActions`, rather than overwriting it entirely.
-4.  **Fix Context Archiving:** In `game-context.tsx`, update `TURN_RESOLVED` to pull `newlyResolved` events from `result.nextState.historyEntry.eventsResolved` rather than filtering the stale `start-of-turn` state.
