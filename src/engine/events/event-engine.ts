@@ -350,11 +350,19 @@ export function surfaceEvents(
   );
 
   // Sort by severity (desc) then weight (desc), with optional category multipliers.
+  // Add variety jitter so equal-weight events don't always sort identically.
+  // Jitter range ±20% preserves intentional weight differences while
+  // randomizing ties.
+  const jitterMap = new Map<string, number>();
+  for (const c of candidates) {
+    jitterMap.set(c.id, 0.8 + Math.random() * 0.4); // 0.8–1.2
+  }
+
   candidates.sort((a, b) => {
     const severityDiff = SEVERITY_SCORE[b.severity] - SEVERITY_SCORE[a.severity];
     if (severityDiff !== 0) return severityDiff;
-    const wa = a.weight * (categoryWeights?.[a.category] ?? 1.0);
-    const wb = b.weight * (categoryWeights?.[b.category] ?? 1.0);
+    const wa = a.weight * (categoryWeights?.[a.category] ?? 1.0) * (jitterMap.get(a.id) ?? 1.0);
+    const wb = b.weight * (categoryWeights?.[b.category] ?? 1.0) * (jitterMap.get(b.id) ?? 1.0);
     return wb - wa;
   });
 
