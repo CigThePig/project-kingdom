@@ -33,6 +33,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
     followUpEvents: [
       { triggerChoiceId: 'offer_tax_relief', followUpDefinitionId: 'evt_merchant_permanent_concessions', delayTurns: 3, probability: 0.7 },
     ],
@@ -56,6 +57,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -81,6 +83,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_commoner_harvest_festival',
@@ -101,6 +104,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -125,6 +129,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
     followUpEvents: [
       { triggerChoiceId: 'defer_to_next_month', followUpDefinitionId: 'evt_equipment_failure_field', delayTurns: 2, probability: 0.6 },
     ],
@@ -148,6 +153,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -173,6 +179,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_border_tension_escalation',
@@ -193,6 +200,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'developing',
   },
 
   // ============================================================
@@ -218,6 +226,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_spring_flooding',
@@ -239,6 +248,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -263,6 +273,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_popular_unrest',
@@ -284,6 +295,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -308,6 +320,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
     followUpEvents: [
       { triggerChoiceId: 'suppress_immediately', followUpDefinitionId: 'evt_underground_heretical_movement', delayTurns: 3, probability: 0.5 },
     ],
@@ -331,6 +344,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -356,6 +370,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_cultural_festival_proposal',
@@ -376,6 +391,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -401,6 +417,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_noble_intrigue_discovered',
@@ -421,6 +438,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
 
   // ============================================================
@@ -445,6 +463,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_library_fire',
@@ -466,6 +485,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -491,6 +511,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_clergy_merchant_dispute',
@@ -512,6 +533,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
 
   // ============================================================
@@ -536,6 +558,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_regional_unrest',
@@ -557,6 +580,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'developing',
   },
 
   // ============================================================
@@ -580,6 +604,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_kingdom_milestone_celebrated',
@@ -601,6 +626,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -625,6 +651,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_noble_court_faction',
@@ -646,6 +673,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_noble_land_seizure',
@@ -667,6 +695,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'developing',
   },
 
   // ============================================================
@@ -692,6 +721,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_clergy_pilgrimage_movement',
@@ -713,6 +743,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_clergy_prophecy_claim',
@@ -734,6 +765,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
 
   // ============================================================
@@ -759,6 +791,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_merchant_smuggling_ring',
@@ -780,6 +813,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_merchant_foreign_traders',
@@ -801,6 +835,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -826,6 +861,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_commoner_folk_hero',
@@ -847,6 +883,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_commoner_migration_wave',
@@ -868,6 +905,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -892,6 +930,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_military_desertion_crisis',
@@ -913,6 +952,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_military_honor_dispute',
@@ -934,6 +974,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
 
   // ============================================================
@@ -959,6 +1000,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_spring_river_thaw',
@@ -980,6 +1022,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -1005,6 +1048,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_summer_trade_season',
@@ -1026,6 +1070,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -1052,6 +1097,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_autumn_bandit_raids',
@@ -1073,6 +1119,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -1098,6 +1145,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_winter_food_shortage',
@@ -1119,6 +1167,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
 
   // ============================================================
@@ -1144,6 +1193,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_region_trade_route_disruption',
@@ -1164,6 +1214,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_region_local_festival',
@@ -1185,6 +1236,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_region_resource_discovery',
@@ -1206,6 +1258,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_region_infrastructure_decay',
@@ -1227,6 +1280,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_region_separatist_sentiment',
@@ -1248,6 +1302,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'developing',
   },
 
   // ============================================================
@@ -1273,6 +1328,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
   {
     id: 'evt_escalation_treasury_crisis',
@@ -1294,6 +1350,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
   {
     id: 'evt_escalation_faith_collapse',
@@ -1315,6 +1372,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
   {
     id: 'evt_escalation_military_mutiny',
@@ -1336,6 +1394,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
   {
     id: 'evt_escalation_noble_conspiracy',
@@ -1357,6 +1416,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
   {
     id: 'evt_escalation_mass_exodus',
@@ -1378,6 +1438,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
 
   // ============================================================
@@ -1407,6 +1468,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 2. Scholarly Breakthrough → Apply Practical Findings
@@ -1432,6 +1494,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 3. Merchant Capital Flight → Offer Tax Relief
@@ -1458,6 +1521,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 4. Merchant Capital Flight → Enforce Capital Controls
@@ -1483,6 +1547,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 5. Commoner Labor Dispute → Side with Laborers
@@ -1509,6 +1574,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 6. Commoner Labor Dispute → Enforce Existing Contracts
@@ -1534,6 +1600,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 7. Heresy Emergence → Permit Theological Debate
@@ -1560,6 +1627,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 8. Noble Intrigue Discovered → Launch Counter Intelligence
@@ -1585,6 +1653,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 9. Harvest Blight → Purchase Foreign Grain
@@ -1610,6 +1679,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 10. Region Resource Discovery → Fund Extraction
@@ -1635,6 +1705,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 11. Commoner Plague Outbreak → Mobilize Clergy Healers
@@ -1660,6 +1731,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // 12. Military Desertion Crisis → Increase Military Pay
@@ -1685,6 +1757,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -1710,6 +1783,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_commoner_uprising_neglect',
@@ -1730,6 +1804,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
   {
     id: 'evt_clergy_power_grab',
@@ -1751,6 +1826,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
   {
     id: 'evt_military_coup_threat',
@@ -1772,6 +1848,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'established',
   },
 
   // ============================================================
@@ -1797,6 +1874,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_plague_spread',
@@ -1817,6 +1895,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_plague_aftermath',
@@ -1837,6 +1916,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -1862,6 +1942,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_trade_war_escalation',
@@ -1882,6 +1963,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_trade_war_resolution',
@@ -1902,6 +1984,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -1928,6 +2011,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_succession_factions',
@@ -1948,6 +2032,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_succession_resolution',
@@ -1968,6 +2053,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -1993,6 +2079,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'opening',
   },
   {
     id: 'evt_famine_crisis',
@@ -2013,6 +2100,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_famine_recovery',
@@ -2033,6 +2121,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -2058,6 +2147,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'developing',
   },
   {
     id: 'evt_schism_factions',
@@ -2078,6 +2168,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_schism_resolution',
@@ -2098,6 +2189,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -2128,6 +2220,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -2154,6 +2247,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_foreign_invasion_rumor',
@@ -2175,6 +2269,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 
   // ============================================================
@@ -2212,6 +2307,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_underground_heretical_movement',
@@ -2232,6 +2328,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
   {
     id: 'evt_equipment_failure_field',
@@ -2252,5 +2349,6 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
+    phase: 'any',
   },
 ];

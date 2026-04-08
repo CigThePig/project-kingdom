@@ -14,6 +14,7 @@ import {
   MAX_CRITICAL_EVENTS_PER_TURN,
   MAX_EVENTS_PER_TURN,
   MAX_SERIOUS_EVENTS_PER_TURN,
+  PHASE_TURN_RANGES,
 } from '../constants';
 
 // ============================================================
@@ -113,6 +114,15 @@ export interface EventDefinition {
    * they appear in eventHistory.
    */
   repeatable?: boolean;
+  /**
+   * Narrative phase gating. Events are only eligible when the current turn
+   * falls within the phase's turn range.
+   * - 'opening': turns 1–3 (fresh kingdom, introductory tensions)
+   * - 'developing': turns 4–8 (player choices creating consequences)
+   * - 'established': turns 9+ (accumulated history, escalations)
+   * - 'any': no turn restriction (default for backward compat)
+   */
+  phase: 'opening' | 'developing' | 'established' | 'any';
   /**
    * Optional reactive follow-up events triggered by specific player choices.
    * When a player selects a matching choiceId, a follow-up event is scheduled
@@ -327,10 +337,15 @@ export function surfaceEvents(
   ]);
 
   // Exclude chain events — they are managed by advanceEventChains.
+  // Phase gating prevents narrative-inappropriate events from surfacing too early.
   const candidates = eventPool.filter(
     (def) =>
       (def.chainId === null || def.chainStep === 1) &&
       !seenDefinitionIds.has(def.id) &&
+      (def.phase === 'any' || (
+        turnNumber >= PHASE_TURN_RANGES[def.phase].min &&
+        turnNumber <= PHASE_TURN_RANGES[def.phase].max
+      )) &&
       allConditionsPass(def, state, turnNumber),
   );
 
