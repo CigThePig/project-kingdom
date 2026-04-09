@@ -2,7 +2,7 @@
 
 ## Overview
 
-Three parallel workstreams expanding Crown & Council with world texture, card quality, and structural variety. Read `design-expansion-proposal.md` for full design rationale. This file contains only implementation tasks.
+Three parallel workstreams expanding Crown & Council with world texture, card quality, and structural variety. See `gameplay-blueprint.md` and `ui-ux-blueprint.md` for full design rationale — the expansion design has been absorbed into those documents. This file contains only implementation tasks.
 
 **Workstream A** — Card Tension Audit (data layer, no UI)
 **Workstream B** — Monthly Structure (UI pacing layer)
