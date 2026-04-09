@@ -29,7 +29,7 @@ The player is a monarch ruling through cards. Every decision — responding to a
 **Three beats per round.** Every round has a dramatic beat (crisis), a reactive beat (petitions), and a proactive beat (decrees). This rhythm creates pacing variety within a consistent structure.
 
 ### §1.3 Single-Player, Turn-Based
-No multiplayer. Neighboring kingdoms are AI-driven. The game is designed for mobile sessions of 5–15 minutes per round, with a full reign spanning 40–80 rounds across multiple sessions.
+No multiplayer. Neighboring kingdoms are AI-driven. The game is designed for mobile sessions of 2.5–6 minutes per round (3 months of ~30–150 seconds each), with a full reign spanning 40–80 rounds across multiple sessions.
 
 ### §1.4 Scenario Architecture
 The base simulation supports scenario overrides. Each scenario reconfigures initial conditions, faction distributions, neighbor configurations, event pools, storyline availability, and starting policies without altering core resolution logic.
@@ -38,34 +38,52 @@ The base simulation supports scenario overrides. Each scenario reconfigures init
 
 ## §2. Round Structure
 
-### §2.1 The Royal Day
-Each round represents a season of rule (3 months). A round consists of five sequential phases:
+### §2.1 The Royal Season
+Each round represents a season of rule, divided into **3 months**. Resolution fires **once per season**, after Month 3. Months are a UI/pacing layer — they distribute court business across the season without changing how the engine resolves.
 
-| Phase | Name | Player Role | Duration Feel |
-|-------|------|-------------|---------------|
-| 0 | Season Dawn | Observe | Brief |
-| 1 | Morning Court | Decide | Weighty |
-| 2 | Audience Chamber | React | Brisk |
-| 3 | Royal Council | Plan | Deliberate |
-| 4 | Court Summary | Reflect | Satisfying |
+```
+Season
+├── Month 1: Month Dawn → Court Business (0-1 event) → advance
+├── Month 2: Month Dawn → Court Business (0-1 event + 0-3 petitions) → advance
+├── Month 3: Month Dawn → Court Business (0-1 event) → Decrees → Summary → Resolution
+```
 
-The player progresses through phases in order. There is no going back to a completed phase within the same round.
+| Month | Tendency | Feel |
+|-------|----------|------|
+| Month 1 | Consequences, aftermath, developing situations | Reactive |
+| Month 2 | Petitions, negotiations, active governance | Engaged |
+| Month 3 | Strategic planning + any remaining crises | Deliberate |
 
-### §2.2 Phase 0 — Season Dawn
-A single atmospheric card appears showing the new season and any persistent conditions. Purpose: set mood, communicate seasonal mechanical shifts, deliver advisor briefings.
+Month tendencies are **soft, not hard** — crises override them. A war declaration can arrive in any month. Quiet months (no court business) are valid and signal stability.
+
+The player progresses through months in order. There is no going back to a completed month within the same season.
+
+### §2.2 Month Names
+Each month has a thematic name used on the Month Dawn card:
+
+| Season | Month 1 | Month 2 | Month 3 |
+|--------|---------|---------|---------|
+| Spring | Early Thaw | High Spring | Late Bloom |
+| Summer | Early Harvest | High Summer | Summer's End |
+| Autumn | First Harvest | Deep Autumn | Last Light |
+| Winter | First Frost | Deep Winter | Winter's End |
+
+### §2.3 Month Dawn (formerly Phase 0 — Season Dawn)
+An atmospheric card appears at the start of **each month** showing the month name and any persistent conditions. Purpose: set mood, communicate seasonal mechanical shifts, deliver advisor briefings, and surface World Pulse flavor.
 
 **Contains:**
-- Season name and year ("Winter, Year 4")
+- Month name, season, and year ("Early Thaw, Spring, Year 4")
 - Active kingdom conditions (drought, festival season, plague scare, etc.)
 - 0–1 advisor briefing cards (espionage intel, diplomatic intelligence, or warning)
-- Seasonal modifier summary (e.g., "Food production halved during winter")
+- Seasonal modifier summary (e.g., "Food production halved during winter") — shown on Month 1 only
+- 1–2 World Pulse lines (see §11)
 
-Advisor briefings are the primary way espionage and diplomatic intelligence reach the player. A briefing card from the Spymaster might read: "Our agents report Lord Ashford masses troops at the border — confidence: moderate." The player reads this, then enters Morning Court with that context coloring their decisions.
+Advisor briefings are the primary way espionage and diplomatic intelligence reach the player. A briefing card from the Spymaster might read: "Our agents report Lord Ashford masses troops at the border — confidence: moderate." The player reads this, then enters court business with that context coloring their decisions.
 
-**Interaction:** Tap to acknowledge and advance. If an advisor briefing is present, the player reads it (no action required) and taps to proceed to Phase 1.
+**Interaction:** Tap to acknowledge and advance. If an advisor briefing is present, the player reads it (no action required) and taps to proceed to court business.
 
-### §2.3 Phase 1 — Morning Court (Crisis)
-The dramatic heart of the round. One major event demands the player's attention.
+### §2.4 Court Business — Crisis Response
+The dramatic heart of the round. One major event demands the player's attention. Can appear in any month.
 
 **Card composition:**
 - 1 Event Card describing the situation (crisis, story beat, neighbor action, failure warning)
@@ -79,14 +97,14 @@ The dramatic heart of the round. One major event demands the player's attention.
 - Failure condition warnings (approaching famine, insolvency, etc.)
 - Active conflict escalation moments
 
-**If no crisis exists this round:** A milder Notable event is promoted to fill the slot. There is always a Morning Court phase — even in peaceful times, the monarch faces decisions. In rare cases of true quiet, a "court is calm" flavor card appears with a single "Proceed" response.
+**If no crisis exists this month:** The month may have no court business at all (signaling stability), or a milder Notable event may appear as a different court business type (petition, assessment, negotiation). There is no requirement that every month have court business.
 
 **Interaction:** Player reads the event card, reviews response cards (each showing title, description, and effect hints), taps to select one, then confirms. Selection is a two-step process (select → confirm) to prevent misclicks.
 
 **Response card effect hints:** Show the immediate, clear effects. Hinted side effects use softer language ("May anger merchants"). Hidden long-term ripple effects are not shown — they emerge through future cards.
 
-### §2.4 Phase 2 — Audience Chamber (Petitions)
-Fast, reactive decision-making. Cards arrive one at a time and the player swipes right (grant) or left (deny).
+### §2.5 Court Business — Audience Petitions
+Fast, reactive decision-making. Cards arrive one at a time and the player swipes right (grant) or left (deny). Petitions tend to cluster in Month 2 but can appear in any month.
 
 **What generates petition cards:**
 - Notable and Informational severity events
@@ -97,14 +115,52 @@ Fast, reactive decision-making. Cards arrive one at a time and the player swipes
 - Minor diplomatic incidents
 - Intelligence report delivery (acknowledge or act on)
 
-**Cards per round:** 1–3 petitions in early game, scaling to 2–5 as the kingdom grows and complexity increases. The narrative pacing system controls volume to prevent fatigue.
+**Cards per month:** Max 3 petitions per month. 1–3 petitions in early game, scaling to 2–5 per season as the kingdom grows and complexity increases. The narrative pacing system controls volume to prevent fatigue.
 
-**Petition-crisis interaction:** Some petitions deliberately echo the crisis. If the player refused to repair a dam in Phase 1, a village petition for flood barriers may appear in Phase 2. This is driven by the consequence tag system — crisis response choices tag the game state, and petition card eligibility checks for those tags.
+**Petition-crisis interaction:** Some petitions deliberately echo the crisis. If the player refused to repair a dam in Month 1, a village petition for flood barriers may appear in Month 2. This is driven by the consequence tag system — crisis response choices tag the game state, and petition card eligibility checks for those tags.
 
 **Interaction:** Swipe right to grant, left to deny. The card physically moves with the player's finger, rotating slightly, with color feedback (green tint right, red tint left). Commits at 35% screen width or sufficient velocity. Springs back if released below threshold.
 
-### §2.5 Phase 3 — Royal Council (Decrees)
-The proactive planning layer. The player browses a spread of available decree cards and selects up to 3.
+### §2.6 Court Business — Negotiation (NEW)
+Multi-factor decisions with separable terms. The player shapes a deal by toggling individual terms on/off before committing.
+
+**Card composition:**
+- 1 Event Card describing the negotiation context
+- 2–4 Toggleable Term Cards, each representing one separable term of the deal
+
+**What generates negotiation cards:**
+- Trade deals with neighbors
+- Treaty proposals (alliance, non-aggression, trade agreements)
+- Peace terms during active conflict
+- Internal faction negotiations (noble houses, merchant guilds, clergy demands)
+
+**Internal vs External:** Internal negotiations use faction accents. External use diplomatic accent + kingdom name. The `contextLabel` on the card reads "INTERNAL NEGOTIATION" or "DIPLOMATIC NEGOTIATION."
+
+**Design constraint:** "Accept all" must not be obviously optimal — at least one term should be costly enough to consider leaving off.
+
+**Interaction:** Player reads the event card, then toggles terms on/off. Each term card shows its own effect strip. "Accept Terms (N selected)" button commits the deal with toggled terms. "Reject Entirely" button rejects the whole negotiation. Both use two-step confirm. Zero terms toggled = treat as reject.
+
+### §2.7 Court Business — Assessment (NEW)
+The player responds to uncertain information — deciding how to handle ambiguous intelligence, early warnings, or diplomatic signals of unclear intent.
+
+**Card composition:**
+- 1 Advisor Event Card with confidence indicator (Low / Moderate / High)
+- 2–3 Posture Response Cards
+
+**What generates assessment cards:**
+- Ambiguous intelligence from espionage operations
+- Early warnings that may or may not materialize
+- Diplomatic signals of unclear intent from neighbors
+- Internal reports with conflicting information
+
+**Posture responses follow a pattern:** One option invests resources to learn more, one hedges (moderate cost, moderate information), one is free but risky (ignore/dismiss). This creates tension between caution and efficiency.
+
+**Visual distinction:** Uses Advisor family (purple accent) instead of Crisis family (red accent), signaling that this is an information-gathering situation rather than an urgent crisis.
+
+**Interaction:** Identical to crisis response — tap to select, confirm. Two-step process.
+
+### §2.8 Court Business — Decrees (Royal Council)
+The proactive planning layer. The player browses a spread of available decree cards and selects up to 3. **Month 3 only.**
 
 **What generates decree cards:**
 - Standing decrees (always available unless on cooldown or locked by prerequisites)
@@ -128,24 +184,22 @@ The proactive planning layer. The player browses a spread of available decree ca
 
 **Interaction:** Horizontal scrollable spread. Tap a card to select (it lifts and glows). Tap again to deselect. Counter shows X/3 selected. Confirm button issues all selected decrees simultaneously.
 
-### §2.6 Phase 4 — Court Summary
-A narrative card followed by a stat delta breakdown. Purpose: make the player feel the weight of their decisions and understand what changed.
+### §2.9 Court Summary
+A narrative card followed by a stat delta breakdown. Appears after Month 3 decrees, before resolution. Purpose: make the player feel the weight of their decisions and understand what changed.
 
 **Contains:**
-- 1 Narrative Summary Card — a short prose paragraph describing the round's story arc in plain language ("The dam holds, but at great cost. The merchant quarter seethes as emergency taxes bite. In the east, militia companies drill for the first time.")
+- 1 Narrative Summary Card — a short prose paragraph describing the season's story arc in plain language ("The dam holds, but at great cost. The merchant quarter seethes as emergency taxes bite. In the east, militia companies drill for the first time.")
 - Stat Delta Display — each tracked stat shows its change with a brief cause annotation (Treasury: -92, "Dam repairs & festival costs")
 - 0–1 Legacy Card — if a significant threshold was crossed (tech milestone, storyline resolution, ruling style crystallization), a special card appears: "Your realm is now known as a Mercantile Power" or "The Great Schism has ended."
-- "Begin Next Season" button advances to the next round's Phase 0.
+- "Begin Next Season" button advances to the next round's Month Dawn.
 
 **Interaction:** Read and review. Tap to advance.
 
-### §2.7 Round Timing Targets
-- Phase 0 (Season Dawn): 5–10 seconds
-- Phase 1 (Morning Court): 30–90 seconds
-- Phase 2 (Audience Chamber): 15–45 seconds
-- Phase 3 (Royal Council): 30–120 seconds
-- Phase 4 (Court Summary): 10–30 seconds
-- **Total round target: 2–5 minutes**
+### §2.10 Round Timing Targets
+- Month 1: 30–90 seconds
+- Month 2: 60–120 seconds
+- Month 3: 60–150 seconds
+- **Season total: 2.5–6 minutes**
 
 ---
 
@@ -160,11 +214,13 @@ Every card in the game belongs to a family. The family determines visual treatme
 | Response | Gold | Choices for crisis events | Tap to select |
 | Petition | Blue | Quick yes/no requests | Swipe left/right |
 | Decree | Green | Proactive player actions | Tap to toggle, up to 3 |
+| Negotiation | Gold/Decree | Multi-factor deal terms | Tap to toggle on/off |
+| Assessment | Purple/Advisor | Uncertain-information posture responses | Tap to select |
 | Status | Amber | Kingdom stats and conditions | Pull-down, read-only |
 | Advisor | Purple | Intelligence briefings and warnings | Read and acknowledge |
 | Summary | Gold | Round results and narrative | Read-only |
 | Legacy | White/Silver | Milestone achievements and identity shifts | Read and acknowledge |
-| Season | Varies | Atmospheric season transitions | Tap to advance |
+| Season | Varies | Atmospheric month/season transitions | Tap to advance |
 
 ### §3.2 Card Anatomy
 All cards share a common layout structure regardless of family:
@@ -241,6 +297,48 @@ Each phase draws from a filtered pool:
 
 **Decree pool:** All decree definitions whose prerequisites are met and not on cooldown. Policy change cards generated from current policy state. Construction cards generated from available buildings and unlocked tech. Military/diplomatic/espionage/religious action cards based on current game state.
 
+### §3.6 Interaction Types
+Five interaction types distribute court business across the monthly structure. The monthly model provides room for the two new types alongside the three originals.
+
+| Type | Admission Criteria | Cards |
+|------|-------------------|-------|
+| Crisis Response | Urgent. Critical/Serious severity. 2+ genuinely different strategic responses. | 1 event + 2–4 mutually exclusive response cards |
+| Audience Petition | Genuinely binary. Passes tension test. Max 3 per month. | Sequential swipe cards |
+| Negotiation (NEW) | Multi-factor with separable terms. Trade deals, treaties, peace terms, internal faction negotiations. Internal vs external clearly labeled via `contextLabel`. | 1 event + 2–4 toggleable term cards |
+| Assessment (NEW) | Genuine uncertainty. Ambiguous intelligence, early warnings, diplomatic signals of unclear intent. One response costs resources to learn more, one hedges, one is free but risky. | 1 advisor event (with confidence indicator) + 2–3 posture response cards |
+| Decrees | Month 3 only. Proactive planning. | Horizontal spread, select up to 3 |
+
+### §3.7 Card Tension Standards
+
+#### Core Rule
+Every card that asks the player to choose must have a meaningful cost on both sides. If one option is obviously correct, the card fails and must be rebalanced or reclassified. Nothing in the game should be a no-brainer.
+
+#### Tension Test
+1. Would a reasonable player ever choose each option?
+2. Does choosing either option sacrifice something the player values?
+3. Does the choice create downstream consequences?
+4. Does the interaction type match the decision's complexity?
+
+#### Reclassification Path
+Cards that fail the tension test are not deleted — they move:
+
+| Failed Card Type | Becomes |
+|------------------|---------|
+| Pure upside event (no cost to accept) | Rebalanced with real costs, OR reclassified as World Pulse flavor |
+| Information delivery (not a decision) | Advisor briefing in Month Dawn, OR Codex update |
+| Completion notification | Summary line + Codex Active Situations entry |
+| Complex multi-factor deal squeezed into binary swipe | Reclassified as Negotiation interaction |
+| Ambiguous intelligence crammed into petition | Reclassified as Assessment interaction |
+
+#### Tension Spectrum
+
+| Level | Both options are... | Use for |
+|-------|--------------------|---------| 
+| Agonizing | Painful | Crisis cards, war, schisms |
+| Strategic | Clear tradeoffs | Diplomacy, policy, major petitions |
+| Contextual | Situation-dependent | Faction requests, resource allocation |
+| Mild | Slight preferences, neither free | Minor petitions, routine governance |
+
 ---
 
 ## §4. Kingdom Systems
@@ -293,6 +391,17 @@ Stability at zero for consecutive turns triggers Collapse (game over). Stability
 - **Neighbors:** Multiple AI-driven kingdoms, each with relationship score, diplomatic posture (Friendly→War), personality disposition, military strength, religious/cultural profile, espionage capability, war weariness.
 - **Neighbor autonomous actions:** Each turn, neighbors evaluate whether to: propose trade, withdraw trade, offer treaties, make demands, declare war, offer peace, create border tension, build up military, retaliate for espionage, apply religious pressure. These actions arrive as crisis cards (war declarations, demands) or petition cards (trade offers, treaty proposals, peace offers).
 - **Player diplomatic actions:** Send envoy, propose treaty, issue ultimatum, declare war, accept/reject peace — all presented as decree cards or response cards to neighbor-initiated crisis events.
+
+#### Rival Personality Archetypes
+Each neighboring kingdom has a personality archetype that governs its autonomous behavior:
+
+| Archetype | Behavior | Player Reads As |
+|-----------|----------|-----------------|
+| Ambitious & Militaristic | Expands, builds army, makes demands | Threat |
+| Mercantile & Pragmatic | Proposes trade, avoids war | Trade partner |
+| Devout & Insular | Religious pressure, resists foreign influence | Cultural friction |
+| Expansionist & Diplomatic | Makes alliances, leverages for territory | Subtle threat |
+| Defensive & Cautious | Fortifies, rarely initiates, retaliates hard | Safe unless provoked |
 
 ### §4.7 Conflicts and War
 - **Phases:** Skirmish → Campaign → Siege. Each phase has different mechanical implications.
@@ -497,4 +606,70 @@ The following scenarios from the data layer are preserved and adapted to the car
 - **Frozen March** — harsh winter start, food scarcity, military pressure
 - **Merchant's Gambit** — trade-focused, mercantile neighbors, economic complexity
 
-Each scenario's initial event and storyline pools need re-tagging to distinguish crisis vs. petition card classification.
+Each scenario's initial event and storyline pools need re-tagging to distinguish crisis vs. petition card classification. Scenarios can additionally configure starting dossier visibility and World Pulse flavor.
+
+---
+
+## §10. The Codex
+
+### §10.1 Purpose
+The Codex is the **pull-based information layer**. The player opens it to browse qualitative, narrative-rich state descriptions. It is accessible from the stats bar at **all times**, including mid-decision. This creates a feedback loop: invest in espionage → see more of the world → make better decisions → feel the value of intelligence funding.
+
+### §10.2 Structure
+The Codex is a full-screen card overlay with 4 tabbed sections:
+
+| Section | Content | Card Count |
+|---------|---------|------------|
+| **Kingdom State** | Qualitative descriptors of 6 domains (realm, stores, treasury, infrastructure, armies, faith). 5-tier scale: Dire → Flourishing. Reads like a steward's report. | 6 cards (fixed) |
+| **Rival Kingdoms** | Living dossier per neighbor. Detail gated by espionage network strength (see §10.3). | 1 per neighbor |
+| **Active Situations** | Ongoing wars, construction, treaties, operations, failure warnings, storylines. Dynamic — can be empty. | 0–N |
+| **Reign Chronicle** | Significant past events in reverse chronological order. Scales with reign length. | Up to capacity |
+
+### §10.3 Intelligence Gating (Rival Dossiers)
+
+| Espionage Network | Dossier Shows |
+|-------------------|---------------|
+| 0–10 (None) | Name, ruler, disposition. "Little is known." |
+| 11–30 (Minimal) | + military strength descriptor + diplomatic status |
+| 31–60 (Moderate) | + known strengths + recent actions (last 2–3 turns) |
+| 61–80 (Strong) | + Spymaster assessment + confidence rating |
+| 81–100 (Exceptional) | + predicted next action + internal political situation |
+
+### §10.4 Chronicle Capacity
+Chronicle capacity scales with reign length:
+- **Base capacity:** 20 entries
+- **Growth:** +1 entry per 2 seasons beyond season 20
+- **Milestones protected:** Entries flagged as milestones (Legacy card events, war outcomes, storyline resolutions) are never pruned. Oldest non-milestone entries are pruned first when capacity is reached.
+
+### §10.5 Design Constraints
+- **Everything is still cards.** The Codex does not violate "everything is a card."
+- **Overlay, not a screen.** No route navigation. Opens over game content, dismisses back.
+- **Read-only.** No decisions made inside the Codex.
+- **Does not pause gameplay.** The game state doesn't change while the Codex is open.
+
+---
+
+## §11. World Pulse
+
+### §11.1 Purpose
+World Pulse is the **push-based information layer**. 1–2 short flavor lines per month, delivered on the Month Dawn card. Informational only — never actionable. Where the Codex is pulled, World Pulse is pushed.
+
+### §11.2 Categories
+
+| Category | Examples |
+|----------|---------|
+| Neighbor Activity | "Traders report Valdris is fortifying its southern passes." |
+| Kingdom Condition | "The eastern roads have fallen into disrepair." |
+| Faction Murmur | "Clergy speak favorably of your recent festival decree." |
+| Seasonal | "The first snows dust the northern mountains." |
+| Foreshadowing | "Strange lights are seen over the eastern marshes." |
+
+### §11.3 Selection Rules
+- 1–2 lines per month, 3–6 per season
+- No category repeats within the same season
+- Weighted by relevance to current game state
+- Month tendencies influence category preference (Month 1 favors aftermath/condition lines, Month 2 favors faction/neighbor lines, Month 3 favors foreshadowing/strategic lines)
+- Neighbor Activity lines filtered by espionage network strength (low espionage = only obvious external events, high espionage = subtle internal affairs)
+
+### §11.4 Foreshadowing Rule
+Foreshadowing lines appear **1–2 seasons before** the event they hint at. They are never explicit — the player should recognize them in hindsight, not use them as direct predictions. This rewards attentive play and creates "I should have seen that coming" moments.

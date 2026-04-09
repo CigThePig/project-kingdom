@@ -132,22 +132,31 @@ card-lifted:      0 16px 48px rgba(0,0,0,0.7), 0 4px 16px rgba(0,0,0,0.5)
 
 ```
 <App>
-  <StatsBar />                    — collapsible top stats
+  <StatsBar />                    — collapsible top stats + codex icon
   <PhaseIndicator />              — phase progress strip
   <PhaseContainer>                — main content area, scrollable
-    <SeasonDawnPhase />           — Phase 0
-    <CrisisPhase />               — Phase 1
-      <CrisisCard />
-      <ResponseCard /> (×2–4)
-    <PetitionPhase />             — Phase 2
-      <PetitionCard /> (one at a time)
-    <DecreePhase />               — Phase 3
+    <MonthDawn />                 — ×3 per season (start of each month)
+    <CourtBusiness>               — router for court business sub-types
+      <CrisisPhase />             — Crisis Response
+        <CrisisCard />
+        <ResponseCard /> (×2–4)
+      <PetitionPhase />           — Audience Petitions
+        <PetitionCard /> (one at a time)
+      <NegotiationPhase />        — Negotiation (NEW)
+        <NegotiationEventCard />
+        <TermCard /> (×2–4, toggleable)
+      <AssessmentPhase />         — Assessment (NEW)
+        <AdvisorEventCard />
+        <ResponseCard /> (×2–3)
+    </CourtBusiness>
+    <DecreePhase />               — Month 3 only
       <DecreeCard /> (horizontal spread)
-    <SummaryPhase />              — Phase 4
+    <SummaryPhase />              — After Month 3 decrees
       <SummaryCard />
       <StatDeltaDisplay />
       <LegacyCard />  (conditional)
   </PhaseContainer>
+  <CodexOverlay />                — full-screen overlay, opened from stats bar
 </App>
 ```
 
@@ -185,12 +194,14 @@ The phase components do NOT talk to each other directly. The parent `<App>` (or 
 
 ## §4. Interaction Specifications
 
-### §4.1 Phase 0 — Season Dawn
-**Cards:** 1 season card + 0–1 advisor briefing cards.
-**Interaction:** Tap anywhere on the card (or a "Continue" region) to advance. If an advisor card is present, it appears after the season card with a slide-up animation.
-**Transition out:** Cards fade up and away. Phase 1 cards slide up from below.
+### §4.1 Month Dawn (formerly Phase 0 — Season Dawn)
+**Cards:** 1 month card + 0–1 advisor briefing cards. Appears **3× per season** (start of each month).
+**Content:** Month name, season, year, active conditions, seasonal modifiers (Month 1 only), 1–2 World Pulse lines.
+**World Pulse display:** World Pulse lines render as italicized text below the atmospheric line, in `text-secondary` color. They are flavor only — no tap interaction.
+**Interaction:** Tap anywhere on the card (or a "Continue" region) to advance. If an advisor card is present, it appears after the month card with a slide-up animation. Advisor briefing behavior is unchanged from the original Phase 0 spec.
+**Transition out:** Cards fade up and away. Court business cards slide up from below.
 
-### §4.2 Phase 1 — Crisis (Morning Court)
+### §4.2 Court Business — Crisis Response (formerly Phase 1 — Morning Court)
 **Layout:** Crisis event card at top. Response cards stacked vertically below with "Choose your response" label between them.
 
 **Selection flow:**
@@ -206,7 +217,7 @@ The phase components do NOT talk to each other directly. The parent `<App>` (or 
 - Confirm button: pop-in (scale 0.9→1), 300ms ease
 - Exit: all cards fade-slide-left, 350ms
 
-### §4.3 Phase 2 — Petitions (Audience Chamber)
+### §4.3 Court Business — Petitions (formerly Phase 2 — Audience Chamber)
 **Layout:** One petition card centered in the viewport. Deny (✗) and Grant (✓) ghost indicators on left/right edges. Decision pip dots below.
 
 **Swipe behavior:**
@@ -223,7 +234,7 @@ The phase components do NOT talk to each other directly. The parent `<App>` (or 
 
 **Completion:** After last petition decided, 200ms pause, then auto-advance to Phase 3.
 
-### §4.4 Phase 3 — Decrees (Royal Council)
+### §4.4 Court Business — Decrees (formerly Phase 3 — Royal Council)
 **Layout:** Horizontal scrollable row of decree cards. Scroll-snap to center alignment. Counter text above ("Select up to 3 decrees · X/3 chosen"). Confirm button below.
 
 **Selection behavior:**
@@ -242,14 +253,50 @@ The phase components do NOT talk to each other directly. The parent `<App>` (or 
 
 **Confirm button:** Only visible when ≥1 decree selected. Text: "Issue X Decree(s)". Gradient green background. On tap: animates out, phase transitions.
 
-### §4.5 Phase 4 — Summary
+### §4.5 Court Business — Summary (formerly Phase 4 — Summary)
 **Layout:** Narrative summary card at top. Stat delta block below. Legacy card (if applicable) below that. "Begin Next Season →" button at bottom.
 
 **Stat delta animation:** Each stat row slides in from left with stagger (80ms per row). Delta values are colored: green for positive, red for negative.
 
 **Legacy card (conditional):** Only appears when a milestone, storyline resolution, or ruling style threshold was crossed this round. Enters with a distinct animation — slow fade-in with slight scale-up, white/silver accent. Should feel momentous and rare.
 
-**Transition to next round:** Button tap fades everything out, then Phase 0 of the next round fades in.
+**Transition to next round:** Button tap fades everything out, then Month Dawn of the next season fades in.
+
+### §4.6 Court Business — Negotiation (NEW)
+**Layout:** Event card at top describing the negotiation context. "NEGOTIATION TERMS" label with `contextLabel` ("INTERNAL NEGOTIATION" or "DIPLOMATIC NEGOTIATION") below. Toggleable term cards stacked vertically beneath.
+
+**Term card behavior:**
+- Each term card uses Gold/Decree accent
+- Tap a term card to toggle it on (gold border + filled accent background at 10% opacity + "✓" indicator). Tap again to toggle off.
+- Each term card shows its own effect strip (individual costs/benefits of that term)
+- Term cards slide in from right with 80ms stagger on phase entrance
+
+**Buttons:**
+- "Accept Terms (N selected)" — appears when ≥1 term is toggled on. Two-step confirm (tap → "Confirm?" → tap again)
+- "Reject Entirely" — always visible below. Two-step confirm.
+- Zero terms toggled + "Accept" = treat as reject
+
+**State:** `toggledTermIds: Set<string>`
+
+**Animation timing:**
+- Event card: slide-up, 400ms ease
+- "NEGOTIATION TERMS" label: fade-in, 250ms, after event card settles
+- Term cards: slide-in from right, 350ms ease, staggered 80ms each
+- Buttons: pop-in (scale 0.9→1), 300ms ease
+- Exit: all cards fade-slide-left, 350ms
+
+### §4.7 Court Business — Assessment (NEW)
+**Layout:** Identical layout and flow to Crisis Response (§4.2) but uses **Advisor family** (purple accent, `accent-advisor`) instead of Crisis family (red accent).
+
+**Distinctions from Crisis Response:**
+- Event card shows a `<ConfidenceIndicator>` component displaying the intelligence confidence level: Low / Moderate / High
+- Confidence indicator uses a 3-pip display: filled pips = confidence level (1 pip = Low, 2 = Moderate, 3 = High)
+- Response cards remain Gold/Response family (same as crisis responses)
+- The purple accent on the event card signals to the player that this is an information-gathering situation, not an urgent crisis
+
+**Interaction:** Identical to crisis response — player reads event, reviews 2–3 posture response cards, taps to select, confirms. Two-step process.
+
+**Animation timing:** Same as Crisis Response (§4.2).
 
 ---
 
@@ -258,9 +305,9 @@ The phase components do NOT talk to each other directly. The parent `<App>` (or 
 ### §5.1 Collapsed State (Default)
 A 44px-high bar at the top of the viewport showing 4 key stats in compact form:
 `👑 72  🌾 340  💰 1250  ⚔ 58`
-Plus a ▼ chevron indicating expandability.
+Plus a ▼ chevron indicating expandability. A small codex icon (📜 or SVG scroll icon) sits to the right of the chevron. Always visible in collapsed state. Tapping the codex icon opens the Codex overlay (see §12). The codex icon does **not** appear inside the Codex itself.
 
-Tapping anywhere on the bar toggles expansion.
+Tapping anywhere on the bar (except the codex icon) toggles expansion.
 
 ### §5.2 Expanded State
 The bar grows to show all tracked stats with:
@@ -434,6 +481,8 @@ The full `GameState` from `engine/types.ts` is the source of truth. The UI state
 
 ## §11. Screen Flow
 
+Each round (season) now cycles through **3 months** before resolution. The inner loop is: Month Dawn → Court Business → advance to next month, repeating for Months 1–3. After Month 3 court business, the player proceeds to Decrees → Summary → Resolution.
+
 ```
 [Title Screen]
      │
@@ -441,34 +490,117 @@ The full `GameState` from `engine/types.ts` is the source of truth. The UI state
 [Scenario Select] ──→ [New Game Init]
      │                       │
      ▼                       ▼
-[Load Game] ──────→ [Round Loop]
+[Load Game] ──────→ [Season Loop]
                          │
-              ┌──────────┼──────────┐
-              ▼          ▼          ▼
-         [Phase 0]  [Phase 1]  [Phase 2]
-         Season     Crisis     Petitions
-         Dawn       Court      Chamber
-              │          │          │
-              └──────────┼──────────┘
-                         ▼
-                    [Phase 3]
-                    Royal
-                    Council
-                         │
-                         ▼
-                    [Phase 4]
-                    Court
-                    Summary
+                    ┌────────────────────────────────┐
+                    │  Month 1                       │
+                    │  [Month Dawn] → [Court Business]│
+                    │       (0-1 event)              │
+                    ├────────────────────────────────┤
+                    │  Month 2                       │
+                    │  [Month Dawn] → [Court Business]│
+                    │       (0-1 event + 0-3 petitions)│
+                    ├────────────────────────────────┤
+                    │  Month 3                       │
+                    │  [Month Dawn] → [Court Business]│
+                    │       (0-1 event)              │
+                    │            │                    │
+                    │            ▼                    │
+                    │       [Decrees]                 │
+                    │            │                    │
+                    │            ▼                    │
+                    │       [Summary]                 │
+                    │            │                    │
+                    │            ▼                    │
+                    │       [Resolution]              │
+                    └────────────────────────────────┘
                          │
                     ┌────┴────┐
                     ▼         ▼
-              [Next Round] [Game Over]
+              [Next Season] [Game Over]
                     │         │
                     ▼         ▼
-              [Phase 0]  [Reign Score]
+              [Month Dawn] [Reign Score]
                               │
                               ▼
                          [Title Screen]
 ```
 
+The Codex overlay (§12) is accessible at any point during the round loop via the stats bar codex icon. It opens over the current content and dismisses back without interrupting the flow.
+
 All transitions between screens use card-based animations (deal in, slide out, flip). No page navigations, no route changes. The entire game runs in a single viewport with content swapping via React state.
+
+---
+
+## §12. Codex UI
+
+### §12.1 Layout
+Full-screen overlay with `bg-primary` at 97% opacity. Dismissible via X button (top-right) or swipe-down gesture.
+
+**Structure:**
+```
+┌─────────────────────────────┐
+│  [X]              CODEX     │
+│                             │
+│  [Kingdom] [Rivals] [Sit.] [Chron.]  ← tab pills
+│                             │
+│  ┌─────────────────────┐   │
+│  │  Scrollable content  │   │
+│  │  area — cards for    │   │
+│  │  the active tab      │   │
+│  │                      │   │
+│  │                      │   │
+│  └─────────────────────┘   │
+└─────────────────────────────┘
+```
+
+### §12.2 Tab Pills
+4 tab pills at top, reusing the `<PhaseIndicator>` pill style:
+
+| Tab | Label | Accent Color |
+|-----|-------|-------------|
+| Kingdom State | Kingdom | Amber (`accent-status`) |
+| Rival Kingdoms | Rivals | Blue (`accent-petition`) |
+| Active Situations | Situations | Red (`accent-crisis`) |
+| Reign Chronicle | Chronicle | Gold (`accent-response`) |
+
+Active tab: filled background (accent at 13% opacity), accent-colored border, cream text. Inactive tabs: transparent background, default border, muted text.
+
+### §12.3 Entry/Exit Animations
+- **Entry:** Slide up from bottom, 350ms ease. Background opacity fades in simultaneously.
+- **Exit:** Slide down, 300ms ease. Background opacity fades out.
+- No animation library — CSS keyframes only.
+
+### §12.4 Kingdom State Cards
+- **Family:** Status (amber accent)
+- **Count:** 6 fixed cards (Realm, Stores, Treasury, Infrastructure, Armies, Faith)
+- **Layout:** Each card has a tier pip in the top-right corner: red (Dire/Struggling), gold (Stable/Growing), green (Thriving/Flourishing)
+- **Content:** Narrative body text — reads like a steward's report, not raw numbers. E.g., "The granaries are well-stocked. Harvest surpluses from the eastern provinces have bolstered reserves through the winter."
+- **No effect strip** on these cards (read-only, informational)
+
+### §12.5 Rival Dossier Cards
+- **Family:** Advisor (purple accent)
+- **Content gated by `intelLevel`** (espionage network strength per neighbor — see `gameplay-blueprint.md` §10.3)
+- **Low intel (0–10):** Card shows kingdom name, ruler name, disposition. Body text: "Little is known about the inner workings of this realm."
+- **Higher intel:** Additional sections appear as intel improves — military assessment, recent actions, spymaster notes, predicted behavior
+- **Layout:** Standard card anatomy. Additional intel sections stack vertically within the card body.
+
+### §12.6 Active Situations Cards
+- **Family:** Varies by situation type (Crisis accent for wars, Decree accent for construction, Advisor accent for operations, Petition accent for treaties)
+- **Layout:** Compact — title + 2–4 status lines per card
+- **Urgency border:** Colored left border indicating urgency: green (stable/progressing), gold (needs attention), red (critical/failing)
+- **Empty state:** When no situations are active, a single card reads: "The realm is at peace. No urgent matters demand your attention." Uses Season family styling.
+
+### §12.7 Reign Chronicle
+- **Family:** Legacy (silver/white accent)
+- **Layout:** Single scrollable-list card containing all chronicle entries. Entries are reverse-chronological (newest at top).
+- **Entry format:** `[Season X, Year Y] — Event description` (1–2 lines per entry)
+- **Milestone entries:** Prefixed with a ★ icon and rendered in `text-primary` color (cream). These are protected from pruning.
+- **Normal entries:** Rendered in `text-secondary` color (muted).
+
+### §12.8 Accessibility
+- **Focus trap:** When the Codex is open, focus is trapped within the overlay. Tab/Shift+Tab cycles through tabs and the close button.
+- **Keyboard navigation:** Arrow keys navigate between tab pills. Enter/Space activates a tab.
+- **Close button:** `aria-label="Close Codex"`
+- **Tab pills:** `role="tablist"` with `role="tab"` on each pill and `aria-selected` state.
+- **Content area:** `role="tabpanel"` with `aria-labelledby` pointing to the active tab.
