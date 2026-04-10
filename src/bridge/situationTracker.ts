@@ -2,7 +2,7 @@
 // Scans GameState for all active ongoing situations.
 // Pure function: state in, ActiveSituation[] out.
 
-import { StorylineStatus } from '../engine/types';
+import { StorylineStatus, FailureCondition } from '../engine/types';
 import type { GameState } from '../engine/types';
 import type { ActiveSituation } from '../ui/types';
 import { NEIGHBOR_LABELS, REGION_LABELS } from '../data/text/labels';
@@ -117,13 +117,13 @@ export function compileActiveSituations(state: GameState): ActiveSituation[] {
     const statusLines: string[] = [`Warning: ${label} approaching`];
 
     // Add specific counter info where available
-    if (condition === 'Famine' as unknown) {
+    if (condition === FailureCondition.Famine) {
       statusLines.push(`Empty turns: ${state.food.consecutiveTurnsEmpty}`);
-    } else if (condition === 'Insolvency' as unknown) {
+    } else if (condition === FailureCondition.Insolvency) {
       statusLines.push(`Insolvent turns: ${state.treasury.consecutiveTurnsInsolvent}`);
-    } else if (condition === 'Collapse' as unknown) {
+    } else if (condition === FailureCondition.Collapse) {
       statusLines.push(`Stability at zero: ${state.stability.consecutiveTurnsAtZero} turn(s)`);
-    } else if (condition === 'Overthrow' as unknown) {
+    } else if (condition === FailureCondition.Overthrow) {
       statusLines.push(`Overthrow risk: ${state.consecutiveTurnsOverthrowRisk} turn(s)`);
     }
 

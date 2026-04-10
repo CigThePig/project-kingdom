@@ -17,7 +17,7 @@ export function formatSeasonYear(season: Season, year: number): string {
 // ============================================================
 
 export function crisisResolvedText(eventId: string, choiceId: string): string {
-  return `A crisis was addressed. The crown chose: ${choiceId}.`;
+  return `Crisis "${eventId}" was addressed. The crown chose: ${choiceId}.`;
 }
 
 export function warStartedText(neighborId: string): string {
@@ -34,7 +34,7 @@ export function warEndedText(neighborId: string, playerVictory: boolean): string
 
 export function treatySignedText(neighborId: string, agreementId: string): string {
   const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
-  return `A treaty was signed with ${name}.`;
+  return `A treaty (${agreementId}) was signed with ${name}.`;
 }
 
 export function treatyBrokenText(neighborId: string): string {
@@ -43,7 +43,7 @@ export function treatyBrokenText(neighborId: string): string {
 }
 
 export function milestoneText(branch: string, milestoneIndex: number): string {
-  return `A knowledge milestone was achieved in ${branch} research.`;
+  return `Knowledge milestone ${milestoneIndex + 1} was achieved in ${branch} research.`;
 }
 
 export function storylineResolvedText(storylineId: string): string {
@@ -61,5 +61,8 @@ export function rulingStyleThresholdText(axis: string, value: number): string {
 }
 
 export function constructionCompletedText(projectName: string, regionId: string): string {
+  if (regionId) {
+    return `Construction completed: ${projectName} in ${regionId}.`;
+  }
   return `Construction completed: ${projectName}.`;
 }

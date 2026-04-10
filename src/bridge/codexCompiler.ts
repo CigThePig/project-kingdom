@@ -3,7 +3,7 @@
 // Pure function: state in, CodexDomain[] out.
 
 import { QualitativeTier } from '../engine/types';
-import type { GameState } from '../engine/types';
+import type { GameState, TreasuryExpenseBreakdown } from '../engine/types';
 import type { CodexDomain } from '../ui/types';
 import { CODEX_NARRATIVES } from '../data/text/codex-narratives';
 
@@ -53,12 +53,27 @@ function assignStoresTier(reserves: number, consumptionPerTurn: number): Qualita
   return QualitativeTier.Flourishing;
 }
 
-/** Treasury tier uses a two-dimensional check: balance + net flow. */
-function assignTreasuryTier(balance: number, netFlow: number): QualitativeTier {
-  if (balance < 0 && netFlow < 0) return QualitativeTier.Dire;
-  if (balance < 100 && netFlow < 0) return QualitativeTier.Troubled;
-  if (balance >= 600 && netFlow > 0) return QualitativeTier.Flourishing;
-  if (balance >= 300 && netFlow > 0) return QualitativeTier.Prosperous;
+/** Treasury tier uses ratio of balance to monthly expenses + net flow direction. */
+function assignTreasuryTier(
+  balance: number,
+  netFlow: number,
+  expenses: TreasuryExpenseBreakdown,
+): QualitativeTier {
+  const totalMonthlyExpenses =
+    expenses.militaryUpkeep +
+    expenses.constructionCosts +
+    expenses.intelligenceFunding +
+    expenses.religiousUpkeep +
+    expenses.festivalCosts;
+
+  const monthsOfRunway = totalMonthlyExpenses > 0
+    ? balance / totalMonthlyExpenses
+    : balance > 0 ? Infinity : 0;
+
+  if (monthsOfRunway < 0 && netFlow < 0) return QualitativeTier.Dire;
+  if (monthsOfRunway < 2 && netFlow < 0) return QualitativeTier.Troubled;
+  if (monthsOfRunway > 9 && netFlow > 0) return QualitativeTier.Flourishing;
+  if (monthsOfRunway > 5 && netFlow > 0) return QualitativeTier.Prosperous;
   return QualitativeTier.Stable;
 }
 
@@ -100,7 +115,7 @@ export function compileKingdomState(state: GameState): CodexDomain[] {
   const domains: { id: string; tier: QualitativeTier }[] = [
     { id: 'realm', tier: assignRealmTier(stability.value) },
     { id: 'stores', tier: assignStoresTier(food.reserves, food.consumptionPerTurn) },
-    { id: 'treasury', tier: assignTreasuryTier(treasury.balance, treasury.netFlowPerTurn) },
+    { id: 'treasury', tier: assignTreasuryTier(treasury.balance, treasury.netFlowPerTurn, treasury.expenses) },
     { id: 'infrastructure', tier: assignStandardTier(avgDevelopment) },
     { id: 'armies', tier: assignStandardTier(armiesScore) },
     { id: 'faith', tier: assignStandardTier(faithScore) },
