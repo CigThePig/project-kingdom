@@ -28,7 +28,11 @@ interface StatRow {
   max: number;
 }
 
-export function StatsBar() {
+interface StatsBarProps {
+  onCodexOpen?: () => void;
+}
+
+export function StatsBar({ onCodexOpen }: StatsBarProps) {
   const ctx = useContext(GameContext);
   if (!ctx) throw new Error('StatsBar must be inside GameProvider');
 
@@ -84,17 +88,46 @@ export function StatsBar() {
             </span>
           ))}
         </div>
-        <span
-          style={{
-            fontSize: 12,
-            color: 'var(--color-text-secondary)',
-            transition: 'transform 350ms ease',
-            transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            display: 'inline-block',
-          }}
-        >
-          &#9660;
-        </span>
+        <div className="flex items-center gap-2">
+          {/* Codex icon */}
+          {onCodexOpen && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onCodexOpen();
+              }}
+              aria-label="Open Codex"
+              style={{
+                width: 44,
+                height: 44,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: 'none',
+                border: 'none',
+                color: 'var(--color-text-secondary)',
+                fontSize: 16,
+                cursor: 'pointer',
+                padding: 0,
+                margin: '-10px 0',
+              }}
+            >
+              {'\uD83D\uDCDC'}
+            </button>
+          )}
+          {/* Expand chevron */}
+          <span
+            style={{
+              fontSize: 12,
+              color: 'var(--color-text-secondary)',
+              transition: 'transform 350ms ease',
+              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              display: 'inline-block',
+            }}
+          >
+            &#9660;
+          </span>
+        </div>
       </div>
 
       {/* Expanded content */}

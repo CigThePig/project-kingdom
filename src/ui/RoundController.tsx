@@ -34,6 +34,10 @@ import { generateAssessmentPhaseData } from '../bridge/assessmentCardGenerator';
 import { distributeCardsToMonths } from '../bridge/cardDistributor';
 import { applyDirectEffects } from '../bridge/directEffectApplier';
 import { generateWorldPulse } from '../bridge/worldPulseGenerator';
+import { compileKingdomState } from '../bridge/codexCompiler';
+import { compileDossier } from '../bridge/dossierCompiler';
+import { compileActiveSituations } from '../bridge/situationTracker';
+import { CodexOverlay } from './components/CodexOverlay';
 import type { WorldPulseLine } from './types';
 
 /**
@@ -74,6 +78,9 @@ export function RoundController() {
   // World Pulse state — tracks categories used this season to avoid repeats
   const [previousPulseCategories, setPreviousPulseCategories] = useState<WorldPulseCategory[]>([]);
   const [currentWorldPulseLines, setCurrentWorldPulseLines] = useState<WorldPulseLine[]>([]);
+
+  // Codex overlay state
+  const [isCodexOpen, setIsCodexOpen] = useState(false);
 
   // Prepare card pools when season starts (Month 1, monthDawn)
   useEffect(() => {
@@ -338,7 +345,7 @@ export function RoundController() {
         gap: 12,
       }}
     >
-      <StatsBar />
+      <StatsBar onCodexOpen={() => setIsCodexOpen(true)} />
       <PhaseIndicator currentMonth={currentMonth} currentPhase={currentPhase} />
 
       {currentPhase === 'monthDawn' && (
@@ -384,6 +391,18 @@ export function RoundController() {
           onComplete={handleRoundComplete}
         />
       )}
+
+      {/* Codex Overlay — accessible during all phases */}
+      <CodexOverlay
+        isOpen={isCodexOpen}
+        onClose={() => setIsCodexOpen(false)}
+        kingdomState={compileKingdomState(ctx.state.gameState)}
+        rivals={ctx.state.gameState.diplomacy.neighbors.map((n) =>
+          compileDossier(n, ctx.state.gameState.espionage, ctx.state.gameState.neighborActions.filter((a) => a.neighborId === n.id), ctx.state.gameState.turn.turnNumber),
+        )}
+        situations={compileActiveSituations(ctx.state.gameState)}
+        chronicle={ctx.state.chronicle}
+      />
     </div>
   );
 }
