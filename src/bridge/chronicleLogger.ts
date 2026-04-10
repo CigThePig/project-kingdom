@@ -33,7 +33,7 @@ export interface ChronicleLogEntry {
 export function generateChronicleEntries(
   preState: GameState,
   postState: GameState,
-  decisions: MonthDecision[],
+  _decisions: MonthDecision[],
   resolvedEvents: ActiveEvent[],
   newMilestones: Array<{ branch: KnowledgeBranch; milestoneIndex: number }>,
   failureWarnings: FailureCondition[],
@@ -183,23 +183,26 @@ export function pruneChronicle(
 ): ChronicleEntry[] {
   if (entries.length <= capacity) return entries;
 
-  // Separate protected and unprotected
-  const protectedEntries = entries.filter((e) => e.isProtected);
-  const unprotected = entries.filter((e) => !e.isProtected);
+  const protectedCount = entries.filter((e) => e.isProtected).length;
 
   // If protected alone exceed capacity, keep all protected (can't prune them)
-  if (protectedEntries.length >= capacity) return protectedEntries;
+  if (protectedCount >= capacity) return entries.filter((e) => e.isProtected);
 
-  // Keep all protected + most recent unprotected up to capacity
-  const spaceForUnprotected = capacity - protectedEntries.length;
-  const keptUnprotected = unprotected.slice(-spaceForUnprotected);
+  // Count how many unprotected entries we must drop (oldest first)
+  const spaceForUnprotected = capacity - protectedCount;
+  const totalUnprotected = entries.length - protectedCount;
+  const excessUnprotected = totalUnprotected - spaceForUnprotected;
 
-  // Merge and maintain chronological order
-  return [...protectedEntries, ...keptUnprotected].sort(
-    // entries don't have turnNumber, sort by position in original array
-    // Since unprotected was sliced from end, this preserves chronological order
-    () => 0,
-  );
+  // Single pass: preserve original order, skip the oldest unprotected entries
+  let skipped = 0;
+  return entries.filter((e) => {
+    if (e.isProtected) return true;
+    if (skipped < excessUnprotected) {
+      skipped++;
+      return false;
+    }
+    return true;
+  });
 }
 
 /**

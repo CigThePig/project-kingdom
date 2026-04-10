@@ -5,7 +5,6 @@
 import {
   RivalPersonality,
   NeighborDisposition,
-  DiplomaticPosture,
 } from '../engine/types';
 import type { NeighborState, EspionageState, NeighborAction } from '../engine/types';
 import type { RivalDossier } from '../ui/types';
@@ -37,7 +36,7 @@ export function getIntelLevel(networkStrength: number): RivalDossier['intelLevel
 // ============================================================
 
 const DISPOSITION_TO_PERSONALITY: Record<NeighborDisposition, RivalPersonality> = {
-  [NeighborDisposition.Aggressive]: RivalPersonality.AmbtitiousMilitaristic,
+  [NeighborDisposition.Aggressive]: RivalPersonality.AmbitiousMilitaristic,
   [NeighborDisposition.Opportunistic]: RivalPersonality.ExpansionistDiplomatic,
   [NeighborDisposition.Cautious]: RivalPersonality.DefensiveCautious,
   [NeighborDisposition.Mercantile]: RivalPersonality.MercantilePragmatic,
@@ -99,7 +98,7 @@ function buildDiplomaticStatus(neighbor: NeighborState): string {
   const base = POSTURE_STATUS_LABELS[neighbor.attitudePosture] ?? 'Unknown';
   if (neighbor.activeAgreements.length > 0) {
     const agreementNames = neighbor.activeAgreements.map((a) => a.agreementId).join(', ');
-    return `${base} \u2014 ${neighbor.activeAgreements.length} active agreement(s)`;
+    return `${base} \u2014 ${agreementNames}`;
   }
   return base;
 }
@@ -192,8 +191,7 @@ export function compileDossier(
   // Strong: + spymaster assessment + confidence rating
   if (intelLevel === 'strong' || intelLevel === 'exceptional') {
     const situation = getSituationKey(neighbor.attitudePosture);
-    const personalityKey = personality.replace('AmbitiousMilitaristic', 'AmbitiousMilitaristic'); // enum value is the key
-    const assessmentKey = `${personalityKey}_${situation}`;
+    const assessmentKey = `${personality}_${situation}`;
     const variants = SPYMASTER_ASSESSMENTS[assessmentKey];
     if (variants && variants.length > 0) {
       dossier.spymasterAssessment = variants[turn % variants.length];

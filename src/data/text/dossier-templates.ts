@@ -18,7 +18,7 @@ export const NEIGHBOR_RULER_NAMES: Record<string, string> = {
 // ============================================================
 
 export const PERSONALITY_LABELS: Record<RivalPersonality, string> = {
-  [RivalPersonality.AmbtitiousMilitaristic]: 'Ambitious & Militaristic',
+  [RivalPersonality.AmbitiousMilitaristic]: 'Ambitious & Militaristic',
   [RivalPersonality.MercantilePragmatic]: 'Mercantile & Pragmatic',
   [RivalPersonality.DevoutInsular]: 'Devout & Insular',
   [RivalPersonality.ExpansionistDiplomatic]: 'Expansionist & Diplomatic',
@@ -26,7 +26,7 @@ export const PERSONALITY_LABELS: Record<RivalPersonality, string> = {
 };
 
 export const PERSONALITY_DESCRIPTIONS: Record<RivalPersonality, string> = {
-  [RivalPersonality.AmbtitiousMilitaristic]:
+  [RivalPersonality.AmbitiousMilitaristic]:
     'This ruler values strength above all and is not afraid to use it. Expect demands, military posturing, and eventual aggression unless deterred.',
   [RivalPersonality.MercantilePragmatic]:
     'A pragmatic ruler who measures worth in gold. They prefer profitable partnerships to costly wars, but will ruthlessly exploit any perceived weakness.',
