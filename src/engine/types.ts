@@ -796,6 +796,55 @@ export enum StyleAxis {
   Faith = 'Faith',           // Secular (−) ↔ Theocratic (+)
 }
 
+// ============================================================
+// Section 17 — Expansion Types (World Texture)
+// ============================================================
+
+// Month-within-Season tracking.
+// The engine already has TurnState.month (1-12). These values map
+// the 3 months within a season to the player-facing monthly structure.
+export enum SeasonMonth {
+  Early = 1,
+  Mid = 2,
+  Late = 3,
+}
+
+// Rival Kingdom Personality (for dossier system)
+export enum RivalPersonality {
+  AmbitiousMilitaristic = 'AmbitiousMilitaristic',
+  MercantilePragmatic = 'MercantilePragmatic',
+  DevoutInsular = 'DevoutInsular',
+  ExpansionistDiplomatic = 'ExpansionistDiplomatic',
+  DefensiveCautious = 'DefensiveCautious',
+}
+
+// Qualitative State Tiers (for Codex)
+export enum QualitativeTier {
+  Dire = 'Dire',
+  Troubled = 'Troubled',
+  Stable = 'Stable',
+  Prosperous = 'Prosperous',
+  Flourishing = 'Flourishing',
+}
+
+// Interaction types (extends card families)
+export enum InteractionType {
+  CrisisResponse = 'CrisisResponse',
+  Petition = 'Petition',
+  Negotiation = 'Negotiation',
+  Assessment = 'Assessment',
+  Decree = 'Decree',
+}
+
+// World Pulse flavor categories
+export enum WorldPulseCategory {
+  NeighborActivity = 'NeighborActivity',
+  KingdomCondition = 'KingdomCondition',
+  FactionMurmur = 'FactionMurmur',
+  Seasonal = 'Seasonal',
+  Foreshadowing = 'Foreshadowing',
+}
+
 export interface StyleDecision {
   source: 'event' | 'decree' | 'petition';
   sourceId: string;
