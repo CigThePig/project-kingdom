@@ -222,7 +222,8 @@ export function generateMonthlySummaryData(
       `You heard ${petitionDecisions.length} petition${petitionDecisions.length !== 1 ? 's' : ''}, granting ${grantedCount} and denying ${deniedCount}.`,
     );
     for (const d of petitionDecisions) {
-      const delta = EVENT_CHOICE_EFFECTS[d.cardId]?.[d.choiceId] ?? {};
+      const card = petitionCards.find((p) => p.eventId === d.cardId);
+      const delta = EVENT_CHOICE_EFFECTS[card?.definitionId ?? d.cardId]?.[d.choiceId] ?? {};
       allEffects.push(...mechDeltaToEffectHints(delta));
     }
   }
