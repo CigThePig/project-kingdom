@@ -29,8 +29,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     purchase_foreign_grain:      { treasuryDelta: -80, foodDelta: +20, merchantSatDelta: +2 },
   },
   evt_commoner_harvest_festival: {
-    endorse_celebrations:       { commonerSatDelta: +3, faithDelta: +2, treasuryDelta: -10 },
-    observe_without_comment:    { commonerSatDelta: +1 },
+    acknowledge: { commonerSatDelta: +2, faithDelta: +1 },
   },
 
   // ============================================================
@@ -51,7 +50,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // Diplomacy (2)
   // ============================================================
   evt_neighbor_trade_overture: {
-    accept_trade_terms:     { merchantSatDelta: +3, treasuryDelta: +25 },
+    accept_trade_terms:     { merchantSatDelta: +3, treasuryDelta: +25, nobilitySatDelta: -1 },
     propose_modifications:  { merchantSatDelta: +1, treasuryDelta: +15, stabilityDelta: +1 },
     decline_politely:       { merchantSatDelta: -2 },
   },
@@ -177,8 +176,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // Kingdom (2)
   // ============================================================
   evt_annual_state_assessment: {
-    review_in_full:       { stabilityDelta: +2 },
-    acknowledge_receipt:  { stabilityDelta: +1 },
+    acknowledge: { stabilityDelta: +2 },
   },
   evt_kingdom_milestone_celebrated: {
     host_state_celebration:         { treasuryDelta: -50, commonerSatDelta: +3, nobilitySatDelta: +2, stabilityDelta: +3 },
@@ -304,7 +302,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     pray_for_rain:               { faithDelta: +2, foodDelta: -30, commonerSatDelta: -1 },
   },
   evt_summer_trade_season: {
-    host_trade_fair:           { treasuryDelta: +30, merchantSatDelta: +3, commonerSatDelta: +1 },
+    host_trade_fair:           { treasuryDelta: +30, merchantSatDelta: +3, commonerSatDelta: -1 },
     reduce_trade_tariffs:      { merchantSatDelta: +4, treasuryDelta: -20, nobilitySatDelta: -1 },
     maintain_current_policy:   { merchantSatDelta: +1 },
   },
@@ -313,9 +311,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // SEASONAL: Autumn (2)
   // ============================================================
   evt_autumn_harvest_bounty: {
-    stockpile_surplus:     { foodDelta: +25 },
-    export_for_profit:     { treasuryDelta: +35, foodDelta: -15, merchantSatDelta: +2 },
-    distribute_to_poor:    { commonerSatDelta: +4, foodDelta: -10, faithDelta: +1 },
+    stockpile_surplus:     { foodDelta: +25, commonerSatDelta: -1 },
+    export_for_profit:     { treasuryDelta: +35, foodDelta: -15, merchantSatDelta: +2, commonerSatDelta: -2 },
+    distribute_to_poor:    { commonerSatDelta: +4, foodDelta: -10, faithDelta: +1, nobilitySatDelta: -1 },
   },
   evt_autumn_bandit_raids: {
     dispatch_patrol_forces:  { militaryReadinessDelta: -3, stabilityDelta: +3, commonerSatDelta: +2, regionConditionDelta: +2 },
@@ -350,11 +348,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     negotiate_safe_passage:    { treasuryDelta: -20, merchantSatDelta: +2, stabilityDelta: +1 },
     reroute_trade:             { merchantSatDelta: -2, regionConditionDelta: -1 },
   },
-  evt_region_local_festival: {
-    send_royal_blessing:  { faithDelta: +1, commonerSatDelta: +1, regionConditionDelta: +1 },
-    attend_in_person:     { faithDelta: +2, commonerSatDelta: +3, nobilitySatDelta: +1, treasuryDelta: -15 },
-    ignore_the_festivities: { commonerSatDelta: -1, faithDelta: -1 },
-  },
+  // evt_region_local_festival — removed, reclassified as World Pulse (see tension-audit.ts)
   evt_region_resource_discovery: {
     fund_extraction:   { treasuryDelta: -50, regionDevelopmentDelta: +6, merchantSatDelta: +2 },
     auction_rights:    { treasuryDelta: +30, merchantSatDelta: +3, commonerSatDelta: -1 },

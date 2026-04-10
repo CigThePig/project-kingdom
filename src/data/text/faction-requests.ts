@@ -73,7 +73,7 @@ export const FACTION_REQUEST_TEXT: Record<string, EventTextEntry> = {
   },
   faction_req_merchant_market_expansion: {
     title: 'Request for Market Expansion',
-    body: 'The merchant guild requests royal permission and modest support to expand the kingdom\'s central marketplace. The project would increase trade volume and tax revenue while creating employment opportunities for the common folk.',
+    body: 'The merchant guild requests royal permission and support to expand the kingdom\'s central marketplace. The project would increase trade volume and tax revenue, though commoners near the market complain of displacement from their homes, and nobles protest the encroachment of commercial activity onto estates bordering the district.',
     choices: {
       approve_market_expansion: 'Approve the Expansion',
       deny_market_expansion: 'Deny the Request',

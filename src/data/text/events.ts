@@ -62,10 +62,9 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_commoner_harvest_festival: {
     title: 'Commoners Celebrate the Harvest',
-    body: 'With food reserves comfortably stocked, the common folk have organized a harvest celebration across several townships. The festivities have improved spirits, though some in the court question whether such gatherings should be formally endorsed.',
+    body: 'With food reserves comfortably stocked, the common folk have organized a harvest celebration across several townships. The festivities have improved spirits and strengthened communal bonds.',
     choices: {
-      endorse_celebrations: 'Endorse the Celebrations',
-      observe_without_comment: 'Observe Without Comment',
+      acknowledge: 'Acknowledge',
     },
   },
 
@@ -92,7 +91,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Diplomacy (2) ---
   evt_neighbor_trade_overture: {
     title: 'Foreign Trade Overture',
-    body: 'An envoy from a neighboring kingdom has arrived bearing proposals for expanded trade agreements. The terms appear favorable, though accepting would deepen economic ties and mutual dependency with a foreign power.',
+    body: 'An envoy from a neighboring kingdom has arrived bearing proposals for expanded trade agreements. The terms appear favorable, though the nobility bristles at the growing influence of merchant-class wealth that foreign trade enables. Accepting would deepen economic ties and mutual dependency with a foreign power.',
     choices: {
       accept_trade_terms: 'Accept the Terms',
       propose_modifications: 'Propose Modifications',
@@ -274,8 +273,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
     title: 'Annual State Assessment',
     body: 'The annual assessment of the kingdom\'s condition has been compiled by the royal council. The report provides a comprehensive overview of all domains — treasury, food security, military readiness, social stability, and diplomatic standing.',
     choices: {
-      review_in_full: 'Review in Full',
-      acknowledge_receipt: 'Acknowledge Receipt',
+      acknowledge: 'Acknowledge',
     },
   },
   evt_kingdom_milestone_celebrated: {
@@ -464,7 +462,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_summer_trade_season: {
     title: 'Peak Trade Season Arrives',
-    body: 'The warm months have brought a surge in merchant activity. Trade caravans clog the roads, market towns are bustling, and the treasury benefits from increased tariff revenue. The court considers how best to capitalize on this seasonal commercial boom.',
+    body: 'The warm months have brought a surge in merchant activity. Trade caravans clog the roads, market towns are bustling, and the treasury benefits from increased tariff revenue. However, commoners complain that the influx of traders drives up prices and disrupts daily commerce. The court considers how best to manage this seasonal boom.',
     choices: {
       host_trade_fair: 'Host a Grand Trade Fair',
       reduce_trade_tariffs: 'Temporarily Reduce Tariffs',
@@ -475,7 +473,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- SEASONAL: Autumn (2) ---
   evt_autumn_harvest_bounty: {
     title: 'Bountiful Autumn Harvest',
-    body: 'The harvest has exceeded all expectations. Granaries are overflowing, and farmers report yields significantly above average. The surplus presents a welcome opportunity — the question is how best to use it before it spoils or loses value.',
+    body: 'The harvest has exceeded all expectations. Granaries are overflowing, and farmers report yields significantly above average. The surplus presents an opportunity, but every option has its costs — stockpiling removes grain from the market and raises bread prices, exporting enriches traders at commoners\' expense, and distributing freely undermines the commercial order the nobility defends.',
     choices: {
       stockpile_surplus: 'Stockpile the Surplus',
       export_for_profit: 'Export for Profit',
@@ -531,15 +529,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
       reroute_trade: 'Reroute Trade',
     },
   },
-  evt_region_local_festival: {
-    title: 'Regional Festival Celebrated',
-    body: 'A region has organized a traditional local festival celebrating its patron saint and cultural heritage. The event has drawn visitors from neighboring areas and provides an opportunity to strengthen the crown\'s presence in the provinces.',
-    choices: {
-      send_royal_blessing: 'Send Royal Blessing',
-      attend_in_person: 'Attend in Person',
-      ignore_the_festivities: 'Ignore the Festivities',
-    },
-  },
+  // evt_region_local_festival — removed, reclassified as World Pulse (see tension-audit.ts)
   evt_region_resource_discovery: {
     title: 'New Resource Deposit Discovered',
     body: 'Surveyors have identified a promising new resource deposit in one of the kingdom\'s regions. Preliminary assessment suggests significant extractable wealth, but development will require investment. Several parties express interest in the discovery.',
