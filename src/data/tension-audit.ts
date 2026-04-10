@@ -431,4 +431,24 @@ export const TENSION_AUDIT: TensionAuditEntry[] = [
   { cardId: 'decree_diplomatic_academy', source: 'decrees', currentClassification: 'decree', tensionPass: true },
   { cardId: 'decree_harbor_expansion', source: 'decrees', currentClassification: 'decree', tensionPass: true },
   { cardId: 'decree_trade_fleet_commission', source: 'decrees', currentClassification: 'decree', tensionPass: true },
+
+  // ============================================================
+  // EXPANSION — New Assessment Cards (6)
+  // All Notable → petition classification, all pass tension audit
+  // ============================================================
+  { cardId: 'assess_merchant_caravan_disappearance', source: 'events', currentClassification: 'petition', tensionPass: true },
+  { cardId: 'assess_scholarly_heresy_manuscript', source: 'events', currentClassification: 'petition', tensionPass: true },
+  { cardId: 'assess_crop_blight_reports', source: 'events', currentClassification: 'petition', tensionPass: true },
+  { cardId: 'assess_noble_faction_meeting', source: 'events', currentClassification: 'petition', tensionPass: true },
+  { cardId: 'assess_coastal_vessel_sighting', source: 'events', currentClassification: 'petition', tensionPass: true },
+  { cardId: 'assess_strange_illness_outbreak', source: 'events', currentClassification: 'petition', tensionPass: true },
+
+  // ============================================================
+  // EXPANSION — New Negotiation Cards (4)
+  // Serious → crisis, Notable → petition
+  // ============================================================
+  { cardId: 'neg_commoner_charter', source: 'events', currentClassification: 'crisis', tensionPass: true },
+  { cardId: 'neg_scholarly_patronage', source: 'events', currentClassification: 'petition', tensionPass: true },
+  { cardId: 'neg_resource_blockade', source: 'events', currentClassification: 'crisis', tensionPass: true },
+  { cardId: 'neg_marriage_alliance', source: 'events', currentClassification: 'petition', tensionPass: true },
 ];
