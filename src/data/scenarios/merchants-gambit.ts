@@ -179,6 +179,7 @@ export function createMerchantsGambitScenario(): GameState {
           lastActionTurn: 0,
           warWeariness: 0,
           isAtWarWithPlayer: false,
+          recentActionHistory: [],
         },
         {
           id: 'neighbor_valdris',
@@ -195,6 +196,7 @@ export function createMerchantsGambitScenario(): GameState {
           lastActionTurn: 0,
           warWeariness: 0,
           isAtWarWithPlayer: false,
+          recentActionHistory: [],
         },
         {
           id: 'neighbor_krath',
@@ -211,6 +213,7 @@ export function createMerchantsGambitScenario(): GameState {
           lastActionTurn: 0,
           warWeariness: 0,
           isAtWarWithPlayer: false,
+          recentActionHistory: [],
         },
       ],
     },

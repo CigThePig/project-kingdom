@@ -133,6 +133,7 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
           neighbors: (save.gameState.diplomacy?.neighbors ?? []).map((n: any) => ({
             ...n,
             pendingProposals: n.pendingProposals ?? [],
+            recentActionHistory: n.recentActionHistory ?? [],
           })),
         },
       };

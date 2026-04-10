@@ -186,6 +186,7 @@ export function createDefaultScenario(): GameState {
           lastActionTurn: 0,
           warWeariness: 0,
           isAtWarWithPlayer: false,
+          recentActionHistory: [],
         },
         {
           id: 'neighbor_valdris',
@@ -202,6 +203,7 @@ export function createDefaultScenario(): GameState {
           lastActionTurn: 0,
           warWeariness: 0,
           isAtWarWithPlayer: false,
+          recentActionHistory: [],
         },
       ],
     },
