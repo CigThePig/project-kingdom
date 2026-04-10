@@ -178,6 +178,7 @@ export function createFrozenMarchScenario(): GameState {
           lastActionTurn: 0,
           warWeariness: 0,
           isAtWarWithPlayer: false,
+          recentActionHistory: [],
         },
         {
           id: 'neighbor_valdris',
@@ -194,6 +195,7 @@ export function createFrozenMarchScenario(): GameState {
           lastActionTurn: 0,
           warWeariness: 0,
           isAtWarWithPlayer: false,
+          recentActionHistory: [],
         },
       ],
     },

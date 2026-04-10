@@ -1,0 +1,65 @@
+// Chronicle Templates — text generation for the Reign Chronicle.
+// Maps event types to human-readable chronicle entry summaries.
+
+import { FailureCondition, Season } from '../../engine/types';
+import { SEASON_LABELS, FAILURE_CONDITION_LABELS, NEIGHBOR_LABELS } from './labels';
+
+// ============================================================
+// Season + Year label
+// ============================================================
+
+export function formatSeasonYear(season: Season, year: number): string {
+  return `${SEASON_LABELS[season]}, Year ${year}`;
+}
+
+// ============================================================
+// Chronicle entry text generators
+// ============================================================
+
+export function crisisResolvedText(eventId: string, choiceId: string): string {
+  return `A crisis was addressed. The crown chose: ${choiceId}.`;
+}
+
+export function warStartedText(neighborId: string): string {
+  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+  return `War declared by ${name}. The kingdom mobilized for conflict.`;
+}
+
+export function warEndedText(neighborId: string, playerVictory: boolean): string {
+  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+  return playerVictory
+    ? `The war with ${name} ended in victory.`
+    : `The war with ${name} concluded. Peace terms were accepted.`;
+}
+
+export function treatySignedText(neighborId: string, agreementId: string): string {
+  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+  return `A treaty was signed with ${name}.`;
+}
+
+export function treatyBrokenText(neighborId: string): string {
+  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+  return `The treaty with ${name} was broken.`;
+}
+
+export function milestoneText(branch: string, milestoneIndex: number): string {
+  return `A knowledge milestone was achieved in ${branch} research.`;
+}
+
+export function storylineResolvedText(storylineId: string): string {
+  return `A major storyline reached its conclusion: ${storylineId}.`;
+}
+
+export function failureWarningText(condition: FailureCondition): string {
+  const label = FAILURE_CONDITION_LABELS[condition] ?? condition;
+  return `Warning: ${label} threatens the realm. Urgent action needed.`;
+}
+
+export function rulingStyleThresholdText(axis: string, value: number): string {
+  const direction = value > 0 ? 'authoritative' : 'permissive';
+  return `The crown's ${axis.toLowerCase()} stance has become notably ${direction}.`;
+}
+
+export function constructionCompletedText(projectName: string, regionId: string): string {
+  return `Construction completed: ${projectName}.`;
+}

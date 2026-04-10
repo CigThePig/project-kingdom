@@ -1,0 +1,205 @@
+// Bridge Layer — Rival Kingdom Dossier Compiler
+// Reads a NeighborState + player's EspionageState and produces a
+// RivalDossier with detail gated by intelligence level.
+
+import {
+  RivalPersonality,
+  NeighborDisposition,
+  DiplomaticPosture,
+} from '../engine/types';
+import type { NeighborState, EspionageState, NeighborAction } from '../engine/types';
+import type { RivalDossier } from '../ui/types';
+import { NEIGHBOR_LABELS } from '../data/text/labels';
+import {
+  NEIGHBOR_RULER_NAMES,
+  PERSONALITY_LABELS,
+  MILITARY_STRENGTH_DESCRIPTORS,
+  RECENT_ACTION_LABELS,
+  SPYMASTER_ASSESSMENTS,
+  POSTURE_STATUS_LABELS,
+  getSituationKey,
+} from '../data/text/dossier-templates';
+
+// ============================================================
+// Intel level determination
+// ============================================================
+
+export function getIntelLevel(networkStrength: number): RivalDossier['intelLevel'] {
+  if (networkStrength <= 10) return 'none';
+  if (networkStrength <= 30) return 'minimal';
+  if (networkStrength <= 60) return 'moderate';
+  if (networkStrength <= 80) return 'strong';
+  return 'exceptional';
+}
+
+// ============================================================
+// Personality mapping
+// ============================================================
+
+const DISPOSITION_TO_PERSONALITY: Record<NeighborDisposition, RivalPersonality> = {
+  [NeighborDisposition.Aggressive]: RivalPersonality.AmbtitiousMilitaristic,
+  [NeighborDisposition.Opportunistic]: RivalPersonality.ExpansionistDiplomatic,
+  [NeighborDisposition.Cautious]: RivalPersonality.DefensiveCautious,
+  [NeighborDisposition.Mercantile]: RivalPersonality.MercantilePragmatic,
+  [NeighborDisposition.Isolationist]: RivalPersonality.DevoutInsular,
+};
+
+// ============================================================
+// Regard label from relationship score
+// ============================================================
+
+function getRegardLabel(score: number): string {
+  if (score <= 20) return 'Hostile';
+  if (score <= 40) return 'Wary';
+  if (score <= 60) return 'Neutral';
+  if (score <= 80) return 'Favorable';
+  return 'Allied';
+}
+
+// ============================================================
+// Military strength descriptor
+// ============================================================
+
+function getMilitaryDescriptor(strength: number): string {
+  if (strength <= 30) return 'weak';
+  if (strength <= 55) return 'moderate';
+  if (strength <= 75) return 'strong';
+  return 'overwhelming';
+}
+
+// ============================================================
+// Known strengths generation
+// ============================================================
+
+function buildKnownStrengths(neighbor: NeighborState): string[] {
+  const strengths: string[] = [];
+  if (neighbor.militaryStrength >= 60) {
+    strengths.push(MILITARY_STRENGTH_DESCRIPTORS[getMilitaryDescriptor(neighbor.militaryStrength)]);
+  }
+  if (neighbor.espionageCapability >= 50) {
+    strengths.push('Maintains a capable intelligence network.');
+  }
+  if (neighbor.activeAgreements.length >= 2) {
+    strengths.push('Engages in multiple active diplomatic agreements.');
+  }
+  if (neighbor.warWeariness <= 10 && neighbor.militaryStrength >= 40) {
+    strengths.push('Fresh and ready for sustained conflict.');
+  }
+  if (strengths.length === 0) {
+    strengths.push('No notable strengths detected.');
+  }
+  return strengths.slice(0, 3);
+}
+
+// ============================================================
+// Diplomatic status string
+// ============================================================
+
+function buildDiplomaticStatus(neighbor: NeighborState): string {
+  const base = POSTURE_STATUS_LABELS[neighbor.attitudePosture] ?? 'Unknown';
+  if (neighbor.activeAgreements.length > 0) {
+    const agreementNames = neighbor.activeAgreements.map((a) => a.agreementId).join(', ');
+    return `${base} \u2014 ${neighbor.activeAgreements.length} active agreement(s)`;
+  }
+  return base;
+}
+
+// ============================================================
+// Trade status string
+// ============================================================
+
+function buildTradeStatus(neighbor: NeighborState): string | null {
+  const tradeAgreements = neighbor.activeAgreements.filter((a) =>
+    a.agreementId.toLowerCase().includes('trade'),
+  );
+  if (tradeAgreements.length === 0) return null;
+  return `Active \u2014 ${tradeAgreements.length} trade route(s)`;
+}
+
+// ============================================================
+// Confidence rating
+// ============================================================
+
+function getConfidenceRating(networkStrength: number): string {
+  if (networkStrength <= 65) return 'Low';
+  if (networkStrength <= 75) return 'Moderate';
+  if (networkStrength <= 90) return 'High';
+  return 'Very High';
+}
+
+// ============================================================
+// Main compiler
+// ============================================================
+
+export function compileDossier(
+  neighbor: NeighborState,
+  espionage: EspionageState,
+  recentActions: NeighborAction[],
+  turn: number,
+): RivalDossier {
+  const intelLevel = getIntelLevel(espionage.networkStrength);
+  const personality = DISPOSITION_TO_PERSONALITY[neighbor.disposition];
+  const kingdomName = NEIGHBOR_LABELS[neighbor.id] ?? `Kingdom of ${neighbor.id}`;
+  const rulerName = NEIGHBOR_RULER_NAMES[neighbor.id] ?? `The ruler of ${kingdomName}`;
+
+  // Base fields — always visible
+  const dossier: RivalDossier = {
+    neighborId: neighbor.id,
+    kingdomName,
+    rulerName,
+    personality,
+    personalityLabel: PERSONALITY_LABELS[personality],
+    regard: {
+      label: getRegardLabel(neighbor.relationshipScore),
+      score: neighbor.relationshipScore,
+    },
+    diplomaticStatus: intelLevel === 'none' ? 'Unknown' : buildDiplomaticStatus(neighbor),
+    tradeStatus: intelLevel === 'none' ? null : buildTradeStatus(neighbor),
+    knownStrengths: [],
+    recentActions: [],
+    spymasterAssessment: null,
+    confidenceRating: null,
+    intelLevel,
+  };
+
+  // Minimal: + military strength descriptor + diplomatic status
+  // (diplomatic status already set above for non-'none')
+
+  // Moderate: + known strengths + recent actions
+  if (intelLevel === 'moderate' || intelLevel === 'strong' || intelLevel === 'exceptional') {
+    dossier.knownStrengths = buildKnownStrengths(neighbor);
+
+    // Recent actions from history
+    const actionTexts: string[] = [];
+    const history = neighbor.recentActionHistory ?? [];
+    for (const entry of history.slice(-4)) {
+      const label = RECENT_ACTION_LABELS[entry.summary];
+      if (label) {
+        const turnsAgo = turn - entry.turnNumber;
+        const agoText = turnsAgo <= 1 ? 'this season' : `${turnsAgo} seasons ago`;
+        actionTexts.push(`${label} (${agoText})`);
+      }
+    }
+    // Also include recent NeighborActions from this turn
+    for (const action of recentActions.slice(-2)) {
+      const summary = action.actionType.toString();
+      const label = RECENT_ACTION_LABELS[summary] ?? summary;
+      actionTexts.push(label);
+    }
+    dossier.recentActions = actionTexts.slice(0, 4);
+  }
+
+  // Strong: + spymaster assessment + confidence rating
+  if (intelLevel === 'strong' || intelLevel === 'exceptional') {
+    const situation = getSituationKey(neighbor.attitudePosture);
+    const personalityKey = personality.replace('AmbitiousMilitaristic', 'AmbitiousMilitaristic'); // enum value is the key
+    const assessmentKey = `${personalityKey}_${situation}`;
+    const variants = SPYMASTER_ASSESSMENTS[assessmentKey];
+    if (variants && variants.length > 0) {
+      dossier.spymasterAssessment = variants[turn % variants.length];
+    }
+    dossier.confidenceRating = getConfidenceRating(espionage.networkStrength);
+  }
+
+  return dossier;
+}

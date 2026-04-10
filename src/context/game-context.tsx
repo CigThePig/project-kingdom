@@ -13,6 +13,13 @@ import {
   type SaveFile,
   type TurnHistoryEntry,
 } from '../engine/types';
+import type { ChronicleEntry } from '../ui/types';
+import {
+  generateChronicleEntries,
+  toChronicleEntry,
+  pruneChronicle,
+  getChronicleCapacity,
+} from '../bridge/chronicleLogger';
 import {
   validateActionAddition,
   deductActionCost,
@@ -33,6 +40,7 @@ export interface GameContextState {
   turnHistory: TurnHistoryEntry[];
   eventHistory: ActiveEvent[];
   intelligenceReports: IntelligenceReport[];
+  chronicle: ChronicleEntry[];
   lastTurnResult: TurnResolutionResult | null;
   isMidTurn: boolean;
   lastSavedAt: number | null;
@@ -89,6 +97,7 @@ function createInitialState(scenarioId?: string): GameContextState {
     turnHistory: [],
     eventHistory: [],
     intelligenceReports: [],
+    chronicle: [],
     lastTurnResult: null,
     isMidTurn: false,
     lastSavedAt: null,
@@ -133,6 +142,7 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
           neighbors: (save.gameState.diplomacy?.neighbors ?? []).map((n: any) => ({
             ...n,
             pendingProposals: n.pendingProposals ?? [],
+            recentActionHistory: n.recentActionHistory ?? [],
           })),
         },
       };
@@ -141,6 +151,7 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
         turnHistory: save.turnHistory,
         eventHistory: save.eventHistory,
         intelligenceReports: save.intelligenceReports,
+        chronicle: (save as Record<string, unknown>).chronicle as ChronicleEntry[] ?? [],
         lastTurnResult: null,
         isMidTurn: save.isMidTurn,
         lastSavedAt: save.savedAt,
@@ -215,12 +226,31 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
 
       const hasFailure = result.triggeredFailureConditions.length > 0;
 
+      // Generate chronicle entries for this season
+      const failureWarningConditions = result.failureWarnings.map((w) => w.condition);
+      const newChronicleLogEntries = generateChronicleEntries(
+        state.gameState,
+        result.nextState,
+        [], // decisions are already consumed by the resolution pipeline
+        newlyResolved,
+        result.newlyUnlockedMilestones,
+        failureWarningConditions,
+        result.completedConstructionIds,
+      );
+      const newChronicleEntries = newChronicleLogEntries.map(toChronicleEntry);
+      const capacity = getChronicleCapacity(result.nextState.turn.turnNumber);
+      const updatedChronicle = pruneChronicle(
+        [...state.chronicle, ...newChronicleEntries],
+        capacity,
+      );
+
       return {
         ...state,
         gameState: result.nextState,
         turnHistory: [...state.turnHistory, result.historyEntry],
         eventHistory: [...state.eventHistory, ...newlyResolved],
         intelligenceReports: [...state.intelligenceReports, ...result.generatedReports],
+        chronicle: updatedChronicle,
         lastTurnResult: result,
         isMidTurn: false,
         lastSavedAt: state.lastSavedAt,

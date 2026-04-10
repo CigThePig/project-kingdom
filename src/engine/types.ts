@@ -405,6 +405,7 @@ export interface NeighborState {
   lastActionTurn: number; // turn of last autonomous AI action
   warWeariness: number; // 0–100, accumulates during conflicts
   isAtWarWithPlayer: boolean; // convenience flag derived from posture
+  recentActionHistory: { turnNumber: number; actionType: NeighborActionType; summary: string }[];
 }
 
 export interface DiplomacyState {
