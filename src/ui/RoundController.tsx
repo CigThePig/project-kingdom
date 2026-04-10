@@ -8,11 +8,14 @@ import { DecreePhase } from './phases/DecreePhase';
 import { SummaryPhase } from './phases/SummaryPhase';
 import { GameContext } from '../context/game-context';
 import { resolveTurn } from '../engine/resolution/turn-resolution';
+import { applyActionEffects } from '../engine/resolution/apply-action-effects';
 import { surfaceEvents } from '../engine/events/event-engine';
 import { calculateCategoryWeights } from '../engine/events/narrative-pacing';
 import { EVENT_POOL } from '../data/events/index';
-import { SeasonMonth } from '../engine/types';
+import { SeasonMonth, InteractionType } from '../engine/types';
 import type { ActiveEvent, GameState } from '../engine/types';
+import { accumulateStyleDecision } from '../engine/systems/ruling-style';
+import { EVENT_CHOICE_STYLE_TAGS, DECREE_STYLE_TAGS } from '../data/ruling-style/flavor-tags';
 import type { MonthPhase, MonthDecision, MonthCardAllocation } from './types';
 import { partitionEvents } from '../bridge/eventClassifier';
 import { generateCrisisPhaseData } from '../bridge/crisisCardGenerator';
@@ -181,6 +184,39 @@ export function RoundController() {
       // Generate summary data with all accumulated decisions
       const allDecisions = accumulatedDecisions;
       const prevStyle = ctx.state.gameState.rulingStyle;
+      const turnNumber = ctx.state.gameState.turn.turnNumber;
+
+      // Project ruling style changes from this round's decisions
+      let projectedStyle = prevStyle;
+      for (const d of allDecisions) {
+        if (d.interactionType === InteractionType.CrisisResponse || d.interactionType === InteractionType.Petition) {
+          const card = petitionCards.find((p) => p.eventId === d.cardId);
+          const defId = card?.definitionId ?? d.cardId;
+          const deltas = EVENT_CHOICE_STYLE_TAGS[defId]?.[d.choiceId];
+          if (deltas && Object.keys(deltas).length > 0) {
+            projectedStyle = accumulateStyleDecision(projectedStyle, {
+              source: d.interactionType === InteractionType.CrisisResponse ? 'event' : 'petition',
+              sourceId: defId,
+              choiceId: d.choiceId,
+              turnApplied: turnNumber,
+              axisDeltas: deltas,
+            });
+          }
+        }
+      }
+      for (const decreeId of decrees) {
+        const deltas = DECREE_STYLE_TAGS[decreeId];
+        if (deltas && Object.keys(deltas).length > 0) {
+          projectedStyle = accumulateStyleDecision(projectedStyle, {
+            source: 'decree',
+            sourceId: decreeId,
+            choiceId: decreeId,
+            turnApplied: turnNumber,
+            axisDeltas: deltas,
+          });
+        }
+      }
+
       setSummaryData(
         generateMonthlySummaryData(
           allDecisions,
@@ -189,13 +225,13 @@ export function RoundController() {
           petitionCards,
           negotiationId,
           prevStyle,
-          prevStyle,
+          projectedStyle,
         ),
       );
 
       setCurrentPhase('summary');
     },
-    [accumulatedDecisions, crisisData, petitionCards, negotiationId, ctx.state.gameState.rulingStyle],
+    [accumulatedDecisions, crisisData, petitionCards, negotiationId, ctx.state.gameState.rulingStyle, ctx.state.gameState.turn.turnNumber],
   );
 
   const handleRoundComplete = useCallback(() => {
@@ -224,10 +260,7 @@ export function RoundController() {
 
       const stateWithActions: GameState = {
         ...stateAfterDirect,
-        activeEvents: [
-          ...ctx.state.gameState.activeEvents,
-          ...surfacedEvents,
-        ],
+        activeEvents: [...surfacedEvents],
         actionBudget: {
           ...ctx.state.gameState.actionBudget,
           queuedActions: allActions,
@@ -239,7 +272,7 @@ export function RoundController() {
         },
       };
 
-      const result = resolveTurn(stateWithActions, (s) => s, ctx.state.eventHistory);
+      const result = resolveTurn(stateWithActions, applyActionEffects, ctx.state.eventHistory);
       ctx.dispatch({ type: 'TURN_RESOLVED', result });
     } catch (err) {
       console.error('Turn resolution error:', err);
