@@ -18,7 +18,7 @@ export const FACTION_REQUEST_EFFECTS: Record<string, Record<string, MechanicalEf
   },
   faction_req_nobility_academy: {
     fund_noble_academy:       { nobilitySatDelta: +3, treasuryDelta: -30, culturalCohesionDelta: +2 },
-    decline_academy_proposal: { nobilitySatDelta: -1 },
+    decline_academy_proposal: { nobilitySatDelta: -3 },
   },
 
   // ============================================================
@@ -34,7 +34,7 @@ export const FACTION_REQUEST_EFFECTS: Record<string, Record<string, MechanicalEf
   },
   faction_req_clergy_religious_festival: {
     sponsor_religious_festival: { clergySatDelta: +3, faithDelta: +2, commonerSatDelta: +1, treasuryDelta: -20 },
-    decline_festival_request:   { clergySatDelta: -1 },
+    decline_festival_request:   { clergySatDelta: -3 },
   },
 
   // ============================================================
@@ -45,12 +45,12 @@ export const FACTION_REQUEST_EFFECTS: Record<string, Record<string, MechanicalEf
     deny_trade_protections:  { merchantSatDelta: -6, treasuryDelta: +10 },
   },
   faction_req_merchant_market_expansion: {
-    approve_market_expansion: { merchantSatDelta: +5, treasuryDelta: +15, commonerSatDelta: +1 },
+    approve_market_expansion: { merchantSatDelta: +5, treasuryDelta: +15, commonerSatDelta: -2, nobilitySatDelta: -2 },
     deny_market_expansion:    { merchantSatDelta: -3 },
   },
   faction_req_merchant_foreign_mission: {
     fund_foreign_mission:    { merchantSatDelta: +3, treasuryDelta: -25, culturalCohesionDelta: +2 },
-    decline_foreign_mission: { merchantSatDelta: -1 },
+    decline_foreign_mission: { merchantSatDelta: -3 },
   },
 
   // ============================================================
@@ -66,7 +66,7 @@ export const FACTION_REQUEST_EFFECTS: Record<string, Record<string, MechanicalEf
   },
   faction_req_commoner_public_works: {
     approve_public_works: { commonerSatDelta: +3, regionDevelopmentDelta: +3, treasuryDelta: -30 },
-    decline_public_works: { commonerSatDelta: -1 },
+    decline_public_works: { commonerSatDelta: -3 },
   },
 
   // ============================================================
@@ -82,6 +82,6 @@ export const FACTION_REQUEST_EFFECTS: Record<string, Record<string, MechanicalEf
   },
   faction_req_military_border_fortification: {
     approve_border_fortification:  { militaryCasteSatDelta: +3, militaryReadinessDelta: +3, treasuryDelta: -35, regionConditionDelta: +2 },
-    decline_border_fortification:  { militaryCasteSatDelta: -1 },
+    decline_border_fortification:  { militaryCasteSatDelta: -3 },
   },
 };

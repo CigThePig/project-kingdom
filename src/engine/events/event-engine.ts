@@ -124,6 +124,13 @@ export interface EventDefinition {
    */
   phase: 'opening' | 'developing' | 'established' | 'any';
   /**
+   * Card classification for the bridge layer.
+   * - 'standard' (default): normal interactive card with player choices
+   * - 'notification': read-only card acknowledged without a decision.
+   *   Must have a single choice `{ choiceId: 'acknowledge', slotCost: 0, isFree: true }`.
+   */
+  classification?: 'standard' | 'notification';
+  /**
    * Optional reactive follow-up events triggered by specific player choices.
    * When a player selects a matching choiceId, a follow-up event is scheduled
    * to surface after delayTurns with the given probability.

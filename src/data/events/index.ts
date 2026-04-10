@@ -98,13 +98,13 @@ export const EVENT_POOL: EventDefinition[] = [
     chainStep: null,
     chainNextDefinitionId: null,
     choices: [
-      { choiceId: 'endorse_celebrations', slotCost: 0, isFree: true },
-      { choiceId: 'observe_without_comment', slotCost: 0, isFree: true },
+      { choiceId: 'acknowledge', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'opening',
+    classification: 'notification',
   },
 
   // ============================================================
@@ -598,13 +598,13 @@ export const EVENT_POOL: EventDefinition[] = [
     chainStep: null,
     chainNextDefinitionId: null,
     choices: [
-      { choiceId: 'review_in_full', slotCost: 0, isFree: true },
-      { choiceId: 'acknowledge_receipt', slotCost: 0, isFree: true },
+      { choiceId: 'acknowledge', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'any',
+    classification: 'notification',
   },
   {
     id: 'evt_kingdom_milestone_celebrated',
@@ -1216,28 +1216,7 @@ export const EVENT_POOL: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'developing',
   },
-  {
-    id: 'evt_region_local_festival',
-    severity: EventSeverity.Notable,
-    category: EventCategory.Region,
-    triggerConditions: [
-      { type: 'faith_above', threshold: 50 },
-      { type: 'random_chance', probability: 0.25 },
-    ],
-    weight: 0.7,
-    chainId: null,
-    chainStep: null,
-    chainNextDefinitionId: null,
-    choices: [
-      { choiceId: 'send_royal_blessing', slotCost: 0, isFree: true },
-      { choiceId: 'attend_in_person', slotCost: 1, isFree: false },
-      { choiceId: 'ignore_the_festivities', slotCost: 0, isFree: true },
-    ],
-    affectsClass: null,
-    affectsRegion: true,
-    relatedStorylineId: null,
-    phase: 'opening',
-  },
+  // evt_region_local_festival — removed, reclassified as World Pulse (see tension-audit.ts)
   {
     id: 'evt_region_resource_discovery',
     severity: EventSeverity.Notable,

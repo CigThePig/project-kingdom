@@ -56,7 +56,7 @@ export const NEIGHBOR_ACTION_TEXT: Record<NeighborActionType, NeighborActionText
   // ============================================================
   [NeighborActionType.TradeProposal]: {
     title: '{neighbor} Proposes Trade Agreement',
-    body: '{neighbor} has sent envoys proposing a formal trade agreement. The terms would open markets in both kingdoms, potentially benefiting merchants and the treasury. The proposal appears genuine, though accepting may create economic dependency.',
+    body: '{neighbor} has sent envoys proposing a formal trade agreement. The terms would open markets in both kingdoms, bringing cheaper goods to commoners — but local merchants warn that foreign competition will undercut their livelihoods. The treasury stands to gain, though the merchant guilds have already voiced their displeasure.',
     choices: {
       accept_trade_proposal: 'Accept the Proposal',
       decline_trade_proposal: 'Decline the Proposal',
@@ -72,7 +72,7 @@ export const NEIGHBOR_ACTION_TEXT: Record<NeighborActionType, NeighborActionText
   },
   [NeighborActionType.TreatyProposal]: {
     title: '{neighbor} Proposes Formal Treaty',
-    body: '{neighbor} has dispatched senior diplomats bearing a formal treaty of cooperation and mutual respect. The agreement would strengthen ties between the kingdoms and provide a framework for peaceful resolution of future disputes.',
+    body: '{neighbor} has dispatched senior diplomats bearing a formal treaty of cooperation and mutual respect. The agreement would strengthen ties between the kingdoms, though the generals warn that treaty obligations will constrain military posture, and the treasury must bear the cost of maintaining a permanent diplomatic presence.',
     choices: {
       accept_treaty: 'Accept the Treaty',
       decline_treaty: 'Decline the Treaty',

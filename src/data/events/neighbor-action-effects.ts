@@ -35,7 +35,7 @@ export const NEIGHBOR_ACTION_EFFECTS: Record<NeighborActionType, Record<string, 
   // Petition-tier
   // ============================================================
   [NeighborActionType.TradeProposal]: {
-    accept_trade_proposal:  { merchantSatDelta: +3, treasuryDelta: +15, diplomacyDeltas: { __NEIGHBOR__: +8 } },
+    accept_trade_proposal:  { merchantSatDelta: -2, treasuryDelta: +15, diplomacyDeltas: { __NEIGHBOR__: +8 }, commonerSatDelta: +1 },
     decline_trade_proposal: { diplomacyDeltas: { __NEIGHBOR__: -3 } },
   },
   [NeighborActionType.TradeWithdrawal]: {
@@ -43,7 +43,7 @@ export const NEIGHBOR_ACTION_EFFECTS: Record<NeighborActionType, Record<string, 
     accept_withdrawal:   { merchantSatDelta: -3, treasuryDelta: -10 },
   },
   [NeighborActionType.TreatyProposal]: {
-    accept_treaty:  { stabilityDelta: +3, diplomacyDeltas: { __NEIGHBOR__: +12 } },
+    accept_treaty:  { stabilityDelta: +3, diplomacyDeltas: { __NEIGHBOR__: +12 }, militaryReadinessDelta: -3, treasuryDelta: -15 },
     decline_treaty: { diplomacyDeltas: { __NEIGHBOR__: -5 } },
   },
   [NeighborActionType.PeaceOffer]: {
