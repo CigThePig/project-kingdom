@@ -141,6 +141,72 @@ export const MONTH_EFFECT_POOLS: Record<number, [EffectHint, EffectHint, EffectH
   ],
 };
 
+// Shorter transition phrases for Months 2 and 3 within each season.
+// Keyed by calendar month (1–12), 2 variants per month.
+// Month 1 of each season uses the full MONTH_PHRASES above instead.
+export const MONTH_TRANSITION_PHRASES: Record<number, [string, string]> = {
+  // January — deep winter (Winter Mid)
+  1: [
+    'The cold persists. The kingdom endures.',
+    'Midwinter deepens its grip on the land.',
+  ],
+  // February — late winter (Winter Late)
+  2: [
+    'Late winter holds, but the light returns.',
+    'The realm stirs beneath the frost.',
+  ],
+  // March — early spring (Spring Early) — used as Month 1, so rarely needed
+  3: [
+    'The first green shoots break through frozen soil.',
+    'Snowmelt feeds the rivers; the land awakens.',
+  ],
+  // April — mid spring (Spring Mid)
+  4: [
+    'Warm rains soak the planting fields.',
+    'The kingdom turns its hands to the soil.',
+  ],
+  // May — late spring (Spring Late)
+  5: [
+    'Blossoms fill the orchards and spirits rise.',
+    'The warmth builds and the roads fill with travelers.',
+  ],
+  // June — early summer (Summer Early) — used as Month 1
+  6: [
+    'Heat settles across the lowlands.',
+    'Long days stretch toward the horizon.',
+  ],
+  // July — midsummer (Summer Mid)
+  7: [
+    'The sun beats down and the fields grow heavy.',
+    'Midsummer toil continues without rest.',
+  ],
+  // August — late summer (Summer Late)
+  8: [
+    'The harvest draws near; the kingdom holds its breath.',
+    'Late summer fades and the reapers sharpen their scythes.',
+  ],
+  // September — early autumn (Autumn Early) — used as Month 1
+  9: [
+    'Cool winds announce the season\'s turn.',
+    'The harvest wagons creak along every road.',
+  ],
+  // October — mid autumn (Autumn Mid)
+  10: [
+    'Amber leaves fall and the granaries swell.',
+    'The harvest is in full swing across the realm.',
+  ],
+  // November — late autumn (Autumn Late)
+  11: [
+    'The land grows grey; winter preparations begin.',
+    'The last leaves fall and the fires are stoked.',
+  ],
+  // December — early winter (Winter Early) — used as Month 1
+  12: [
+    'Frost grips the land and the roads thin out.',
+    'The cold descends; the kingdom turns to its stores.',
+  ],
+};
+
 export const MONTH_NAMES: Record<number, string> = {
   1: 'January',
   2: 'February',

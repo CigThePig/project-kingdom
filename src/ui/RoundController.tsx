@@ -2,9 +2,8 @@ import { useState, useContext, useCallback, useEffect } from 'react';
 
 import { StatsBar } from './components/StatsBar';
 import { PhaseIndicator } from './components/PhaseIndicator';
-import { SeasonDawn } from './phases/SeasonDawn';
-import { CrisisPhase } from './phases/CrisisPhase';
-import { PetitionPhase } from './phases/PetitionPhase';
+import { MonthDawn } from './phases/MonthDawn';
+import { CourtBusiness } from './phases/CourtBusiness';
 import { DecreePhase } from './phases/DecreePhase';
 import { SummaryPhase } from './phases/SummaryPhase';
 import { GameContext } from '../context/game-context';
@@ -12,8 +11,9 @@ import { resolveTurn } from '../engine/resolution/turn-resolution';
 import { surfaceEvents } from '../engine/events/event-engine';
 import { calculateCategoryWeights } from '../engine/events/narrative-pacing';
 import { EVENT_POOL } from '../data/events/index';
+import { SeasonMonth } from '../engine/types';
 import type { ActiveEvent, GameState } from '../engine/types';
-import type { RoundPhase, PhaseDecisions } from './types';
+import type { MonthPhase, MonthDecision, MonthCardAllocation } from './types';
 import { partitionEvents } from '../bridge/eventClassifier';
 import { generateCrisisPhaseData } from '../bridge/crisisCardGenerator';
 import type { CrisisPhaseData } from '../bridge/crisisCardGenerator';
@@ -23,48 +23,71 @@ import { generateDecreeCards } from '../bridge/decreeCardGenerator';
 import type { DecreeCardData } from '../bridge/decreeCardGenerator';
 import { generateAdvisorBriefing } from '../bridge/advisorGenerator';
 import type { AdvisorBriefing } from '../bridge/advisorGenerator';
-import { generateSummaryData } from '../bridge/summaryGenerator';
+import { generateMonthlySummaryData } from '../bridge/summaryGenerator';
 import type { SummaryData } from '../bridge/summaryGenerator';
-import { mapDecisionsToActions } from '../bridge/decisionMapper';
+import { mapMonthDecisionsToActions } from '../bridge/decisionMapper';
+import { generateNegotiationCard } from '../bridge/negotiationCardGenerator';
+import { generateAssessmentPhaseData } from '../bridge/assessmentCardGenerator';
+import { distributeCardsToMonths } from '../bridge/cardDistributor';
 
-const PHASE_ORDER: RoundPhase[] = ['seasonDawn', 'crisis', 'petition', 'decree', 'summary'];
-
-const INITIAL_DECISIONS: PhaseDecisions = {
-  crisisResponse: null,
-  petitionDecisions: [],
-  selectedDecrees: [],
-};
+/**
+ * Returns the MonthAllocation for the given SeasonMonth from a MonthCardAllocation.
+ */
+function getAllocationForMonth(allocations: MonthCardAllocation, month: SeasonMonth) {
+  switch (month) {
+    case SeasonMonth.Early: return allocations.month1;
+    case SeasonMonth.Mid:   return allocations.month2;
+    case SeasonMonth.Late:  return allocations.month3;
+  }
+}
 
 export function RoundController() {
   const ctx = useContext(GameContext);
   if (!ctx) throw new Error('RoundController must be inside GameProvider');
 
-  const [currentPhase, setCurrentPhase] = useState<RoundPhase>('seasonDawn');
-  const [decisions, setDecisions] = useState<PhaseDecisions>(INITIAL_DECISIONS);
+  // Monthly state machine
+  const [currentMonth, setCurrentMonth] = useState<SeasonMonth>(SeasonMonth.Early);
+  const [currentPhase, setCurrentPhase] = useState<MonthPhase>('monthDawn');
+  const [accumulatedDecisions, setAccumulatedDecisions] = useState<MonthDecision[]>([]);
 
-  // Bridge data for this round
+  // Bridge data for this season
   const [surfacedEvents, setSurfacedEvents] = useState<ActiveEvent[]>([]);
+  const [monthAllocations, setMonthAllocations] = useState<MonthCardAllocation | null>(null);
   const [crisisData, setCrisisData] = useState<CrisisPhaseData | null>(null);
   const [petitionCards, setPetitionCards] = useState<PetitionCardData[]>([]);
   const [decreeCards, setDecreeCards] = useState<DecreeCardData[]>([]);
   const [advisorBriefing, setAdvisorBriefing] = useState<AdvisorBriefing | null>(null);
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
-  // Random selections for Season Dawn — computed in prepareRound (inside a useEffect)
-  // so Math.random() is never called during the render phase.
-  const [seasonPhraseIndex, setSeasonPhraseIndex] = useState(0);
-  const [seasonEffectOrder, setSeasonEffectOrder] = useState<[number, number, number]>([0, 1, 2]);
+  const [negotiationId, setNegotiationId] = useState<string | null>(null);
+  const [selectedDecrees, setSelectedDecrees] = useState<string[]>([]);
 
-  // Pre-generate card pools when the season dawn phase begins
+  // Random selections for MonthDawn — computed in prepareRound (inside a useEffect)
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [effectOrder, setEffectOrder] = useState<[number, number, number]>([0, 1, 2]);
+
+  // Prepare card pools when season starts (Month 1, monthDawn)
   useEffect(() => {
-    if (currentPhase === 'seasonDawn') {
+    if (currentMonth === SeasonMonth.Early && currentPhase === 'monthDawn') {
       prepareRound(ctx.state.gameState, ctx.state.eventHistory);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPhase]);
+  }, [currentMonth, currentPhase]);
+
+  // Randomize dawn display each time we enter monthDawn
+  useEffect(() => {
+    if (currentPhase === 'monthDawn') {
+      setPhraseIndex(Math.floor(Math.random() * 3));
+      const order = [0, 1, 2] as [number, number, number];
+      for (let i = 2; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [order[i], order[j]] = [order[j], order[i]];
+      }
+      setEffectOrder(order);
+    }
+  }, [currentPhase, currentMonth]);
 
   function prepareRound(gameState: GameState, eventHistory: ActiveEvent[]) {
-    // Use events already generated by Phase 9 of the previous turn's resolution.
-    // Only call surfaceEvents on the very first turn when activeEvents is empty.
+    // Surface events for the season (same as before)
     let events: ActiveEvent[];
     if (gameState.activeEvents.length > 0) {
       events = gameState.activeEvents;
@@ -84,58 +107,108 @@ export function RoundController() {
     }
     setSurfacedEvents(events);
 
+    // Partition events into crisis/petition
     const { crisisEvents, petitionEvents } = partitionEvents(events);
-
     const firstCrisis = crisisEvents[0] ?? null;
     const crisis = firstCrisis ? generateCrisisPhaseData(firstCrisis) : null;
     setCrisisData(crisis);
-    setPetitionCards(generatePetitionCards(petitionEvents));
-    setDecreeCards(generateDecreeCards(gameState));
-    setAdvisorBriefing(generateAdvisorBriefing(gameState));
-    setSummaryData(null);
 
-    // Randomize Season Dawn display — safe here because prepareRound runs inside a useEffect
-    setSeasonPhraseIndex(Math.floor(Math.random() * 3));
-    const order = [0, 1, 2] as [number, number, number];
-    for (let i = 2; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [order[i], order[j]] = [order[j], order[i]];
-    }
-    setSeasonEffectOrder(order);
+    const petitions = generatePetitionCards(petitionEvents);
+    setPetitionCards(petitions);
+
+    // Generate negotiation and assessment cards
+    const negotiation = generateNegotiationCard(gameState);
+    setNegotiationId(negotiation?.eventCard.id ?? null);
+
+    const assessment = generateAssessmentPhaseData(gameState);
+
+    // Distribute cards across 3 months
+    const allocations = distributeCardsToMonths(crisis, petitions, negotiation, assessment);
+    setMonthAllocations(allocations);
+
+    // Generate decree cards (used in Month 3)
+    setDecreeCards(generateDecreeCards(gameState));
+
+    // Generate advisor briefing (used in Month 1 dawn)
+    setAdvisorBriefing(generateAdvisorBriefing(gameState));
+
+    // Reset accumulated state
+    setSummaryData(null);
+    setSelectedDecrees([]);
+    setAccumulatedDecisions([]);
   }
 
-  const advancePhase = useCallback(
-    (phaseDecisions?: Partial<PhaseDecisions>) => {
-      setDecisions((prev: PhaseDecisions) => {
-        const updated = phaseDecisions ? { ...prev, ...phaseDecisions } : prev;
+  // Phase advancement — the core state machine
+  const advanceFromDawn = useCallback(() => {
+    if (!monthAllocations) return;
 
-        const currentIndex = PHASE_ORDER.indexOf(currentPhase);
-        if (currentIndex < PHASE_ORDER.length - 1) {
-          const nextPhase = PHASE_ORDER[currentIndex + 1];
+    const alloc = getAllocationForMonth(monthAllocations, currentMonth);
 
-          // Generate summary data when transitioning to summary phase
-          if (nextPhase === 'summary') {
-            const finalDecisions = updated;
-            const prevStyle = ctx.state.gameState.rulingStyle;
-            setSummaryData(
-              generateSummaryData(finalDecisions, crisisData, petitionCards, prevStyle, prevStyle),
-            );
-          }
+    if (alloc.interactionType !== null) {
+      // This month has court business
+      setCurrentPhase('courtBusiness');
+    } else if (currentMonth < SeasonMonth.Late) {
+      // Quiet month, advance to next month
+      setCurrentMonth((m) => (m + 1) as SeasonMonth);
+      setCurrentPhase('monthDawn');
+    } else {
+      // Month 3, quiet, go straight to decrees
+      setCurrentPhase('decree');
+    }
+  }, [monthAllocations, currentMonth]);
 
-          setCurrentPhase(nextPhase);
-        }
+  const handleCourtBusinessComplete = useCallback(
+    (decisions: MonthDecision[]) => {
+      setAccumulatedDecisions((prev) => [...prev, ...decisions]);
 
-        return updated;
-      });
+      if (currentMonth < SeasonMonth.Late) {
+        // Advance to next month
+        setCurrentMonth((m) => (m + 1) as SeasonMonth);
+        setCurrentPhase('monthDawn');
+      } else {
+        // Month 3 — proceed to decrees
+        setCurrentPhase('decree');
+      }
     },
-    [currentPhase, crisisData, petitionCards, ctx.state.gameState.rulingStyle],
+    [currentMonth],
+  );
+
+  const handleDecreeComplete = useCallback(
+    (decrees: string[]) => {
+      setSelectedDecrees(decrees);
+
+      // Generate summary data with all accumulated decisions
+      const allDecisions = accumulatedDecisions;
+      const prevStyle = ctx.state.gameState.rulingStyle;
+      setSummaryData(
+        generateMonthlySummaryData(
+          allDecisions,
+          decrees,
+          crisisData,
+          petitionCards,
+          negotiationId,
+          prevStyle,
+          prevStyle,
+        ),
+      );
+
+      setCurrentPhase('summary');
+    },
+    [accumulatedDecisions, crisisData, petitionCards, negotiationId, ctx.state.gameState.rulingStyle],
   );
 
   const handleRoundComplete = useCallback(() => {
     try {
-      const cardActions = mapDecisionsToActions(decisions, crisisData, petitionCards, decreeCards);
-      // Merge card-derived actions with any actions already queued via QUEUE_ACTION dispatch
-      // (e.g. military deployments, construction, espionage operations).
+      const cardActions = mapMonthDecisionsToActions(
+        accumulatedDecisions,
+        selectedDecrees,
+        crisisData,
+        petitionCards,
+        negotiationId,
+        decreeCards,
+      );
+
+      // Merge card-derived actions with any pre-queued actions
       const existingActions = ctx.state.gameState.actionBudget.queuedActions;
       const allActions = [...existingActions, ...cardActions];
       const totalSlots = allActions.reduce((sum, a) => sum + a.slotCost, 0);
@@ -163,10 +236,30 @@ export function RoundController() {
       console.error('Turn resolution error:', err);
     }
 
-    setCurrentPhase('seasonDawn');
-    setDecisions(INITIAL_DECISIONS);
+    // Reset for next season
+    setCurrentMonth(SeasonMonth.Early);
+    setCurrentPhase('monthDawn');
+    setAccumulatedDecisions([]);
+    setSelectedDecrees([]);
     setSurfacedEvents([]);
-  }, [ctx, decisions, crisisData, petitionCards, decreeCards, surfacedEvents]);
+    setMonthAllocations(null);
+  }, [
+    ctx,
+    accumulatedDecisions,
+    selectedDecrees,
+    crisisData,
+    petitionCards,
+    negotiationId,
+    decreeCards,
+    surfacedEvents,
+  ]);
+
+  // Get current month's allocation for rendering
+  const currentAllocation = monthAllocations
+    ? getAllocationForMonth(monthAllocations, currentMonth)
+    : null;
+
+  const { season, year } = ctx.state.gameState.turn;
 
   return (
     <div
@@ -180,37 +273,47 @@ export function RoundController() {
       }}
     >
       <StatsBar />
-      <PhaseIndicator activePhase={currentPhase} />
+      <PhaseIndicator currentMonth={currentMonth} currentPhase={currentPhase} />
 
-      {currentPhase === 'seasonDawn' && (
-        <SeasonDawn
-          advisorBriefing={advisorBriefing ?? undefined}
-          phraseIndex={seasonPhraseIndex}
-          effectOrder={seasonEffectOrder}
-          onComplete={() => advancePhase()}
+      {currentPhase === 'monthDawn' && (
+        <MonthDawn
+          seasonMonth={currentMonth}
+          season={season}
+          year={year}
+          worldPulseLines={[]}
+          advisorBriefing={currentMonth === SeasonMonth.Early ? (advisorBriefing ?? undefined) : undefined}
+          phraseIndex={phraseIndex}
+          effectOrder={effectOrder}
+          onComplete={advanceFromDawn}
         />
       )}
-      {currentPhase === 'crisis' && (
-        <CrisisPhase
-          crisisData={crisisData ?? undefined}
-          onComplete={(response) => advancePhase({ crisisResponse: response })}
+
+      {currentPhase === 'courtBusiness' && currentAllocation && (
+        <CourtBusiness
+          interactionType={currentAllocation.interactionType}
+          crisisData={currentAllocation.crisisData}
+          petitionCards={currentAllocation.petitionCards}
+          negotiationCard={currentAllocation.negotiationCard}
+          assessmentData={currentAllocation.assessmentData}
+          currentMonth={currentMonth}
+          onComplete={handleCourtBusinessComplete}
         />
       )}
-      {currentPhase === 'petition' && (
-        <PetitionPhase
-          petitionCards={petitionCards}
-          onComplete={(petitionDecisions) => advancePhase({ petitionDecisions })}
-        />
-      )}
+
       {currentPhase === 'decree' && (
         <DecreePhase
           decreeCards={decreeCards}
-          onComplete={(selectedDecrees) => advancePhase({ selectedDecrees })}
+          onComplete={handleDecreeComplete}
         />
       )}
+
       {currentPhase === 'summary' && (
         <SummaryPhase
-          decisions={decisions}
+          decisions={{
+            crisisResponse: null,
+            petitionDecisions: [],
+            selectedDecrees,
+          }}
           summaryData={summaryData ?? undefined}
           onComplete={handleRoundComplete}
         />

@@ -96,6 +96,21 @@ export interface NegotiationCard {
   rejectHints: EffectHint[];
 }
 
+// Monthly card allocation — output of the card distributor
+export interface MonthAllocation {
+  interactionType: InteractionType | null;
+  crisisData: import('../bridge/crisisCardGenerator').CrisisPhaseData | null;
+  petitionCards: import('../bridge/petitionCardGenerator').PetitionCardData[];
+  negotiationCard: NegotiationCard | null;
+  assessmentData: import('../bridge/assessmentCardGenerator').AssessmentPhaseData | null;
+}
+
+export interface MonthCardAllocation {
+  month1: MonthAllocation;
+  month2: MonthAllocation;
+  month3: MonthAllocation;
+}
+
 // Codex types
 export interface CodexDomain {
   id: string;          // 'realm' | 'stores' | 'treasury' | 'infrastructure' | 'armies' | 'faith'

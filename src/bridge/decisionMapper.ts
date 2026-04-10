@@ -1,12 +1,13 @@
 // Bridge Layer — Decision Mapper
-// Maps PhaseDecisions to QueuedAction[] for the engine's turn resolution.
+// Maps PhaseDecisions / MonthDecision[] to QueuedAction[] for the engine's turn resolution.
 
 import type { QueuedAction } from '../engine/types';
-import { ActionType } from '../engine/types';
-import type { PhaseDecisions } from '../ui/types';
+import { ActionType, InteractionType } from '../engine/types';
+import type { PhaseDecisions, MonthDecision } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData } from './petitionCardGenerator';
 import type { DecreeCardData } from './decreeCardGenerator';
+import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 
 export function mapDecisionsToActions(
   decisions: PhaseDecisions,
@@ -58,6 +59,143 @@ export function mapDecisionsToActions(
 
   // Decrees
   for (const decreeId of decisions.selectedDecrees) {
+    const card = decreeCards.find((d) => d.decreeId === decreeId);
+    if (!card) continue;
+    actions.push({
+      id: crypto.randomUUID(),
+      type: ActionType.Decree,
+      actionDefinitionId: decreeId,
+      slotCost: card.slotCost,
+      isFree: false,
+      targetRegionId: null,
+      targetNeighborId: null,
+      parameters: {},
+    });
+  }
+
+  return actions;
+}
+
+/**
+ * Maps MonthDecision[] (accumulated across 3 months) + decree selections
+ * into QueuedAction[] for the engine's turn resolution.
+ */
+export function mapMonthDecisionsToActions(
+  monthDecisions: MonthDecision[],
+  selectedDecrees: string[],
+  crisisData: CrisisPhaseData | null,
+  petitionCards: PetitionCardData[],
+  negotiationId: string | null,
+  decreeCards: DecreeCardData[],
+): QueuedAction[] {
+  const actions: QueuedAction[] = [];
+
+  for (const decision of monthDecisions) {
+    switch (decision.interactionType) {
+      case InteractionType.CrisisResponse: {
+        // Find the response in crisis data to get slot cost
+        const response = crisisData?.responses.find((r) => r.id === decision.choiceId);
+        actions.push({
+          id: crypto.randomUUID(),
+          type: ActionType.CrisisResponse,
+          actionDefinitionId: crisisData?.crisisCard.definitionId ?? decision.cardId,
+          slotCost: response?.slotCost ?? 0,
+          isFree: response?.isFree ?? true,
+          targetRegionId: null,
+          targetNeighborId: null,
+          parameters: {
+            eventId: decision.cardId,
+            choiceId: decision.choiceId,
+          },
+        });
+        break;
+      }
+
+      case InteractionType.Petition: {
+        const card = petitionCards.find((p) => p.eventId === decision.cardId);
+        actions.push({
+          id: crypto.randomUUID(),
+          type: ActionType.CrisisResponse,
+          actionDefinitionId: card?.definitionId ?? decision.cardId,
+          slotCost: 0,
+          isFree: true,
+          targetRegionId: null,
+          targetNeighborId: null,
+          parameters: {
+            eventId: decision.cardId,
+            choiceId: decision.choiceId,
+          },
+        });
+        break;
+      }
+
+      case InteractionType.Negotiation: {
+        // Skip the overall accept/reject wrapper — only process term decisions
+        if (decision.choiceId.startsWith('accept:') || decision.choiceId.startsWith('reject:')) {
+          // For reject, create an action with the negotiation's rejectChoiceId
+          if (decision.choiceId.startsWith('reject:') && negotiationId) {
+            const negEffects = NEGOTIATION_EFFECTS[negotiationId];
+            if (negEffects) {
+              actions.push({
+                id: crypto.randomUUID(),
+                type: ActionType.CrisisResponse,
+                actionDefinitionId: negotiationId,
+                slotCost: 0,
+                isFree: true,
+                targetRegionId: null,
+                targetNeighborId: null,
+                parameters: {
+                  eventId: decision.cardId,
+                  choiceId: decision.choiceId,
+                },
+              });
+            }
+          }
+          break;
+        }
+        // Each toggled term → a free action
+        actions.push({
+          id: crypto.randomUUID(),
+          type: ActionType.CrisisResponse,
+          actionDefinitionId: negotiationId ?? decision.cardId,
+          slotCost: 0,
+          isFree: true,
+          targetRegionId: null,
+          targetNeighborId: null,
+          parameters: {
+            eventId: decision.cardId,
+            choiceId: decision.choiceId,
+          },
+        });
+        break;
+      }
+
+      case InteractionType.Assessment: {
+        // Same as crisis — assessment choices map to CrisisResponse actions
+        actions.push({
+          id: crypto.randomUUID(),
+          type: ActionType.CrisisResponse,
+          actionDefinitionId: decision.cardId.replace('assessment:', ''),
+          slotCost: 0,
+          isFree: true,
+          targetRegionId: null,
+          targetNeighborId: null,
+          parameters: {
+            eventId: decision.cardId,
+            choiceId: decision.choiceId,
+          },
+        });
+        break;
+      }
+
+      case InteractionType.Decree:
+        // Decrees are handled separately below
+        break;
+    }
+  }
+
+  // Decrees
+  for (const decreeId of selectedDecrees) {
     const card = decreeCards.find((d) => d.decreeId === decreeId);
     if (!card) continue;
     actions.push({

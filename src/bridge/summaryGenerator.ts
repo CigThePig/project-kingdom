@@ -1,10 +1,12 @@
 // Bridge Layer — Summary Generator
 // Generates narrative text and effect preview for the Summary phase.
 
-import type { PhaseDecisions, EffectHint } from '../ui/types';
+import type { PhaseDecisions, EffectHint, MonthDecision } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData } from './petitionCardGenerator';
-import type { RulingStyleState, StyleAxis } from '../engine/types';
+import type { RulingStyleState, StyleAxis, InteractionType } from '../engine/types';
+import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
+import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { DECREE_EFFECTS } from '../data/decrees/effects';
@@ -98,6 +100,159 @@ export function generateSummaryData(
   }
 
   // Generate legacy cards from ruling style threshold crossings
+  const legacyCards: LegacyCardData[] = [];
+  let updatedRulingStyle: RulingStyleState | undefined;
+
+  if (prevRulingStyle && currentRulingStyle) {
+    const crossings = checkThresholdCrossings(prevRulingStyle, currentRulingStyle);
+    for (const crossing of crossings) {
+      const textKey = `${crossing.axis}_${crossing.direction}_${crossing.threshold}`;
+      const text = LEGACY_TEXT[textKey as keyof typeof LEGACY_TEXT];
+      if (text) {
+        legacyCards.push({
+          title: text.title,
+          body: text.body,
+          axis: crossing.axis,
+          threshold: crossing.threshold,
+          effects: [{ label: `${crossing.axis} ${crossing.direction === 'positive' ? '+' : '-'}${crossing.threshold}`, type: 'neutral' }],
+        });
+      }
+    }
+    if (crossings.length > 0) {
+      updatedRulingStyle = markThresholdsCrossed(currentRulingStyle, crossings);
+    }
+  }
+
+  return {
+    narrative: parts.join(' '),
+    effectPreview: dedupedEffects,
+    legacyCards,
+    updatedRulingStyle,
+  };
+}
+
+/**
+ * Generates summary data from MonthDecision[] accumulated across all 3 months,
+ * plus decree selections made in Month 3.
+ */
+export function generateMonthlySummaryData(
+  monthDecisions: MonthDecision[],
+  selectedDecrees: string[],
+  crisisData: CrisisPhaseData | null,
+  petitionCards: PetitionCardData[],
+  negotiationId: string | null,
+  prevRulingStyle?: RulingStyleState,
+  currentRulingStyle?: RulingStyleState,
+): SummaryData {
+  const parts: string[] = [];
+  const allEffects: EffectHint[] = [];
+
+  // Group decisions by interaction type
+  const crisisDecisions = monthDecisions.filter(
+    (d) => d.interactionType === ('CrisisResponse' as InteractionType),
+  );
+  const petitionDecisions = monthDecisions.filter(
+    (d) => d.interactionType === ('Petition' as InteractionType),
+  );
+  const negotiationDecisions = monthDecisions.filter(
+    (d) => d.interactionType === ('Negotiation' as InteractionType),
+  );
+  const assessmentDecisions = monthDecisions.filter(
+    (d) => d.interactionType === ('Assessment' as InteractionType),
+  );
+
+  // Crisis narrative
+  if (crisisDecisions.length > 0 && crisisData) {
+    const chosen = crisisData.responses.find((r) => r.id === crisisDecisions[0].choiceId);
+    if (chosen) {
+      parts.push(`${crisisData.crisisCard.title} — you chose "${chosen.title}".`);
+      allEffects.push(...chosen.effects);
+    }
+  }
+
+  // Assessment narrative
+  if (assessmentDecisions.length > 0) {
+    const d = assessmentDecisions[0];
+    const assessId = d.cardId.replace('assessment:', '');
+    const effects = ASSESSMENT_EFFECTS[assessId]?.[d.choiceId];
+    if (effects) {
+      allEffects.push(...mechDeltaToEffectHints(effects));
+    }
+    parts.push('An intelligence assessment was evaluated and a posture was chosen.');
+  }
+
+  // Negotiation narrative
+  const termDecisions = negotiationDecisions.filter(
+    (d) => !d.choiceId.startsWith('accept:') && !d.choiceId.startsWith('reject:'),
+  );
+  const wasRejected = negotiationDecisions.some((d) => d.choiceId.startsWith('reject:'));
+
+  if (wasRejected && negotiationId) {
+    parts.push('A negotiation was rejected outright.');
+    const rejectKey = Object.keys(NEGOTIATION_EFFECTS[negotiationId] ?? {}).find(
+      (k) => k.startsWith('reject'),
+    );
+    if (rejectKey) {
+      const delta = NEGOTIATION_EFFECTS[negotiationId][rejectKey];
+      allEffects.push(...mechDeltaToEffectHints(delta));
+    }
+  } else if (termDecisions.length > 0 && negotiationId) {
+    parts.push(
+      `A negotiation concluded with ${termDecisions.length} term${termDecisions.length !== 1 ? 's' : ''} accepted.`,
+    );
+    for (const td of termDecisions) {
+      const delta = NEGOTIATION_EFFECTS[negotiationId]?.[td.choiceId];
+      if (delta) allEffects.push(...mechDeltaToEffectHints(delta));
+    }
+  }
+
+  // Petition narrative
+  const grantedCount = petitionDecisions.filter((d) => {
+    const card = petitionCards.find((p) => p.eventId === d.cardId);
+    return card && d.choiceId === card.grantChoiceId;
+  }).length;
+  const deniedCount = petitionDecisions.length - grantedCount;
+
+  if (petitionDecisions.length > 0) {
+    parts.push(
+      `You heard ${petitionDecisions.length} petition${petitionDecisions.length !== 1 ? 's' : ''}, granting ${grantedCount} and denying ${deniedCount}.`,
+    );
+    for (const d of petitionDecisions) {
+      const delta = EVENT_CHOICE_EFFECTS[d.cardId]?.[d.choiceId] ?? {};
+      allEffects.push(...mechDeltaToEffectHints(delta));
+    }
+  }
+
+  // Decree narrative
+  if (selectedDecrees.length > 0) {
+    parts.push(
+      `${selectedDecrees.length} royal decree${selectedDecrees.length !== 1 ? 's were' : ' was'} issued from the Royal Council.`,
+    );
+    for (const decreeId of selectedDecrees) {
+      const delta = DECREE_EFFECTS[decreeId] ?? {};
+      allEffects.push(...mechDeltaToEffectHints(delta));
+    }
+  } else {
+    parts.push('The council adjourned without issuing decrees.');
+  }
+
+  if (parts.length === 0) {
+    parts.push('A quiet season passed without major incident.');
+  }
+  parts.push('The kingdom endures. Your decisions ripple outward.');
+
+  // Deduplicate effects
+  const seen = new Set<string>();
+  const dedupedEffects: EffectHint[] = [];
+  for (const hint of allEffects) {
+    const key = hint.label.replace(/[+-]\d+.*$/, '').trim();
+    if (!seen.has(key)) {
+      seen.add(key);
+      dedupedEffects.push(hint);
+    }
+  }
+
+  // Legacy cards from ruling style
   const legacyCards: LegacyCardData[] = [];
   let updatedRulingStyle: RulingStyleState | undefined;
 
