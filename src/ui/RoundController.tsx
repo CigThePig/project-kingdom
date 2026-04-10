@@ -29,6 +29,7 @@ import { mapMonthDecisionsToActions } from '../bridge/decisionMapper';
 import { generateNegotiationCard } from '../bridge/negotiationCardGenerator';
 import { generateAssessmentPhaseData } from '../bridge/assessmentCardGenerator';
 import { distributeCardsToMonths } from '../bridge/cardDistributor';
+import { applyDirectEffects } from '../bridge/directEffectApplier';
 
 /**
  * Returns the MonthAllocation for the given SeasonMonth from a MonthCardAllocation.
@@ -208,13 +209,21 @@ export function RoundController() {
         decreeCards,
       );
 
+      // Apply assessment and negotiation effects directly (they don't
+      // flow through the engine's event system as ActiveEvents).
+      const stateAfterDirect = applyDirectEffects(
+        ctx.state.gameState,
+        accumulatedDecisions,
+        negotiationId,
+      );
+
       // Merge card-derived actions with any pre-queued actions
-      const existingActions = ctx.state.gameState.actionBudget.queuedActions;
+      const existingActions = stateAfterDirect.actionBudget.queuedActions;
       const allActions = [...existingActions, ...cardActions];
       const totalSlots = allActions.reduce((sum, a) => sum + a.slotCost, 0);
 
       const stateWithActions: GameState = {
-        ...ctx.state.gameState,
+        ...stateAfterDirect,
         activeEvents: [
           ...ctx.state.gameState.activeEvents,
           ...surfacedEvents,

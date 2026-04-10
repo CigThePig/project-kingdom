@@ -94,6 +94,7 @@ export interface NegotiationCard {
   terms: NegotiationTerm[];
   rejectEffects: MechanicalEffectDelta;
   rejectHints: EffectHint[];
+  contextLabel: string;
 }
 
 // Monthly card allocation — output of the card distributor

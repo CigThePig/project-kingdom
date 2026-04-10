@@ -133,5 +133,6 @@ export function generateNegotiationCard(
     terms,
     rejectEffects,
     rejectHints: mechDeltaToEffectHints(rejectEffects),
+    contextLabel: text.contextLabel ?? 'NEGOTIATION',
   };
 }

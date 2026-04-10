@@ -14,6 +14,24 @@ import type { PetitionCardData } from '../../bridge/petitionCardGenerator';
 import type { AssessmentPhaseData } from '../../bridge/assessmentCardGenerator';
 import type { NegotiationCard, MonthDecision } from '../types';
 
+/** Fallback for negotiation with no data — defers onComplete to an effect. */
+function NegotiationFallback({ onComplete }: { onComplete: (d: MonthDecision[]) => void }) {
+  useEffect(() => { onComplete([]); }, [onComplete]);
+  return null;
+}
+
+/** Fallback for assessment with no data — defers onComplete to an effect. */
+function AssessmentFallback({ onComplete }: { onComplete: (d: MonthDecision[]) => void }) {
+  useEffect(() => { onComplete([]); }, [onComplete]);
+  return null;
+}
+
+/** Fallback for decree routed through CourtBusiness — defers onComplete to an effect. */
+function DecreeFallback({ onComplete }: { onComplete: (d: MonthDecision[]) => void }) {
+  useEffect(() => { onComplete([]); }, [onComplete]);
+  return null;
+}
+
 interface CourtBusinessProps {
   interactionType: InteractionType | null;
   crisisData: CrisisPhaseData | null;
@@ -123,8 +141,7 @@ export function CourtBusiness({
 
     case InteractionType.Negotiation:
       if (!negotiationCard) {
-        onComplete([]);
-        return null;
+        return <NegotiationFallback onComplete={onComplete} />;
       }
       return (
         <NegotiationPhase
@@ -136,8 +153,7 @@ export function CourtBusiness({
 
     case InteractionType.Assessment:
       if (!assessmentData) {
-        onComplete([]);
-        return null;
+        return <AssessmentFallback onComplete={onComplete} />;
       }
       return (
         <AssessmentPhase
@@ -149,7 +165,6 @@ export function CourtBusiness({
 
     case InteractionType.Decree:
       // Decrees are handled separately in RoundController, not through CourtBusiness
-      onComplete([]);
-      return null;
+      return <DecreeFallback onComplete={onComplete} />;
   }
 }

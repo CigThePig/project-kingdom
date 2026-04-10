@@ -99,9 +99,7 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
               marginBottom: 6,
             }}
           >
-            {negotiationCard.eventCard.body.includes('foreign') || negotiationCard.eventCard.body.includes('envoy')
-              ? 'DIPLOMATIC NEGOTIATION'
-              : 'INTERNAL NEGOTIATION'}
+            {negotiationCard.contextLabel}
           </div>
           <CardTitle>{eventCard.title}</CardTitle>
           <CardBody>{eventCard.body}</CardBody>
