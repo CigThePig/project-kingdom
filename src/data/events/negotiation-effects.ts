@@ -219,4 +219,105 @@ export const NEGOTIATION_EFFECTS: Record<string, Record<string, MechanicalEffect
       stabilityDelta: -1,
     },
   },
+
+  // ============================================================
+  // Expansion — 4 additional negotiation effects
+  // ============================================================
+  neg_commoner_charter: {
+    fair_wage_guarantee: {
+      commonerSatDelta: +5,
+      merchantSatDelta: -3,
+      treasuryDelta: -15,
+    },
+    land_tenure_rights: {
+      commonerSatDelta: +4,
+      nobilitySatDelta: -4,
+      regionDevelopmentDelta: +2,
+    },
+    public_assembly_rights: {
+      commonerSatDelta: +3,
+      stabilityDelta: -2,
+      clergySatDelta: -1,
+      culturalCohesionDelta: +2,
+    },
+    reject_commoner_charter: {
+      commonerSatDelta: -5,
+      stabilityDelta: -4,
+    },
+  },
+
+  neg_scholarly_patronage: {
+    university_funding: {
+      culturalCohesionDelta: +3,
+      treasuryDelta: -30,
+      clergySatDelta: -2,
+    },
+    secular_curriculum: {
+      heterodoxyDelta: +3,
+      culturalCohesionDelta: +2,
+      clergySatDelta: -4,
+      commonerSatDelta: +1,
+    },
+    foreign_scholars: {
+      diplomacyDeltas: { __NEIGHBOR__: +5 },
+      espionageNetworkDelta: -2,
+      culturalCohesionDelta: +2,
+      nobilitySatDelta: -2,
+    },
+    reject_scholarly_patronage: {
+      culturalCohesionDelta: -2,
+      commonerSatDelta: -1,
+    },
+  },
+
+  neg_resource_blockade: {
+    payment_tribute: {
+      treasuryDelta: -50,
+      diplomacyDeltas: { __NEIGHBOR__: +12 },
+      commonerSatDelta: -2,
+    },
+    trade_concessions: {
+      merchantSatDelta: -4,
+      treasuryDelta: +10,
+      diplomacyDeltas: { __NEIGHBOR__: +8 },
+    },
+    military_passage_rights: {
+      militaryReadinessDelta: -4,
+      diplomacyDeltas: { __NEIGHBOR__: +10 },
+      espionageNetworkDelta: -2,
+    },
+    hostage_exchange: {
+      nobilitySatDelta: -3,
+      stabilityDelta: -2,
+      diplomacyDeltas: { __NEIGHBOR__: +15 },
+    },
+    reject_blockade_terms: {
+      diplomacyDeltas: { __NEIGHBOR__: -12 },
+      merchantSatDelta: -3,
+      foodDelta: -15,
+    },
+  },
+
+  neg_marriage_alliance: {
+    royal_dowry: {
+      treasuryDelta: -40,
+      diplomacyDeltas: { __NEIGHBOR__: +15 },
+      nobilitySatDelta: +2,
+    },
+    land_gift: {
+      regionDevelopmentDelta: -3,
+      diplomacyDeltas: { __NEIGHBOR__: +10 },
+      nobilitySatDelta: -3,
+    },
+    faith_concessions: {
+      faithDelta: -2,
+      heterodoxyDelta: +2,
+      diplomacyDeltas: { __NEIGHBOR__: +8 },
+      clergySatDelta: -3,
+    },
+    reject_marriage_alliance: {
+      diplomacyDeltas: { __NEIGHBOR__: -5 },
+      nobilitySatDelta: -2,
+    },
+  },
 };

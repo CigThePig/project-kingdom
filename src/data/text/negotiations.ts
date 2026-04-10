@@ -188,4 +188,95 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
     },
     rejectLabel: 'Reject the Reforms',
   },
+
+  // ============================================================
+  // Expansion — 4 additional negotiations
+  // ============================================================
+  neg_commoner_charter: {
+    title: 'Commoners Demand a Charter of Rights',
+    body: 'A delegation of commoner representatives — guild workers, field laborers, and market traders — has gathered at the palace gates with a formal charter of demands. Their numbers are large enough that dismissal risks unrest, but each concession shifts power away from the crown and the upper classes.',
+    contextLabel: 'INTERNAL NEGOTIATION',
+    terms: {
+      fair_wage_guarantee: {
+        title: 'Fair Wage Guarantee',
+        description: 'Mandate minimum wages for laborers and apprentices. Commoners gain economic security, but merchants bear the cost of higher labor expenses and the treasury funds enforcement.',
+      },
+      land_tenure_rights: {
+        title: 'Land Tenure Rights',
+        description: 'Grant commoners legal protection against eviction from their plots. Stabilizes rural life and encourages development, but directly undermines noble landholding prerogatives.',
+      },
+      public_assembly_rights: {
+        title: 'Right of Public Assembly',
+        description: 'Permit commoners to gather and petition without prior approval. Strengthens cultural expression but reduces the crown\'s ability to control dissent, and the clergy fears rival gathering places.',
+      },
+    },
+    rejectLabel: 'Refuse the Charter',
+  },
+
+  neg_scholarly_patronage: {
+    title: 'Scholars Petition for Royal Patronage',
+    body: 'A consortium of scholars, philosophers, and natural historians seeks formal royal patronage to establish a center of learning. Their proposals would advance knowledge and culture — but each term carries entanglements with religious authority, foreign influence, or noble sensibility.',
+    contextLabel: 'INTERNAL NEGOTIATION',
+    terms: {
+      university_funding: {
+        title: 'University Endowment',
+        description: 'Fund a permanent institution of higher learning. Advances cultural cohesion and knowledge, but the treasury bears a heavy cost and the clergy resents a rival center of authority.',
+      },
+      secular_curriculum: {
+        title: 'Secular Curriculum',
+        description: 'Allow the university to teach subjects outside religious doctrine. Commoners welcome broader education, but the curriculum increases heterodox thinking and deeply offends the clergy.',
+      },
+      foreign_scholars: {
+        title: 'Invite Foreign Scholars',
+        description: 'Welcome learned foreigners to teach and research. Improves diplomatic ties and enriches culture, but foreign scholars may carry espionage risk and the nobility distrusts outside influence.',
+      },
+    },
+    rejectLabel: 'Decline Patronage',
+  },
+
+  neg_resource_blockade: {
+    title: 'Blockade Negotiations with {neighbor}',
+    body: '{neighbor} has imposed a resource blockade on the kingdom, choking vital supply lines. Their envoys arrive with a list of demands — each term extracts a painful concession, but continued blockade may cost more than compliance. The kingdom\'s reserves dwindle with each passing day.',
+    contextLabel: 'DIPLOMATIC NEGOTIATION',
+    terms: {
+      payment_tribute: {
+        title: 'Pay Tribute',
+        description: 'Transfer a substantial sum to {neighbor} as a gesture of compliance. Eases the blockade but drains the treasury and demoralizes the common people who bear the tax burden.',
+      },
+      trade_concessions: {
+        title: 'Grant Trade Concessions',
+        description: 'Offer {neighbor} favorable trading terms that undercut domestic merchants. Reopens some commerce and brings modest revenue, but local merchants suffer under the unfair competition.',
+      },
+      military_passage_rights: {
+        title: 'Military Passage Rights',
+        description: 'Allow {neighbor} troops to transit through kingdom territory. Lifts the blockade pressure but weakens border security and compromises intelligence operations.',
+      },
+      hostage_exchange: {
+        title: 'Exchange Hostages',
+        description: 'Send members of noble families as diplomatic guarantors. Demonstrates commitment to peace but destabilizes the nobility and creates a permanent vulnerability.',
+      },
+    },
+    rejectLabel: 'Refuse and Endure the Blockade',
+  },
+
+  neg_marriage_alliance: {
+    title: 'Marriage Alliance Proposed by {neighbor}',
+    body: '{neighbor} proposes a dynastic marriage to bind the two kingdoms together. The alliance would bring lasting peace and cooperation, but the terms of the union involve significant concessions — each one a permanent commitment that reshapes the kingdom\'s future.',
+    contextLabel: 'DIPLOMATIC NEGOTIATION',
+    terms: {
+      royal_dowry: {
+        title: 'Royal Dowry',
+        description: 'Provide a lavish dowry befitting a royal union. Cements the alliance and pleases the nobility who value dynastic tradition, but the treasury takes a devastating blow.',
+      },
+      land_gift: {
+        title: 'Gift of Border Lands',
+        description: 'Cede border territories as a wedding gift. Strengthens the diplomatic bond but permanently reduces the kingdom\'s development potential and enrages nobles who held estates there.',
+      },
+      faith_concessions: {
+        title: 'Religious Accommodation',
+        description: 'Permit {neighbor}\'s religious practices within the kingdom as a condition of the union. Improves diplomatic ties but introduces heterodox traditions that alarm the clergy.',
+      },
+    },
+    rejectLabel: 'Decline the Marriage',
+  },
 };

@@ -5,6 +5,7 @@
 import {
   EventCategory,
   EventSeverity,
+  PopulationClass,
 } from '../../engine/types';
 import type { EventTriggerCondition } from '../../engine/events/event-engine';
 
@@ -109,7 +110,7 @@ export const NEGOTIATION_POOL: NegotiationDefinition[] = [
     severity: EventSeverity.Serious,
     category: EventCategory.ClassConflict,
     triggerConditions: [
-      { type: 'class_satisfaction_below', classTarget: 'Nobility' as any, threshold: 35 },
+      { type: 'class_satisfaction_below', classTarget: PopulationClass.Nobility, threshold: 35 },
     ],
     weight: 1.1,
     terms: [
@@ -125,7 +126,7 @@ export const NEGOTIATION_POOL: NegotiationDefinition[] = [
     severity: EventSeverity.Notable,
     category: EventCategory.Economy,
     triggerConditions: [
-      { type: 'class_satisfaction_above', classTarget: 'Merchants' as any, threshold: 50 },
+      { type: 'class_satisfaction_above', classTarget: PopulationClass.Merchants, threshold: 50 },
       { type: 'turn_range', minTurn: 5 },
     ],
     weight: 1.0,
@@ -143,7 +144,7 @@ export const NEGOTIATION_POOL: NegotiationDefinition[] = [
     category: EventCategory.Religion,
     triggerConditions: [
       { type: 'faith_above', threshold: 50 },
-      { type: 'class_satisfaction_below', classTarget: 'Clergy' as any, threshold: 45 },
+      { type: 'class_satisfaction_below', classTarget: PopulationClass.Clergy, threshold: 45 },
     ],
     weight: 1.0,
     terms: [
@@ -168,5 +169,79 @@ export const NEGOTIATION_POOL: NegotiationDefinition[] = [
       { termId: 'equipment_budget', slotCost: 0, isFree: true },
     ],
     rejectChoiceId: 'reject_military_reform',
+  },
+
+  // ============================================================
+  // Expansion — 4 additional negotiations
+  // ============================================================
+  {
+    id: 'neg_commoner_charter',
+    context: 'internal',
+    severity: EventSeverity.Serious,
+    category: EventCategory.ClassConflict,
+    triggerConditions: [
+      { type: 'class_satisfaction_below', classTarget: PopulationClass.Commoners, threshold: 40 },
+    ],
+    weight: 1.1,
+    terms: [
+      { termId: 'fair_wage_guarantee', slotCost: 0, isFree: true },
+      { termId: 'land_tenure_rights', slotCost: 0, isFree: true },
+      { termId: 'public_assembly_rights', slotCost: 0, isFree: true },
+    ],
+    rejectChoiceId: 'reject_commoner_charter',
+  },
+  {
+    id: 'neg_scholarly_patronage',
+    context: 'internal',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Knowledge,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 6 },
+      { type: 'faith_above', threshold: 30 },
+      { type: 'random_chance', probability: 0.2 },
+    ],
+    weight: 1.0,
+    terms: [
+      { termId: 'university_funding', slotCost: 0, isFree: true },
+      { termId: 'secular_curriculum', slotCost: 0, isFree: true },
+      { termId: 'foreign_scholars', slotCost: 0, isFree: true },
+    ],
+    rejectChoiceId: 'reject_scholarly_patronage',
+  },
+  {
+    id: 'neg_resource_blockade',
+    context: 'external',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Diplomacy,
+    triggerConditions: [
+      { type: 'stability_below', threshold: 45 },
+      { type: 'turn_range', minTurn: 7 },
+    ],
+    weight: 1.2,
+    terms: [
+      { termId: 'payment_tribute', slotCost: 0, isFree: true },
+      { termId: 'trade_concessions', slotCost: 0, isFree: true },
+      { termId: 'military_passage_rights', slotCost: 0, isFree: true },
+      { termId: 'hostage_exchange', slotCost: 0, isFree: true },
+    ],
+    rejectChoiceId: 'reject_blockade_terms',
+  },
+  {
+    id: 'neg_marriage_alliance',
+    context: 'external',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Diplomacy,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 8 },
+      { type: 'stability_above', threshold: 45 },
+      { type: 'random_chance', probability: 0.2 },
+    ],
+    weight: 0.9,
+    terms: [
+      { termId: 'royal_dowry', slotCost: 0, isFree: true },
+      { termId: 'land_gift', slotCost: 0, isFree: true },
+      { termId: 'faith_concessions', slotCost: 0, isFree: true },
+    ],
+    rejectChoiceId: 'reject_marriage_alliance',
   },
 ];
