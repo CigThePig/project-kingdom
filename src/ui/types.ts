@@ -27,6 +27,115 @@ export interface EffectHint {
 
 export type ConfidenceLevel = 'low' | 'moderate' | 'high';
 
+// ============================================================
+// Expansion Types — World Texture (Workstreams A, B, C)
+// ============================================================
+
+import type {
+  QualitativeTier,
+  SeasonMonth,
+  InteractionType,
+  WorldPulseCategory,
+  RivalPersonality,
+  MechanicalEffectDelta,
+} from '../engine/types';
+
+/** Generic card definition used by the card distributor and monthly structure. */
+export interface CardDefinition {
+  id: string;
+  title: string;
+  body: string;
+  family: CardFamily;
+  effects: EffectHint[];
+}
+
+// Monthly round phase tracking
+export type MonthPhase =
+  | 'monthDawn'
+  | 'courtBusiness'
+  | 'decree'    // Month 3 only
+  | 'summary';  // Month 3 only
+
+export interface MonthState {
+  seasonMonth: SeasonMonth;          // 1, 2, or 3
+  monthName: string;                 // "Early Thaw", "High Summer", etc.
+  phase: MonthPhase;
+  assignedCards: CardDefinition[];   // cards distributed to this month
+  interactionType: InteractionType | null; // null = quiet month
+  worldPulseLines: WorldPulseLine[];
+  decisions: MonthDecision[];        // accumulated, fed to resolution after Month 3
+}
+
+export interface MonthDecision {
+  cardId: string;
+  choiceId: string;
+  interactionType: InteractionType;
+  month: SeasonMonth;
+}
+
+export interface WorldPulseLine {
+  text: string;
+  category: WorldPulseCategory;
+  sourceId?: string; // neighborId, factionId, etc.
+}
+
+// Negotiation interaction
+export interface NegotiationTerm {
+  id: string;
+  title: string;
+  description: string;
+  effects: MechanicalEffectDelta;
+  effectHints: EffectHint[];
+  isToggled: boolean;
+}
+
+export interface NegotiationCard {
+  eventCard: CardDefinition;
+  terms: NegotiationTerm[];
+  rejectEffects: MechanicalEffectDelta;
+  rejectHints: EffectHint[];
+}
+
+// Codex types
+export interface CodexDomain {
+  id: string;          // 'realm' | 'stores' | 'treasury' | 'infrastructure' | 'armies' | 'faith'
+  title: string;
+  tier: QualitativeTier;
+  narrative: string;   // 1-3 sentence qualitative description
+}
+
+export interface RivalDossier {
+  neighborId: string;
+  kingdomName: string;
+  rulerName: string;
+  personality: RivalPersonality;
+  personalityLabel: string;          // "Ambitious & Militaristic"
+  regard: { label: string; score: number };  // "Wary (-12)"
+  diplomaticStatus: string;          // "Non-Aggression Pact (Year 2)"
+  tradeStatus: string | null;        // "Active — southern grain route" or null
+  knownStrengths: string[];          // gated by intel level
+  recentActions: string[];           // gated by intel level, last 3-4 turns
+  spymasterAssessment: string | null; // gated by intel level >= Strong
+  confidenceRating: string | null;    // "Low" | "Moderate" | "High" | "Very High"
+  intelLevel: 'none' | 'minimal' | 'moderate' | 'strong' | 'exceptional';
+}
+
+export interface ActiveSituation {
+  id: string;
+  type: 'war' | 'construction' | 'treaty' | 'trade' | 'espionage' | 'failureWarning' | 'storyline';
+  title: string;
+  statusLines: string[];   // 2-4 short status descriptors
+  urgency: 'low' | 'medium' | 'high';
+}
+
+export interface ChronicleEntry {
+  season: string;       // "Year 2, Autumn"
+  text: string;         // "The Great Schism divided the clergy. You chose tolerance."
+  isProtected: boolean; // legacy/milestone events can't be pruned
+}
+
+export type CodexSection = 'kingdom' | 'rivals' | 'situations' | 'chronicle';
+
 /** Maps a CardFamily to its CSS custom-property accent color. */
 export function getAccentColor(family: CardFamily): string {
   switch (family) {
