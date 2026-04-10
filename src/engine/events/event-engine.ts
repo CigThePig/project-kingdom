@@ -163,7 +163,7 @@ const SEVERITY_SCORE: Record<EventSeverity, number> = {
  * Evaluates a single trigger condition against current game state.
  * Returns true when the condition is satisfied.
  */
-function evaluateCondition(
+export function evaluateCondition(
   condition: EventTriggerCondition,
   state: GameState,
   turnNumber: number,
@@ -258,7 +258,7 @@ function evaluateCondition(
 /**
  * Returns true when all of the definition's trigger conditions pass.
  */
-function allConditionsPass(
+export function allConditionsPass(
   definition: EventDefinition,
   state: GameState,
   turnNumber: number,
