@@ -4,7 +4,8 @@
 import type { PhaseDecisions, EffectHint, MonthDecision } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData } from './petitionCardGenerator';
-import type { RulingStyleState, StyleAxis, InteractionType } from '../engine/types';
+import { InteractionType } from '../engine/types';
+import type { RulingStyleState, StyleAxis } from '../engine/types';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
@@ -149,16 +150,16 @@ export function generateMonthlySummaryData(
 
   // Group decisions by interaction type
   const crisisDecisions = monthDecisions.filter(
-    (d) => d.interactionType === ('CrisisResponse' as InteractionType),
+    (d) => d.interactionType === InteractionType.CrisisResponse,
   );
   const petitionDecisions = monthDecisions.filter(
-    (d) => d.interactionType === ('Petition' as InteractionType),
+    (d) => d.interactionType === InteractionType.Petition,
   );
   const negotiationDecisions = monthDecisions.filter(
-    (d) => d.interactionType === ('Negotiation' as InteractionType),
+    (d) => d.interactionType === InteractionType.Negotiation,
   );
   const assessmentDecisions = monthDecisions.filter(
-    (d) => d.interactionType === ('Assessment' as InteractionType),
+    (d) => d.interactionType === InteractionType.Assessment,
   );
 
   // Crisis narrative
@@ -174,7 +175,10 @@ export function generateMonthlySummaryData(
   if (assessmentDecisions.length > 0) {
     const d = assessmentDecisions[0];
     const assessId = d.cardId.replace('assessment:', '');
-    const effects = ASSESSMENT_EFFECTS[assessId]?.[d.choiceId];
+    // choiceId format: "assessment:<defId>:<bareChoiceId>" — extract bare part
+    const choiceParts = d.choiceId.split(':');
+    const bareChoiceId = choiceParts[choiceParts.length - 1];
+    const effects = ASSESSMENT_EFFECTS[assessId]?.[bareChoiceId];
     if (effects) {
       allEffects.push(...mechDeltaToEffectHints(effects));
     }

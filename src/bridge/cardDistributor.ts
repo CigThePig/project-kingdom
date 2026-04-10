@@ -112,11 +112,11 @@ export function distributeCardsToMonths(
       } else if (month3.interactionType === null) {
         month3.interactionType = InteractionType.Petition;
         petitionMonths.push(month3);
-      } else {
-        // All months are occupied — bundle petitions into month 2
-        // (keeping existing interaction, petitions served alongside)
-        petitionMonths.push(month2);
       }
+      // If all months are occupied by higher-priority interactions
+      // (crisis/negotiation/assessment), petitions are deferred this season.
+      // CourtBusiness only renders petitions when interactionType === Petition,
+      // so assigning them to an occupied month would silently drop them.
     }
 
     // Distribute petitions evenly across petition months (max 3 per month)

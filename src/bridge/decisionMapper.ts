@@ -7,7 +7,6 @@ import type { PhaseDecisions, MonthDecision } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData } from './petitionCardGenerator';
 import type { DecreeCardData } from './decreeCardGenerator';
-import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 
 export function mapDecisionsToActions(
   decisions: PhaseDecisions,
@@ -85,7 +84,7 @@ export function mapMonthDecisionsToActions(
   selectedDecrees: string[],
   crisisData: CrisisPhaseData | null,
   petitionCards: PetitionCardData[],
-  negotiationId: string | null,
+  _negotiationId: string | null,
   decreeCards: DecreeCardData[],
 ): QueuedAction[] {
   const actions: QueuedAction[] = [];
@@ -105,7 +104,7 @@ export function mapMonthDecisionsToActions(
           targetNeighborId: null,
           parameters: {
             eventId: decision.cardId,
-            choiceId: decision.choiceId,
+            choiceId: response?.choiceId ?? decision.choiceId,
           },
         });
         break;
@@ -129,64 +128,15 @@ export function mapMonthDecisionsToActions(
         break;
       }
 
-      case InteractionType.Negotiation: {
-        // Skip the overall accept/reject wrapper — only process term decisions
-        if (decision.choiceId.startsWith('accept:') || decision.choiceId.startsWith('reject:')) {
-          // For reject, create an action with the negotiation's rejectChoiceId
-          if (decision.choiceId.startsWith('reject:') && negotiationId) {
-            const negEffects = NEGOTIATION_EFFECTS[negotiationId];
-            if (negEffects) {
-              actions.push({
-                id: crypto.randomUUID(),
-                type: ActionType.CrisisResponse,
-                actionDefinitionId: negotiationId,
-                slotCost: 0,
-                isFree: true,
-                targetRegionId: null,
-                targetNeighborId: null,
-                parameters: {
-                  eventId: decision.cardId,
-                  choiceId: decision.choiceId,
-                },
-              });
-            }
-          }
-          break;
-        }
-        // Each toggled term → a free action
-        actions.push({
-          id: crypto.randomUUID(),
-          type: ActionType.CrisisResponse,
-          actionDefinitionId: negotiationId ?? decision.cardId,
-          slotCost: 0,
-          isFree: true,
-          targetRegionId: null,
-          targetNeighborId: null,
-          parameters: {
-            eventId: decision.cardId,
-            choiceId: decision.choiceId,
-          },
-        });
+      case InteractionType.Negotiation:
+        // Negotiation effects are applied directly via applyDirectEffects()
+        // in RoundController, not through the engine's event system.
         break;
-      }
 
-      case InteractionType.Assessment: {
-        // Same as crisis — assessment choices map to CrisisResponse actions
-        actions.push({
-          id: crypto.randomUUID(),
-          type: ActionType.CrisisResponse,
-          actionDefinitionId: decision.cardId.replace('assessment:', ''),
-          slotCost: 0,
-          isFree: true,
-          targetRegionId: null,
-          targetNeighborId: null,
-          parameters: {
-            eventId: decision.cardId,
-            choiceId: decision.choiceId,
-          },
-        });
+      case InteractionType.Assessment:
+        // Assessment effects are applied directly via applyDirectEffects()
+        // in RoundController, not through the engine's event system.
         break;
-      }
 
       case InteractionType.Decree:
         // Decrees are handled separately below
