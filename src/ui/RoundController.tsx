@@ -12,7 +12,7 @@ import { applyActionEffects } from '../engine/resolution/apply-action-effects';
 import { surfaceEvents } from '../engine/events/event-engine';
 import { calculateCategoryWeights } from '../engine/events/narrative-pacing';
 import { EVENT_POOL } from '../data/events/index';
-import { SeasonMonth, InteractionType } from '../engine/types';
+import { SeasonMonth, InteractionType, WorldPulseCategory } from '../engine/types';
 import type { ActiveEvent, GameState } from '../engine/types';
 import { accumulateStyleDecision } from '../engine/systems/ruling-style';
 import { EVENT_CHOICE_STYLE_TAGS, DECREE_STYLE_TAGS } from '../data/ruling-style/flavor-tags';
@@ -33,6 +33,8 @@ import { generateNegotiationCard } from '../bridge/negotiationCardGenerator';
 import { generateAssessmentPhaseData } from '../bridge/assessmentCardGenerator';
 import { distributeCardsToMonths } from '../bridge/cardDistributor';
 import { applyDirectEffects } from '../bridge/directEffectApplier';
+import { generateWorldPulse } from '../bridge/worldPulseGenerator';
+import type { WorldPulseLine } from './types';
 
 /**
  * Returns the MonthAllocation for the given SeasonMonth from a MonthCardAllocation.
@@ -69,6 +71,10 @@ export function RoundController() {
   const [phraseIndex, setPhraseIndex] = useState(0);
   const [effectOrder, setEffectOrder] = useState<[number, number, number]>([0, 1, 2]);
 
+  // World Pulse state — tracks categories used this season to avoid repeats
+  const [previousPulseCategories, setPreviousPulseCategories] = useState<WorldPulseCategory[]>([]);
+  const [currentWorldPulseLines, setCurrentWorldPulseLines] = useState<WorldPulseLine[]>([]);
+
   // Prepare card pools when season starts (Month 1, monthDawn)
   useEffect(() => {
     if (currentMonth === SeasonMonth.Early && currentPhase === 'monthDawn') {
@@ -77,7 +83,7 @@ export function RoundController() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMonth, currentPhase]);
 
-  // Randomize dawn display each time we enter monthDawn
+  // Randomize dawn display and generate World Pulse each time we enter monthDawn
   useEffect(() => {
     if (currentPhase === 'monthDawn') {
       setPhraseIndex(Math.floor(Math.random() * 3));
@@ -87,7 +93,25 @@ export function RoundController() {
         [order[i], order[j]] = [order[j], order[i]];
       }
       setEffectOrder(order);
+
+      // Reset pulse categories on season start (Month 1)
+      const prevCategories = currentMonth === SeasonMonth.Early ? [] : previousPulseCategories;
+      if (currentMonth === SeasonMonth.Early) {
+        setPreviousPulseCategories([]);
+      }
+
+      // Generate World Pulse lines for this month
+      const pulseLines = generateWorldPulse(ctx.state.gameState, currentMonth, prevCategories);
+      setCurrentWorldPulseLines(pulseLines);
+
+      // Track categories used this season
+      const newCategories = pulseLines.map((l) => l.category);
+      setPreviousPulseCategories((prev) => {
+        const base = currentMonth === SeasonMonth.Early ? [] : prev;
+        return [...base, ...newCategories];
+      });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPhase, currentMonth]);
 
   function prepareRound(gameState: GameState, eventHistory: ActiveEvent[]) {
@@ -322,7 +346,7 @@ export function RoundController() {
           seasonMonth={currentMonth}
           season={season}
           year={year}
-          worldPulseLines={[]}
+          worldPulseLines={currentWorldPulseLines}
           advisorBriefing={currentMonth === SeasonMonth.Early ? (advisorBriefing ?? undefined) : undefined}
           phraseIndex={phraseIndex}
           effectOrder={effectOrder}
