@@ -78,7 +78,7 @@ export function DecreePhase({ onComplete, decreeCards }: DecreePhaseProps) {
           marginTop: 4,
         }}
       >
-        <div
+        <button
           onClick={() => onComplete([])}
           style={{
             padding: '10px 20px',
@@ -89,13 +89,15 @@ export function DecreePhase({ onComplete, decreeCards }: DecreePhaseProps) {
             textTransform: 'uppercase',
             color: 'var(--color-text-disabled)',
             cursor: 'pointer',
+            background: 'transparent',
+            border: 'none',
           }}
         >
           SKIP
-        </div>
+        </button>
 
         {selected.size > 0 && (
-          <div
+          <button
             onClick={() => onComplete(Array.from(selected))}
             style={{
               padding: '10px 20px',
@@ -106,11 +108,13 @@ export function DecreePhase({ onComplete, decreeCards }: DecreePhaseProps) {
               textTransform: 'uppercase',
               color: 'var(--color-accent-decree)',
               cursor: 'pointer',
+              background: 'transparent',
+              border: 'none',
               animation: 'pop 300ms ease both',
             }}
           >
             CONFIRM DECREES
-          </div>
+          </button>
         )}
       </div>
     </div>

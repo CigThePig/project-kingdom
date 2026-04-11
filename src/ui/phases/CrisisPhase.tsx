@@ -30,11 +30,12 @@ export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
         <Card family="crisis">
           <CardTitle>Morning Court — Peaceful</CardTitle>
           <CardBody>No urgent matters reach the throne this morning. The court is quiet, the kingdom at ease.</CardBody>
-          <div
+          <button
             onClick={() => onComplete('no-crisis')}
             style={{
               marginTop: 16,
               padding: '12px 0',
+              width: '100%',
               textAlign: 'center',
               fontFamily: 'var(--font-family-mono)',
               fontSize: 11,
@@ -43,10 +44,12 @@ export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
               textTransform: 'uppercase',
               color: 'var(--color-accent-response)',
               cursor: 'pointer',
+              background: 'transparent',
+              border: 'none',
             }}
           >
             CONTINUE
-          </div>
+          </button>
         </Card>
       </div>
     );
@@ -65,10 +68,11 @@ export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
             <EffectStrip effects={crisisCard.effects} />
           </Card>
         </div>
-        <div
+        <button
           onClick={() => onComplete('acknowledge')}
           style={{
             padding: '12px 0',
+            width: '100%',
             textAlign: 'center',
             fontFamily: 'var(--font-family-mono)',
             fontSize: 11,
@@ -77,10 +81,12 @@ export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
             textTransform: 'uppercase',
             color: 'var(--color-accent-response)',
             cursor: 'pointer',
+            background: 'transparent',
+            border: 'none',
           }}
         >
           ACKNOWLEDGE
-        </div>
+        </button>
       </div>
     );
   }

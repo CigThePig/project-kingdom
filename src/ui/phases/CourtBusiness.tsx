@@ -111,6 +111,7 @@ export function CourtBusiness({
         choiceId,
         interactionType: InteractionType.Assessment,
         month: currentMonth,
+        targetNeighborId: assessmentData?.resolvedNeighborId,
       }];
       onComplete(decisions);
     },

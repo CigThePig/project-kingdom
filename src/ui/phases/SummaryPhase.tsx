@@ -64,11 +64,12 @@ export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhas
         </div>
       ))}
 
-      <div
+      <button
         onClick={onComplete}
         style={{
           marginTop: 4,
           padding: '12px 0',
+          width: '100%',
           textAlign: 'center',
           fontFamily: 'var(--font-family-mono)',
           fontSize: 11,
@@ -77,10 +78,12 @@ export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhas
           textTransform: 'uppercase',
           color: 'var(--color-accent-response)',
           cursor: 'pointer',
+          background: 'transparent',
+          border: 'none',
         }}
       >
         NEXT ROUND
-      </div>
+      </button>
     </div>
   );
 }

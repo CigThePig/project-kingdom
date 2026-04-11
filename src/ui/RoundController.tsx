@@ -82,13 +82,16 @@ export function RoundController() {
   // Codex overlay state
   const [isCodexOpen, setIsCodexOpen] = useState(false);
 
-  // Prepare card pools when season starts (Month 1, monthDawn)
+  // Prepare card pools when season starts (Month 1, monthDawn).
+  // Also regenerates when authoritative gameState changes externally
+  // (e.g. load-save, new-game) so cards reflect the current state.
+  const turnNumber = ctx.state.gameState.turn.turnNumber;
   useEffect(() => {
     if (currentMonth === SeasonMonth.Early && currentPhase === 'monthDawn') {
       prepareRound(ctx.state.gameState, ctx.state.eventHistory);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentMonth, currentPhase]);
+  }, [currentMonth, currentPhase, turnNumber]);
 
   // Randomize dawn display and generate World Pulse each time we enter monthDawn
   useEffect(() => {
@@ -142,13 +145,15 @@ export function RoundController() {
     }
     setSurfacedEvents(events);
 
-    // Partition events into crisis/petition
-    const { crisisEvents, petitionEvents } = partitionEvents(events);
-    const firstCrisis = crisisEvents[0] ?? null;
-    const crisis = firstCrisis ? generateCrisisPhaseData(firstCrisis) : null;
+    // Partition events into crisis/petition/notification
+    const { crisisEvents, petitionEvents, notificationEvents } = partitionEvents(events);
+    const crisisDataList = crisisEvents.map(generateCrisisPhaseData);
+    const crisis = crisisDataList[0] ?? null;
     setCrisisData(crisis);
 
-    const petitions = generatePetitionCards(petitionEvents);
+    // Notification events are included in the petition pool so they appear
+    // as acknowledge-only cards and don't silently accumulate.
+    const petitions = generatePetitionCards([...petitionEvents, ...notificationEvents]);
     setPetitionCards(petitions);
 
     // Generate negotiation and assessment cards
@@ -157,8 +162,9 @@ export function RoundController() {
 
     const assessment = generateAssessmentPhaseData(gameState);
 
-    // Distribute cards across 3 months
-    const allocations = distributeCardsToMonths(crisis, petitions, negotiation, assessment);
+    // Distribute cards across 3 months (pass additional crises beyond the first)
+    const additionalCrises = crisisDataList.slice(1);
+    const allocations = distributeCardsToMonths(crisis, petitions, negotiation, assessment, additionalCrises);
     setMonthAllocations(allocations);
 
     // Generate decree cards (used in Month 3)
@@ -222,7 +228,11 @@ export function RoundController() {
       for (const d of allDecisions) {
         if (d.interactionType === InteractionType.CrisisResponse || d.interactionType === InteractionType.Petition) {
           const card = petitionCards.find((p) => p.eventId === d.cardId);
-          const defId = card?.definitionId ?? d.cardId;
+          // For crisis responses, look up the definitionId from crisis card data.
+          const crisisDefId = crisisData?.crisisCard.eventId === d.cardId
+            ? crisisData.crisisCard.definitionId
+            : undefined;
+          const defId = card?.definitionId ?? crisisDefId ?? d.cardId;
           const deltas = EVENT_CHOICE_STYLE_TAGS[defId]?.[d.choiceId];
           if (deltas && Object.keys(deltas).length > 0) {
             projectedStyle = accumulateStyleDecision(projectedStyle, {
@@ -278,11 +288,19 @@ export function RoundController() {
 
       // Apply assessment and negotiation effects directly (they don't
       // flow through the engine's event system as ActiveEvents).
-      const stateAfterDirect = applyDirectEffects(
+      let stateAfterDirect = applyDirectEffects(
         ctx.state.gameState,
         accumulatedDecisions,
         negotiationId,
       );
+
+      // Persist ruling-style threshold crossings computed during summary generation.
+      if (summaryData?.updatedRulingStyle) {
+        stateAfterDirect = {
+          ...stateAfterDirect,
+          rulingStyle: summaryData.updatedRulingStyle,
+        };
+      }
 
       // Merge card-derived actions with any pre-queued actions
       const existingActions = stateAfterDirect.actionBudget.queuedActions;
@@ -305,17 +323,17 @@ export function RoundController() {
 
       const result = resolveTurn(stateWithActions, applyActionEffects, ctx.state.eventHistory);
       ctx.dispatch({ type: 'TURN_RESOLVED', result });
+
+      // Only reset for next season after successful resolution.
+      setCurrentMonth(SeasonMonth.Early);
+      setCurrentPhase('monthDawn');
+      setAccumulatedDecisions([]);
+      setSelectedDecrees([]);
+      setSurfacedEvents([]);
+      setMonthAllocations(null);
     } catch (err) {
       console.error('Turn resolution error:', err);
     }
-
-    // Reset for next season
-    setCurrentMonth(SeasonMonth.Early);
-    setCurrentPhase('monthDawn');
-    setAccumulatedDecisions([]);
-    setSelectedDecrees([]);
-    setSurfacedEvents([]);
-    setMonthAllocations(null);
   }, [
     ctx,
     accumulatedDecisions,
@@ -325,6 +343,7 @@ export function RoundController() {
     negotiationId,
     decreeCards,
     surfacedEvents,
+    summaryData,
   ]);
 
   // Get current month's allocation for rendering
@@ -383,8 +402,15 @@ export function RoundController() {
       {currentPhase === 'summary' && (
         <SummaryPhase
           decisions={{
-            crisisResponse: null,
-            petitionDecisions: [],
+            crisisResponse: accumulatedDecisions.find(
+              (d) => d.interactionType === InteractionType.CrisisResponse,
+            )?.choiceId ?? null,
+            petitionDecisions: accumulatedDecisions
+              .filter((d) => d.interactionType === InteractionType.Petition)
+              .map((d) => {
+                const card = petitionCards.find((p) => p.eventId === d.cardId);
+                return { cardId: d.cardId, granted: d.choiceId === (card?.grantChoiceId ?? 'grant') };
+              }),
             selectedDecrees,
           }}
           summaryData={summaryData ?? undefined}

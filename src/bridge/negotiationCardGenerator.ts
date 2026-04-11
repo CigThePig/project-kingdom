@@ -134,5 +134,6 @@ export function generateNegotiationCard(
     rejectEffects,
     rejectHints: mechDeltaToEffectHints(rejectEffects),
     contextLabel: text.contextLabel ?? 'NEGOTIATION',
+    resolvedNeighborId: neighbor.id || undefined,
   };
 }

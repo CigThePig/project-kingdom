@@ -139,5 +139,9 @@ function generatePetitionFromAction(
     denyChoiceId: denyChoice.choiceId,
     grantEffects: mechDeltaToEffectHints(grantDelta),
     denyEffects: mechDeltaToEffectHints(denyDelta),
+    allChoices: template.choices.map((c) => ({
+      choiceId: c.choiceId,
+      effects: mechDeltaToEffectHints(resolveEffects(effects[c.choiceId] ?? {}, action.neighborId)),
+    })),
   };
 }

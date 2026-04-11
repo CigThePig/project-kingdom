@@ -17,6 +17,8 @@ import type { MechanicalEffectDelta } from '../engine/types';
 export interface AssessmentPhaseData {
   crisisData: CrisisPhaseData;
   confidenceLevel: ConfidenceLevel;
+  /** Neighbor resolved at generation time; prevents retargeting at resolution. */
+  resolvedNeighborId?: string;
 }
 
 /**
@@ -93,6 +95,13 @@ export function generateAssessmentPhaseData(
     effects: [],
   };
 
+  // Resolve neighbor once and reuse for all choices.
+  const neighbors = state.diplomacy.neighbors;
+  const peaceful = neighbors
+    .filter((n) => !n.isAtWarWithPlayer)
+    .sort((a, b) => b.relationshipScore - a.relationshipScore);
+  const resolvedNeighborId = peaceful[0]?.id ?? neighbors[0]?.id ?? undefined;
+
   // Build response cards from choices
   const responses: ResponseCardData[] = selected.choices.map((choice) => {
     const choiceEffects = effects[choice.choiceId] ?? {};
@@ -110,5 +119,6 @@ export function generateAssessmentPhaseData(
   return {
     crisisData: { crisisCard, responses },
     confidenceLevel: deriveConfidenceLevel(selected),
+    resolvedNeighborId,
   };
 }

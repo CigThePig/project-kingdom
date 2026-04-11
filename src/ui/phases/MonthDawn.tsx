@@ -92,11 +92,12 @@ export function MonthDawn({
 
         <EffectStrip effects={effects} />
 
-        <div
+        <button
           onClick={onComplete}
           style={{
             marginTop: 16,
             padding: '12px 0',
+            width: '100%',
             textAlign: 'center',
             fontFamily: 'var(--font-family-mono)',
             fontSize: 11,
@@ -105,10 +106,12 @@ export function MonthDawn({
             textTransform: 'uppercase',
             color: 'var(--color-text-disabled)',
             cursor: 'pointer',
+            background: 'transparent',
+            border: 'none',
           }}
         >
           TAP TO BEGIN
-        </div>
+        </button>
       </Card>
 
       {/* Advisor briefing — Month 1 only */}

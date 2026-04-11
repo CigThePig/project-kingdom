@@ -71,6 +71,8 @@ export interface MonthDecision {
   choiceId: string;
   interactionType: InteractionType;
   month: SeasonMonth;
+  /** Neighbor resolved during card generation; used to prevent retargeting at resolution. */
+  targetNeighborId?: string;
 }
 
 export interface WorldPulseLine {
@@ -95,6 +97,8 @@ export interface NegotiationCard {
   rejectEffects: MechanicalEffectDelta;
   rejectHints: EffectHint[];
   contextLabel: string;
+  /** Neighbor resolved at generation time; prevents retargeting at resolution. */
+  resolvedNeighborId?: string;
 }
 
 // Monthly card allocation — output of the card distributor

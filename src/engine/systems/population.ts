@@ -314,7 +314,7 @@ export function calculateStability(
   const foodContribution = foodSecurityScore * STABILITY_FOOD_SECURITY_WEIGHT;
   const faithContribution = faithLevel * STABILITY_FAITH_WEIGHT;
   const culturalCohesionContribution = culturalCohesion * STABILITY_CULTURAL_COHESION_WEIGHT;
-  const excessActions = Math.max(0, actionsTakenThisTurn - 3);
+  const excessActions = Math.max(0, actionsTakenThisTurn - 2);
   const decreePaceDrag = -(excessActions * STABILITY_DECREE_PACE_DRAG_PER_EXCESS_ACTION);
   const decreePaceContribution = decreePaceDrag;
 

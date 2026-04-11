@@ -940,4 +940,5 @@ export interface SaveFile {
   turnHistory: TurnHistoryEntry[];
   eventHistory: ActiveEvent[]; // fully resolved past events
   intelligenceReports: IntelligenceReport[];
+  chronicle?: Array<{ season: string; text: string; isProtected: boolean }>;
 }

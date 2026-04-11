@@ -38,6 +38,8 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
     });
   }, []);
 
+  const resolvedNeighborId = negotiationCard.resolvedNeighborId;
+
   const handleReject = useCallback(() => {
     if (confirming === 'reject') {
       // Second tap — commit
@@ -46,12 +48,13 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
         choiceId: `reject:${eventCard.id}`,
         interactionType: InteractionType.Negotiation,
         month: currentMonth,
+        targetNeighborId: resolvedNeighborId,
       }];
       onComplete(decisions);
     } else {
       setConfirming('reject');
     }
-  }, [confirming, eventCard.id, currentMonth, onComplete]);
+  }, [confirming, eventCard.id, currentMonth, onComplete, resolvedNeighborId]);
 
   const handleAccept = useCallback(() => {
     if (toggledTermIds.size === 0) {
@@ -68,6 +71,7 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
           choiceId: termId,
           interactionType: InteractionType.Negotiation,
           month: currentMonth,
+          targetNeighborId: resolvedNeighborId,
         });
       }
       // Add overall accept decision
@@ -76,12 +80,13 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
         choiceId: `accept:${eventCard.id}`,
         interactionType: InteractionType.Negotiation,
         month: currentMonth,
+        targetNeighborId: resolvedNeighborId,
       });
       onComplete(decisions);
     } else {
       setConfirming('accept');
     }
-  }, [confirming, toggledTermIds, eventCard.id, currentMonth, onComplete, handleReject]);
+  }, [confirming, toggledTermIds, eventCard.id, currentMonth, onComplete, handleReject, resolvedNeighborId]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

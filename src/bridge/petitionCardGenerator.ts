@@ -12,6 +12,11 @@ import { mechDeltaToEffectHints } from './crisisCardGenerator';
 // Card data type
 // ============================================================
 
+export interface PetitionChoiceData {
+  choiceId: string;
+  effects: EffectHint[];
+}
+
 export interface PetitionCardData {
   eventId: string;
   definitionId: string;
@@ -21,6 +26,8 @@ export interface PetitionCardData {
   denyChoiceId: string;
   grantEffects: EffectHint[];
   denyEffects: EffectHint[];
+  /** All authored choices, preserving middle options for 3+ choice events. */
+  allChoices: PetitionChoiceData[];
 }
 
 // ============================================================
@@ -34,11 +41,34 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
     const textEntry = EVENT_TEXT[event.definitionId];
     const def = EVENT_POOL.find((e) => e.id === event.definitionId);
 
-    if (!textEntry || !def || def.choices.length < 2) continue;
+    if (!textEntry || !def || def.choices.length < 1) continue;
 
     const choiceEffects = EVENT_CHOICE_EFFECTS[event.definitionId] ?? {};
+
+    // Single-choice (notification-style) events: present as acknowledge-only petition.
+    if (def.choices.length === 1) {
+      const onlyChoice = def.choices[0];
+      const onlyEffects = mechDeltaToEffectHints(choiceEffects[onlyChoice.choiceId] ?? {});
+      cards.push({
+        eventId: event.id,
+        definitionId: event.definitionId,
+        title: textEntry.title,
+        body: textEntry.body,
+        grantChoiceId: onlyChoice.choiceId,
+        denyChoiceId: onlyChoice.choiceId,
+        grantEffects: onlyEffects,
+        denyEffects: onlyEffects,
+        allChoices: [{ choiceId: onlyChoice.choiceId, effects: onlyEffects }],
+      });
+      continue;
+    }
     const grantChoice = def.choices[0];
     const denyChoice = def.choices[def.choices.length - 1];
+
+    const allChoices: PetitionChoiceData[] = def.choices.map((c) => ({
+      choiceId: c.choiceId,
+      effects: mechDeltaToEffectHints(choiceEffects[c.choiceId] ?? {}),
+    }));
 
     cards.push({
       eventId: event.id,
@@ -49,6 +79,40 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
       denyChoiceId: denyChoice.choiceId,
       grantEffects: mechDeltaToEffectHints(choiceEffects[grantChoice.choiceId] ?? {}),
       denyEffects: mechDeltaToEffectHints(choiceEffects[denyChoice.choiceId] ?? {}),
+      allChoices,
+    });
+  }
+
+  return cards;
+}
+
+// ============================================================
+// Notification Card Data
+// ============================================================
+
+export interface NotificationCardData {
+  eventId: string;
+  definitionId: string;
+  title: string;
+  body: string;
+  acknowledgeChoiceId: string;
+}
+
+export function generateNotificationCards(events: ActiveEvent[]): NotificationCardData[] {
+  const cards: NotificationCardData[] = [];
+
+  for (const event of events) {
+    const textEntry = EVENT_TEXT[event.definitionId];
+    const def = EVENT_POOL.find((e) => e.id === event.definitionId);
+
+    if (!textEntry || !def || def.choices.length < 1) continue;
+
+    cards.push({
+      eventId: event.id,
+      definitionId: event.definitionId,
+      title: textEntry.title,
+      body: textEntry.body,
+      acknowledgeChoiceId: def.choices[0].choiceId,
     });
   }
 

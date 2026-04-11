@@ -441,7 +441,7 @@ function applyTradeActionEffect(state: GameState, action: QueuedAction): GameSta
 
   if (subType === 'initiate_agreement' && targetNeighborId !== null) {
     const newAgreement: DiplomaticAgreement = {
-      agreementId: `trade-${action.id}`,
+      agreementId: `trade_${action.id}`,
       neighborId: targetNeighborId,
       turnsRemaining: TRADE_AGREEMENT_TURNS,
     };

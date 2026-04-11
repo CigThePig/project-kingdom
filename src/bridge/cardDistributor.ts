@@ -37,6 +37,7 @@ export function distributeCardsToMonths(
   petitionCards: PetitionCardData[],
   negotiationCard: NegotiationCard | null,
   assessmentData: AssessmentPhaseData | null,
+  additionalCrises: CrisisPhaseData[] = [],
 ): MonthCardAllocation {
   const month1: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [] };
   const month2: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [] };
@@ -93,6 +94,17 @@ export function distributeCardsToMonths(
   }
   // else: quiet month
 
+  // ---- Place additional crisis events in available months ----
+  for (const extraCrisis of additionalCrises) {
+    const months = [month1, month2, month3];
+    const freeMonth = months.find((m) => m.interactionType === null);
+    if (freeMonth) {
+      freeMonth.interactionType = InteractionType.CrisisResponse;
+      freeMonth.crisisData = extraCrisis;
+    }
+    // If no free month, the extra crisis is not surfaced this season.
+  }
+
   // ---- Distribute petitions across months that have petition interaction ----
   if (petitionCards.length > 0) {
     const petitionMonths: MonthAllocation[] = [];
@@ -113,10 +125,12 @@ export function distributeCardsToMonths(
         month3.interactionType = InteractionType.Petition;
         petitionMonths.push(month3);
       }
-      // If all months are occupied by higher-priority interactions
-      // (crisis/negotiation/assessment), petitions are deferred this season.
-      // CourtBusiness only renders petitions when interactionType === Petition,
-      // so assigning them to an occupied month would silently drop them.
+      // If all months are occupied by higher-priority interactions,
+      // attach petitions to the last month so they are not deferred entirely.
+      // CourtBusiness will show them after the primary interaction.
+      if (petitionMonths.length === 0) {
+        petitionMonths.push(month3);
+      }
     }
 
     // Distribute petitions evenly across petition months (max 3 per month)

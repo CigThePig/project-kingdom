@@ -13,19 +13,24 @@ import type { MonthDecision } from '../ui/types';
 
 /**
  * Resolves __NEIGHBOR__ placeholders in diplomacyDeltas.
- * Picks the first peaceful neighbor by relationship score, or falls back to any.
+ * Uses the provided neighborId if available (from card generation), otherwise
+ * falls back to picking the first peaceful neighbor by relationship score.
  */
 function resolveNeighborPlaceholders(
   delta: MechanicalEffectDelta,
   state: GameState,
+  preResolvedNeighborId?: string,
 ): MechanicalEffectDelta {
   if (!delta.diplomacyDeltas) return delta;
 
-  const neighbors = state.diplomacy.neighbors;
-  const peaceful = neighbors
-    .filter((n) => !n.isAtWarWithPlayer)
-    .sort((a, b) => b.relationshipScore - a.relationshipScore);
-  const neighborId = peaceful[0]?.id ?? neighbors[0]?.id ?? 'unknown';
+  let neighborId = preResolvedNeighborId;
+  if (!neighborId) {
+    const neighbors = state.diplomacy.neighbors;
+    const peaceful = neighbors
+      .filter((n) => !n.isAtWarWithPlayer)
+      .sort((a, b) => b.relationshipScore - a.relationshipScore);
+    neighborId = peaceful[0]?.id ?? neighbors[0]?.id ?? 'unknown';
+  }
 
   const resolved: Record<string, number> = {};
   for (const [key, value] of Object.entries(delta.diplomacyDeltas)) {
@@ -54,7 +59,7 @@ export function applyDirectEffects(
       const bareChoiceId = parts[parts.length - 1];
       const rawDelta = ASSESSMENT_EFFECTS[assessId]?.[bareChoiceId];
       if (rawDelta) {
-        const delta = resolveNeighborPlaceholders(rawDelta, current);
+        const delta = resolveNeighborPlaceholders(rawDelta, current, d.targetNeighborId);
         current = applyMechanicalEffectDelta(current, delta, null);
       }
     }
@@ -67,14 +72,14 @@ export function applyDirectEffects(
         );
         if (rejectKey) {
           const rawDelta = NEGOTIATION_EFFECTS[negotiationId][rejectKey];
-          const delta = resolveNeighborPlaceholders(rawDelta, current);
+          const delta = resolveNeighborPlaceholders(rawDelta, current, d.targetNeighborId);
           current = applyMechanicalEffectDelta(current, delta, null);
         }
       } else if (!d.choiceId.startsWith('accept:')) {
         // Term effect — choiceId is the bare termId
         const rawDelta = NEGOTIATION_EFFECTS[negotiationId]?.[d.choiceId];
         if (rawDelta) {
-          const delta = resolveNeighborPlaceholders(rawDelta, current);
+          const delta = resolveNeighborPlaceholders(rawDelta, current, d.targetNeighborId);
           current = applyMechanicalEffectDelta(current, delta, null);
         }
       }
