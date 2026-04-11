@@ -218,7 +218,14 @@ export function resolveTurn(
   const hasAnyPendingProposals = state.diplomacy.neighbors.some(
     (n) => n.pendingProposals && n.pendingProposals.length > 0,
   );
+  // Track just-accepted agreement IDs so they are not decremented this turn.
+  const justAcceptedAgreementIds = new Set<string>();
   if (hasAnyPendingProposals) {
+    for (const n of state.diplomacy.neighbors) {
+      for (const p of n.pendingProposals ?? []) {
+        justAcceptedAgreementIds.add(p.agreementId);
+      }
+    }
     stateWithAcceptedProposals = {
       ...state,
       diplomacy: {
@@ -272,42 +279,48 @@ export function resolveTurn(
     },
   };
 
-  // Calculate income from pre-action state (using accepted proposals).
+  // Neighbor relationship scores needed for trade income calculation.
   const neighborRelScores: Record<string, number> = {};
   for (const n of stateWithAcceptedProposals.diplomacy.neighbors) {
     neighborRelScores[n.id] = n.relationshipScore;
   }
 
-  const taxationIncome = calculateTaxationIncome(
-    state.policies.taxationLevel,
-    state.population[PopulationClass.Nobility].satisfaction,
-    state.population[PopulationClass.Merchants].satisfaction,
-    state.regions,
-  );
-
-  const tradeIncome = calculateTradeIncome(
-    state.population[PopulationClass.Merchants].satisfaction,
-    state.policies.tradeOpenness,
-    neighborRelScores,
-    regionalSummary.tradeModifier,
-    getTradeBonus(state.knowledge),
-  );
-
-  const incomeBreakdown = calculateIncome(taxationIncome, tradeIncome, 0);
-
-  // Food production uses commoner labor and regional food output from pre-action state.
-  const foodProduction = calculateFoodProduction(
-    state.population[PopulationClass.Commoners],
-    regionalSummary.foodOutput,
-    state.turn.season,
-    getAgriculturalBonus(state.knowledge),
-  );
-
   // ---- Phase 2: Action Execution ----
   // Pass updated resources and accepted proposals into action effects.
+  // Snapshot existing construction project IDs so Phase 10 can skip new ones.
+  const preActionProjectIds = new Set(
+    stateWithAcceptedProposals.constructionProjects.map((p) => p.id),
+  );
   let stateAfterActions = applyActionEffects(
     { ...stateWithAcceptedProposals, resources: phase1Resources },
     stateWithAcceptedProposals.actionBudget.queuedActions,
+  );
+
+  // ---- Phase 2a: Recalculate income/food with post-action policies ----
+  // Policy changes (taxation, trade openness, rationing) applied in Phase 2
+  // must feed into the same turn's economy/food calculations.
+  const taxationIncomePostAction = calculateTaxationIncome(
+    stateAfterActions.policies.taxationLevel,
+    stateAfterActions.population[PopulationClass.Nobility].satisfaction,
+    stateAfterActions.population[PopulationClass.Merchants].satisfaction,
+    stateAfterActions.regions,
+  );
+
+  const tradeIncomePostAction = calculateTradeIncome(
+    stateAfterActions.population[PopulationClass.Merchants].satisfaction,
+    stateAfterActions.policies.tradeOpenness,
+    neighborRelScores,
+    regionalSummary.tradeModifier,
+    getTradeBonus(stateAfterActions.knowledge),
+  );
+
+  const incomeBreakdownPostAction = calculateIncome(taxationIncomePostAction, tradeIncomePostAction, 0);
+
+  const foodProductionPostAction = calculateFoodProduction(
+    stateAfterActions.population[PopulationClass.Commoners],
+    regionalSummary.foodOutput,
+    stateAfterActions.turn.season,
+    getAgriculturalBonus(stateAfterActions.knowledge),
   );
 
   // ---- Phase 2b: Temporary Modifier Tick ----
@@ -349,7 +362,7 @@ export function resolveTurn(
 
   let updatedTreasury = applyTreasuryFlow(
     stateAfterActions.treasury,
-    incomeBreakdown,
+    incomeBreakdownPostAction,
     expenseBreakdown,
   );
 
@@ -360,11 +373,11 @@ export function resolveTurn(
     stateAfterActions.military.forceSize,
   );
 
-  let updatedFood = applyFoodFlow(stateAfterActions.food, foodProduction, foodConsumption);
+  let updatedFood = applyFoodFlow(stateAfterActions.food, foodProductionPostAction, foodConsumption);
 
   // ---- Phase 4: Population and Class Dynamics ----
   // Trade income trend used by merchants satisfaction delta.
-  const tradeIncomeDelta = tradeIncome - state.treasury.income.trade;
+  const tradeIncomeDelta = tradeIncomePostAction - state.treasury.income.trade;
 
   const satisfactionDeltas = {
     [PopulationClass.Nobility]: calculateNobilitySatisfactionDelta(
@@ -465,9 +478,20 @@ export function resolveTurn(
       neighbor.religiousProfile === stateAfterActions.faithCulture.kingdomFaithTraditionId;
     const sharedCulture =
       neighbor.culturalIdentity === stateAfterActions.faithCulture.kingdomCultureIdentityId;
+    // Composite military strength on 0–100 scale, comparable to neighbor.militaryStrength.
+    const playerMilitaryStrength = clamp(
+      Math.round(
+        militaryAfterUpdate.readiness * 0.3 +
+        militaryAfterUpdate.equipmentCondition * 0.25 +
+        militaryAfterUpdate.morale * 0.25 +
+        militaryAfterUpdate.militaryCasteQuality * 0.2,
+      ),
+      0,
+      100,
+    );
     aiRelationshipDeltas[neighbor.id] = calculateAIRelationshipDelta(
       neighbor,
-      militaryAfterUpdate.readiness,
+      playerMilitaryStrength,
       stateAfterActions.stability.value,
       sharedFaith,
       sharedCulture,
@@ -480,7 +504,7 @@ export function resolveTurn(
   );
   let updatedDiplomacy = {
     ...diplomacyAfterDrift,
-    neighbors: tickDiplomaticAgreements(diplomacyAfterDrift.neighbors),
+    neighbors: tickDiplomaticAgreements(diplomacyAfterDrift.neighbors, justAcceptedAgreementIds),
   };
 
   // Intelligence operation resolution.
@@ -1490,12 +1514,13 @@ export function resolveTurn(
     }
 
     // Resource costs are paid upfront in applyConstructionEffect (Phase 2).
-    // Just decrement the turn counter.
+    // Just decrement the turn counter — but skip projects created this turn.
     if (project.turnsRemaining <= 0) continue;
 
+    const isNewThisTurn = !preActionProjectIds.has(project.id);
     updatedConstructionProjects.push({
       ...project,
-      turnsRemaining: project.turnsRemaining - 1,
+      turnsRemaining: isNewThisTurn ? project.turnsRemaining : project.turnsRemaining - 1,
     });
   }
 

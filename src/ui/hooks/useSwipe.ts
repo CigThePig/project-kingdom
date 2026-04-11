@@ -91,8 +91,17 @@ export function useSwipe({ onSwipeLeft, onSwipeRight, enabled = true }: UseSwipe
     }
   }, [onSwipeLeft, onSwipeRight]);
 
+  const onTouchCancel = useCallback(() => {
+    const el = ref.current;
+    if (!tracking.current.isDragging || !el) return;
+    tracking.current.isDragging = false;
+    el.style.transition = `transform ${TRANSITION_MS}ms ease, opacity ${TRANSITION_MS}ms ease`;
+    el.style.transform = 'translateX(0) rotate(0deg)';
+    el.style.opacity = '1';
+  }, []);
+
   return {
     ref,
-    handlers: { onTouchStart, onTouchMove, onTouchEnd },
+    handlers: { onTouchStart, onTouchMove, onTouchEnd, onTouchCancel },
   };
 }

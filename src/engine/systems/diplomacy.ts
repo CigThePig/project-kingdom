@@ -188,11 +188,15 @@ export function applyDiplomaticActionEffect(
  * Indefinite agreements (turnsRemaining === null) are untouched.
  * Returns a new NeighborState[] (immutable update).
  */
-export function tickDiplomaticAgreements(neighbors: NeighborState[]): NeighborState[] {
+export function tickDiplomaticAgreements(
+  neighbors: NeighborState[],
+  skipAgreementIds?: Set<string>,
+): NeighborState[] {
   return neighbors.map((n) => {
     const updatedAgreements = n.activeAgreements
       .map((agreement: DiplomaticAgreement) => {
         if (agreement.turnsRemaining === null) return agreement;
+        if (skipAgreementIds?.has(agreement.agreementId)) return agreement;
         return { ...agreement, turnsRemaining: agreement.turnsRemaining - 1 };
       })
       .filter(

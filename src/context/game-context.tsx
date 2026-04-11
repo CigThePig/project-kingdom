@@ -151,7 +151,7 @@ function gameReducer(state: GameContextState, action: GameAction): GameContextSt
         turnHistory: save.turnHistory,
         eventHistory: save.eventHistory,
         intelligenceReports: save.intelligenceReports,
-        chronicle: (save as Record<string, unknown>).chronicle as ChronicleEntry[] ?? [],
+        chronicle: (save.chronicle as ChronicleEntry[] | undefined) ?? [],
         lastTurnResult: null,
         isMidTurn: save.isMidTurn,
         lastSavedAt: save.savedAt,

@@ -151,9 +151,78 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
           <Card family="petition">
             <CardTitle>{petition.title}</CardTitle>
             <CardBody>{petition.body}</CardBody>
-            <EffectStrip effects={petition.grantEffects} />
+            <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontFamily: 'var(--font-family-mono)',
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: 1,
+                  textTransform: 'uppercase',
+                  color: 'var(--color-positive)',
+                  marginBottom: 2,
+                }}>GRANT</div>
+                <EffectStrip effects={petition.grantEffects} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{
+                  fontFamily: 'var(--font-family-mono)',
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: 1,
+                  textTransform: 'uppercase',
+                  color: 'var(--color-negative)',
+                  marginBottom: 2,
+                }}>DENY</div>
+                <EffectStrip effects={petition.denyEffects} />
+              </div>
+            </div>
           </Card>
         </div>
+      </div>
+
+      {/* Button fallbacks for non-touch / accessibility */}
+      <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+        <button
+          onClick={() => handleDecision(false)}
+          style={{
+            flex: 1,
+            maxWidth: 140,
+            padding: '10px 16px',
+            fontFamily: 'var(--font-family-mono)',
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: 2,
+            textTransform: 'uppercase',
+            color: 'var(--color-negative)',
+            background: 'transparent',
+            border: '1px solid var(--color-negative)',
+            borderRadius: 4,
+            cursor: 'pointer',
+          }}
+        >
+          DENY
+        </button>
+        <button
+          onClick={() => handleDecision(true)}
+          style={{
+            flex: 1,
+            maxWidth: 140,
+            padding: '10px 16px',
+            fontFamily: 'var(--font-family-mono)',
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: 2,
+            textTransform: 'uppercase',
+            color: 'var(--color-positive)',
+            background: 'transparent',
+            border: '1px solid var(--color-positive)',
+            borderRadius: 4,
+            cursor: 'pointer',
+          }}
+        >
+          GRANT
+        </button>
       </div>
 
       {/* Swipe hint */}
