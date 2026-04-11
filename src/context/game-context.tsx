@@ -76,7 +76,7 @@ export const GameContext = createContext<GameContextValue | null>(null);
 // Initial State
 // ============================================================
 
-function createScenarioState(scenarioId?: string): GameState {
+export function createScenarioState(scenarioId?: string): GameState {
   switch (scenarioId) {
     case 'fractured_inheritance':
       return createFracturedInheritanceScenario();
@@ -91,7 +91,7 @@ function createScenarioState(scenarioId?: string): GameState {
   }
 }
 
-function createInitialState(scenarioId?: string): GameContextState {
+export function createInitialState(scenarioId?: string): GameContextState {
   return {
     gameState: createScenarioState(scenarioId),
     turnHistory: [],
@@ -110,7 +110,7 @@ function createInitialState(scenarioId?: string): GameContextState {
 // Reducer
 // ============================================================
 
-function gameReducer(state: GameContextState, action: GameAction): GameContextState {
+export function gameReducer(state: GameContextState, action: GameAction): GameContextState {
   switch (action.type) {
     case 'INIT_NEW_GAME': {
       return createInitialState(action.scenarioId);

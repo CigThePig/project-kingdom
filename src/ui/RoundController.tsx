@@ -1,11 +1,12 @@
-import { useState, useContext, useCallback, useEffect } from 'react';
+import { useState, useContext, useCallback, useEffect, lazy, Suspense } from 'react';
 
 import { StatsBar } from './components/StatsBar';
 import { PhaseIndicator } from './components/PhaseIndicator';
-import { MonthDawn } from './phases/MonthDawn';
-import { CourtBusiness } from './phases/CourtBusiness';
-import { DecreePhase } from './phases/DecreePhase';
-import { SummaryPhase } from './phases/SummaryPhase';
+
+const MonthDawn = lazy(() => import('./phases/MonthDawn').then(m => ({ default: m.MonthDawn })));
+const CourtBusiness = lazy(() => import('./phases/CourtBusiness').then(m => ({ default: m.CourtBusiness })));
+const DecreePhase = lazy(() => import('./phases/DecreePhase').then(m => ({ default: m.DecreePhase })));
+const SummaryPhase = lazy(() => import('./phases/SummaryPhase').then(m => ({ default: m.SummaryPhase })));
 import { GameContext } from '../context/game-context';
 import { resolveTurn } from '../engine/resolution/turn-resolution';
 import { applyActionEffects } from '../engine/resolution/apply-action-effects';
@@ -38,6 +39,8 @@ import { compileKingdomState } from '../bridge/codexCompiler';
 import { compileDossier } from '../bridge/dossierCompiler';
 import { compileActiveSituations } from '../bridge/situationTracker';
 import { CodexOverlay } from './components/CodexOverlay';
+import { generateStorylineCrisisData } from '../bridge/storylineCardGenerator';
+import { generateNeighborActionCards } from '../bridge/neighborActionCardGenerator';
 import type { WorldPulseLine } from './types';
 
 /**
@@ -51,7 +54,11 @@ function getAllocationForMonth(allocations: MonthCardAllocation, month: SeasonMo
   }
 }
 
-export function RoundController() {
+interface RoundControllerProps {
+  onGameOver?: () => void;
+}
+
+export function RoundController({ onGameOver }: RoundControllerProps = {}) {
   const ctx = useContext(GameContext);
   if (!ctx) throw new Error('RoundController must be inside GameProvider');
 
@@ -148,13 +155,25 @@ export function RoundController() {
     // Partition events into crisis/petition/notification
     const { crisisEvents, petitionEvents, notificationEvents } = partitionEvents(events);
     const crisisDataList = crisisEvents.map(generateCrisisPhaseData);
-    const crisis = crisisDataList[0] ?? null;
+
+    // Generate crisis cards from active storylines at branch points
+    const storylineCrises = (gameState.activeStorylines ?? [])
+      .map(generateStorylineCrisisData)
+      .filter((d): d is CrisisPhaseData => d !== null);
+
+    // Generate cards from neighbor AI actions
+    const neighborCards = generateNeighborActionCards(gameState.neighborActions ?? []);
+
+    // Merge all crisis sources
+    const allCrises = [...crisisDataList, ...storylineCrises, ...neighborCards.crisisCards];
+    const crisis = allCrises[0] ?? null;
     setCrisisData(crisis);
 
     // Notification events are included in the petition pool so they appear
     // as acknowledge-only cards and don't silently accumulate.
     const petitions = generatePetitionCards([...petitionEvents, ...notificationEvents]);
-    setPetitionCards(petitions);
+    const allPetitions = [...petitions, ...neighborCards.petitionCards];
+    setPetitionCards(allPetitions);
 
     // Generate negotiation and assessment cards
     const negotiation = generateNegotiationCard(gameState);
@@ -163,8 +182,8 @@ export function RoundController() {
     const assessment = generateAssessmentPhaseData(gameState);
 
     // Distribute cards across 3 months (pass additional crises beyond the first)
-    const additionalCrises = crisisDataList.slice(1);
-    const allocations = distributeCardsToMonths(crisis, petitions, negotiation, assessment, additionalCrises);
+    const additionalCrises = allCrises.slice(1);
+    const allocations = distributeCardsToMonths(crisis, allPetitions, negotiation, assessment, additionalCrises);
     setMonthAllocations(allocations);
 
     // Generate decree cards (used in Month 3)
@@ -324,6 +343,12 @@ export function RoundController() {
       const result = resolveTurn(stateWithActions, applyActionEffects, ctx.state.eventHistory);
       ctx.dispatch({ type: 'TURN_RESOLVED', result });
 
+      // If failure conditions triggered, signal game over instead of cycling.
+      if (result.triggeredFailureConditions.length > 0) {
+        onGameOver?.();
+        return;
+      }
+
       // Only reset for next season after successful resolution.
       setCurrentMonth(SeasonMonth.Early);
       setCurrentPhase('monthDawn');
@@ -344,6 +369,7 @@ export function RoundController() {
     decreeCards,
     surfacedEvents,
     summaryData,
+    onGameOver,
   ]);
 
   // Get current month's allocation for rendering
@@ -366,6 +392,8 @@ export function RoundController() {
     >
       <StatsBar onCodexOpen={() => setIsCodexOpen(true)} />
       <PhaseIndicator currentMonth={currentMonth} currentPhase={currentPhase} />
+
+      <Suspense fallback={<div style={{ fontFamily: 'var(--font-family-mono)', fontSize: 11, color: 'var(--color-text-secondary)', textAlign: 'center', padding: '24px 0', letterSpacing: 2, textTransform: 'uppercase' }}>The court assembles...</div>}>
 
       {currentPhase === 'monthDawn' && (
         <MonthDawn
@@ -417,6 +445,8 @@ export function RoundController() {
           onComplete={handleRoundComplete}
         />
       )}
+
+      </Suspense>
 
       {/* Codex Overlay — accessible during all phases */}
       <CodexOverlay

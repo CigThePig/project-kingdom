@@ -1,5 +1,5 @@
-import { RoundController } from './ui/RoundController';
+import { AppShell } from './ui/AppShell';
 
 export function App() {
-  return <RoundController />;
+  return <AppShell />;
 }
