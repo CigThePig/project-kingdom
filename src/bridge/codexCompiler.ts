@@ -138,7 +138,6 @@ export function compileKingdomState(state: GameState): CodexDomain[] {
 function generatePulseDescription(
   dominant: { axis: keyof NarrativePressure; value: number },
   secondary: { axis: keyof NarrativePressure; value: number },
-  _pressure: NarrativePressure,
 ): string {
   const dominantDef = NARRATIVE_AXIS_DEFINITIONS[dominant.axis];
   if (dominant.value === 0) {
@@ -172,6 +171,6 @@ export function compileNarrativePulse(
 
   return {
     headline: dominantDef.codexHeadline,
-    description: generatePulseDescription(dominant, secondary, pressure),
+    description: generatePulseDescription(dominant, secondary),
   };
 }
