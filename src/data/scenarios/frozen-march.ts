@@ -13,6 +13,7 @@ import {
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
+import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
 import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
 import {
   DiplomaticPosture,
@@ -341,6 +342,8 @@ export function createFrozenMarchScenario(): GameState {
     narrativePacing: createInitialPacingState(),
     resolvedStorylineIds: [],
     lastStorylineActivationTurn: 0,
+    lastStorylineResolutionTurn: 0,
+    narrativePressure: createInitialNarrativePressure(),
 
     // --- Scenario ---
     // --- Ruling Style ---

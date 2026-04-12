@@ -8,6 +8,7 @@ import {
   GameState,
   KnowledgeBranch,
   PopulationClass,
+  StorylineActivationProfile,
   StorylineCategory,
   StorylineStatus,
   StorylineBranchDecision,
@@ -92,8 +93,8 @@ export interface StorylineBranchPointDefinition {
 export interface StorylineDefinition {
   id: string;
   category: StorylineCategory;
-  /** All conditions must pass for this storyline to become eligible for activation. */
-  activationConditions: StorylineActivationCondition[];
+  /** Narrative pressure activation profile — replaces legacy activationConditions. */
+  activationProfile: StorylineActivationProfile;
   /** The branchId of the opening branch point (the first decision the player faces). */
   openingBranchId: string;
   branches: StorylineBranchPointDefinition[];
@@ -180,14 +181,16 @@ function evaluateActivationCondition(
   }
 }
 
+/**
+ * @deprecated Legacy condition check — no longer used. Storyline activation is now
+ * driven by the narrative pressure system in systems/narrative-pressure.ts.
+ */
 function allActivationConditionsPass(
-  definition: StorylineDefinition,
-  state: GameState,
-  turnNumber: number,
+  _definition: StorylineDefinition,
+  _state: GameState,
+  _turnNumber: number,
 ): boolean {
-  return definition.activationConditions.every((c) =>
-    evaluateActivationCondition(c, state, turnNumber),
-  );
+  return false;
 }
 
 /**
@@ -233,7 +236,7 @@ function storylineRelevanceWeight(definition: StorylineDefinition, state: GameSt
   }
 }
 
-function buildActiveStoryline(
+export function buildActiveStoryline(
   definition: StorylineDefinition,
   turnNumber: number,
 ): ActiveStoryline {

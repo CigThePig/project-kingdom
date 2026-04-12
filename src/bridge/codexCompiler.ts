@@ -3,9 +3,11 @@
 // Pure function: state in, CodexDomain[] out.
 
 import { QualitativeTier } from '../engine/types';
-import type { GameState, TreasuryExpenseBreakdown } from '../engine/types';
+import type { GameState, NarrativePressure, TreasuryExpenseBreakdown } from '../engine/types';
 import type { CodexDomain } from '../ui/types';
 import { CODEX_NARRATIVES } from '../data/text/codex-narratives';
+import { getDominantAxis, getSecondHighestAxis } from '../engine/systems/narrative-pressure';
+import { NARRATIVE_AXIS_DEFINITIONS } from '../data/narrative-pressure/axis-definitions';
 
 // ============================================================
 // Domain definitions
@@ -127,4 +129,49 @@ export function compileKingdomState(state: GameState): CodexDomain[] {
     tier,
     narrative: lookupNarrative(id, tier, turn.turnNumber),
   }));
+}
+
+// ============================================================
+// Narrative Pulse — qualitative reading of dominant pressures
+// ============================================================
+
+function generatePulseDescription(
+  dominant: { axis: keyof NarrativePressure; value: number },
+  secondary: { axis: keyof NarrativePressure; value: number },
+  _pressure: NarrativePressure,
+): string {
+  const dominantDef = NARRATIVE_AXIS_DEFINITIONS[dominant.axis];
+  if (dominant.value === 0) {
+    return 'The kingdom drifts without a clear direction. Your decisions have yet to define the character of your reign.';
+  }
+  if (secondary.value > dominant.value * 0.6) {
+    const secondaryDef = NARRATIVE_AXIS_DEFINITIONS[secondary.axis];
+    return `${dominantDef.codexDescription} Meanwhile, ${secondaryDef.theme.toLowerCase()} also shapes the realm's trajectory.`;
+  }
+  return dominantDef.codexDescription;
+}
+
+/**
+ * Compiles a qualitative "Narrative Pulse" reading for the Codex.
+ * Shows the story the player's decisions imply without exposing mechanical axes or numbers.
+ */
+export function compileNarrativePulse(
+  pressure: NarrativePressure,
+): { headline: string; description: string } {
+  const dominant = getDominantAxis(pressure);
+  const secondary = getSecondHighestAxis(pressure);
+
+  if (dominant.value === 0) {
+    return {
+      headline: 'A Kingdom Awaits',
+      description: 'The kingdom drifts without a clear direction. Your decisions have yet to define the character of your reign.',
+    };
+  }
+
+  const dominantDef = NARRATIVE_AXIS_DEFINITIONS[dominant.axis];
+
+  return {
+    headline: dominantDef.codexHeadline,
+    description: generatePulseDescription(dominant, secondary, pressure),
+  };
 }

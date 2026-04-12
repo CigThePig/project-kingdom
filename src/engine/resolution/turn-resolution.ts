@@ -36,9 +36,13 @@ import { processDueFollowUps, scheduleFollowUps } from '../events/follow-up-trac
 import { calculateCategoryWeights, createInitialPacingState, updateClassFavorFromChoice, updatePacingForSurfacedEvents } from '../events/narrative-pacing';
 import {
   advanceStorylines,
-  evaluateStorylinePool,
+  buildActiveStoryline,
   StorylineDefinition,
 } from '../events/storyline-engine';
+import {
+  applyPressure,
+  evaluateStorylineActivation,
+} from '../systems/narrative-pressure';
 import { applyMechanicalEffectDelta, applyStorylineResolutionEffects } from '../events/apply-event-effects';
 import { STORYLINE_RESOLUTION_EFFECTS } from '../../data/storylines/effects';
 import { resetActionBudgetForNextTurn } from './action-budget';
@@ -1371,7 +1375,7 @@ export function resolveTurn(
     updatedRegions = workingState.regions;
   }
 
-  // Track resolved storyline IDs and last activation turn for pool evaluation.
+  // Track resolved storyline IDs and last activation/resolution turns.
   const allResolvedStorylineIds = [
     ...stateAfterActions.resolvedStorylineIds,
     ...newlyResolvedStorylineIds,
@@ -1383,15 +1387,53 @@ export function resolveTurn(
       )
     : stateAfterActions.lastStorylineActivationTurn;
 
-  // Evaluate storyline pool for new activations.
-  const newStorylines = evaluateStorylinePool(
-    stateAfterActions,
-    nextTurnNumber,
+  // Update lastStorylineResolutionTurn if any storylines resolved this turn.
+  const updatedLastStorylineResolutionTurn = newlyResolvedStorylineIds.length > 0
+    ? nextTurnNumber
+    : stateAfterActions.lastStorylineResolutionTurn;
+
+  // --- Narrative Pressure: accumulate from all resolved decisions this turn ---
+  // Apply pressure from event choices resolved this turn.
+  let updatedPressure = stateAfterActions.narrativePressure;
+  for (const evt of stateAfterActions.activeEvents) {
+    if (evt.isResolved && evt.choiceMade) {
+      updatedPressure = applyPressure(updatedPressure, 'event', evt.definitionId, evt.choiceMade);
+    }
+  }
+  // Apply pressure from storyline branch decisions made this turn.
+  for (const sl of advancedStorylines) {
+    for (const decision of sl.decisionHistory) {
+      if (decision.turnNumber === stateAfterActions.turn.turnNumber) {
+        updatedPressure = applyPressure(updatedPressure, 'storyline', sl.definitionId, decision.choiceId);
+      }
+    }
+  }
+  // Apply pressure from decree actions queued this turn.
+  for (const action of stateAfterActions.actionBudget.queuedActions) {
+    if (action.type === ActionType.Decree) {
+      updatedPressure = applyPressure(updatedPressure, 'decree', action.actionDefinitionId, action.actionDefinitionId);
+    }
+  }
+
+  // --- Evaluate storyline activation against updated pressure ---
+  const candidate = evaluateStorylineActivation(
+    updatedPressure,
     STORYLINE_REGISTRY,
+    nextTurnNumber,
     advancedStorylines.filter((s) => s.status !== StorylineStatus.Resolved),
     allResolvedStorylineIds,
-    lastActivationTurn,
+    stateAfterActions.persistentConsequences,
+    updatedLastStorylineResolutionTurn,
   );
+
+  // If a candidate qualifies, activate it.
+  const newStorylines = [];
+  if (candidate) {
+    const def = STORYLINE_REGISTRY.find(s => s.id === candidate.storylineId);
+    if (def) {
+      newStorylines.push(buildActiveStoryline(def, nextTurnNumber));
+    }
+  }
 
   // Update lastStorylineActivationTurn if new storylines were activated.
   const updatedLastActivationTurn = newStorylines.length > 0
@@ -1696,6 +1738,8 @@ export function resolveTurn(
     narrativePacing: updatedNarrativePacing,
     resolvedStorylineIds: allResolvedStorylineIds,
     lastStorylineActivationTurn: updatedLastActivationTurn,
+    lastStorylineResolutionTurn: updatedLastStorylineResolutionTurn,
+    narrativePressure: updatedPressure,
     issuedDecrees: stateAfterActions.issuedDecrees,
     rulingStyle: updatedRulingStyle,
     scenarioId: stateAfterActions.scenarioId,

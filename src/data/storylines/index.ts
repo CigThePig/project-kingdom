@@ -1,12 +1,13 @@
 // gameplay-blueprint.md §8 — Storyline Pool Definitions
-// 6 storylines: one per StorylineCategory.
+// 12 storylines across 6 categories.
 // Each storyline has: opening branch → mid-arc branch → resolution branch.
+// Activation is now driven by the narrative pressure system (activationProfile).
 
 import type { StorylineDefinition } from '../../engine/events/storyline-engine';
 import {
-  PopulationClass,
   StorylineCategory,
 } from '../../engine/types';
+import { STORYLINE_ACTIVATION_PROFILES } from '../narrative-pressure/thresholds';
 
 export const STORYLINE_POOL: StorylineDefinition[] = [
   // ============================================================
@@ -15,11 +16,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_pretenders_claim',
     category: StorylineCategory.Political,
-    activationConditions: [
-      { type: 'turn_min', threshold: 6 },
-      { type: 'class_satisfaction_below', classTarget: PopulationClass.Nobility, threshold: 60 },
-      { type: 'random_chance', probability: 0.4 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_pretenders_claim'],
     openingBranchId: 'bp_pretender_opening',
     branches: [
       {
@@ -85,11 +82,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_prophet_of_the_waste',
     category: StorylineCategory.Religious,
-    activationConditions: [
-      { type: 'turn_min', threshold: 5 },
-      { type: 'faith_below', threshold: 60 },
-      { type: 'random_chance', probability: 0.35 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_prophet_of_the_waste'],
     openingBranchId: 'bp_prophet_opening',
     branches: [
       {
@@ -155,10 +148,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_frozen_march',
     category: StorylineCategory.Military,
-    activationConditions: [
-      { type: 'turn_min', threshold: 4 },
-      { type: 'random_chance', probability: 0.3 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_frozen_march'],
     openingBranchId: 'bp_frozen_march_opening',
     branches: [
       {
@@ -224,12 +214,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_merchant_king',
     category: StorylineCategory.TradeEcon,
-    activationConditions: [
-      { type: 'turn_min', threshold: 6 },
-      { type: 'class_satisfaction_above', classTarget: PopulationClass.Merchants, threshold: 65 },
-      { type: 'class_satisfaction_below', classTarget: PopulationClass.Nobility, threshold: 55 },
-      { type: 'random_chance', probability: 0.4 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_merchant_king'],
     openingBranchId: 'bp_merchant_king_opening',
     branches: [
       {
@@ -295,11 +280,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_lost_expedition',
     category: StorylineCategory.Discovery,
-    activationConditions: [
-      { type: 'turn_min', threshold: 5 },
-      { type: 'treasury_above', threshold: 350 },
-      { type: 'random_chance', probability: 0.3 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_lost_expedition'],
     openingBranchId: 'bp_expedition_opening',
     branches: [
       {
@@ -365,11 +346,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_foreign_festival',
     category: StorylineCategory.Cultural,
-    activationConditions: [
-      { type: 'turn_min', threshold: 4 },
-      { type: 'treasury_above', threshold: 300 },
-      { type: 'random_chance', probability: 0.35 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_foreign_festival'],
     openingBranchId: 'bp_festival_opening',
     branches: [
       {
@@ -435,11 +412,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_merchants_rebellion',
     category: StorylineCategory.TradeEcon,
-    activationConditions: [
-      { type: 'turn_min', threshold: 7 },
-      { type: 'class_satisfaction_above', classTarget: PopulationClass.Merchants, threshold: 70 },
-      { type: 'random_chance', probability: 0.35 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_merchants_rebellion'],
     openingBranchId: 'bp_rebellion_opening',
     branches: [
       {
@@ -505,11 +478,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_holy_war',
     category: StorylineCategory.Religious,
-    activationConditions: [
-      { type: 'turn_min', threshold: 8 },
-      { type: 'faith_above', threshold: 55 },
-      { type: 'random_chance', probability: 0.25 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_holy_war'],
     openingBranchId: 'bp_holy_war_opening',
     branches: [
       {
@@ -575,11 +544,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_prodigal_prince',
     category: StorylineCategory.Political,
-    activationConditions: [
-      { type: 'turn_min', threshold: 9 },
-      { type: 'stability_below', threshold: 55 },
-      { type: 'random_chance', probability: 0.3 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_prodigal_prince'],
     openingBranchId: 'bp_prince_opening',
     branches: [
       {
@@ -645,10 +610,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_plague_ships',
     category: StorylineCategory.Discovery,
-    activationConditions: [
-      { type: 'turn_min', threshold: 6 },
-      { type: 'random_chance', probability: 0.3 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_plague_ships'],
     openingBranchId: 'bp_plague_ships_opening',
     branches: [
       {
@@ -714,11 +676,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_great_tournament',
     category: StorylineCategory.Military,
-    activationConditions: [
-      { type: 'turn_min', threshold: 7 },
-      { type: 'stability_above', threshold: 40 },
-      { type: 'random_chance', probability: 0.35 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_great_tournament'],
     openingBranchId: 'bp_tournament_opening',
     branches: [
       {
@@ -784,10 +742,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
   {
     id: 'sl_starving_winter',
     category: StorylineCategory.Cultural,
-    activationConditions: [
-      { type: 'turn_min', threshold: 5 },
-      { type: 'random_chance', probability: 0.3 },
-    ],
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_starving_winter'],
     openingBranchId: 'bp_winter_opening',
     branches: [
       {
