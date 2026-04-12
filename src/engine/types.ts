@@ -623,6 +623,47 @@ export interface ActiveEvent {
 }
 
 // ============================================================
+// Section 13b — Narrative Pressure Types
+// ============================================================
+
+export interface NarrativePressure {
+  authority: number;
+  piety: number;
+  commerce: number;
+  militarism: number;
+  reform: number;
+  intrigue: number;
+  openness: number;
+  isolation: number;
+}
+
+export interface StorylineActivationProfile {
+  /** Primary axis — must cross this threshold. */
+  primaryAxis: keyof NarrativePressure;
+  primaryThreshold: number;
+
+  /** Optional secondary axis — if present, must also cross this threshold. */
+  secondaryAxis?: keyof NarrativePressure;
+  secondaryThreshold?: number;
+
+  /** Optional suppressor — if this axis is ABOVE this value, storyline is blocked. */
+  suppressedByAxis?: keyof NarrativePressure;
+  suppressedByThreshold?: number;
+
+  /** Minimum turn before this storyline can activate (floor: 8, enforced by engine). */
+  minTurn: number;
+
+  /** Priority when multiple storylines qualify simultaneously. Higher = preferred. */
+  priority: number;
+
+  /** Optional: required consequence tags (from follow-up chains or past decisions). */
+  requiredTags?: string[];
+
+  /** Optional: blocking consequence tags (if present, storyline cannot activate). */
+  blockedByTags?: string[];
+}
+
+// ============================================================
 // Section 14 — Storyline Types
 // ============================================================
 
@@ -911,6 +952,10 @@ export interface GameState {
   persistentConsequences: PersistentConsequence[];
   resolvedStorylineIds: string[];       // definitionIds of resolved storylines
   lastStorylineActivationTurn: number;  // turn number of most recent storyline activation
+  lastStorylineResolutionTurn: number;  // turn number of most recent storyline resolution (0 if none)
+
+  // Narrative pressure accumulator — tracks thematic weight of player decisions
+  narrativePressure: NarrativePressure;
 
   // Temporary modifiers from event/storyline choices (applied each turn, expire after N turns)
   activeTemporaryModifiers: TemporaryModifier[];

@@ -237,10 +237,16 @@ export const PHASE_TURN_RANGES = {
 } as const;
 
 // Maximum number of storylines that may be active simultaneously.
-export const MAX_ACTIVE_STORYLINES = 2;
+export const MAX_ACTIVE_STORYLINES = 1;
 
 // Minimum number of turns that must elapse between storyline activations.
 export const MIN_TURNS_BETWEEN_STORYLINE_ACTIVATIONS = 3;
+
+// Cooldown turns after a storyline resolves before the next can activate.
+export const STORYLINE_POST_RESOLUTION_COOLDOWN = 4;
+
+// Minimum turn before any storyline can activate via narrative pressure.
+export const NARRATIVE_PRESSURE_MIN_TURN = 8;
 
 // ============================================================
 // Block 12 — Policy Upkeep & Multipliers (§5.3)
