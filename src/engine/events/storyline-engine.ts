@@ -4,59 +4,15 @@
 
 import {
   ActiveStoryline,
-  DiplomaticPosture,
-  GameState,
-  KnowledgeBranch,
-  PopulationClass,
   StorylineActivationProfile,
   StorylineCategory,
   StorylineStatus,
   StorylineBranchDecision,
 } from '../types';
-import {
-  MAX_ACTIVE_STORYLINES,
-  MIN_TURNS_BETWEEN_STORYLINE_ACTIVATIONS,
-} from '../constants';
 
 // ============================================================
 // Data Contract Interfaces (fulfilled by Phase 5 data layer)
 // ============================================================
-
-/**
- * A single activation condition that must evaluate to true for a storyline
- * to become eligible. All conditions in StorylineDefinition.activationConditions
- * must pass simultaneously.
- */
-export interface StorylineActivationCondition {
-  type:
-    | 'turn_min'
-    | 'turn_max'
-    | 'treasury_above'
-    | 'treasury_below'
-    | 'stability_above'
-    | 'stability_below'
-    | 'class_satisfaction_above'
-    | 'class_satisfaction_below'
-    | 'faith_above'
-    | 'faith_below'
-    | 'diplomatic_posture_with'
-    | 'knowledge_branch_milestone'
-    | 'random_chance';
-  /** Numeric threshold for above/below condition types. */
-  threshold?: number;
-  /** Required for class_satisfaction_* conditions. */
-  classTarget?: PopulationClass;
-  /** Required for diplomatic_posture_with: neighbor to check. */
-  neighborId?: string;
-  /** Required for diplomatic_posture_with: minimum required posture. */
-  posture?: DiplomaticPosture;
-  /** Required for knowledge_branch_milestone. */
-  branch?: KnowledgeBranch;
-  /** Required for knowledge_branch_milestone: minimum milestone index unlocked. */
-  minMilestoneIndex?: number;
-  /** Required for random_chance: probability 0–1. */
-  probability?: number;
-}
 
 /**
  * A single player choice at a branch point.
@@ -109,133 +65,6 @@ export interface StorylineDefinition {
 // Internal Helpers
 // ============================================================
 
-/** Posture comparison: returns true when actual is at least as friendly as required. */
-const POSTURE_RANK: Record<DiplomaticPosture, number> = {
-  War: 0,
-  Hostile: 1,
-  Tense: 2,
-  Neutral: 3,
-  Friendly: 4,
-};
-
-function evaluateActivationCondition(
-  condition: StorylineActivationCondition,
-  state: GameState,
-  turnNumber: number,
-): boolean {
-  switch (condition.type) {
-    case 'turn_min':
-      return condition.threshold !== undefined && turnNumber >= condition.threshold;
-
-    case 'turn_max':
-      return condition.threshold !== undefined && turnNumber <= condition.threshold;
-
-    case 'treasury_above':
-      return condition.threshold !== undefined && state.treasury.balance > condition.threshold;
-
-    case 'treasury_below':
-      return condition.threshold !== undefined && state.treasury.balance < condition.threshold;
-
-    case 'stability_above':
-      return condition.threshold !== undefined && state.stability.value > condition.threshold;
-
-    case 'stability_below':
-      return condition.threshold !== undefined && state.stability.value < condition.threshold;
-
-    case 'class_satisfaction_above':
-      if (condition.threshold === undefined || condition.classTarget === undefined) return false;
-      return state.population[condition.classTarget].satisfaction > condition.threshold;
-
-    case 'class_satisfaction_below':
-      if (condition.threshold === undefined || condition.classTarget === undefined) return false;
-      return state.population[condition.classTarget].satisfaction < condition.threshold;
-
-    case 'faith_above':
-      return (
-        condition.threshold !== undefined && state.faithCulture.faithLevel > condition.threshold
-      );
-
-    case 'faith_below':
-      return (
-        condition.threshold !== undefined && state.faithCulture.faithLevel < condition.threshold
-      );
-
-    case 'diplomatic_posture_with': {
-      if (!condition.neighborId || !condition.posture) return false;
-      const neighbor = state.diplomacy.neighbors.find((n) => n.id === condition.neighborId);
-      if (!neighbor) return false;
-      return POSTURE_RANK[neighbor.attitudePosture] >= POSTURE_RANK[condition.posture];
-    }
-
-    case 'knowledge_branch_milestone': {
-      if (!condition.branch || condition.minMilestoneIndex === undefined) return false;
-      const branchState = state.knowledge.branches[condition.branch];
-      return branchState.currentMilestoneIndex >= condition.minMilestoneIndex;
-    }
-
-    case 'random_chance':
-      return condition.probability !== undefined && Math.random() < condition.probability;
-
-    default:
-      return false;
-  }
-}
-
-/**
- * @deprecated Legacy condition check — no longer used. Storyline activation is now
- * driven by the narrative pressure system in systems/narrative-pressure.ts.
- */
-function allActivationConditionsPass(
-  _definition: StorylineDefinition,
-  _state: GameState,
-  _turnNumber: number,
-): boolean {
-  return false;
-}
-
-/**
- * Weights a candidate storyline by relevance to current kingdom pressures.
- * Higher weight = more likely to be selected when multiple storylines qualify.
- * Each category maps to a state signal that indicates player relevance.
- */
-function storylineRelevanceWeight(definition: StorylineDefinition, state: GameState): number {
-  switch (definition.category) {
-    case StorylineCategory.Political:
-      // More relevant when nobility intrigue risk is elevated.
-      return 1 + (state.population[PopulationClass.Nobility].intrigueRisk ?? 0) / 100;
-
-    case StorylineCategory.Religious:
-      // More relevant when faith is stressed or heterodoxy is rising.
-      return 1 + state.faithCulture.heterodoxy / 100;
-
-    case StorylineCategory.Military: {
-      // More relevant when military readiness is low or posture is elevated.
-      const readinessStress = (100 - state.military.readiness) / 100;
-      return 1 + readinessStress;
-    }
-
-    case StorylineCategory.TradeEcon:
-      // More relevant when merchant satisfaction is low.
-      return 1 + (100 - state.population[PopulationClass.Merchants].satisfaction) / 100;
-
-    case StorylineCategory.Discovery:
-      // More relevant when knowledge progress is advancing (any branch has milestones).
-      {
-        const maxMilestone = Math.max(
-          ...Object.values(state.knowledge.branches).map((b) => b.currentMilestoneIndex),
-        );
-        return 1 + maxMilestone * 0.3;
-      }
-
-    case StorylineCategory.Cultural:
-      // More relevant when cultural cohesion is stressed.
-      return 1 + (100 - state.faithCulture.culturalCohesion) / 100;
-
-    default:
-      return 1;
-  }
-}
-
 export function buildActiveStoryline(
   definition: StorylineDefinition,
   turnNumber: number,
@@ -256,81 +85,6 @@ export function buildActiveStoryline(
 // ============================================================
 // Exported Functions
 // ============================================================
-
-/**
- * Evaluates the storyline pool against current state and returns any newly
- * activated storylines to add this turn.
- *
- * Selection rules (§8.3):
- * - At most MAX_ACTIVE_STORYLINES may be active simultaneously.
- * - At least MIN_TURNS_BETWEEN_STORYLINE_ACTIVATIONS must have elapsed since
- *   the last activation (checked via lastActivationTurn).
- * - Storylines whose definitionId is already active or resolved (in
- *   resolvedStorylineIds) are excluded.
- * - Avoids repeating a StorylineCategory already resolved in this run.
- * - Among remaining candidates, selection is weighted by category relevance
- *   to current kingdom pressures.
- */
-export function evaluateStorylinePool(
-  state: GameState,
-  turnNumber: number,
-  storylinePool: StorylineDefinition[],
-  activeStorylines: ActiveStoryline[],
-  resolvedStorylineIds: string[],
-  lastActivationTurn: number,
-): ActiveStoryline[] {
-  if (storylinePool.length === 0) return [];
-  if (activeStorylines.length >= MAX_ACTIVE_STORYLINES) return [];
-  if (turnNumber - lastActivationTurn < MIN_TURNS_BETWEEN_STORYLINE_ACTIVATIONS) return [];
-
-  const availableSlots = MAX_ACTIVE_STORYLINES - activeStorylines.length;
-  const activeDefinitionIds = new Set(activeStorylines.map((s) => s.definitionId));
-  const resolvedSet = new Set(resolvedStorylineIds);
-
-  // With multiple storylines per category, we no longer block an entire category
-  // after one resolves. Instead, we only exclude the exact storyline already resolved.
-  const candidates = storylinePool.filter(
-    (def) =>
-      !activeDefinitionIds.has(def.id) &&
-      !resolvedSet.has(def.id) &&
-      allActivationConditionsPass(def, state, turnNumber),
-  );
-
-  if (candidates.length === 0) return [];
-
-  // Weighted selection: build a weighted list and pick without replacement.
-  const weighted = candidates.map((def) => ({
-    def,
-    weight: storylineRelevanceWeight(def, state),
-  }));
-
-  const selected: ActiveStoryline[] = [];
-
-  for (let i = 0; i < availableSlots && weighted.length > 0; i++) {
-    const totalWeight = weighted.reduce((sum, e) => sum + e.weight, 0);
-    let roll = Math.random() * totalWeight;
-    let pickedIndex = 0;
-    for (let j = 0; j < weighted.length; j++) {
-      roll -= weighted[j].weight;
-      if (roll <= 0) {
-        pickedIndex = j;
-        break;
-      }
-    }
-    selected.push(buildActiveStoryline(weighted[pickedIndex].def, turnNumber));
-    // Remove selected from weighted pool and exclude its category.
-    const pickedCategory = weighted[pickedIndex].def.category;
-    weighted.splice(pickedIndex, 1);
-    // Filter out same-category candidates to preserve variety.
-    for (let j = weighted.length - 1; j >= 0; j--) {
-      if (weighted[j].def.category === pickedCategory) {
-        weighted.splice(j, 1);
-      }
-    }
-  }
-
-  return selected;
-}
 
 /**
  * Decrements turnsUntilNextBranchPoint by 1 for each Active storyline.
