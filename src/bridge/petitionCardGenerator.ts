@@ -14,6 +14,7 @@ import { mechDeltaToEffectHints } from './crisisCardGenerator';
 
 export interface PetitionChoiceData {
   choiceId: string;
+  title: string;
   effects: EffectHint[];
 }
 
@@ -58,7 +59,7 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
         denyChoiceId: onlyChoice.choiceId,
         grantEffects: onlyEffects,
         denyEffects: onlyEffects,
-        allChoices: [{ choiceId: onlyChoice.choiceId, effects: onlyEffects }],
+        allChoices: [{ choiceId: onlyChoice.choiceId, title: textEntry.choices[onlyChoice.choiceId] ?? onlyChoice.choiceId, effects: onlyEffects }],
       });
       continue;
     }
@@ -67,6 +68,7 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
 
     const allChoices: PetitionChoiceData[] = def.choices.map((c) => ({
       choiceId: c.choiceId,
+      title: textEntry.choices[c.choiceId] ?? c.choiceId,
       effects: mechDeltaToEffectHints(choiceEffects[c.choiceId] ?? {}),
     }));
 

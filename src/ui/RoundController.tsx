@@ -435,10 +435,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
             )?.choiceId ?? null,
             petitionDecisions: accumulatedDecisions
               .filter((d) => d.interactionType === InteractionType.Petition)
-              .map((d) => {
-                const card = petitionCards.find((p) => p.eventId === d.cardId);
-                return { cardId: d.cardId, granted: d.choiceId === (card?.grantChoiceId ?? 'grant') };
-              }),
+              .map((d) => ({ cardId: d.cardId, choiceId: d.choiceId })),
             selectedDecrees,
           }}
           summaryData={summaryData ?? undefined}

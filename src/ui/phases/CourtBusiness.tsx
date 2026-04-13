@@ -78,21 +78,16 @@ export function CourtBusiness({
 
   // Wrap PetitionPhase callback → MonthDecision[]
   const handlePetitionComplete = useCallback(
-    (petitionDecisions: { cardId: string; granted: boolean }[]) => {
-      const decisions: MonthDecision[] = petitionDecisions.map((d) => {
-        const card = petitionCards.find((p) => p.eventId === d.cardId);
-        return {
-          cardId: d.cardId,
-          choiceId: d.granted
-            ? card?.grantChoiceId ?? 'grant'
-            : card?.denyChoiceId ?? 'deny',
-          interactionType: InteractionType.Petition,
-          month: currentMonth,
-        };
-      });
+    (petitionDecisions: { cardId: string; choiceId: string }[]) => {
+      const decisions: MonthDecision[] = petitionDecisions.map((d) => ({
+        cardId: d.cardId,
+        choiceId: d.choiceId,
+        interactionType: InteractionType.Petition,
+        month: currentMonth,
+      }));
       onComplete(decisions);
     },
-    [petitionCards, currentMonth, onComplete],
+    [currentMonth, onComplete],
   );
 
   // NegotiationPhase already returns MonthDecision[]

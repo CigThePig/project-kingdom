@@ -16,7 +16,7 @@ export type RoundPhase = 'seasonDawn' | 'crisis' | 'petition' | 'decree' | 'summ
 
 export interface PhaseDecisions {
   crisisResponse: string | null;
-  petitionDecisions: { cardId: string; granted: boolean }[];
+  petitionDecisions: { cardId: string; choiceId: string }[];
   selectedDecrees: string[];
 }
 
