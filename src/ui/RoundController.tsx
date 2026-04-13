@@ -21,8 +21,8 @@ import type { MonthPhase, MonthDecision, MonthCardAllocation } from './types';
 import { partitionEvents } from '../bridge/eventClassifier';
 import { generateCrisisPhaseData } from '../bridge/crisisCardGenerator';
 import type { CrisisPhaseData } from '../bridge/crisisCardGenerator';
-import { generatePetitionCards } from '../bridge/petitionCardGenerator';
-import type { PetitionCardData } from '../bridge/petitionCardGenerator';
+import { generatePetitionCards, generateNotificationCards } from '../bridge/petitionCardGenerator';
+import type { PetitionCardData, NotificationCardData } from '../bridge/petitionCardGenerator';
 import { generateDecreeCards } from '../bridge/decreeCardGenerator';
 import type { DecreeCardData } from '../bridge/decreeCardGenerator';
 import { generateAdvisorBriefing } from '../bridge/advisorGenerator';
@@ -70,8 +70,9 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
   // Bridge data for this season
   const [surfacedEvents, setSurfacedEvents] = useState<ActiveEvent[]>([]);
   const [monthAllocations, setMonthAllocations] = useState<MonthCardAllocation | null>(null);
-  const [crisisData, setCrisisData] = useState<CrisisPhaseData | null>(null);
+  const [allCrisesData, setAllCrisesData] = useState<CrisisPhaseData[]>([]);
   const [petitionCards, setPetitionCards] = useState<PetitionCardData[]>([]);
+  const [notificationCards, setNotificationCards] = useState<NotificationCardData[]>([]);
   const [decreeCards, setDecreeCards] = useState<DecreeCardData[]>([]);
   const [advisorBriefing, setAdvisorBriefing] = useState<AdvisorBriefing | null>(null);
   const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
@@ -167,13 +168,15 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     // Merge all crisis sources
     const allCrises = [...crisisDataList, ...storylineCrises, ...neighborCards.crisisCards];
     const crisis = allCrises[0] ?? null;
-    setCrisisData(crisis);
+    setAllCrisesData(allCrises);
 
-    // Notification events are included in the petition pool so they appear
-    // as acknowledge-only cards and don't silently accumulate.
-    const petitions = generatePetitionCards([...petitionEvents, ...notificationEvents]);
+    // Generate petition and notification cards separately
+    const petitions = generatePetitionCards(petitionEvents);
     const allPetitions = [...petitions, ...neighborCards.petitionCards];
     setPetitionCards(allPetitions);
+
+    const notifications = generateNotificationCards(notificationEvents);
+    setNotificationCards(notifications);
 
     // Generate negotiation and assessment cards
     const negotiation = generateNegotiationCard(gameState);
@@ -181,9 +184,9 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
 
     const assessment = generateAssessmentPhaseData(gameState);
 
-    // Distribute cards across 3 months (pass additional crises beyond the first)
+    // Distribute cards across 3 months (pass additional crises beyond the first + notifications)
     const additionalCrises = allCrises.slice(1);
-    const allocations = distributeCardsToMonths(crisis, allPetitions, negotiation, assessment, additionalCrises);
+    const allocations = distributeCardsToMonths(crisis, allPetitions, negotiation, assessment, additionalCrises, notifications);
     setMonthAllocations(allocations);
 
     // Generate decree cards (used in Month 3)
@@ -247,10 +250,11 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       for (const d of allDecisions) {
         if (d.interactionType === InteractionType.CrisisResponse || d.interactionType === InteractionType.Petition) {
           const card = petitionCards.find((p) => p.eventId === d.cardId);
-          // For crisis responses, look up the definitionId from crisis card data.
-          const crisisDefId = crisisData?.crisisCard.eventId === d.cardId
-            ? crisisData.crisisCard.definitionId
-            : undefined;
+          // For crisis responses, look up the definitionId from all crises data.
+          const matchedCrisis = allCrisesData.find(
+            (c) => c.crisisCard.eventId === d.cardId,
+          );
+          const crisisDefId = matchedCrisis?.crisisCard.definitionId;
           const defId = card?.definitionId ?? crisisDefId ?? d.cardId;
           const deltas = EVENT_CHOICE_STYLE_TAGS[defId]?.[d.choiceId];
           if (deltas && Object.keys(deltas).length > 0) {
@@ -281,17 +285,18 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         generateMonthlySummaryData(
           allDecisions,
           decrees,
-          crisisData,
+          allCrisesData,
           petitionCards,
           negotiationId,
           prevStyle,
           projectedStyle,
+          notificationCards,
         ),
       );
 
       setCurrentPhase('summary');
     },
-    [accumulatedDecisions, crisisData, petitionCards, negotiationId, ctx.state.gameState.rulingStyle, ctx.state.gameState.turn.turnNumber],
+    [accumulatedDecisions, allCrisesData, petitionCards, notificationCards, negotiationId, ctx.state.gameState.rulingStyle, ctx.state.gameState.turn.turnNumber],
   );
 
   const handleRoundComplete = useCallback(() => {
@@ -299,10 +304,11 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       const cardActions = mapMonthDecisionsToActions(
         accumulatedDecisions,
         selectedDecrees,
-        crisisData,
+        allCrisesData,
         petitionCards,
         negotiationId,
         decreeCards,
+        notificationCards,
       );
 
       // Apply assessment and negotiation effects directly (they don't
@@ -363,8 +369,9 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     ctx,
     accumulatedDecisions,
     selectedDecrees,
-    crisisData,
+    allCrisesData,
     petitionCards,
+    notificationCards,
     negotiationId,
     decreeCards,
     surfacedEvents,
@@ -412,7 +419,9 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         <CourtBusiness
           interactionType={currentAllocation.interactionType}
           crisisData={currentAllocation.crisisData}
+          additionalCrises={currentAllocation.additionalCrises}
           petitionCards={currentAllocation.petitionCards}
+          notificationCards={currentAllocation.notificationCards}
           negotiationCard={currentAllocation.negotiationCard}
           assessmentData={currentAllocation.assessmentData}
           currentMonth={currentMonth}

@@ -36,6 +36,19 @@ export interface PetitionCardData {
 // ============================================================
 
 export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[] {
+  // Dev assertion: notification events should use generateNotificationCards(), not this function.
+  if (import.meta.env.DEV) {
+    for (const event of events) {
+      const def = EVENT_POOL.find((e) => e.id === event.definitionId);
+      if (def?.classification === 'notification') {
+        console.warn(
+          `[petitionCardGenerator] Notification event "${event.definitionId}" was passed to generatePetitionCards(). ` +
+          `Route it through generateNotificationCards() instead.`,
+        );
+      }
+    }
+  }
+
   const cards: PetitionCardData[] = [];
 
   for (const event of events) {

@@ -5,14 +5,16 @@
 
 import { InteractionType } from '../engine/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
-import type { PetitionCardData } from './petitionCardGenerator';
+import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import type { AssessmentPhaseData } from './assessmentCardGenerator';
 import type { NegotiationCard, MonthCardAllocation, MonthAllocation } from '../ui/types';
 
 const EMPTY_ALLOCATION: MonthAllocation = {
   interactionType: null,
   crisisData: null,
+  additionalCrises: [],
   petitionCards: [],
+  notificationCards: [],
   negotiationCard: null,
   assessmentData: null,
 };
@@ -38,10 +40,11 @@ export function distributeCardsToMonths(
   negotiationCard: NegotiationCard | null,
   assessmentData: AssessmentPhaseData | null,
   additionalCrises: CrisisPhaseData[] = [],
+  notificationCards: NotificationCardData[] = [],
 ): MonthCardAllocation {
-  const month1: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [] };
-  const month2: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [] };
-  const month3: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [] };
+  const month1: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };
+  const month2: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };
+  const month3: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };
 
   // Track what's been placed
   let crisisPlaced = false;
@@ -101,8 +104,15 @@ export function distributeCardsToMonths(
     if (freeMonth) {
       freeMonth.interactionType = InteractionType.CrisisResponse;
       freeMonth.crisisData = extraCrisis;
+    } else {
+      // No free month — attach as a stacked additional crisis.
+      // Prefer a month that doesn't already have a primary crisis.
+      const nonCrisisMonth = months.find(
+        (m) => m.interactionType !== InteractionType.CrisisResponse,
+      );
+      const target = nonCrisisMonth ?? month3;
+      target.additionalCrises.push(extraCrisis);
     }
-    // If no free month, the extra crisis is not surfaced this season.
   }
 
   // ---- Distribute petitions across months that have petition interaction ----
@@ -126,8 +136,8 @@ export function distributeCardsToMonths(
         petitionMonths.push(month3);
       }
       // If all months are occupied by higher-priority interactions,
-      // attach petitions to the last month so they are not deferred entirely.
-      // CourtBusiness will show them after the primary interaction.
+      // attach petitions as stacked secondary interactions.
+      // CourtBusiness renders them after the primary interaction completes.
       if (petitionMonths.length === 0) {
         petitionMonths.push(month3);
       }
@@ -152,6 +162,33 @@ export function distributeCardsToMonths(
       lastMonth.petitionCards = [
         ...lastMonth.petitionCards,
         ...petitionCards.slice(petitionIdx),
+      ];
+    }
+  }
+
+  // ---- Distribute notification cards across months ----
+  if (notificationCards.length > 0) {
+    const months = [month1, month2, month3];
+    // Prefer quieter months (no primary interaction), then spread evenly
+    const quietMonths = months.filter((m) => m.interactionType === null);
+    const targets = quietMonths.length > 0 ? quietMonths : months;
+
+    let notifIdx = 0;
+    for (const target of targets) {
+      const count = Math.ceil(
+        (notificationCards.length - notifIdx) / (targets.length - targets.indexOf(target)),
+      );
+      target.notificationCards = notificationCards.slice(notifIdx, notifIdx + count);
+      notifIdx += count;
+      if (notifIdx >= notificationCards.length) break;
+    }
+
+    // Overflow: attach remaining to last target
+    if (notifIdx < notificationCards.length) {
+      const last = targets[targets.length - 1];
+      last.notificationCards = [
+        ...last.notificationCards,
+        ...notificationCards.slice(notifIdx),
       ];
     }
   }
