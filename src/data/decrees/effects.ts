@@ -252,6 +252,31 @@ export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
     foodDelta: +35,
     stabilityDelta: +4,
   },
+  // --- Food Standalone Decrees ---
+  decree_military_ration_reform: {
+    foodDelta: +12,
+    militaryCasteSatDelta: -2,
+    militaryMoraleDelta: -1,
+    commonerSatDelta: +1,
+  },
+  decree_seasonal_reserve_mandate: {
+    foodDelta: +20,
+    commonerSatDelta: +3,
+    merchantSatDelta: -2,
+    stabilityDelta: +2,
+  },
+  decree_agricultural_trade_compact: {
+    foodDelta: +25,
+    treasuryDelta: -30,
+    merchantSatDelta: +3,
+    commonerSatDelta: +2,
+  },
+  decree_harvest_tithe_exemption: {
+    foodDelta: +18,
+    treasuryDelta: -25,
+    commonerSatDelta: +3,
+    clergySatDelta: -2,
+  },
   // --- Labor Chain ---
   decree_labor_rights: {
     commonerSatDelta: +5,

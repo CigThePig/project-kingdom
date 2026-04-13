@@ -67,6 +67,95 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
       acknowledge: 'Acknowledge',
     },
   },
+  evt_abundant_harvest_surplus: {
+    title: 'Bountiful Harvest Surplus',
+    body: 'The fields have yielded beyond all expectations this season. Granaries are approaching capacity, and the kingdom\'s agricultural advisors present several options for making the most of this rare abundance before the surplus spoils.',
+    choices: {
+      invest_in_granary_expansion: 'Expand Granary Capacity',
+      organize_food_trade_caravans: 'Organize Trade Caravans',
+      celebrate_abundance: 'Celebrate the Bounty',
+    },
+  },
+  evt_agricultural_innovation: {
+    title: 'A Farmer\'s Discovery',
+    body: 'Word has reached the court of a remarkable development: experienced farmers in the eastern provinces have developed new cultivation techniques that dramatically improve crop yields. Their methods show great promise but require investment to spread throughout the kingdom.',
+    choices: {
+      implement_across_kingdom: 'Implement Kingdom-Wide',
+      trial_in_one_region: 'Trial in One Region',
+      document_for_scholars: 'Document for Scholars',
+    },
+  },
+  evt_autumn_stockpile_opportunity: {
+    title: 'Preparing for Winter',
+    body: 'Autumn markets are flush with grain and preserved goods as the harvest winds down. With winter approaching, the royal steward advises that this may be the last opportunity to bolster food reserves before the lean months set in.',
+    choices: {
+      purchase_winter_grain_reserves: 'Purchase Winter Reserves',
+      organize_community_preserving: 'Organize Community Preserving',
+      trust_existing_stores: 'Trust Existing Stores',
+    },
+  },
+  evt_foreign_grain_offer: {
+    title: 'Foreign Grain Merchants Arrive',
+    body: 'A delegation of merchants from a neighboring kingdom has arrived at court with an enticing offer: surplus grain at favorable prices. They hint at the possibility of establishing a longer-term supply arrangement, though some advisors caution against dependency on foreign food sources.',
+    choices: {
+      accept_bulk_purchase: 'Accept Bulk Purchase',
+      negotiate_ongoing_supply: 'Negotiate Ongoing Supply',
+      decline_offer: 'Decline the Offer',
+    },
+  },
+  evt_military_foraging_campaign: {
+    title: 'Soldiers Seek Provisions',
+    body: 'With food reserves under strain, military commanders have approached the throne with proposals to supplement their rations. They suggest several approaches, each with different implications for the army\'s readiness and the kingdom\'s relations with its borderland communities.',
+    choices: {
+      organize_military_hunts: 'Organize Military Hunts',
+      forage_borderlands: 'Forage the Borderlands',
+      reduce_military_rations: 'Reduce Military Rations',
+    },
+  },
+  evt_spring_planting_expansion: {
+    title: 'Spring Planting Expansion',
+    body: 'The spring thaw has revealed fertile stretches of uncultivated land, and favorable weather forecasts have emboldened the kingdom\'s farmers. With adequate investment, the agricultural advisors believe this season could see a meaningful expansion of the kingdom\'s food production capacity.',
+    choices: {
+      clear_new_farmland: 'Clear New Farmland',
+      improve_existing_fields: 'Improve Existing Fields',
+      rely_on_current_acreage: 'Rely on Current Acreage',
+    },
+  },
+  evt_commoner_agricultural_petition: {
+    title: 'Farmers\' Petition',
+    body: 'A delegation of the kingdom\'s most experienced farmers has petitioned the crown with detailed proposals to improve agricultural yields. Their plans range from modest irrigation improvements to ambitious land reclamation projects, all promising to strengthen the kingdom\'s food security.',
+    choices: {
+      fund_peasant_proposals: 'Fund Their Proposals',
+      approve_with_oversight: 'Approve with Royal Oversight',
+      acknowledge_initiative: 'Acknowledge Their Initiative',
+    },
+  },
+  // --- Food Follow-up Text ---
+  evt_granary_expansion_complete: {
+    title: 'New Granaries Stand Ready',
+    body: 'The granary expansion project has been completed. Sturdy new storage facilities now stand across the kingdom\'s agricultural heartland, greatly increasing the realm\'s capacity to preserve grain through the difficult months ahead.',
+    choices: {
+      stockpile_for_winter: 'Stockpile for Winter',
+      share_with_needy_regions: 'Share with Needy Regions',
+    },
+  },
+  evt_trade_caravan_returns: {
+    title: 'Trade Caravans Return',
+    body: 'The food trade caravans dispatched earlier have returned successfully. The merchants report brisk business abroad, bringing back both profits and foreign goods that will benefit the kingdom\'s markets and food stores.',
+    choices: {
+      reinvest_profits: 'Reinvest the Profits',
+      distribute_foreign_goods: 'Distribute Foreign Goods',
+    },
+  },
+  evt_supply_agreement_renewal: {
+    title: 'Grain Supply Agreement Due',
+    body: 'The standing grain supply agreement with the neighboring kingdom is approaching its renewal date. The foreign merchants have sent word that they are willing to continue the arrangement, though they seek to renegotiate certain terms in their favor.',
+    choices: {
+      renew_agreement: 'Renew the Agreement',
+      renegotiate_terms: 'Renegotiate Terms',
+      let_agreement_lapse: 'Let Agreement Lapse',
+    },
+  },
 
   // --- Military (2) — Chain ---
   evt_military_equipment_shortage_1: {

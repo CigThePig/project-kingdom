@@ -24,12 +24,61 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // Food (2)
   // ============================================================
   evt_harvest_blight: {
-    quarantine_affected_fields:  { foodDelta: -30, commonerSatDelta: -2, regionConditionDelta: -3 },
-    redirect_labor_to_salvage:   { foodDelta: -15, commonerSatDelta: -3, stabilityDelta: -1 },
+    quarantine_affected_fields:  { foodDelta: -20, commonerSatDelta: -2, regionConditionDelta: -3 },
+    redirect_labor_to_salvage:   { foodDelta: -10, commonerSatDelta: -3, stabilityDelta: -1 },
     purchase_foreign_grain:      { treasuryDelta: -80, foodDelta: +20, merchantSatDelta: +2 },
   },
   evt_commoner_harvest_festival: {
     acknowledge: { commonerSatDelta: +2, faithDelta: +1 },
+  },
+  evt_abundant_harvest_surplus: {
+    invest_in_granary_expansion:   { foodDelta: +20, treasuryDelta: -25, commonerSatDelta: +2, regionDevelopmentDelta: +3 },
+    organize_food_trade_caravans:  { foodDelta: -10, treasuryDelta: +40, merchantSatDelta: +3 },
+    celebrate_abundance:           { foodDelta: +10, commonerSatDelta: +3, faithDelta: +1 },
+  },
+  evt_agricultural_innovation: {
+    implement_across_kingdom:  { foodDelta: +25, treasuryDelta: -40, commonerSatDelta: +3, regionDevelopmentDelta: +3 },
+    trial_in_one_region:       { foodDelta: +15, treasuryDelta: -15, regionDevelopmentDelta: +5 },
+    document_for_scholars:     { foodDelta: +5, clergySatDelta: +2 },
+  },
+  evt_autumn_stockpile_opportunity: {
+    purchase_winter_grain_reserves:  { treasuryDelta: -50, foodDelta: +35, merchantSatDelta: +2 },
+    organize_community_preserving:   { foodDelta: +20, commonerSatDelta: +2, treasuryDelta: -15 },
+    trust_existing_stores:           { stabilityDelta: +1 },
+  },
+  evt_foreign_grain_offer: {
+    accept_bulk_purchase:       { treasuryDelta: -40, foodDelta: +30, merchantSatDelta: +2 },
+    negotiate_ongoing_supply:   { treasuryDelta: -25, foodDelta: +15, merchantSatDelta: +3, nobilitySatDelta: -1 },
+    decline_offer:              { merchantSatDelta: -1 },
+  },
+  evt_military_foraging_campaign: {
+    organize_military_hunts:  { foodDelta: +15, militaryMoraleDelta: +2, militaryCasteSatDelta: +1, regionConditionDelta: -2 },
+    forage_borderlands:       { foodDelta: +20, militaryReadinessDelta: -3, commonerSatDelta: -2 },
+    reduce_military_rations:  { foodDelta: +10, militaryCasteSatDelta: -3, militaryMoraleDelta: -2, commonerSatDelta: +1 },
+  },
+  evt_spring_planting_expansion: {
+    clear_new_farmland:       { treasuryDelta: -35, foodDelta: +20, commonerSatDelta: +2, regionDevelopmentDelta: +4 },
+    improve_existing_fields:  { treasuryDelta: -20, foodDelta: +15, regionConditionDelta: +3 },
+    rely_on_current_acreage:  { stabilityDelta: +1 },
+  },
+  evt_commoner_agricultural_petition: {
+    fund_peasant_proposals:   { treasuryDelta: -25, foodDelta: +20, commonerSatDelta: +4, nobilitySatDelta: -2 },
+    approve_with_oversight:   { treasuryDelta: -10, foodDelta: +10, commonerSatDelta: +2, nobilitySatDelta: +1 },
+    acknowledge_initiative:   { commonerSatDelta: +2, foodDelta: +5 },
+  },
+  // --- Food Follow-up Effects ---
+  evt_granary_expansion_complete: {
+    stockpile_for_winter:      { foodDelta: +15, stabilityDelta: +2 },
+    share_with_needy_regions:  { foodDelta: +5, commonerSatDelta: +3, regionDevelopmentDelta: +2 },
+  },
+  evt_trade_caravan_returns: {
+    reinvest_profits:          { treasuryDelta: +25, merchantSatDelta: +2, foodDelta: +5 },
+    distribute_foreign_goods:  { foodDelta: +10, commonerSatDelta: +2, merchantSatDelta: +1 },
+  },
+  evt_supply_agreement_renewal: {
+    renew_agreement:       { treasuryDelta: -30, foodDelta: +20, merchantSatDelta: +1, stabilityDelta: +1 },
+    renegotiate_terms:     { treasuryDelta: -15, foodDelta: +10, merchantSatDelta: +2 },
+    let_agreement_lapse:   { merchantSatDelta: -2 },
   },
 
   // ============================================================
@@ -64,7 +113,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // Environment (2)
   // ============================================================
   evt_early_frost: {
-    mobilize_harvest_crews:  { foodDelta: -10, commonerSatDelta: +2, treasuryDelta: -15 },
+    mobilize_harvest_crews:  { foodDelta: -5, commonerSatDelta: +2, treasuryDelta: -15 },
     open_emergency_stores:   { foodDelta: -25, commonerSatDelta: +3, stabilityDelta: +1 },
     accept_the_losses:       { foodDelta: -35, commonerSatDelta: -3, regionConditionDelta: -3 },
   },
@@ -283,8 +332,8 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // SEASONAL: Spring (2)
   // ============================================================
   evt_spring_planting_festival: {
-    sponsor_planting_rites:  { faithDelta: +2, commonerSatDelta: +3, foodDelta: +5, treasuryDelta: -15 },
-    attend_ceremonies:       { commonerSatDelta: +1, faithDelta: +1 },
+    sponsor_planting_rites:  { faithDelta: +2, commonerSatDelta: +3, foodDelta: +15, treasuryDelta: -15 },
+    attend_ceremonies:       { commonerSatDelta: +1, faithDelta: +1, foodDelta: +5 },
     decline_involvement:     { commonerSatDelta: -1 },
   },
   evt_spring_river_thaw: {
@@ -298,7 +347,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // ============================================================
   evt_summer_drought: {
     ration_water_supplies:       { foodDelta: -20, commonerSatDelta: -2, stabilityDelta: +2 },
-    dig_emergency_wells:         { treasuryDelta: -45, foodDelta: -10, regionDevelopmentDelta: +2, commonerSatDelta: +1 },
+    dig_emergency_wells:         { treasuryDelta: -45, foodDelta: +5, regionDevelopmentDelta: +2, commonerSatDelta: +1 },
     pray_for_rain:               { faithDelta: +2, foodDelta: -30, commonerSatDelta: -1 },
   },
   evt_summer_trade_season: {
@@ -311,7 +360,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // SEASONAL: Autumn (2)
   // ============================================================
   evt_autumn_harvest_bounty: {
-    stockpile_surplus:     { foodDelta: +25, commonerSatDelta: -1 },
+    stockpile_surplus:     { foodDelta: +30, commonerSatDelta: -1 },
     export_for_profit:     { treasuryDelta: +35, foodDelta: -15, merchantSatDelta: +2, commonerSatDelta: -2 },
     distribute_to_poor:    { commonerSatDelta: +4, foodDelta: -10, faithDelta: +1, nobilitySatDelta: -1 },
   },
