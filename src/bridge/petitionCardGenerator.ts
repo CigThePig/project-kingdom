@@ -4,7 +4,7 @@
 import type { ActiveEvent } from '../engine/types';
 import type { EffectHint } from '../ui/types';
 import { EVENT_TEXT } from '../data/text/events';
-import { EVENT_POOL } from '../data/events/index';
+import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 
@@ -39,7 +39,8 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
   // Dev assertion: notification events should use generateNotificationCards(), not this function.
   if (import.meta.env.DEV) {
     for (const event of events) {
-      const def = EVENT_POOL.find((e) => e.id === event.definitionId);
+      const def = EVENT_POOL.find((e) => e.id === event.definitionId)
+        ?? FOLLOW_UP_POOL.find((e) => e.id === event.definitionId);
       if (def?.classification === 'notification') {
         console.warn(
           `[petitionCardGenerator] Notification event "${event.definitionId}" was passed to generatePetitionCards(). ` +
@@ -53,7 +54,8 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
 
   for (const event of events) {
     const textEntry = EVENT_TEXT[event.definitionId];
-    const def = EVENT_POOL.find((e) => e.id === event.definitionId);
+    const def = EVENT_POOL.find((e) => e.id === event.definitionId)
+      ?? FOLLOW_UP_POOL.find((e) => e.id === event.definitionId);
 
     if (!textEntry || !def || def.choices.length < 1) continue;
 
@@ -118,7 +120,8 @@ export function generateNotificationCards(events: ActiveEvent[]): NotificationCa
 
   for (const event of events) {
     const textEntry = EVENT_TEXT[event.definitionId];
-    const def = EVENT_POOL.find((e) => e.id === event.definitionId);
+    const def = EVENT_POOL.find((e) => e.id === event.definitionId)
+      ?? FOLLOW_UP_POOL.find((e) => e.id === event.definitionId);
 
     if (!textEntry || !def || def.choices.length < 1) continue;
 

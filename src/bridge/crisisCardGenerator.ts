@@ -5,7 +5,7 @@ import type { ActiveEvent, MechanicalEffectDelta } from '../engine/types';
 import { EventSeverity } from '../engine/types';
 import type { EffectHint } from '../ui/types';
 import { EVENT_TEXT } from '../data/text/events';
-import { EVENT_POOL } from '../data/events/index';
+import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 
 // ============================================================
@@ -106,7 +106,8 @@ function severityLabel(severity: EventSeverity): EffectHint {
 
 export function generateCrisisPhaseData(event: ActiveEvent): CrisisPhaseData {
   const textEntry = EVENT_TEXT[event.definitionId];
-  const def = EVENT_POOL.find((e) => e.id === event.definitionId);
+  const def = EVENT_POOL.find((e) => e.id === event.definitionId)
+    ?? FOLLOW_UP_POOL.find((e) => e.id === event.definitionId);
 
   const title = textEntry?.title ?? 'CRISIS';
   const body = textEntry?.body ?? 'The court faces an urgent matter requiring your decision.';
