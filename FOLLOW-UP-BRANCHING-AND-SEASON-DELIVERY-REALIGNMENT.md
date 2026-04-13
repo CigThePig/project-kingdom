@@ -34,7 +34,7 @@ Do not pursue these as part of this implementation:
 
 - infinite recursive follow-up trees (max depth is capped and enforced)
 - generalized arbitrary chain scripting language
-- petition UI overhaul for 3+ choices (this is a separate future feature; binary petition rule is enforced here)
+- petition UI overhaul for 3+ choices (completed prior to this implementation; petition phase now uses tap-to-select response cards supporting arbitrary choice counts)
 - storyline-engine integration (follow-up chains operate independently of the storyline system)
 
 ---
@@ -73,11 +73,13 @@ Currently in `cardDistributor.ts`, additional crises that exceed the 3-month cap
 
 The UI must not present fake decisions for acknowledgment-only content.
 
-Currently notification events are fed into `generatePetitionCards()` in `RoundController.tsx` (line 174) and rendered through `PetitionPhase` with grant/deny controls. The infrastructure for proper notification handling partially exists: `eventClassifier.ts` correctly partitions events into crisis/petition/notification, and `petitionCardGenerator.ts` already defines a `NotificationCardData` type and `generateNotificationCards()` function. However, the notification pipeline is not wired through `MonthAllocation`, `CourtBusiness`, or `decisionMapper`. The `InteractionType` enum has no `Notification` member.
+Currently notification events are fed into `generatePetitionCards()` in `RoundController.tsx` (line 174) and rendered through `PetitionPhase` with decision controls meant for substantive choices. The infrastructure for proper notification handling partially exists: `eventClassifier.ts` correctly partitions events into crisis/petition/notification, and `petitionCardGenerator.ts` already defines a `NotificationCardData` type and `generateNotificationCards()` function. However, the notification pipeline is not wired through `MonthAllocation`, `CourtBusiness`, or `decisionMapper`. The `InteractionType` enum has no `Notification` member.
 
-### G. Petition choice-count mismatch
+### G. Petition choice-count mismatch — RESOLVED
 
-The `PetitionCardData` type preserves all authored choices via `allChoices: PetitionChoiceData[]`, and `generatePetitionCards()` populates this correctly. However, the UI callback in `CourtBusiness.tsx` (line 81) reduces decisions to `{ cardId: string; granted: boolean }`, and `decisionMapper.ts` maps this boolean back to `grantChoiceId` or `denyChoiceId`. Any middle options in a 3-choice event are unreachable. All 3 events currently in the `FOLLOW_UP_POOL` have 3 choices, meaning none of them can be fully resolved through the petition path today.
+~~The `PetitionCardData` type preserves all authored choices via `allChoices: PetitionChoiceData[]`, and `generatePetitionCards()` populates this correctly. However, the UI callback in `CourtBusiness.tsx` reduced decisions to `{ cardId: string; granted: boolean }`, and `decisionMapper.ts` mapped this boolean back to `grantChoiceId` or `denyChoiceId`. Any middle options in a 3-choice event were unreachable.~~
+
+**Fixed:** The petition phase now uses tap-to-select response cards (same pattern as CrisisPhase), reading from `allChoices`. The pipeline passes `{ cardId: string; choiceId: string }` through `CourtBusiness` → `MonthDecision` → `decisionMapper`, so all authored choices are reachable. No binary constraint remains.
 
 ---
 
@@ -86,7 +88,7 @@ The `PetitionCardData` type preserves all authored choices via `allChoices: Peti
 1. **Engine follow-up model revision**
 2. **Season/month delivery fixes**
 3. **Notification handling wiring**
-4. **Petition choice-model guardrails**
+4. **Petition choice-model verification** (largely complete — see Phase 4)
 5. **Multi-crisis summary cleanup**
 6. **Condition vocabulary expansion**
 7. **Existing FOLLOW_UP_POOL triage**
@@ -291,28 +293,22 @@ A lightweight notification card component renders the event title and body with 
 
 ---
 
-## Phase 4: Petition Choice-Model Guardrails
+## Phase 4: Petition Choice-Model Verification
 
-Current petition presentation routes through a `granted: boolean` callback in `CourtBusiness.tsx`, which `decisionMapper.ts` maps back to `grantChoiceId` or `denyChoiceId`. The `allChoices` array on `PetitionCardData` is populated but unreachable through the UI.
+> **Status: Largely complete.** The petition UI was overhauled in a prior commit to support arbitrary choice counts via tap-to-select response cards. The binary swipe constraint no longer exists.
 
-### Rule
+### What was done
 
-Until the petition UI supports rendering arbitrary choice counts, all petition-type follow-ups must be strictly binary (exactly 2 choices). This is not a temporary constraint — it is the authoring contract for the petition interaction path.
+- `PetitionPhase.tsx` now renders response cards from `allChoices` with the same select-then-confirm pattern as `CrisisPhase`
+- The pipeline passes `{ cardId: string; choiceId: string }` (not `granted: boolean`) through `CourtBusiness` → `MonthDecision` → `decisionMapper` → engine
+- `PetitionChoiceData` includes a `title` field populated from `EVENT_TEXT`
+- `summaryGenerator` and `SummaryPhase` use `choiceId` directly instead of boolean grant/deny logic
 
-Events that need 3+ choices must be authored at `Critical` or `Serious` severity so they route through the crisis path, which does support arbitrary choice counts.
+### Remaining work for this phase
 
-### Existing FOLLOW_UP_POOL violations
-
-All 3 events in `FOLLOW_UP_POOL` (`evt_merchant_permanent_concessions`, `evt_underground_heretical_movement`, `evt_equipment_failure_field`) have 3 choices. Triage is specified in Phase 7.
-
-### Enforcement
-
-Both documentation and runtime:
-
-- document the binary petition rule in the authoring guidelines
-- add a development-only assertion in `generatePetitionCards()` that throws when a non-notification event has a choice count other than 2
-
-This prevents silent flattening of authored content.
+- Verify all 3 existing `FOLLOW_UP_POOL` events render correctly through the petition path with all choices visible (see Phase 7)
+- Confirm that `generatePetitionCards()` correctly populates `allChoices` for events with 2, 3, and 4+ choices
+- Events with 1 choice (notifications) should still route through the notification path, not petitions (see Phase 3)
 
 ---
 
@@ -414,9 +410,9 @@ The existing 3 follow-up events must be resolved before the production content s
 
 ### `evt_merchant_permanent_concessions`
 
-3 choices, Notable severity → routes as petition → middle choice unreachable.
+3 choices, Notable severity → routes as petition → all 3 choices now reachable via tap-to-select response cards.
 
-**Resolution:** Elevate to Serious severity. This event describes permanent trade concessions — the stakes justify crisis routing, and the 3-choice structure is appropriate for a crisis decision. Update severity, verify crisis routing, update text to match crisis framing.
+**Resolution:** Safe as-is. The petition UI now supports 3+ choices. Verify that all 3 response cards render correctly in the petition phase and that the selected choiceId flows through to the engine. Add to the integration test set.
 
 ### `evt_underground_heretical_movement`
 
