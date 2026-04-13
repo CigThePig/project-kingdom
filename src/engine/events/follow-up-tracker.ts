@@ -3,6 +3,8 @@
 
 import type { ActiveEvent, GameState, PendingFollowUp } from '../types';
 import type { EventDefinition } from './event-engine';
+import { evaluateCondition } from './event-engine';
+import { DEFAULT_MAX_STATE_RETRIES } from '../constants';
 
 /**
  * Schedules follow-up events based on a resolved event's choice.
@@ -25,11 +27,24 @@ export function scheduleFollowUps(
   for (const followUp of definition.followUpEvents) {
     if (followUp.triggerChoiceId !== resolvedEvent.choiceMade) continue;
 
-    // Don't schedule duplicates (same definitionId already pending).
+    // Composite dedupe: sourceEventId + triggerChoiceId + definitionId.
+    // Prevents true duplicates while allowing the same follow-up definition
+    // to be scheduled from different source events.
     const alreadyPending = pendingFollowUps.some(
-      (p) => p.definitionId === followUp.followUpDefinitionId,
+      (p) =>
+        p.sourceEventId === resolvedEvent.definitionId &&
+        p.triggerChoiceId === resolvedEvent.choiceMade &&
+        p.definitionId === followUp.followUpDefinitionId,
     );
     if (alreadyPending) continue;
+
+    const alreadyInBatch = newFollowUps.some(
+      (p) =>
+        p.sourceEventId === resolvedEvent.definitionId &&
+        p.triggerChoiceId === resolvedEvent.choiceMade &&
+        p.definitionId === followUp.followUpDefinitionId,
+    );
+    if (alreadyInBatch) continue;
 
     newFollowUps.push({
       id: `fu-${followUp.followUpDefinitionId}-t${currentTurn}-${Math.random().toString(36).slice(2, 8)}`,
@@ -39,6 +54,10 @@ export function scheduleFollowUps(
       triggerTurn: currentTurn,
       delayTurns: followUp.delayTurns,
       probability: followUp.probability,
+      stateConditions: followUp.stateConditions,
+      stateRetries: 0,
+      maxStateRetries: followUp.maxStateRetries,
+      exclusiveGroupId: followUp.exclusiveGroupId ?? null,
     });
   }
 
@@ -48,9 +67,15 @@ export function scheduleFollowUps(
 
 /**
  * Processes due follow-up events for the current turn.
- * Returns an object with:
- * - `surfacedEvents`: ActiveEvent[] — follow-up events ready to surface this turn
- * - `remainingFollowUps`: PendingFollowUp[] — follow-ups not yet due or that failed probability check
+ *
+ * Processing order per follow-up:
+ * 1. Timing check — not yet due goes to remaining
+ * 2. Exclusive group pre-check — if a sibling already surfaced this turn, discard
+ * 3. State conditions — all must pass (AND-list); empty/undefined = pass
+ * 4. If conditions fail — increment stateRetries, re-queue or discard
+ * 5. If conditions pass — roll probability
+ * 6. If probability passes — surface; track exclusive group
+ * 7. Post-loop — cancel remaining follow-ups whose exclusive group was surfaced
  */
 export function processDueFollowUps(
   pendingFollowUps: PendingFollowUp[],
@@ -60,33 +85,64 @@ export function processDueFollowUps(
   existingEventIds: Set<string>,
 ): { surfacedEvents: ActiveEvent[]; remainingFollowUps: PendingFollowUp[] } {
   const surfaced: ActiveEvent[] = [];
-  const remaining: PendingFollowUp[] = [];
+  let remaining: PendingFollowUp[] = [];
+
+  const surfacedExclusiveGroups = new Set<string>();
 
   for (const followUp of pendingFollowUps) {
     const turnsElapsed = currentTurn - followUp.triggerTurn;
 
+    // 1. Timing check.
     if (turnsElapsed < followUp.delayTurns) {
-      // Not yet due.
       remaining.push(followUp);
       continue;
     }
 
-    // Due now. Roll probability.
-    if (Math.random() > followUp.probability) {
-      // Failed probability check — discard.
+    // 2. Exclusive group pre-check: if a sibling already surfaced this turn, discard.
+    if (
+      followUp.exclusiveGroupId != null &&
+      surfacedExclusiveGroups.has(followUp.exclusiveGroupId)
+    ) {
       continue;
     }
 
-    // Find the definition to create the ActiveEvent.
+    // 3. Evaluate state conditions (AND-list).
+    const conditions = followUp.stateConditions ?? [];
+    const conditionsPass = conditions.every((c) =>
+      evaluateCondition(c, state, currentTurn),
+    );
+
+    if (!conditionsPass) {
+      // Conditions failed. Check retry budget.
+      const retries = followUp.stateRetries ?? 0;
+      const maxRetries = followUp.maxStateRetries ?? DEFAULT_MAX_STATE_RETRIES;
+      if (retries < maxRetries) {
+        remaining.push({
+          ...followUp,
+          stateRetries: retries + 1,
+        });
+      }
+      // else: max retries exhausted, discard silently.
+      continue;
+    }
+
+    // 4. Conditions passed. Roll probability.
+    if (Math.random() > followUp.probability) {
+      // Failed probability — discard permanently.
+      continue;
+    }
+
+    // 5. Find the definition to create the ActiveEvent.
     const definition = eventPool.find((d) => d.id === followUp.definitionId);
     if (!definition) continue;
 
-    // Skip if already active.
+    // 6. Skip if already active.
     if (existingEventIds.has(definition.id)) {
       remaining.push(followUp);
       continue;
     }
 
+    // 7. Surface the follow-up.
     const activeEvent: ActiveEvent = {
       id: `evt-${definition.id}-t${currentTurn}-${Math.random().toString(36).slice(2, 8)}`,
       definitionId: definition.id,
@@ -106,6 +162,19 @@ export function processDueFollowUps(
     };
 
     surfaced.push(activeEvent);
+
+    if (followUp.exclusiveGroupId != null) {
+      surfacedExclusiveGroups.add(followUp.exclusiveGroupId);
+    }
+  }
+
+  // 8. Post-loop: cancel remaining follow-ups whose exclusive group was surfaced.
+  if (surfacedExclusiveGroups.size > 0) {
+    remaining = remaining.filter(
+      (fu) =>
+        fu.exclusiveGroupId == null ||
+        !surfacedExclusiveGroups.has(fu.exclusiveGroupId),
+    );
   }
 
   return { surfacedEvents: surfaced, remainingFollowUps: remaining };

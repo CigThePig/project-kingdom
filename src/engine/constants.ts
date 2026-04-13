@@ -248,6 +248,11 @@ export const STORYLINE_POST_RESOLUTION_COOLDOWN = 4;
 // Minimum turn before any storyline can activate via narrative pressure.
 export const NARRATIVE_PRESSURE_MIN_TURN = 8;
 
+// Default retry limit for state-gated follow-ups.
+// A due follow-up whose stateConditions fail will retry once per turn,
+// up to this limit, before being discarded. Authored events may override.
+export const DEFAULT_MAX_STATE_RETRIES = 3;
+
 // ============================================================
 // Block 12 — Policy Upkeep & Multipliers (§5.3)
 // ============================================================

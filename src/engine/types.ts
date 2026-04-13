@@ -1,3 +1,5 @@
+import type { EventTriggerCondition } from './events/event-engine';
+
 // ============================================================
 // Section 1 — Time Enums & Interfaces
 // ============================================================
@@ -801,6 +803,10 @@ export interface PendingFollowUp {
   triggerTurn: number;        // turn the triggering choice was made
   delayTurns: number;         // turns to wait before surfacing
   probability: number;        // 0-1, chance it fires when due
+  stateConditions?: EventTriggerCondition[];   // fire-time state gate
+  stateRetries?: number;                       // retry counter
+  maxStateRetries?: number;                    // authored override for retry limit
+  exclusiveGroupId?: string | null;            // sibling cancellation group
 }
 
 // ============================================================
