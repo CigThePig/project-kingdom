@@ -29,7 +29,10 @@ export interface DecreeCardData {
 // Generator
 // ============================================================
 
-export function generateDecreeCards(gameState: GameState): DecreeCardData[] {
+export function generateDecreeCards(
+  gameState: GameState,
+  recentlyOfferedDecreeIds: string[] = [],
+): DecreeCardData[] {
   const currentTurn = gameState.turn.turnNumber;
 
   const available = DECREE_POOL.filter((decree) => {
@@ -55,13 +58,16 @@ export function generateDecreeCards(gameState: GameState): DecreeCardData[] {
   });
 
   // Weighted random sampling: favor lower tiers and style-aligned decrees
-  // while ensuring variety across rounds.
+  // while ensuring variety across rounds. Penalize decrees that were offered
+  // last season so the player sees fresh options.
   const dominantAxes = getDominantAxes(gameState.rulingStyle.axes);
+  const recentlyOfferedSet = new Set(recentlyOfferedDecreeIds);
 
   const selected = weightedSample(available, 6, (decree) => {
     const tierWeight = 1 / decree.tier; // tier 1 = 1.0, tier 2 = 0.5, tier 3 = 0.33
     const alignment = getDecreeStyleAlignment(decree.id, dominantAxes);
-    return 1.0 + tierWeight + alignment * 0.5;
+    const recentPenalty = recentlyOfferedSet.has(decree.id) ? 0.3 : 1.0;
+    return (1.0 + tierWeight + alignment * 0.5) * recentPenalty;
   });
 
   return selected.map((decree) => ({

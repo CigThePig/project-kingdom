@@ -1028,6 +1028,7 @@ describe('Production chains: negative paths', () => {
       2, // turnsElapsed = 2 - 1 = 1 < delayTurns (2) → not due
       makeState(),
       new Set(),
+      new Set(),
     );
 
     expect(surfacedEvents).toHaveLength(0);
@@ -1054,6 +1055,7 @@ describe('Production chains: negative paths', () => {
       ALL_DEFINITIONS,
       4,
       makeState(),
+      new Set(),
       new Set(),
     );
 

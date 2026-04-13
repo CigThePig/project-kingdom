@@ -238,6 +238,7 @@ describe('processDueFollowUps', () => {
         3, // turnsElapsed = 3 - 1 = 2 >= delayTurns (2) → due
         state,
         new Set(),
+        new Set(),
       );
 
       expect(surfacedEvents).toHaveLength(0);
@@ -261,6 +262,7 @@ describe('processDueFollowUps', () => {
         3,
         state,
         new Set(),
+        new Set(),
       );
 
       expect(surfacedEvents).toHaveLength(0);
@@ -283,6 +285,7 @@ describe('processDueFollowUps', () => {
         pool,
         3,
         state,
+        new Set(),
         new Set(),
       );
 
@@ -309,6 +312,7 @@ describe('processDueFollowUps', () => {
         3,
         state,
         new Set(),
+        new Set(),
       );
 
       expect(surfacedEvents).toHaveLength(1);
@@ -333,7 +337,7 @@ describe('processDueFollowUps', () => {
       const pool = [makeDefinition()];
       const state = makeState();
 
-      processDueFollowUps([fu], pool, 3, state, new Set());
+      processDueFollowUps([fu], pool, 3, state, new Set(), new Set());
 
       // Math.random should NOT have been called at all — conditions failed
       // before reaching the probability roll.
@@ -387,6 +391,7 @@ describe('processDueFollowUps', () => {
         3,
         state,
         new Set(),
+        new Set(),
       );
 
       expect(surfacedEvents).toHaveLength(1);
@@ -428,6 +433,7 @@ describe('processDueFollowUps', () => {
         3,
         state,
         new Set(),
+        new Set(),
       );
 
       // Only A (first in array) should surface.
@@ -466,6 +472,7 @@ describe('processDueFollowUps', () => {
         pool,
         3,
         state,
+        new Set(),
         new Set(),
       );
 
@@ -506,6 +513,7 @@ describe('processDueFollowUps', () => {
         3,
         state,
         new Set(),
+        new Set(),
       );
 
       expect(remainingFollowUps).toHaveLength(1);
@@ -534,6 +542,7 @@ describe('processDueFollowUps', () => {
         3,
         state,
         new Set(),
+        new Set(),
       );
 
       expect(surfacedEvents).toHaveLength(1);
@@ -556,6 +565,7 @@ describe('processDueFollowUps', () => {
         pool,
         3,
         state,
+        new Set(),
         new Set(),
       );
 
@@ -580,6 +590,7 @@ describe('processDueFollowUps', () => {
         pool,
         3,
         state,
+        new Set(),
         new Set(),
       );
 

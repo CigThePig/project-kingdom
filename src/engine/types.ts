@@ -993,4 +993,6 @@ export interface SaveFile {
   eventHistory: ActiveEvent[]; // fully resolved past events
   intelligenceReports: IntelligenceReport[];
   chronicle?: Array<{ season: string; text: string; isProtected: boolean }>;
+  /** Decree IDs offered last season, used to penalize repeat offers. */
+  recentlyOfferedDecreeIds?: string[];
 }

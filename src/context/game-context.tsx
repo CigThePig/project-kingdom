@@ -46,6 +46,7 @@ export interface GameContextState {
   lastSavedAt: number | null;
   isGameOver: boolean;
   gameOverConditions: FailureCondition[];
+  recentlyOfferedDecreeIds: string[];
 }
 
 // ============================================================
@@ -59,7 +60,8 @@ export type GameAction =
   | { type: 'REMOVE_ACTION'; actionId: string }
   | { type: 'TURN_RESOLVED'; result: TurnResolutionResult }
   | { type: 'SAVE_COMPLETED'; savedAt: number }
-  | { type: 'UPDATE_GAME_STATE'; updater: (state: GameState) => GameState };
+  | { type: 'UPDATE_GAME_STATE'; updater: (state: GameState) => GameState }
+  | { type: 'DECREES_OFFERED'; decreeIds: string[] };
 
 // ============================================================
 // Context Value
@@ -103,6 +105,7 @@ export function createInitialState(scenarioId?: string): GameContextState {
     lastSavedAt: null,
     isGameOver: false,
     gameOverConditions: [],
+    recentlyOfferedDecreeIds: [],
   };
 }
 
@@ -157,6 +160,7 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         lastSavedAt: save.savedAt,
         isGameOver: false,
         gameOverConditions: [],
+        recentlyOfferedDecreeIds: save.recentlyOfferedDecreeIds ?? [],
       };
     }
 
@@ -256,6 +260,13 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         lastSavedAt: state.lastSavedAt,
         isGameOver: hasFailure,
         gameOverConditions: hasFailure ? result.triggeredFailureConditions : [],
+      };
+    }
+
+    case 'DECREES_OFFERED': {
+      return {
+        ...state,
+        recentlyOfferedDecreeIds: action.decreeIds,
       };
     }
 
