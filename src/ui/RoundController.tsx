@@ -190,7 +190,9 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     setMonthAllocations(allocations);
 
     // Generate decree cards (used in Month 3)
-    setDecreeCards(generateDecreeCards(gameState));
+    const decrees = generateDecreeCards(gameState, ctx.state.recentlyOfferedDecreeIds);
+    setDecreeCards(decrees);
+    ctx.dispatch({ type: 'DECREES_OFFERED', decreeIds: decrees.map((d) => d.decreeId) });
 
     // Generate advisor briefing (used in Month 1 dawn)
     setAdvisorBriefing(generateAdvisorBriefing(gameState));

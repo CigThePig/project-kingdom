@@ -123,6 +123,7 @@ describe('Follow-up event triage: evt_merchant_permanent_concessions', () => {
       4, // turnsElapsed = 4 - 1 = 3 >= delayTurns (3) → due
       makeState(),
       new Set(),
+      new Set(),
     );
 
     expect(surfacedEvents).toHaveLength(1);
@@ -230,6 +231,7 @@ describe('Follow-up event triage: evt_underground_heretical_movement', () => {
       ALL_DEFINITIONS,
       4,
       makeState(),
+      new Set(),
       new Set(),
     );
 
@@ -341,6 +343,7 @@ describe('Follow-up event triage: evt_equipment_failure_field', () => {
       3, // turnsElapsed = 3 - 1 = 2 >= delayTurns (2) → due
       makeState(),
       new Set(),
+      new Set(),
     );
 
     expect(surfacedEvents).toHaveLength(1);
@@ -407,6 +410,7 @@ describe('Follow-up event triage: negative paths', () => {
       4,
       makeState(),
       new Set(),
+      new Set(),
     );
 
     expect(surfacedEvents).toHaveLength(0);
@@ -431,6 +435,7 @@ describe('Follow-up event triage: negative paths', () => {
       ALL_DEFINITIONS,
       2, // turnsElapsed = 2 - 1 = 1 < delayTurns (2) → not due
       makeState(),
+      new Set(),
       new Set(),
     );
 

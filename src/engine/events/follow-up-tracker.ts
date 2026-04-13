@@ -82,7 +82,8 @@ export function processDueFollowUps(
   eventPool: EventDefinition[],
   currentTurn: number,
   state: GameState,
-  existingEventIds: Set<string>,
+  activeEventIds: Set<string>,
+  historyEventIds: Set<string>,
 ): { surfacedEvents: ActiveEvent[]; remainingFollowUps: PendingFollowUp[] } {
   const surfaced: ActiveEvent[] = [];
   let remaining: PendingFollowUp[] = [];
@@ -136,8 +137,13 @@ export function processDueFollowUps(
     const definition = eventPool.find((d) => d.id === followUp.definitionId);
     if (!definition) continue;
 
-    // 6. Skip if already active.
-    if (existingEventIds.has(definition.id)) {
+    // 6a. If this definition was already resolved in the past, discard permanently.
+    // Re-queuing it would cause unbounded growth of pendingFollowUps.
+    if (historyEventIds.has(definition.id)) {
+      continue;
+    }
+    // 6b. If this definition is currently active (unresolved), re-queue for next turn.
+    if (activeEventIds.has(definition.id)) {
       remaining.push(followUp);
       continue;
     }

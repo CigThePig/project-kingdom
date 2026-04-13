@@ -1140,6 +1140,13 @@ export function resolveTurn(
   // Capture resolved events before chain advancement drops them.
   const resolvedEvents = stateAfterActions.activeEvents.filter((e) => e.isResolved);
 
+  // Merge resolved events into eventHistory so that surfaceEvents, advanceEventChains,
+  // and processDueFollowUps see current-turn resolutions in their dedup sets.
+  // Without this, resolved events fall through both existingActive (dropped by
+  // advanceEventChains) and eventHistory (not yet dispatched to context), allowing
+  // them to be immediately re-surfaced for the next turn.
+  const mergedEventHistory = [...eventHistory, ...resolvedEvents];
+
   // Apply mechanical effects, schedule follow-ups, and update class-favor tracking
   // for all events the player resolved since the last turn.
   const currentPacing = stateAfterActions.narrativePacing ?? createInitialPacingState();
@@ -1279,20 +1286,23 @@ export function resolveTurn(
     stateAfterActions.activeEvents,
     nextTurnNumber,
     EVENT_REGISTRY,
-    eventHistory,
+    mergedEventHistory,
   );
 
   // Process due follow-up events before standard surfacing.
-  const existingEventIds = new Set([
-    ...chainAdvancedEvents.map((e) => e.definitionId),
-    ...eventHistory.map((e) => e.definitionId),
-  ]);
+  const activeEventIds = new Set(
+    chainAdvancedEvents.map((e) => e.definitionId),
+  );
+  const historyEventIds = new Set(
+    mergedEventHistory.map((e) => e.definitionId),
+  );
   const followUpResult = processDueFollowUps(
     stateAfterActions.pendingFollowUps ?? [],
     FOLLOW_UP_REGISTRY,
     nextTurnNumber,
     stateAfterActions,
-    existingEventIds,
+    activeEventIds,
+    historyEventIds,
   );
 
   // Surface new standalone events against updated state.
@@ -1304,7 +1314,7 @@ export function resolveTurn(
     nextTurnNumber,
     EVENT_REGISTRY,
     eventsWithFollowUps,
-    eventHistory,
+    mergedEventHistory,
     categoryWeights,
   );
 

@@ -14,6 +14,7 @@ export function saveToStorage(state: GameContextState): number {
     eventHistory: state.eventHistory,
     intelligenceReports: state.intelligenceReports,
     chronicle: state.chronicle,
+    recentlyOfferedDecreeIds: state.recentlyOfferedDecreeIds,
   };
   localStorage.setItem(SAVE_STORAGE_KEY, JSON.stringify(saveFile));
   return savedAt;
