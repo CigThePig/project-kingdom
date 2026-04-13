@@ -96,7 +96,8 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
   const turnNumber = ctx.state.gameState.turn.turnNumber;
   useEffect(() => {
     if (currentMonth === SeasonMonth.Early && currentPhase === 'monthDawn') {
-      prepareRound(ctx.state.gameState, ctx.state.eventHistory);
+      const offeredDecrees = prepareRound(ctx.state.gameState, ctx.state.eventHistory, ctx.state.recentlyOfferedDecreeIds);
+      ctx.dispatch({ type: 'DECREES_OFFERED', decreeIds: offeredDecrees });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMonth, currentPhase, turnNumber]);
@@ -132,7 +133,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPhase, currentMonth]);
 
-  function prepareRound(gameState: GameState, eventHistory: ActiveEvent[]) {
+  function prepareRound(gameState: GameState, eventHistory: ActiveEvent[], recentlyOfferedDecreeIds: string[]): string[] {
     // Surface events for the season (same as before)
     let events: ActiveEvent[];
     if (gameState.activeEvents.length > 0) {
@@ -190,9 +191,8 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     setMonthAllocations(allocations);
 
     // Generate decree cards (used in Month 3)
-    const decrees = generateDecreeCards(gameState, ctx.state.recentlyOfferedDecreeIds);
+    const decrees = generateDecreeCards(gameState, recentlyOfferedDecreeIds);
     setDecreeCards(decrees);
-    ctx.dispatch({ type: 'DECREES_OFFERED', decreeIds: decrees.map((d) => d.decreeId) });
 
     // Generate advisor briefing (used in Month 1 dawn)
     setAdvisorBriefing(generateAdvisorBriefing(gameState));
@@ -201,6 +201,8 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     setSummaryData(null);
     setSelectedDecrees([]);
     setAccumulatedDecisions([]);
+
+    return decrees.map((d) => d.decreeId);
   }
 
   // Phase advancement — the core state machine
