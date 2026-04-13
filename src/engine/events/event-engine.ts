@@ -40,6 +40,7 @@ export interface EventTriggerCondition {
     | 'heterodoxy_above'
     | 'schism_active'
     | 'military_readiness_below'
+    | 'military_readiness_above'
     | 'season_is'
     | 'turn_range'
     | 'random_chance'
@@ -235,6 +236,9 @@ export function evaluateCondition(
 
     case 'military_readiness_below':
       return condition.threshold !== undefined && state.military.readiness < condition.threshold;
+
+    case 'military_readiness_above':
+      return condition.threshold !== undefined && state.military.readiness > condition.threshold;
 
     case 'season_is':
       return condition.season !== undefined && state.turn.season === condition.season;
