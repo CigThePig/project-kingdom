@@ -45,6 +45,12 @@ export interface EventTriggerCondition {
     | 'random_chance'
     | 'consequence_tag_present'
     | 'consequence_tag_absent'
+    | 'neighbor_relationship_above'
+    | 'neighbor_relationship_below'
+    | 'neighbor_action_recent'
+    | 'population_above'
+    | 'population_below'
+    | 'any_of'
     | 'always';
   /** Numeric threshold for above/below condition types. */
   threshold?: number;
@@ -62,6 +68,14 @@ export interface EventTriggerCondition {
   consequenceTag?: string;
   /** Optional: minimum turns elapsed since the consequence was recorded. */
   minTurnsSinceConsequence?: number;
+  /** Required for neighbor_relationship_* and neighbor_action_recent conditions. */
+  neighborId?: string;
+  /** Required for neighbor_action_recent: the NeighborActionType value to match. */
+  actionType?: string;
+  /** Required for neighbor_action_recent: how many turns back to search. */
+  withinTurns?: number;
+  /** Required for any_of: sub-conditions evaluated with OR semantics. */
+  conditions?: EventTriggerCondition[];
 }
 
 /**
@@ -251,6 +265,58 @@ export function evaluateCondition(
       return !state.persistentConsequences.some(
         (c) => c.tag === condition.consequenceTag,
       );
+    }
+
+    case 'neighbor_relationship_above': {
+      if (condition.neighborId === undefined || condition.threshold === undefined) return false;
+      const neighbor = state.diplomacy.neighbors.find((n) => n.id === condition.neighborId);
+      if (!neighbor) return false;
+      return neighbor.relationshipScore > condition.threshold;
+    }
+
+    case 'neighbor_relationship_below': {
+      if (condition.neighborId === undefined || condition.threshold === undefined) return false;
+      const neighbor = state.diplomacy.neighbors.find((n) => n.id === condition.neighborId);
+      if (!neighbor) return false;
+      return neighbor.relationshipScore < condition.threshold;
+    }
+
+    case 'neighbor_action_recent': {
+      if (
+        condition.neighborId === undefined ||
+        condition.actionType === undefined ||
+        condition.withinTurns === undefined
+      ) return false;
+      const neighbor = state.diplomacy.neighbors.find((n) => n.id === condition.neighborId);
+      if (!neighbor) return false;
+      return neighbor.recentActionHistory.some(
+        (entry) =>
+          entry.actionType === condition.actionType &&
+          turnNumber - entry.turnNumber <= condition.withinTurns!,
+      );
+    }
+
+    case 'population_above': {
+      if (condition.threshold === undefined) return false;
+      let totalPop = 0;
+      for (const cls of Object.values(PopulationClass)) {
+        totalPop += state.population[cls].population;
+      }
+      return totalPop > condition.threshold;
+    }
+
+    case 'population_below': {
+      if (condition.threshold === undefined) return false;
+      let totalPop = 0;
+      for (const cls of Object.values(PopulationClass)) {
+        totalPop += state.population[cls].population;
+      }
+      return totalPop < condition.threshold;
+    }
+
+    case 'any_of': {
+      if (!condition.conditions || condition.conditions.length === 0) return false;
+      return condition.conditions.some((sub) => evaluateCondition(sub, state, turnNumber));
     }
 
     default:
