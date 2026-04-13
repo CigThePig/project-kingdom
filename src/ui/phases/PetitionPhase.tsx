@@ -52,11 +52,6 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
     [selectedChoiceId, currentIndex, results, petitions, onComplete],
   );
 
-  // Reset selection when advancing to next petition
-  useEffect(() => {
-    setSelectedChoiceId(null);
-  }, [currentIndex]);
-
   if (petitions.length === 0) {
     return (
       <div
