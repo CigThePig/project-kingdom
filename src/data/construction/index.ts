@@ -98,6 +98,56 @@ export const CONSTRUCTION_POOL: ConstructionProjectDefinition[] = [
       stabilityDelta: 2,
     },
   },
+  {
+    id: 'construction_root_cellar',
+    title: 'Root Cellar Network',
+    category: ConstructionCategory.Economic,
+    turnsTotal: 2,
+    resourceCosts: { [ResourceType.Wood]: 10 },
+    knowledgePrerequisite: null,
+    effectDescription:
+      'Dig underground cellars throughout the region for preserving root vegetables and grain. A modest but immediate improvement to food stores.',
+    completionEffect: {
+      regionDevelopmentDelta: 3,
+      foodProductionDelta: 10,
+    },
+  },
+  {
+    id: 'construction_grain_mill',
+    title: 'Grain Mill',
+    category: ConstructionCategory.Economic,
+    turnsTotal: 4,
+    resourceCosts: { [ResourceType.Wood]: 25, [ResourceType.Iron]: 5 },
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.Agricultural,
+      milestoneIndex: 0,
+    },
+    effectDescription:
+      'Construct a water-powered grain mill, improving flour production efficiency and enabling surplus grain to be processed for trade.',
+    completionEffect: {
+      regionDevelopmentDelta: 5,
+      foodProductionDelta: 12,
+      tradeIncomeDelta: 5,
+    },
+  },
+  {
+    id: 'construction_irrigation_network',
+    title: 'Irrigation Network',
+    category: ConstructionCategory.Economic,
+    turnsTotal: 4,
+    resourceCosts: { [ResourceType.Stone]: 20, [ResourceType.Wood]: 15 },
+    knowledgePrerequisite: {
+      branch: KnowledgeBranch.Agricultural,
+      milestoneIndex: 1,
+    },
+    effectDescription:
+      'Build an extensive irrigation system across the region, dramatically increasing agricultural output and protecting against drought.',
+    completionEffect: {
+      regionDevelopmentDelta: 8,
+      foodProductionDelta: 15,
+      stabilityDelta: 2,
+    },
+  },
 
   // ====================
   // Military (3)

@@ -904,6 +904,90 @@ export const DECREE_POOL: DecreeDefinition[] = [
   },
 
   // ====================
+  // Food — Standalone Decrees (4)
+  // ====================
+  {
+    id: 'decree_military_ration_reform',
+    title: 'Reform Military Rations',
+    category: DecreeCategory.Military,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.MilitaryCaste, PopulationClass.Commoners],
+    effectPreview:
+      'Restructure military provisioning to reduce waste and align rations with actual readiness needs. Saves food but military morale may suffer.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: true,
+    cooldownTurns: 6,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
+  },
+  {
+    id: 'decree_seasonal_reserve_mandate',
+    title: 'Mandate Seasonal Food Reserves',
+    category: DecreeCategory.Social,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Wood]: 15 },
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Commoners, PopulationClass.Merchants],
+    effectPreview:
+      'Require all regions to maintain minimum food reserves before winter. Stabilizes food supply but constrains merchant trade in foodstuffs.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 3,
+    statePrerequisites: [{ type: 'stability_above', threshold: 40 }],
+  },
+  {
+    id: 'decree_agricultural_trade_compact',
+    title: 'Negotiate Agricultural Trade Compact',
+    category: DecreeCategory.Diplomatic,
+    slotCost: 2,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
+    effectPreview:
+      'Establish formal food trade agreements with neighboring kingdoms. Provides a reliable food supplement at ongoing treasury cost, but strengthens merchant ties and diplomatic bonds.',
+    isHighImpact: true,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 5,
+    statePrerequisites: [{ type: 'stability_above', threshold: 50 }],
+  },
+  {
+    id: 'decree_harvest_tithe_exemption',
+    title: 'Waive Harvest Tithe',
+    category: DecreeCategory.Economic,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Commoners, PopulationClass.Clergy],
+    effectPreview:
+      'Temporarily waive the traditional harvest tithe, allowing farmers to retain more of their produce for food stores. Reduces treasury income but substantially boosts food reserves.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: true,
+    cooldownTurns: 4,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: null,
+    statePrerequisites: null,
+  },
+
+  // ====================
   // Social — Labor Chain (3 tiers)
   // ====================
   {
