@@ -882,6 +882,7 @@ export enum InteractionType {
   Negotiation = 'Negotiation',
   Assessment = 'Assessment',
   Decree = 'Decree',
+  Notification = 'Notification',
 }
 
 // World Pulse flavor categories

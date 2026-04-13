@@ -10,7 +10,8 @@ export type CardFamily =
   | 'legacy'
   | 'status'
   | 'season'
-  | 'summary';
+  | 'summary'
+  | 'notification';
 
 export type RoundPhase = 'seasonDawn' | 'crisis' | 'petition' | 'decree' | 'summary';
 
@@ -105,7 +106,9 @@ export interface NegotiationCard {
 export interface MonthAllocation {
   interactionType: InteractionType | null;
   crisisData: import('../bridge/crisisCardGenerator').CrisisPhaseData | null;
+  additionalCrises: import('../bridge/crisisCardGenerator').CrisisPhaseData[];
   petitionCards: import('../bridge/petitionCardGenerator').PetitionCardData[];
+  notificationCards: import('../bridge/petitionCardGenerator').NotificationCardData[];
   negotiationCard: NegotiationCard | null;
   assessmentData: import('../bridge/assessmentCardGenerator').AssessmentPhaseData | null;
 }
@@ -168,6 +171,7 @@ export function getAccentColor(family: CardFamily): string {
     case 'status':   return 'var(--color-accent-status)';
     case 'summary':  return 'var(--color-accent-response)';
     case 'season':   return 'var(--color-accent-status)';
+    case 'notification': return 'var(--color-accent-status)';
   }
 }
 
@@ -183,5 +187,6 @@ export function getFamilyLabel(family: CardFamily): string {
     case 'status':   return 'STATUS';
     case 'summary':  return 'SUMMARY';
     case 'season':   return 'SEASON';
+    case 'notification': return 'NOTICE';
   }
 }

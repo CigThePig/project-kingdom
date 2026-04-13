@@ -3,7 +3,7 @@
 
 import type { PhaseDecisions, EffectHint, MonthDecision } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
-import type { PetitionCardData } from './petitionCardGenerator';
+import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import { InteractionType } from '../engine/types';
 import type { RulingStyleState, StyleAxis } from '../engine/types';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
@@ -135,11 +135,12 @@ export function generateSummaryData(
 export function generateMonthlySummaryData(
   monthDecisions: MonthDecision[],
   selectedDecrees: string[],
-  crisisData: CrisisPhaseData | null,
+  allCrisesData: CrisisPhaseData[],
   petitionCards: PetitionCardData[],
   negotiationId: string | null,
   prevRulingStyle?: RulingStyleState,
   currentRulingStyle?: RulingStyleState,
+  notificationCards: NotificationCardData[] = [],
 ): SummaryData {
   const parts: string[] = [];
   const allEffects: EffectHint[] = [];
@@ -157,12 +158,19 @@ export function generateMonthlySummaryData(
   const assessmentDecisions = monthDecisions.filter(
     (d) => d.interactionType === InteractionType.Assessment,
   );
+  const notificationDecisions = monthDecisions.filter(
+    (d) => d.interactionType === InteractionType.Notification,
+  );
 
-  // Crisis narrative
-  if (crisisDecisions.length > 0 && crisisData) {
-    const chosen = crisisData.responses.find((r) => r.id === crisisDecisions[0].choiceId);
+  // Crisis narrative — each crisis maps against its own source data
+  for (const cd of crisisDecisions) {
+    const matchedCrisis = allCrisesData.find(
+      (c) => c.crisisCard.eventId === cd.cardId,
+    );
+    if (!matchedCrisis) continue;
+    const chosen = matchedCrisis.responses.find((r) => r.id === cd.choiceId);
     if (chosen) {
-      parts.push(`${crisisData.crisisCard.title} — you chose "${chosen.title}".`);
+      parts.push(`${matchedCrisis.crisisCard.title} — you chose "${chosen.title}".`);
       allEffects.push(...chosen.effects);
     }
   }
@@ -219,6 +227,18 @@ export function generateMonthlySummaryData(
     );
     for (const d of petitionDecisions) {
       const card = petitionCards.find((p) => p.eventId === d.cardId);
+      const delta = EVENT_CHOICE_EFFECTS[card?.definitionId ?? d.cardId]?.[d.choiceId] ?? {};
+      allEffects.push(...mechDeltaToEffectHints(delta));
+    }
+  }
+
+  // Notification narrative
+  if (notificationDecisions.length > 0) {
+    parts.push(
+      `${notificationDecisions.length} royal notice${notificationDecisions.length !== 1 ? 's were' : ' was'} acknowledged.`,
+    );
+    for (const d of notificationDecisions) {
+      const card = notificationCards.find((n) => n.eventId === d.cardId);
       const delta = EVENT_CHOICE_EFFECTS[card?.definitionId ?? d.cardId]?.[d.choiceId] ?? {};
       allEffects.push(...mechDeltaToEffectHints(delta));
     }

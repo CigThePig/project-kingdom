@@ -5,7 +5,7 @@ import type { QueuedAction } from '../engine/types';
 import { ActionType, InteractionType } from '../engine/types';
 import type { PhaseDecisions, MonthDecision } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
-import type { PetitionCardData } from './petitionCardGenerator';
+import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import type { DecreeCardData } from './decreeCardGenerator';
 
 export function mapDecisionsToActions(
@@ -81,22 +81,26 @@ export function mapDecisionsToActions(
 export function mapMonthDecisionsToActions(
   monthDecisions: MonthDecision[],
   selectedDecrees: string[],
-  crisisData: CrisisPhaseData | null,
+  allCrisesData: CrisisPhaseData[],
   petitionCards: PetitionCardData[],
   _negotiationId: string | null,
   decreeCards: DecreeCardData[],
+  notificationCards: NotificationCardData[] = [],
 ): QueuedAction[] {
   const actions: QueuedAction[] = [];
 
   for (const decision of monthDecisions) {
     switch (decision.interactionType) {
       case InteractionType.CrisisResponse: {
-        // Find the response in crisis data to get slot cost
-        const response = crisisData?.responses.find((r) => r.id === decision.choiceId);
+        // Find the matching crisis data by event id
+        const matchedCrisis = allCrisesData.find(
+          (c) => c.crisisCard.eventId === decision.cardId,
+        );
+        const response = matchedCrisis?.responses.find((r) => r.id === decision.choiceId);
         actions.push({
           id: crypto.randomUUID(),
           type: ActionType.CrisisResponse,
-          actionDefinitionId: crisisData?.crisisCard.definitionId ?? decision.cardId,
+          actionDefinitionId: matchedCrisis?.crisisCard.definitionId ?? decision.cardId,
           slotCost: response?.slotCost ?? 0,
           isFree: response?.isFree ?? true,
           targetRegionId: null,
@@ -122,6 +126,24 @@ export function mapMonthDecisionsToActions(
           parameters: {
             eventId: decision.cardId,
             choiceId: decision.choiceId,
+          },
+        });
+        break;
+      }
+
+      case InteractionType.Notification: {
+        const card = notificationCards.find((n) => n.eventId === decision.cardId);
+        actions.push({
+          id: crypto.randomUUID(),
+          type: ActionType.CrisisResponse,
+          actionDefinitionId: card?.definitionId ?? decision.cardId,
+          slotCost: 0,
+          isFree: true,
+          targetRegionId: null,
+          targetNeighborId: null,
+          parameters: {
+            eventId: decision.cardId,
+            choiceId: card?.acknowledgeChoiceId ?? decision.choiceId,
           },
         });
         break;
