@@ -995,6 +995,808 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
 
+  // ============================================================
+  // PRODUCTION CHAIN TEXT
+  // ============================================================
+
+  // --- Chain 9: Infrastructure Decay ---
+  evt_infrastructure_decay_root: {
+    title: 'Crumbling Infrastructure',
+    body: 'Roads are rutted, bridges groan under their loads, and public works across the kingdom show the scars of deferred maintenance. Engineers warn that without investment soon, critical failures are inevitable. The treasury is thin, but the cost of inaction may be higher.',
+    choices: {
+      fund_emergency_repairs: 'Fund Emergency Repairs',
+      defer_maintenance: 'Defer Maintenance',
+    },
+  },
+  evt_infra_repair_success: {
+    title: 'Repairs Completed',
+    body: 'The emergency repair program has been completed on schedule. Roads have been resurfaced, weakened bridges reinforced, and the most critical public works restored to serviceable condition. Trade flows more smoothly and the people take notice of the crown\'s investment.',
+    choices: {
+      acknowledge: 'Acknowledged',
+    },
+  },
+  evt_infra_repair_cost_overrun: {
+    title: 'Repair Costs Exceed Estimates',
+    body: 'The infrastructure repair project has encountered unexpected complications — rotted foundations, substandard materials from previous contractors, and scope that was underestimated from the start. The engineers request additional funds to complete the work properly, or the crown can cut the project short.',
+    choices: {
+      approve_additional_funds: 'Approve Additional Funds',
+      cut_scope: 'Cut the Scope',
+    },
+  },
+  evt_infra_bridge_collapse: {
+    title: 'Bridge Collapse Disrupts Supply Lines',
+    body: 'A key bridge on the kingdom\'s primary trade and supply route has collapsed, sending a loaded grain cart into the river below. The failure was entirely predictable — engineers had warned of the deterioration months ago. Food shipments are disrupted, and the crown must act immediately to restore the connection.',
+    choices: {
+      emergency_rebuild: 'Order Emergency Rebuild',
+      reroute_supply_lines: 'Reroute Supply Lines',
+      requisition_noble_estates: 'Requisition Noble Estates for Materials',
+    },
+  },
+  evt_infra_road_decay: {
+    title: 'Roads Deteriorate Further',
+    body: 'Without maintenance funds, the kingdom\'s roads have continued their steady decline. Merchant caravans report longer journey times, broken axles, and increased losses to spoilage. Trade revenue has begun to slip as commerce flows more slowly through the realm.',
+    choices: {
+      acknowledge: 'Acknowledged',
+    },
+  },
+  evt_infra_commoner_petition: {
+    title: 'Commoners Petition for Road Repairs',
+    body: 'A delegation of commoners from the outer townships has brought a formal petition to the court. They describe impassable roads, isolated villages cut off from markets, and children unable to reach the nearest school. They ask only for basic repairs — enough to reconnect their communities to the kingdom\'s trade network.',
+    choices: {
+      grant_road_repairs: 'Grant Road Repairs',
+      deny_petition: 'Deny the Petition',
+    },
+  },
+
+  // --- Chain 1: Grain Crisis ---
+  evt_grain_crisis_root: {
+    title: 'Grain Crisis',
+    body: 'A poor harvest has left the kingdom\'s grain reserves dangerously low. The autumn stores will not last through winter at current consumption rates. Advisors present three paths, each with consequences that will echo long after the immediate hunger is addressed.',
+    choices: {
+      ration_strictly: 'Impose Strict Rationing',
+      import_grain: 'Import Grain at High Cost',
+      seize_noble_reserves: 'Seize Noble Estates\' Reserves',
+    },
+  },
+  evt_grain_ration_compliance: {
+    title: 'Rationing Holds',
+    body: 'The strict rationing program has held. The people tightened their belts, the markets adapted, and the winter stores — though thin — will last. Minor unrest in the early weeks has faded as the population accepted the necessity. The kingdom endures.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_grain_ration_riots: {
+    title: 'Riots in the Market District',
+    body: 'The rationing has pushed the people past their breaking point. Riots have erupted in the market district — stalls overturned, warehouses broken into, and grain stores looted. The city watch is overwhelmed, and the violence is spreading to neighboring districts.',
+    choices: {
+      suppress_market_riots: 'Suppress the Riots',
+      negotiate_with_rioters: 'Negotiate with the Rioters',
+      distribute_reserves: 'Distribute Emergency Reserves',
+    },
+  },
+  evt_grain_ration_black_market: {
+    title: 'Black Market Grain Trade',
+    body: 'A grey market for grain has emerged under the rationing regime. Merchants with connections sell grain at inflated prices to those who can afford it, while the official ration remains inadequate. A delegation petitions the crown to either legalize the market or shut it down.',
+    choices: {
+      legalize_grey_market: 'Legalize the Grey Market',
+      crack_down_market: 'Crack Down on It',
+    },
+  },
+  evt_grain_import_merchant_leverage: {
+    title: 'Import Merchants Demand Concessions',
+    body: 'The merchants who supplied the imported grain are pressing their advantage. With the treasury weakened by the purchase, they demand permanent tariff exemptions as the price of continued cooperation. They know the kingdom cannot afford to alienate its grain suppliers.',
+    choices: {
+      grant_tariff_exemptions: 'Grant Tariff Exemptions',
+      refuse_merchant_demands: 'Refuse Their Demands',
+      partial_concessions: 'Offer Partial Concessions',
+    },
+  },
+  evt_grain_import_gratitude: {
+    title: 'Grain Arrives Safely',
+    body: 'The imported grain has arrived in good condition and has been distributed to the kingdom\'s stores. The people are fed, the merchants are paid, and the crisis is averted. The treasury is lighter, but the kingdom\'s food supply is secure for the coming months.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_grain_import_spoiled: {
+    title: 'Imported Grain Spoiled',
+    body: 'Disaster has struck — nearly half the imported grain was spoiled, either through poor storage during transport or deliberate fraud by the suppliers. The food stores that were meant to see the kingdom through winter are now critically insufficient. The crown must act immediately.',
+    choices: {
+      demand_replacement: 'Demand Replacement Shipment',
+      emergency_local_harvest: 'Emergency Local Harvest',
+      distribute_what_remains: 'Distribute What Remains',
+    },
+  },
+  evt_grain_noble_plot: {
+    title: 'Nobility Organizes Resistance',
+    body: 'The nobility, furious at the seizure of their estate reserves, is organizing a coordinated resistance. Intelligence reports describe secret meetings, the hiring of private guards, and communications with sympathetic nobles in neighboring kingdoms. This is not mere grumbling — it is the beginning of organized defiance.',
+    choices: {
+      negotiate_concessions: 'Negotiate Concessions',
+      arrest_ringleaders: 'Arrest the Ringleaders',
+      show_of_force: 'Display of Military Force',
+    },
+  },
+  evt_grain_noble_acceptance: {
+    title: 'Nobles Accept the Seizure',
+    body: 'The nobility, though aggrieved by the seizure of their reserves, has accepted the necessity. The grain crisis was genuine, the people were hungry, and even the most privileged recognize that a starving kingdom serves no one. The nobles grumble, but they comply.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_grain_noble_concessions_result: {
+    title: 'Terms Settled with Nobility',
+    body: 'Negotiations with the resistant nobility have concluded. Concessions have been made — tax relief, restoration guarantees, and a formal apology for the seizure. The terms are expensive but have defused the crisis. The nobility accepts, and the kingdom moves forward.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_grain_noble_uprising: {
+    title: 'Armed Noble Uprising',
+    body: 'The arrests have backfired catastrophically. Loyal noble retainers have taken up arms, and an armed uprising has erupted in the provinces. Fortified estates have become strongholds of resistance, and the kingdom\'s military — already stretched thin — faces an internal war it can ill afford.',
+    choices: {
+      crush_uprising: 'Crush the Uprising',
+      negotiate_surrender: 'Negotiate a Surrender',
+      offer_amnesty: 'Offer General Amnesty',
+    },
+  },
+  evt_grain_noble_cowed: {
+    title: 'Nobility Falls in Line',
+    body: 'The arrests of the ringleaders, backed by visible military strength, have had the desired effect. The remaining nobles have fallen in line, abandoning their resistance and accepting the new reality. The arrests were harsh, but effective — the nobility will not challenge the crown again soon.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+
+  // --- Chain 3: Faith Schism ---
+  evt_faith_schism_root: {
+    title: 'Theological Dispute Erupts',
+    body: 'A deep theological dispute has split the kingdom\'s religious institutions. The orthodox clergy demands adherence to traditional doctrine, while a growing reform movement challenges centuries of established teaching. The dispute has moved beyond the temples and into the streets, threatening to tear the kingdom\'s spiritual fabric apart.',
+    choices: {
+      back_orthodox: 'Back the Orthodox Faction',
+      support_reformists: 'Support the Reformists',
+      suppress_all_factions: 'Suppress All Factions',
+    },
+  },
+  evt_schism_inquisition: {
+    title: 'Orthodox Faction Demands Inquisition',
+    body: 'Emboldened by royal support, the orthodox faction has demanded a formal inquisition to root out heterodox beliefs. They seek the authority to investigate, interrogate, and punish those who deviate from established doctrine. The clergy argues this is necessary to preserve spiritual unity; others see it as a dangerous overreach.',
+    choices: {
+      authorize_inquisition: 'Authorize the Inquisition',
+      limit_scope: 'Limit Its Scope',
+      refuse_inquisition: 'Refuse the Inquisition',
+    },
+  },
+  evt_schism_orthodox_peace: {
+    title: 'Theological Dispute Settles',
+    body: 'The theological dispute has settled without further crisis. The orthodox position has been reaffirmed, the reformists have quieted, and the temples have returned to their traditional rhythms. Whether this peace reflects genuine resolution or mere exhaustion remains to be seen.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_schism_orthodox_overreach: {
+    title: 'Commoners Complain of Religious Oppression',
+    body: 'The orthodox clergy, backed by royal authority, has grown heavy-handed. Common folk report that temple attendance is enforced by social pressure and economic penalty, that minor deviations from doctrine are punished harshly, and that the joy has been drained from religious life. A petition reaches the court.',
+    choices: {
+      rein_in_clergy: 'Rein In the Clergy',
+      support_clergy_authority: 'Support Clergy Authority',
+    },
+  },
+  evt_schism_reform_growth: {
+    title: 'Reform Movement Integrates Peacefully',
+    body: 'The reform movement has integrated peacefully into the kingdom\'s religious landscape. New interpretations of doctrine have enriched theological discourse, and the reformists have found ways to innovate within the broader tradition rather than against it. The kingdom\'s faith is evolving, not breaking.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_schism_reform_backlash: {
+    title: 'Clergy Revolts Against Reforms',
+    body: 'The established clergy has revolted against the crown\'s support of the reform movement. Temples have closed their doors in protest, clergy refuse to perform rites, and senior religious figures denounce the reforms from makeshift pulpits in the market squares. The kingdom\'s spiritual infrastructure is in open rebellion.',
+    choices: {
+      stand_with_reformists: 'Stand with the Reformists',
+      appease_clergy: 'Appease the Clergy',
+      impose_silence: 'Impose Silence on Both Sides',
+    },
+  },
+  evt_schism_reform_schism_deep: {
+    title: 'Two Competing Religious Authorities',
+    body: 'The kingdom now has two competing religious authorities — the orthodox hierarchy and a reformist council, each claiming legitimacy, each demanding the crown\'s exclusive recognition. Congregations are split, families are divided, and the question of which doctrine the kingdom officially follows has become unavoidable.',
+    choices: {
+      recognize_both_authorities: 'Recognize Both Authorities',
+      enforce_single_doctrine: 'Enforce a Single Doctrine',
+      secularize_state: 'Secularize the State',
+    },
+  },
+  evt_schism_underground_worship: {
+    title: 'Underground Worship Cells Discovered',
+    body: 'The suppression of all religious factions has driven worship underground. Secret gatherings have been discovered in cellars, barns, and forest clearings. The worshippers come from all classes — commoners, merchants, even minor nobles — united by their refusal to abandon their faith simply because the crown demanded it.',
+    choices: {
+      tolerate_quietly: 'Tolerate Quietly',
+      crack_down: 'Crack Down',
+      infiltrate_cells: 'Infiltrate the Cells',
+    },
+  },
+  evt_schism_suppress_calm: {
+    title: 'Suppression Succeeds',
+    body: 'The suppression of religious factions has worked — at least on the surface. Religious discourse is muted, the factional leaders have dispersed, and the public space is free of theological conflict. The temples are quiet, though whether this represents peace or merely the absence of visible dissent is an open question.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_schism_underground_stable: {
+    title: 'An Uneasy Equilibrium',
+    body: 'The decision to tolerate underground worship has produced an uneasy equilibrium. The worshippers practice their faith in private, the crown maintains its public stance, and both sides pretend the other does not exist. It is not a solution, but it is stable — a quiet coexistence built on mutual avoidance.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_schism_underground_martyr: {
+    title: 'Crackdown Creates a Martyr',
+    body: 'The crackdown on underground worship has created a martyr. A charismatic worship leader was killed during the raids, and their death has electrified the underground movement. Songs are sung in their memory, their words are copied and distributed, and what was once a scattered resistance has found its unifying symbol.',
+    choices: {
+      honor_martyr: 'Honor the Martyr',
+      discredit_martyr: 'Discredit the Martyr',
+      ignore_martyr: 'Ignore the Matter',
+    },
+  },
+
+  // --- Chain 5: Plague Outbreak ---
+  evt_plague_outbreak_root: {
+    title: 'Plague Strikes the Kingdom',
+    body: 'Disease has broken out in the densely populated districts. The affliction spreads rapidly through crowded quarters, and the death toll climbs daily. The court\'s physicians warn that without decisive action, the plague will reach every corner of the kingdom. The question is not whether to act, but who will be saved.',
+    choices: {
+      quarantine_districts: 'Quarantine Affected Districts',
+      prioritize_nobility: 'Prioritize Treating the Nobility',
+      open_royal_stores: 'Open Royal Stores for All',
+    },
+  },
+  evt_plague_quarantine_holds: {
+    title: 'Quarantine Holds',
+    body: 'The quarantine has held. The disease was contained within the affected districts, casualties were limited, and the rest of the kingdom was spared the worst. The cost was real — lives lost, livelihoods disrupted — but the containment strategy prevented a far greater catastrophe.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_plague_quarantine_breaks: {
+    title: 'Quarantine Collapses',
+    body: 'The quarantine has collapsed. Desperate residents broke through the barriers, carrying the disease into previously clean districts. The plague is now spreading unchecked, and the kingdom\'s health infrastructure is overwhelmed. The original containment strategy has failed.',
+    choices: {
+      military_enforcement: 'Enforce with Military',
+      expand_treatment: 'Expand Treatment Centers',
+      abandon_quarantine: 'Abandon the Quarantine',
+    },
+  },
+  evt_plague_quarantine_unrest: {
+    title: 'Quarantined Districts Demand Compensation',
+    body: 'The quarantined districts have suffered disproportionately. Businesses shuttered, wages lost, and families separated by the barriers. A delegation demands compensation for the sacrifices they made so the rest of the kingdom could remain healthy. Their grievance is legitimate.',
+    choices: {
+      compensate_quarantined: 'Compensate the Districts',
+      maintain_quarantine: 'Maintain the Quarantine',
+    },
+  },
+  evt_plague_class_anger: {
+    title: 'Class Riots over Treatment',
+    body: 'The decision to prioritize noble treatment has ignited fury among the common people. Riots have erupted in multiple districts, with crowds demanding equal access to medicine and physicians. The class divide, always present, has been exposed in the starkest possible terms: who lives and who dies is being decided by birth, not need.',
+    choices: {
+      extend_treatment_to_all: 'Extend Treatment to All',
+      suppress_riots: 'Suppress the Riots',
+      public_apology: 'Issue a Public Apology',
+    },
+  },
+  evt_plague_noble_saved: {
+    title: 'Nobility Treated Successfully',
+    body: 'The noble families have been treated and the disease contained within their estates. The commoners, left largely to their own devices, have endured as they always do — with quiet suffering and long memory. The nobility is grateful; the common people are not.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_plague_noble_spread: {
+    title: 'Second Wave Among Commoners',
+    body: 'The untreated commoner population has become the breeding ground for a devastating second wave of plague. The disease has mutated in the overcrowded, neglected districts and is now more virulent than before. Population losses are mounting, and the kingdom faces a demographic crisis.',
+    choices: {
+      emergency_measures: 'Deploy Emergency Measures',
+      appeal_for_foreign_aid: 'Appeal for Foreign Aid',
+      isolate_and_wait: 'Isolate and Wait It Out',
+    },
+  },
+  evt_plague_recovery: {
+    title: 'Kingdom Recovers from Plague',
+    body: 'The kingdom has survived the plague, weakened but united. The open stores policy, though devastatingly expensive, saved lives across all classes. The shared suffering has created a sense of solidarity, and the people credit the crown\'s generosity with their survival.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_plague_bankruptcy: {
+    title: 'Treasury Depleted by Plague Response',
+    body: 'The cost of treating the entire kingdom has emptied the treasury. The plague is receding, but the financial crisis is just beginning. The crown cannot pay its soldiers, maintain its roads, or fund any of the kingdom\'s essential services. Saving lives has bankrupted the realm.',
+    choices: {
+      emergency_loans: 'Seek Emergency Loans',
+      slash_all_spending: 'Slash All Spending',
+      levy_crisis_tax: 'Levy a Crisis Tax',
+    },
+  },
+  evt_plague_gratitude: {
+    title: 'Commoners Rally to the Crown',
+    body: 'The commoners, grateful for the crown\'s sacrifice in opening the royal stores, have rallied to support the kingdom\'s recovery. Volunteer labor forces have organized, donations flow from townships, and a wave of goodwill strengthens the bonds between crown and people.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+
+  // --- Chain 2: Border Incursion ---
+  evt_border_incursion_root: {
+    title: 'Border Incursion',
+    body: 'Raiders from the northern rival kingdom have crossed the border in force. Villages near the frontier report burned farms, stolen livestock, and displaced families. The incursion is too organized to be mere banditry — this bears the hallmarks of state-sanctioned aggression. The court demands a response.',
+    choices: {
+      retaliate_with_force: 'Retaliate with Force',
+      send_diplomatic_envoy: 'Send a Diplomatic Envoy',
+      fortify_and_absorb: 'Fortify and Absorb the Losses',
+    },
+  },
+  evt_border_campaign_victory: {
+    title: 'Campaign Victory',
+    body: 'The retaliatory campaign has succeeded. The kingdom\'s forces drove the raiders back across the border, secured key positions, and extracted a formal apology from the northern court. The victory strengthens the kingdom\'s reputation and sends a clear message about the cost of aggression.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_border_campaign_stalemate: {
+    title: 'Campaign Stalemate',
+    body: 'The border campaign has ground to a stalemate. Neither side can achieve a decisive advantage, and the conflict is consuming resources at an unsustainable rate. The generals petition for either a significant commitment of additional resources or permission to withdraw with whatever terms can be salvaged.',
+    choices: {
+      commit_more_resources: 'Commit More Resources',
+      withdraw_forces: 'Withdraw Forces',
+    },
+  },
+  evt_border_campaign_defeat: {
+    title: 'Campaign Defeated',
+    body: 'The retaliatory campaign has failed catastrophically. The kingdom\'s forces were outmaneuvered and decisively beaten. The enemy is advancing into the kingdom\'s territory, and the remaining defenders are in disarray. The crown faces the gravest military crisis in a generation.',
+    choices: {
+      rally_defense: 'Rally a Last Defense',
+      sue_for_peace: 'Sue for Peace',
+      scorched_earth: 'Scorched Earth Retreat',
+    },
+  },
+  evt_border_envoy_success: {
+    title: 'Envoy Secures Ceasefire',
+    body: 'The diplomatic envoy has secured a ceasefire with the northern kingdom. The agreement includes a withdrawal of raiders, compensation for damages, and a commitment to formal border negotiations. Diplomacy has prevailed where force might have failed.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_border_envoy_hostage: {
+    title: 'Envoy Taken Hostage',
+    body: 'The diplomatic mission has ended in disaster — the envoy has been taken hostage by the northern kingdom. Ransom demands have arrived at court, and the hostage-takers threaten harm if their conditions are not met. The kingdom\'s honor and the envoy\'s life hang in the balance.',
+    choices: {
+      pay_ransom: 'Pay the Ransom',
+      rescue_mission: 'Launch a Rescue Mission',
+      abandon_envoy: 'Abandon the Envoy',
+    },
+  },
+  evt_border_envoy_terms: {
+    title: 'Unfavorable Peace Terms Offered',
+    body: 'The northern kingdom has offered peace terms, but they are unfavorable — territorial concessions, trade advantages, and a public acknowledgment of the kingdom\'s "provocation." The terms are humiliating but would end the immediate crisis and prevent further bloodshed.',
+    choices: {
+      accept_unfavorable_terms: 'Accept the Terms',
+      reject_terms: 'Reject the Terms',
+    },
+  },
+  evt_border_fortify_holds: {
+    title: 'Border Fortifications Hold',
+    body: 'The decision to fortify and absorb the losses has proven sound. The border defenses held firm, the raids diminished as the fortifications strengthened, and the kingdom weathered the storm without escalation. The losses were real but manageable.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_border_fortify_famine: {
+    title: 'Border Losses Trigger Shortages',
+    body: 'The damage absorbed during the border incursion has triggered food shortages across the frontier provinces. Burned farms, disrupted supply lines, and displaced farmers have combined to create a growing hunger crisis. The fortification strategy preserved territory but not the people\'s food supply.',
+    choices: {
+      emergency_food_imports: 'Import Emergency Food Supplies',
+      redistribute_reserves: 'Redistribute Existing Reserves',
+      enforce_rationing: 'Enforce Rationing',
+    },
+  },
+  evt_border_fortify_resentment: {
+    title: 'Border Commoners Demand Compensation',
+    body: 'Commoners living near the border have organized a petition demanding compensation for the losses they absorbed while the crown chose a defensive strategy. They bore the brunt of the raids — their farms burned, their livestock stolen — while the capital remained untouched.',
+    choices: {
+      grant_compensation: 'Grant Compensation',
+      deny_compensation: 'Deny Compensation',
+    },
+  },
+
+  // --- Chain 4: Trade Route Disruption ---
+  evt_trade_route_disruption_root: {
+    title: 'Trade Route Threatened',
+    body: 'A major trade route has come under threat. Reports vary — bandits, a neighbor\'s toll demands, or natural disaster — but the result is the same: merchant caravans are turning back, goods are piling up in warehouses, and the kingdom\'s commercial lifeline is constricting. The court must decide how to restore the flow of trade.',
+    choices: {
+      send_military_escorts: 'Send Military Escorts',
+      negotiate_with_disruptors: 'Negotiate with the Disrupting Party',
+      redirect_to_alternate: 'Redirect to Alternate Routes',
+    },
+  },
+  evt_trade_escort_success: {
+    title: 'Trade Route Secured',
+    body: 'The military escort program has succeeded. The trade route is secure, merchant caravans move freely under armed protection, and commerce has resumed at near-normal levels. The show of force has deterred further disruption, at least for now.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_trade_escort_ambush: {
+    title: 'Escort Force Ambushed',
+    body: 'The military escort was ambushed on the trade route by a well-organized force. Casualties are significant, goods have been seized, and the survivors report that the attackers had detailed knowledge of the escort\'s route and composition. This was not a random attack — it was planned.',
+    choices: {
+      send_reinforcements: 'Send Reinforcements',
+      negotiate_ransom: 'Negotiate for Return of Goods',
+      cut_losses: 'Cut Our Losses',
+    },
+  },
+  evt_trade_escort_expensive: {
+    title: 'Merchants Request Escort Subsidies',
+    body: 'The military escort program is working, but the costs are mounting. Merchants petition the crown to subsidize the ongoing escort expenses, arguing that the trade route\'s security benefits the entire kingdom. The alternative is ending the program and leaving the route vulnerable again.',
+    choices: {
+      subsidize_escorts: 'Subsidize Ongoing Escorts',
+      end_escort_program: 'End the Escort Program',
+    },
+  },
+  evt_trade_negotiate_deal: {
+    title: 'Toll Arrangement Offered',
+    body: 'Negotiations with the disrupting party have produced a proposal: a formal toll arrangement. Merchants would pay a fixed fee for safe passage, and the disrupting party would guarantee the route\'s security. It is an unsavory arrangement, but it would restore trade immediately.',
+    choices: {
+      accept_toll: 'Accept the Toll Arrangement',
+      refuse_toll: 'Refuse the Toll',
+    },
+  },
+  evt_trade_negotiate_betrayal: {
+    title: 'Negotiation Was a Ruse',
+    body: 'The negotiation was a trap. While the kingdom\'s envoys discussed terms in good faith, the disrupting party used the ceasefire to seize a major merchant convoy. The goods are gone, the trust is broken, and the kingdom looks foolish for having trusted those who had no intention of honoring a deal.',
+    choices: {
+      military_response: 'Launch Military Response',
+      demand_compensation: 'Demand Compensation',
+      write_off_losses: 'Write Off the Losses',
+    },
+  },
+  evt_trade_negotiate_alliance: {
+    title: 'Lasting Trade Arrangement Formed',
+    body: 'Against expectations, the negotiation has produced a lasting arrangement. The disrupting party has been brought into the kingdom\'s trade network as a legitimate partner, with mutual obligations and shared profits. What began as a crisis has become an opportunity for expanded commerce.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_trade_redirect_slow_recovery: {
+    title: 'Alternate Routes Stabilize',
+    body: 'The alternate trade routes have stabilized, though at reduced capacity. Journey times are longer, costs are higher, and some perishable goods simply cannot survive the detour. Trade continues, but the kingdom\'s commerce operates at a fraction of its former efficiency.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_trade_redirect_opportunity: {
+    title: 'Investment Opportunity on New Route',
+    body: 'A merchant guild proposes investing in the alternate trade route permanently — building proper roads, establishing waypoints, and negotiating with settlements along the new path. The investment is significant, but a successful second route would make the kingdom\'s trade network more resilient.',
+    choices: {
+      invest_in_new_route: 'Invest in the New Route',
+      decline_investment: 'Decline the Investment',
+    },
+  },
+
+  // --- Chain 6: Military Mutiny ---
+  evt_military_mutiny_root: {
+    title: 'Military Mutiny',
+    body: 'Unpaid and overworked soldiers have begun to organize. The barracks are restless, officers report insubordination, and a delegation of senior sergeants has delivered an ultimatum to the crown: address their grievances or face the consequences. The military, the kingdom\'s shield, is turning inward.',
+    choices: {
+      pay_back_wages: 'Pay Back Wages Immediately',
+      promise_reform: 'Promise Reform',
+      execute_ringleaders: 'Execute the Ringleaders',
+    },
+  },
+  evt_mutiny_pay_loyalty: {
+    title: 'Soldiers Return to Duty',
+    body: 'The payment of back wages has restored discipline and morale. The soldiers have returned to their posts, the officers report normal operations, and the mutiny has ended as quickly as it began. The treasury is lighter, but the kingdom\'s defense is intact.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_mutiny_pay_bankrupt: {
+    title: 'Treasury Emptied by Military Pay',
+    body: 'The soldiers are paid, but the treasury is empty. The crown cannot meet its other obligations — infrastructure projects halt, court salaries go unpaid, and there is no reserve for emergencies. The kingdom has traded one crisis for another.',
+    choices: {
+      emergency_taxation: 'Levy Emergency Taxes',
+      seize_noble_assets: 'Seize Noble Assets',
+      reduce_military_size: 'Reduce Military Size',
+    },
+  },
+  evt_mutiny_reform_trust: {
+    title: 'Military Reforms Succeed',
+    body: 'The promised reforms have materialized. Pay schedules are regularized, training conditions improved, and a formal grievance process established. The soldiers, seeing their trust rewarded, have returned to full readiness. The military is stronger for having weathered the crisis.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_mutiny_reform_betrayal: {
+    title: 'Soldiers March on the Capital',
+    body: 'The promised reforms never came. The soldiers, feeling betrayed by empty promises, have mobilized and are marching on the capital. This is no longer a mutiny — it is an insurrection. The crown has hours, not days, to respond before the army reaches the palace gates.',
+    choices: {
+      meet_soldiers_personally: 'Meet the Soldiers Personally',
+      call_loyal_units: 'Call Loyal Units',
+      flee_capital: 'Flee the Capital',
+    },
+  },
+  evt_mutiny_reform_desertion: {
+    title: 'Desertion Rates Climb',
+    body: 'Without visible progress on reform, soldiers are voting with their feet. Desertion rates have climbed steadily, with experienced veterans and skilled specialists among those departing. The army shrinks not through policy but through the quiet exodus of those who have lost faith in the crown\'s word.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_mutiny_execute_fear: {
+    title: 'Army Cowed into Compliance',
+    body: 'The execution of the mutiny\'s ringleaders has restored discipline through fear. The army is obedient, but the barracks are silent in a way that unsettles the officers. Morale is shattered, and the soldiers serve not from loyalty but from the knowledge of what happens to those who speak up.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_mutiny_execute_revenge: {
+    title: 'Fortification Sabotaged',
+    body: 'Loyalists of the executed soldiers have struck back with devastating precision. A key fortification on the kingdom\'s border has been sabotaged — walls weakened, supplies contaminated, and defensive positions compromised. The sabotage was an inside job, carried out by soldiers still serving.',
+    choices: {
+      investigate_sabotage: 'Investigate the Sabotage',
+      rebuild_fortification: 'Rebuild the Fortification',
+      purge_suspects: 'Purge Suspected Sympathizers',
+    },
+  },
+  evt_mutiny_execute_loyalty_split: {
+    title: 'Families Petition for Amnesty',
+    body: 'Commoner-born soldiers have organized a petition on behalf of the families of the executed ringleaders. The families face destitution and social ostracism. The petition asks only for basic protections — the right to remain in their homes, to keep their property, to not be punished for the actions of their kin.',
+    choices: {
+      grant_amnesty_families: 'Grant Amnesty to Families',
+      deny_amnesty: 'Deny the Petition',
+    },
+  },
+
+  // --- Chain 8: Succession Anxiety ---
+  evt_succession_anxiety_root: {
+    title: 'Succession Rumors Spread',
+    body: 'Rumors about the stability of the royal succession have begun circulating through the court and beyond. Different factions are positioning themselves for advantage, and foreign powers are taking notice. The uncertainty is eroding confidence in the kingdom\'s future. The crown must address the question before others answer it.',
+    choices: {
+      name_heir_publicly: 'Name an Heir Publicly',
+      suppress_rumors: 'Suppress the Rumors',
+      convene_great_lords: 'Convene the Great Lords',
+    },
+  },
+  evt_succession_heir_accepted: {
+    title: 'Succession Settled',
+    body: 'The naming of an heir has been accepted across the kingdom. The nobility acknowledges the choice, the people feel reassured, and foreign courts send formal recognition. The question of succession, for now, is answered.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_succession_heir_challenged: {
+    title: 'Rival Claimant Emerges',
+    body: 'A rival claimant to the succession has emerged from within the nobility, backed by a coalition of discontented lords. The challenger presents a credible genealogical claim and has begun gathering military support. The named heir\'s position is suddenly precarious.',
+    choices: {
+      discredit_rival: 'Discredit the Rival',
+      negotiate_with_rival: 'Negotiate with the Rival',
+      imprison_rival: 'Imprison the Rival',
+    },
+  },
+  evt_succession_heir_popular: {
+    title: 'Heir Wins Popular Support',
+    body: 'The named heir has proven unexpectedly popular with the common people. Public appearances have been well received, and the heir\'s reputation for fairness has spread through the townships. Popular support strengthens the succession and provides a counterweight to noble skepticism.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_succession_whispers: {
+    title: 'Suppression Amplifies Rumors',
+    body: 'The attempt to suppress succession rumors has backfired spectacularly. The very act of censorship has convinced people that the rumors are true, and underground pamphlets circulate with increasingly wild speculation. The court whispers louder than before, and foreign ambassadors are taking careful notes.',
+    choices: {
+      crack_down_harder: 'Crack Down Harder',
+      address_publicly: 'Address the Matter Publicly',
+      redirect_attention: 'Redirect Public Attention',
+    },
+  },
+  evt_succession_suppress_works: {
+    title: 'Rumors Die Down',
+    body: 'The succession rumors have faded from public discourse. Whether through effective suppression or simple loss of interest, the topic no longer dominates court conversation. The kingdom\'s attention has moved on to more immediate concerns.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_succession_council_agreement: {
+    title: 'Lords Agree on Succession',
+    body: 'The council of great lords has reached agreement on a succession protocol. After extensive deliberation, a clear line of succession has been established with the support of the major noble houses. The arrangement may not please everyone, but it provides the stability the kingdom needs.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_succession_council_deadlock: {
+    title: 'Succession Council Deadlocked',
+    body: 'The council of great lords is hopelessly deadlocked. Rival factions have formed around competing candidates, and each session devolves into accusations and threats. The council that was meant to resolve the succession crisis is becoming one itself.',
+    choices: {
+      force_decision: 'Force a Decision',
+      dissolve_council: 'Dissolve the Council',
+      extend_deliberations: 'Extend Deliberations',
+    },
+  },
+  evt_succession_council_proposal: {
+    title: 'Compromise Candidate Proposed',
+    body: 'A senior lord has proposed a compromise candidate for the succession — one with connections to multiple factions and a reputation for moderation. The proposal is imperfect but has the merit of being acceptable to most parties. The crown must decide whether pragmatism outweighs preference.',
+    choices: {
+      accept_compromise: 'Accept the Compromise',
+      reject_compromise: 'Reject the Compromise',
+    },
+  },
+
+  // --- Chain 11: Commoner Uprising ---
+  evt_commoner_uprising_root: {
+    title: 'Organized Commoner Resistance',
+    body: 'Years of accumulated grievance have crystallized into organized resistance. This is not a riot — it is a movement, with leaders, demands, and growing support across the townships. The commoners have presented a formal list of grievances and warn that their patience has reached its limit.',
+    choices: {
+      meet_demands: 'Meet Their Demands',
+      suppress_by_force: 'Suppress by Force',
+      address_root_causes: 'Address Root Causes with Reform',
+    },
+  },
+  evt_uprising_noble_backlash: {
+    title: 'Nobility Retaliates',
+    body: 'The concessions granted to the commoners have provoked a sharp reaction from the nobility. They view the crown\'s capitulation as a dangerous precedent — rewarding rebellion. Noble houses are withdrawing cooperation, and some are openly questioning whether the crown still serves their interests.',
+    choices: {
+      appease_nobility: 'Appease the Nobility',
+      stand_with_commoners: 'Stand with the Commoners',
+      find_compromise: 'Find a Compromise',
+    },
+  },
+  evt_uprising_peace: {
+    title: 'Peace Returns',
+    body: 'The commoner demands have been met, and the movement has dissolved as peacefully as it formed. Markets reopen, the townships quiet, and a tentative normalcy returns to the kingdom. Whether this peace endures depends on whether the promises made are kept.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_uprising_guerrilla: {
+    title: 'Guerrilla Attacks',
+    body: 'The suppressed commoner movement has gone underground and turned violent. Supply wagons are ambushed on rural roads, tax collectors are attacked, and noble estates outside the capital face arson. The military struggles to fight an enemy that melts back into the population after each strike.',
+    choices: {
+      hunt_insurgents: 'Hunt the Insurgents',
+      offer_amnesty: 'Offer Amnesty',
+      fortify_key_positions: 'Fortify Key Positions',
+    },
+  },
+  evt_uprising_crushed: {
+    title: 'Uprising Crushed',
+    body: 'The military has crushed the commoner uprising through overwhelming force. The movement\'s leaders are imprisoned or fled, and the townships are quiet — not from contentment, but from fear. The commoners will remember this, and the resentment runs deeper than before.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_uprising_reform_progress: {
+    title: 'Reforms Taking Effect',
+    body: 'The reforms initiated in response to the commoner uprising are beginning to show results. Working conditions have improved, taxation is more equitable, and the crown\'s investment in public works has created visible changes in the townships. Recovery is slow, but the trajectory is positive.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_uprising_reform_too_slow: {
+    title: 'Reform Supporters Demand Faster Action',
+    body: 'Those who supported reform over confrontation are growing impatient. The promised changes are proceeding too slowly for those who staked their credibility on the crown\'s good faith. A delegation of reform supporters petitions the crown for accelerated action before the moderates lose control to the radicals.',
+    choices: {
+      accelerate_reforms: 'Accelerate the Reforms',
+      urge_patience: 'Urge Patience',
+    },
+  },
+  evt_uprising_reform_resistance: {
+    title: 'Nobility Resists Reforms',
+    body: 'The reforms aimed at addressing commoner grievances have met stiff resistance from the nobility. The proposed changes would reduce noble privileges, redistribute resources, and fundamentally alter the feudal compact. The nobility argues that the crown is dismantling the very order that sustains the kingdom.',
+    choices: {
+      override_nobility: 'Override the Nobility',
+      compromise_on_reforms: 'Compromise on Reforms',
+      abandon_reforms: 'Abandon Reforms',
+    },
+  },
+
+  // --- Chain 7: Merchant Guild Power Play ---
+  evt_merchant_guild_demands_root: {
+    title: 'Merchant Guild Demands Representation',
+    body: 'The merchant guild has organized a formal delegation demanding political representation. They seek a permanent seat on the royal council, arguing that those who generate the kingdom\'s wealth deserve a voice in its governance. The nobility views this as an unacceptable challenge to the established order.',
+    choices: {
+      grant_council_seat: 'Grant a Council Seat',
+      offer_tax_concessions: 'Offer Tax Concessions Instead',
+      refuse_reassert_authority: 'Refuse and Reassert Authority',
+    },
+  },
+  evt_merchant_council_effective: {
+    title: 'Trade Council Produces Results',
+    body: 'The merchant council seat has proven to be a wise concession. Trade policy is more informed, commercial disputes are resolved efficiently, and the guild\'s participation has produced measurable improvements in revenue collection. Even some nobles grudgingly acknowledge the arrangement\'s utility.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_merchant_council_overreach: {
+    title: 'Nobility Demands Council Dissolution',
+    body: 'The merchant council representative has overstepped — proposing trade regulations that directly undermine noble land rights and feudal commerce privileges. The nobility has united in demanding the council seat be dissolved, warning that the traditional order is being eroded from within.',
+    choices: {
+      dissolve_council: 'Dissolve the Council Seat',
+      limit_council_powers: 'Limit Council Powers',
+      side_with_merchants: 'Side with the Merchants',
+    },
+  },
+  evt_merchant_council_corruption: {
+    title: 'Reports of Council Corruption',
+    body: 'Whispers have reached the court that the merchant council representative is using their position to steer contracts to favored guild members. The corruption is not yet public knowledge, but if left unchecked, it threatens to discredit both the council and the crown\'s judgment in creating it.',
+    choices: {
+      investigate_council: 'Investigate the Council',
+      ignore_reports: 'Ignore the Reports',
+    },
+  },
+  evt_merchant_tax_satisfied: {
+    title: 'Tax Concessions Accepted',
+    body: 'The merchant guild has accepted the tax concessions and withdrawn their demands for political representation. Trade activity has increased as merchants reinvest their savings, and the guild\'s public complaints have ceased. The concessions have bought peace, at least for now.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_merchant_tax_shortfall: {
+    title: 'Revenue Shortfall from Concessions',
+    body: 'The tax concessions granted to the merchant guild have created a significant shortfall in royal revenue. The treasury struggles to meet its obligations, and other groups are beginning to demand similar treatment. The crown must find a way to restore fiscal balance without igniting the conflict it sought to avoid.',
+    choices: {
+      reverse_concessions: 'Reverse the Concessions',
+      raise_taxes_elsewhere: 'Raise Taxes Elsewhere',
+      cut_spending: 'Cut Crown Spending',
+    },
+  },
+  evt_merchant_boycott: {
+    title: 'Merchant Guild Boycott',
+    body: 'In retaliation for the crown\'s refusal, the merchant guild has organized a coordinated trade boycott. Shops close, caravans halt, and market squares stand empty. The economic disruption is significant and growing. The guild is betting that the crown\'s treasury will break before their reserves do.',
+    choices: {
+      break_boycott_by_force: 'Break the Boycott by Force',
+      negotiate_end: 'Negotiate an End',
+      wait_out_boycott: 'Wait It Out',
+    },
+  },
+  evt_merchant_grudging_acceptance: {
+    title: 'Guild Backs Down',
+    body: 'The merchant guild\'s demands have lost momentum. Without sufficient support from other factions, and with their own members divided on the wisdom of confrontation, the guild has quietly withdrawn its formal petition. The matter is settled, though the underlying tensions remain.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+
+  // --- Chain 10: Foreign Ambassador ---
+  evt_foreign_ambassador_root: {
+    title: 'Foreign Ambassador Arrives',
+    body: 'An ambassador from the southern empire has arrived at court bearing a formal proposal. The empire offers a partnership — trade agreements, mutual defense, and cultural exchange — but the terms suggest the empire views the kingdom as a junior partner. The court is divided on how to respond.',
+    choices: {
+      accept_proposal: 'Accept the Proposal',
+      counter_propose: 'Counter-Propose',
+      reject_outright: 'Reject Outright',
+    },
+  },
+  evt_ambassador_alliance_benefit: {
+    title: 'Alliance Bears Fruit',
+    body: 'The alliance with the southern empire has begun to yield tangible benefits. Trade routes are more secure, goods flow more freely, and the kingdom\'s merchants report increased profits from access to imperial markets. The partnership, whatever its political costs, is proving economically sound.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_ambassador_dependency: {
+    title: 'Growing Dependency Concerns',
+    body: 'Advisors have raised alarms about the kingdom\'s growing reliance on the southern empire. Key imports now flow exclusively through imperial channels, and the empire has begun using this leverage to influence domestic policy. The crown must decide whether to renegotiate from a position of weakness or accept the new reality.',
+    choices: {
+      renegotiate_terms: 'Renegotiate Terms',
+      accept_dependency: 'Accept the Arrangement',
+    },
+  },
+  evt_ambassador_counter_accepted: {
+    title: 'Counter-Proposal Accepted',
+    body: 'The southern empire has accepted the kingdom\'s counter-proposal. The revised terms are more favorable — a true partnership of equals, with balanced trade provisions and mutual obligations. Diplomats on both sides express cautious optimism about the new arrangement.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+  evt_ambassador_counter_rejected: {
+    title: 'Counter-Proposal Rejected',
+    body: 'The southern empire has rejected the kingdom\'s counter-proposal with barely concealed displeasure. The ambassador warns that the empire\'s patience is not infinite and that continued resistance will have consequences. The court must decide how to proceed in the face of imperial pressure.',
+    choices: {
+      concede_to_terms: 'Concede to Their Terms',
+      stand_firm: 'Stand Firm',
+      offer_trade_concession: 'Offer Trade Concession',
+    },
+  },
+  evt_ambassador_trade_embargo: {
+    title: 'Trade Embargo Imposed',
+    body: 'The southern empire has imposed a formal trade embargo on the kingdom in retaliation for the diplomatic rejection. Imperial merchants have withdrawn, border crossings are restricted, and goods that once flowed freely are now contraband. The economic impact is immediate and severe.',
+    choices: {
+      seek_alternative_partners: 'Seek Alternative Partners',
+      retaliate_economically: 'Retaliate Economically',
+      accept_embargo: 'Accept and Endure',
+    },
+  },
+  evt_ambassador_respect: {
+    title: 'Rejection Earns Respect',
+    body: 'The kingdom\'s firm rejection of the imperial proposal, backed by visible military strength, has earned a grudging respect from the southern empire. The ambassador departed with formal courtesy, and intelligence suggests the empire has revised its assessment of the kingdom upward. Sometimes strength speaks louder than diplomacy.',
+    choices: { acknowledge: 'Acknowledged' },
+  },
+
+  // --- Chain 12: Royal Treasury Audit ---
+  evt_treasury_audit_root: {
+    title: 'Treasury Irregularities Discovered',
+    body: 'A routine audit of the royal treasury has uncovered discrepancies in the accounts — missing entries, unexplained transfers, and records that do not reconcile. The irregularities could indicate simple incompetence or something far more deliberate. The crown must decide how deeply to probe.',
+    choices: {
+      conduct_full_investigation: 'Conduct Full Investigation',
+      accept_report: 'Accept the Report',
+    },
+  },
+  evt_audit_corruption_found: {
+    title: 'Corruption Uncovered',
+    body: 'The investigation has revealed a network of corruption among senior court officials. Treasury funds were diverted into private accounts through a web of falsified contracts and phantom suppliers. The evidence is damning, and the court awaits the crown\'s judgment on the guilty parties.',
+    choices: {
+      prosecute_officials: 'Prosecute the Officials',
+      demand_restitution: 'Demand Financial Restitution',
+      cover_up_findings: 'Bury the Findings',
+    },
+  },
+  evt_audit_clean: {
+    title: 'Books Are Clean',
+    body: 'After a thorough review, the investigators have concluded that the treasury\'s accounts are in order. The earlier discrepancies were the result of clerical errors, not malfeasance. The kingdom\'s financial administration, while imperfect, is fundamentally sound.',
+    choices: {
+      acknowledge: 'Acknowledged',
+    },
+  },
+  evt_audit_embezzlement: {
+    title: 'Embezzlement Worsens',
+    body: 'The irregularities that were dismissed in the earlier audit have metastasized. A significant and ongoing embezzlement operation has been draining the treasury for months. The losses are now substantial enough to threaten the kingdom\'s ability to meet its obligations. Something must be done.',
+    choices: {
+      launch_crackdown: 'Launch a Crackdown',
+      reform_treasury_oversight: 'Reform Treasury Oversight',
+      ignore_and_absorb: 'Absorb the Losses',
+    },
+  },
+  evt_audit_whistleblower: {
+    title: 'A Clerk Comes Forward',
+    body: 'A junior treasury clerk has come forward with detailed evidence of fraud among senior officials — ledgers, correspondence, and witness accounts. The clerk seeks the crown\'s protection in exchange for testimony. Protecting them risks angering the powerful, but silencing them buries the truth.',
+    choices: {
+      protect_whistleblower: 'Protect the Clerk',
+      silence_whistleblower: 'Silence the Clerk',
+    },
+  },
+  evt_audit_quiet: {
+    title: 'Irregularities Fade',
+    body: 'The treasury irregularities from the earlier audit have not resurfaced. Whether the problems resolved themselves or were quietly smoothed over by those involved, the accounts now appear stable. The matter passes from the court\'s attention without further incident.',
+    choices: {
+      acknowledge: 'Acknowledged',
+    },
+  },
+
   // Phase 6.5 — Faction Request Text
   ...FACTION_REQUEST_TEXT_ENTRIES,
 };

@@ -644,6 +644,460 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     dismiss_as_rumor:    { stabilityDelta: -1 },
   },
 
+  // ============================================================
+  // PRODUCTION CHAIN EFFECTS
+  // ============================================================
+
+  // --- Chain 9: Infrastructure Decay ---
+  evt_infrastructure_decay_root: {
+    fund_emergency_repairs: { treasuryDelta: -60, stabilityDelta: +2 },
+    defer_maintenance:      { stabilityDelta: -1 },
+  },
+  evt_infra_repair_success: {
+    acknowledge: { stabilityDelta: +1 },
+  },
+  evt_infra_repair_cost_overrun: {
+    approve_additional_funds: { treasuryDelta: -40, stabilityDelta: +1 },
+    cut_scope:                { commonerSatDelta: -2, stabilityDelta: -1 },
+  },
+  evt_infra_bridge_collapse: {
+    emergency_rebuild:         { treasuryDelta: -80, foodDelta: -20, stabilityDelta: +2 },
+    reroute_supply_lines:      { foodDelta: -30, merchantSatDelta: -3, treasuryDelta: -20 },
+    requisition_noble_estates: { nobilitySatDelta: -4, foodDelta: +10, commonerSatDelta: +2 },
+  },
+  evt_infra_road_decay: {
+    acknowledge: { treasuryDelta: -10, merchantSatDelta: -1 },
+  },
+  evt_infra_commoner_petition: {
+    grant_road_repairs: { treasuryDelta: -30, commonerSatDelta: +3 },
+    deny_petition:      { commonerSatDelta: -3, stabilityDelta: -1 },
+  },
+
+  // --- Chain 1: Grain Crisis ---
+  evt_grain_crisis_root: {
+    ration_strictly:      { foodDelta: +10, commonerSatDelta: -3, stabilityDelta: +1 },
+    import_grain:         { treasuryDelta: -60, foodDelta: +25, merchantSatDelta: -1 },
+    seize_noble_reserves: { nobilitySatDelta: -5, foodDelta: +20, commonerSatDelta: +2 },
+  },
+  evt_grain_ration_compliance: {
+    acknowledge: { stabilityDelta: +1, commonerSatDelta: +1 },
+  },
+  evt_grain_ration_riots: {
+    suppress_market_riots: { stabilityDelta: +2, commonerSatDelta: -4, militaryReadinessDelta: -2 },
+    negotiate_with_rioters: { commonerSatDelta: +2, stabilityDelta: -1, treasuryDelta: -15 },
+    distribute_reserves:    { foodDelta: -10, commonerSatDelta: +3, stabilityDelta: +1 },
+  },
+  evt_grain_ration_black_market: {
+    legalize_grey_market: { merchantSatDelta: +3, commonerSatDelta: +1, treasuryDelta: -10 },
+    crack_down_market:    { merchantSatDelta: -3, stabilityDelta: +1, commonerSatDelta: -1 },
+  },
+  evt_grain_import_merchant_leverage: {
+    grant_tariff_exemptions:  { merchantSatDelta: +4, treasuryDelta: -30, nobilitySatDelta: -1 },
+    refuse_merchant_demands:  { merchantSatDelta: -4, foodDelta: -10, stabilityDelta: -1 },
+    partial_concessions:      { merchantSatDelta: +1, treasuryDelta: -15 },
+  },
+  evt_grain_import_gratitude: {
+    acknowledge: { commonerSatDelta: +2, merchantSatDelta: +1 },
+  },
+  evt_grain_import_spoiled: {
+    demand_replacement:      { treasuryDelta: -20, merchantSatDelta: -2, foodDelta: +10 },
+    emergency_local_harvest: { commonerSatDelta: -2, foodDelta: +15, treasuryDelta: -30 },
+    distribute_what_remains: { foodDelta: -5, commonerSatDelta: -2 },
+  },
+  evt_grain_noble_plot: {
+    negotiate_concessions: { nobilitySatDelta: +2, treasuryDelta: -20, stabilityDelta: +1 },
+    arrest_ringleaders:    { nobilitySatDelta: -4, stabilityDelta: +2, militaryReadinessDelta: -2 },
+    show_of_force:         { nobilitySatDelta: -3, militaryReadinessDelta: -3, stabilityDelta: +1 },
+  },
+  evt_grain_noble_acceptance: {
+    acknowledge: { nobilitySatDelta: +1, stabilityDelta: +1 },
+  },
+  evt_grain_noble_concessions_result: {
+    acknowledge: { nobilitySatDelta: +1, treasuryDelta: -5 },
+  },
+  evt_grain_noble_uprising: {
+    crush_uprising:       { militaryReadinessDelta: -5, nobilitySatDelta: -5, stabilityDelta: +3 },
+    negotiate_surrender:  { nobilitySatDelta: -1, treasuryDelta: -30, stabilityDelta: +1 },
+    offer_amnesty:        { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1 },
+  },
+  evt_grain_noble_cowed: {
+    acknowledge: { nobilitySatDelta: -1, stabilityDelta: +2 },
+  },
+
+  // --- Chain 3: Faith Schism ---
+  evt_faith_schism_root: {
+    back_orthodox:          { heterodoxyDelta: -5, commonerSatDelta: -2, clergySatDelta: +4 },
+    support_reformists:     { heterodoxyDelta: +5, commonerSatDelta: +3, clergySatDelta: -4, faithDelta: -3 },
+    suppress_all_factions:  { stabilityDelta: +2, faithDelta: -3, clergySatDelta: -3, commonerSatDelta: -2 },
+  },
+  evt_schism_inquisition: {
+    authorize_inquisition: { heterodoxyDelta: -8, commonerSatDelta: -4, clergySatDelta: +3, faithDelta: +2 },
+    limit_scope:           { heterodoxyDelta: -3, commonerSatDelta: -1, clergySatDelta: +1 },
+    refuse_inquisition:    { clergySatDelta: -4, commonerSatDelta: +2, heterodoxyDelta: +2 },
+  },
+  evt_schism_orthodox_peace: {
+    acknowledge: { faithDelta: +3, stabilityDelta: +2 },
+  },
+  evt_schism_orthodox_overreach: {
+    rein_in_clergy:          { clergySatDelta: -3, commonerSatDelta: +2 },
+    support_clergy_authority: { clergySatDelta: +2, commonerSatDelta: -3, faithDelta: +1 },
+  },
+  evt_schism_reform_growth: {
+    acknowledge: { heterodoxyDelta: +2, commonerSatDelta: +1, faithDelta: +1 },
+  },
+  evt_schism_reform_backlash: {
+    stand_with_reformists: { clergySatDelta: -5, commonerSatDelta: +2, heterodoxyDelta: +3 },
+    appease_clergy:        { clergySatDelta: +3, commonerSatDelta: -2, heterodoxyDelta: -3 },
+    impose_silence:        { clergySatDelta: -2, commonerSatDelta: -2, stabilityDelta: -1 },
+  },
+  evt_schism_reform_schism_deep: {
+    recognize_both_authorities: { faithDelta: -3, heterodoxyDelta: +5, stabilityDelta: -2, culturalCohesionDelta: +3 },
+    enforce_single_doctrine:    { faithDelta: +4, heterodoxyDelta: -8, clergySatDelta: +2, commonerSatDelta: -3 },
+    secularize_state:           { faithDelta: -5, clergySatDelta: -5, commonerSatDelta: +3, stabilityDelta: +2 },
+  },
+  evt_schism_underground_worship: {
+    tolerate_quietly: { heterodoxyDelta: +3, stabilityDelta: +1, clergySatDelta: -2 },
+    crack_down:       { commonerSatDelta: -4, stabilityDelta: -2, heterodoxyDelta: -3 },
+    infiltrate_cells: { espionageNetworkDelta: +4, treasuryDelta: -20, clergySatDelta: -1 },
+  },
+  evt_schism_suppress_calm: {
+    acknowledge: { stabilityDelta: +2, faithDelta: -1 },
+  },
+  evt_schism_underground_stable: {
+    acknowledge: { heterodoxyDelta: +1, stabilityDelta: +1 },
+  },
+  evt_schism_underground_martyr: {
+    honor_martyr:      { commonerSatDelta: +4, clergySatDelta: -4, heterodoxyDelta: +5, faithDelta: -3 },
+    discredit_martyr:  { commonerSatDelta: -3, clergySatDelta: +2, stabilityDelta: -2 },
+    ignore_martyr:     { stabilityDelta: -1, heterodoxyDelta: +2 },
+  },
+
+  // --- Chain 5: Plague Outbreak ---
+  evt_plague_outbreak_root: {
+    quarantine_districts: { commonerSatDelta: -3, treasuryDelta: -40, stabilityDelta: +1 },
+    prioritize_nobility:  { commonerSatDelta: -6, nobilitySatDelta: +3, stabilityDelta: -2 },
+    open_royal_stores:    { commonerSatDelta: +3, treasuryDelta: -80, nobilitySatDelta: -2 },
+  },
+  evt_plague_quarantine_holds: {
+    acknowledge: { stabilityDelta: +2, commonerSatDelta: +1 },
+  },
+  evt_plague_quarantine_breaks: {
+    military_enforcement: { militaryReadinessDelta: -3, commonerSatDelta: -4, stabilityDelta: +1 },
+    expand_treatment:     { treasuryDelta: -50, commonerSatDelta: +2 },
+    abandon_quarantine:   { commonerSatDelta: -2, stabilityDelta: -3 },
+  },
+  evt_plague_quarantine_unrest: {
+    compensate_quarantined: { treasuryDelta: -30, commonerSatDelta: +3 },
+    maintain_quarantine:    { commonerSatDelta: -3, stabilityDelta: -1 },
+  },
+  evt_plague_class_anger: {
+    extend_treatment_to_all: { treasuryDelta: -60, commonerSatDelta: +4, nobilitySatDelta: -3 },
+    suppress_riots:          { commonerSatDelta: -5, stabilityDelta: +2, militaryReadinessDelta: -3 },
+    public_apology:          { commonerSatDelta: +2, nobilitySatDelta: -2, stabilityDelta: -1 },
+  },
+  evt_plague_noble_saved: {
+    acknowledge: { nobilitySatDelta: +2, commonerSatDelta: -1 },
+  },
+  evt_plague_noble_spread: {
+    emergency_measures:    { treasuryDelta: -50, commonerSatDelta: +1, stabilityDelta: +1 },
+    appeal_for_foreign_aid: { treasuryDelta: -20, diplomacyDeltas: { empire_south: +3 } },
+    isolate_and_wait:      { commonerSatDelta: -3, stabilityDelta: -2 },
+  },
+  evt_plague_recovery: {
+    acknowledge: { stabilityDelta: +2, commonerSatDelta: +2 },
+  },
+  evt_plague_bankruptcy: {
+    emergency_loans:    { treasuryDelta: +40, stabilityDelta: -1 },
+    slash_all_spending: { treasuryDelta: +20, commonerSatDelta: -2, militaryReadinessDelta: -3 },
+    levy_crisis_tax:    { treasuryDelta: +30, commonerSatDelta: -3, merchantSatDelta: -2 },
+  },
+  evt_plague_gratitude: {
+    acknowledge: { commonerSatDelta: +3, stabilityDelta: +2 },
+  },
+
+  // --- Chain 2: Border Incursion ---
+  evt_border_incursion_root: {
+    retaliate_with_force:  { militaryReadinessDelta: -5, stabilityDelta: +2, diplomacyDeltas: { rival_north: -5 } },
+    send_diplomatic_envoy: { treasuryDelta: -30, diplomacyDeltas: { rival_north: +3 } },
+    fortify_and_absorb:    { foodDelta: -20, commonerSatDelta: -2, militaryReadinessDelta: +2 },
+  },
+  evt_border_campaign_victory: {
+    acknowledge: { diplomacyDeltas: { rival_north: +10 }, stabilityDelta: +3, militaryCasteSatDelta: +3 },
+  },
+  evt_border_campaign_stalemate: {
+    commit_more_resources: { treasuryDelta: -40, militaryReadinessDelta: -3 },
+    withdraw_forces:       { militaryCasteSatDelta: -3, stabilityDelta: -2 },
+  },
+  evt_border_campaign_defeat: {
+    rally_defense:   { militaryReadinessDelta: -5, treasuryDelta: -60, stabilityDelta: +1 },
+    sue_for_peace:   { diplomacyDeltas: { rival_north: +5 }, nobilitySatDelta: -3, treasuryDelta: -30 },
+    scorched_earth:  { foodDelta: -30, commonerSatDelta: -4, militaryReadinessDelta: +3 },
+  },
+  evt_border_envoy_success: {
+    acknowledge: { diplomacyDeltas: { rival_north: +8 }, stabilityDelta: +2 },
+  },
+  evt_border_envoy_hostage: {
+    pay_ransom:      { treasuryDelta: -60, diplomacyDeltas: { rival_north: -3 } },
+    rescue_mission:  { militaryReadinessDelta: -5, treasuryDelta: -20, stabilityDelta: +2 },
+    abandon_envoy:   { stabilityDelta: -3, nobilitySatDelta: -2 },
+  },
+  evt_border_envoy_terms: {
+    accept_unfavorable_terms: { treasuryDelta: -20, diplomacyDeltas: { rival_north: +5 }, nobilitySatDelta: -2 },
+    reject_terms:             { diplomacyDeltas: { rival_north: -5 }, stabilityDelta: -1 },
+  },
+  evt_border_fortify_holds: {
+    acknowledge: { stabilityDelta: +2, militaryReadinessDelta: +2 },
+  },
+  evt_border_fortify_famine: {
+    emergency_food_imports: { treasuryDelta: -50, foodDelta: +25 },
+    redistribute_reserves:  { foodDelta: +10, nobilitySatDelta: -2, commonerSatDelta: +1 },
+    enforce_rationing:      { foodDelta: +5, commonerSatDelta: -3, stabilityDelta: -1 },
+  },
+  evt_border_fortify_resentment: {
+    grant_compensation: { treasuryDelta: -25, commonerSatDelta: +3 },
+    deny_compensation:  { commonerSatDelta: -3, stabilityDelta: -1 },
+  },
+
+  // --- Chain 4: Trade Route Disruption ---
+  evt_trade_route_disruption_root: {
+    send_military_escorts:      { militaryReadinessDelta: -3, treasuryDelta: -30, merchantSatDelta: +2 },
+    negotiate_with_disruptors:  { treasuryDelta: -20, stabilityDelta: -1 },
+    redirect_to_alternate:      { merchantSatDelta: -3, treasuryDelta: -15 },
+  },
+  evt_trade_escort_success: {
+    acknowledge: { merchantSatDelta: +2, treasuryDelta: +10 },
+  },
+  evt_trade_escort_ambush: {
+    send_reinforcements: { militaryReadinessDelta: -5, treasuryDelta: -40, stabilityDelta: +1 },
+    negotiate_ransom:    { treasuryDelta: -60, merchantSatDelta: -2 },
+    cut_losses:          { merchantSatDelta: -4, militaryCasteSatDelta: -2, treasuryDelta: -20 },
+  },
+  evt_trade_escort_expensive: {
+    subsidize_escorts:   { treasuryDelta: -40, merchantSatDelta: +2 },
+    end_escort_program:  { merchantSatDelta: -3, militaryReadinessDelta: +2 },
+  },
+  evt_trade_negotiate_deal: {
+    accept_toll:  { treasuryDelta: -15, merchantSatDelta: -1, stabilityDelta: +1 },
+    refuse_toll:  { merchantSatDelta: +1, stabilityDelta: -1 },
+  },
+  evt_trade_negotiate_betrayal: {
+    military_response:    { militaryReadinessDelta: -4, treasuryDelta: -20, stabilityDelta: +1 },
+    demand_compensation:  { treasuryDelta: +10, merchantSatDelta: -1 },
+    write_off_losses:     { treasuryDelta: -30, merchantSatDelta: -3 },
+  },
+  evt_trade_negotiate_alliance: {
+    acknowledge: { merchantSatDelta: +3, treasuryDelta: +15, stabilityDelta: +1 },
+  },
+  evt_trade_redirect_slow_recovery: {
+    acknowledge: { merchantSatDelta: -1, treasuryDelta: -10 },
+  },
+  evt_trade_redirect_opportunity: {
+    invest_in_new_route: { treasuryDelta: -50, merchantSatDelta: +3 },
+    decline_investment:  { merchantSatDelta: -1 },
+  },
+
+  // --- Chain 6: Military Mutiny ---
+  evt_military_mutiny_root: {
+    pay_back_wages:      { treasuryDelta: -80, militaryCasteSatDelta: +4, militaryMoraleDelta: +3 },
+    promise_reform:      { militaryReadinessDelta: -3, militaryCasteSatDelta: -1 },
+    execute_ringleaders: { militaryReadinessDelta: -2, stabilityDelta: +2, militaryMoraleDelta: -5 },
+  },
+  evt_mutiny_pay_loyalty: {
+    acknowledge: { militaryCasteSatDelta: +3, militaryReadinessDelta: +5 },
+  },
+  evt_mutiny_pay_bankrupt: {
+    emergency_taxation:    { treasuryDelta: +40, commonerSatDelta: -4, merchantSatDelta: -3 },
+    seize_noble_assets:    { treasuryDelta: +50, nobilitySatDelta: -5 },
+    reduce_military_size:  { militaryForceSizeDelta: -200, militaryCasteSatDelta: -3, treasuryDelta: +20 },
+  },
+  evt_mutiny_reform_trust: {
+    acknowledge: { militaryCasteSatDelta: +3, militaryReadinessDelta: +3, stabilityDelta: +1 },
+  },
+  evt_mutiny_reform_betrayal: {
+    meet_soldiers_personally: { stabilityDelta: +3, militaryCasteSatDelta: +2, treasuryDelta: -40 },
+    call_loyal_units:         { militaryReadinessDelta: -5, stabilityDelta: -3, militaryCasteSatDelta: -2 },
+    flee_capital:             { stabilityDelta: -5, nobilitySatDelta: -3, commonerSatDelta: -3 },
+  },
+  evt_mutiny_reform_desertion: {
+    acknowledge: { militaryReadinessDelta: -5, militaryForceSizeDelta: -100 },
+  },
+  evt_mutiny_execute_fear: {
+    acknowledge: { militaryMoraleDelta: -3, stabilityDelta: +1 },
+  },
+  evt_mutiny_execute_revenge: {
+    investigate_sabotage:   { espionageNetworkDelta: +3, treasuryDelta: -20, stabilityDelta: +1 },
+    rebuild_fortification:  { treasuryDelta: -60, militaryReadinessDelta: +3 },
+    purge_suspects:         { militaryCasteSatDelta: -4, militaryForceSizeDelta: -100, stabilityDelta: +2 },
+  },
+  evt_mutiny_execute_loyalty_split: {
+    grant_amnesty_families: { commonerSatDelta: +3, militaryCasteSatDelta: +1, nobilitySatDelta: -1 },
+    deny_amnesty:           { commonerSatDelta: -3, stabilityDelta: -1 },
+  },
+
+  // --- Chain 8: Succession Anxiety ---
+  evt_succession_anxiety_root: {
+    name_heir_publicly:  { stabilityDelta: +3, nobilitySatDelta: -2 },
+    suppress_rumors:     { faithDelta: -2, stabilityDelta: -1 },
+    convene_great_lords: { nobilitySatDelta: -2, stabilityDelta: +1 },
+  },
+  evt_succession_heir_accepted: {
+    acknowledge: { stabilityDelta: +3 },
+  },
+  evt_succession_heir_challenged: {
+    discredit_rival:      { espionageNetworkDelta: +3, nobilitySatDelta: -2, stabilityDelta: +1 },
+    negotiate_with_rival: { treasuryDelta: -30, nobilitySatDelta: +1 },
+    imprison_rival:       { nobilitySatDelta: -4, stabilityDelta: +2, commonerSatDelta: -1 },
+  },
+  evt_succession_heir_popular: {
+    acknowledge: { stabilityDelta: +2, commonerSatDelta: +2 },
+  },
+  evt_succession_whispers: {
+    crack_down_harder:    { stabilityDelta: -2, commonerSatDelta: -2, faithDelta: -1 },
+    address_publicly:     { stabilityDelta: +2, nobilitySatDelta: -1 },
+    redirect_attention:   { treasuryDelta: -20, stabilityDelta: +1 },
+  },
+  evt_succession_suppress_works: {
+    acknowledge: { stabilityDelta: +2 },
+  },
+  evt_succession_council_agreement: {
+    acknowledge: { stabilityDelta: +3, nobilitySatDelta: +2 },
+  },
+  evt_succession_council_deadlock: {
+    force_decision:        { nobilitySatDelta: -3, stabilityDelta: +2 },
+    dissolve_council:      { nobilitySatDelta: -2, stabilityDelta: -2 },
+    extend_deliberations:  { stabilityDelta: -1 },
+  },
+  evt_succession_council_proposal: {
+    accept_compromise: { nobilitySatDelta: +2, stabilityDelta: +2 },
+    reject_compromise: { nobilitySatDelta: -3, stabilityDelta: -1 },
+  },
+
+  // --- Chain 11: Commoner Uprising ---
+  evt_commoner_uprising_root: {
+    meet_demands:        { commonerSatDelta: +5, nobilitySatDelta: -4, treasuryDelta: -40 },
+    suppress_by_force:   { stabilityDelta: +2, commonerSatDelta: -5, faithDelta: -2 },
+    address_root_causes: { treasuryDelta: -50, commonerSatDelta: +2, stabilityDelta: +1 },
+  },
+  evt_uprising_noble_backlash: {
+    appease_nobility:    { nobilitySatDelta: +3, commonerSatDelta: -3, treasuryDelta: -20 },
+    stand_with_commoners: { nobilitySatDelta: -4, commonerSatDelta: +3, stabilityDelta: -2 },
+    find_compromise:     { nobilitySatDelta: +1, commonerSatDelta: +1, treasuryDelta: -15 },
+  },
+  evt_uprising_peace: {
+    acknowledge: { stabilityDelta: +3, commonerSatDelta: +2 },
+  },
+  evt_uprising_guerrilla: {
+    hunt_insurgents:      { militaryReadinessDelta: -5, stabilityDelta: -2, commonerSatDelta: -4 },
+    offer_amnesty:        { commonerSatDelta: +3, nobilitySatDelta: -2, stabilityDelta: +1 },
+    fortify_key_positions: { treasuryDelta: -40, militaryReadinessDelta: -3, stabilityDelta: +1 },
+  },
+  evt_uprising_crushed: {
+    acknowledge: { commonerSatDelta: -3, stabilityDelta: +2 },
+  },
+  evt_uprising_reform_progress: {
+    acknowledge: { commonerSatDelta: +3, stabilityDelta: +1 },
+  },
+  evt_uprising_reform_too_slow: {
+    accelerate_reforms: { treasuryDelta: -30, commonerSatDelta: +2, stabilityDelta: +1 },
+    urge_patience:      { commonerSatDelta: -2, stabilityDelta: -1 },
+  },
+  evt_uprising_reform_resistance: {
+    override_nobility:     { nobilitySatDelta: -5, commonerSatDelta: +3, stabilityDelta: -2 },
+    compromise_on_reforms: { nobilitySatDelta: -1, commonerSatDelta: -1 },
+    abandon_reforms:       { commonerSatDelta: -4, nobilitySatDelta: +2, stabilityDelta: -2 },
+  },
+
+  // --- Chain 7: Merchant Guild Power Play ---
+  evt_merchant_guild_demands_root: {
+    grant_council_seat:        { nobilitySatDelta: -3, merchantSatDelta: +5, stabilityDelta: +1 },
+    offer_tax_concessions:     { treasuryDelta: -30, merchantSatDelta: +3 },
+    refuse_reassert_authority: { nobilitySatDelta: +2, merchantSatDelta: -4, treasuryDelta: -15 },
+  },
+  evt_merchant_council_effective: {
+    acknowledge: { merchantSatDelta: +2, stabilityDelta: +1, treasuryDelta: +10 },
+  },
+  evt_merchant_council_overreach: {
+    dissolve_council:      { merchantSatDelta: -5, nobilitySatDelta: +3, stabilityDelta: -2 },
+    limit_council_powers:  { merchantSatDelta: -2, nobilitySatDelta: +1 },
+    side_with_merchants:   { merchantSatDelta: +3, nobilitySatDelta: -4, stabilityDelta: -1 },
+  },
+  evt_merchant_council_corruption: {
+    investigate_council: { merchantSatDelta: -3, treasuryDelta: +15, stabilityDelta: +1 },
+    ignore_reports:      { merchantSatDelta: +1, commonerSatDelta: -2, stabilityDelta: -1 },
+  },
+  evt_merchant_tax_satisfied: {
+    acknowledge: { merchantSatDelta: +1 },
+  },
+  evt_merchant_tax_shortfall: {
+    reverse_concessions:   { merchantSatDelta: -5, treasuryDelta: +25, stabilityDelta: -1 },
+    raise_taxes_elsewhere: { commonerSatDelta: -3, treasuryDelta: +20 },
+    cut_spending:          { stabilityDelta: -2, treasuryDelta: +10 },
+  },
+  evt_merchant_boycott: {
+    break_boycott_by_force: { merchantSatDelta: -4, stabilityDelta: +2, militaryReadinessDelta: -3 },
+    negotiate_end:          { merchantSatDelta: +2, treasuryDelta: -25 },
+    wait_out_boycott:       { treasuryDelta: -20, merchantSatDelta: -2 },
+  },
+  evt_merchant_grudging_acceptance: {
+    acknowledge: { stabilityDelta: +1 },
+  },
+
+  // --- Chain 10: Foreign Ambassador ---
+  evt_foreign_ambassador_root: {
+    accept_proposal:  { treasuryDelta: +20, nobilitySatDelta: -2, diplomacyDeltas: { empire_south: +10 } },
+    counter_propose:  { treasuryDelta: -20, diplomacyDeltas: { empire_south: +5 } },
+    reject_outright:  { nobilitySatDelta: +2, diplomacyDeltas: { empire_south: -10 } },
+  },
+  evt_ambassador_alliance_benefit: {
+    acknowledge: { treasuryDelta: +15, merchantSatDelta: +2 },
+  },
+  evt_ambassador_dependency: {
+    renegotiate_terms: { treasuryDelta: -20, diplomacyDeltas: { empire_south: -5 }, stabilityDelta: +1 },
+    accept_dependency: { treasuryDelta: +10, diplomacyDeltas: { empire_south: +5 }, nobilitySatDelta: -3 },
+  },
+  evt_ambassador_counter_accepted: {
+    acknowledge: { diplomacyDeltas: { empire_south: +10 }, stabilityDelta: +1 },
+  },
+  evt_ambassador_counter_rejected: {
+    concede_to_terms:      { diplomacyDeltas: { empire_south: +5 }, treasuryDelta: -30, nobilitySatDelta: -2 },
+    stand_firm:            { diplomacyDeltas: { empire_south: -10 }, stabilityDelta: +2, nobilitySatDelta: +2 },
+    offer_trade_concession: { treasuryDelta: -20, merchantSatDelta: -2, diplomacyDeltas: { empire_south: +3 } },
+  },
+  evt_ambassador_trade_embargo: {
+    seek_alternative_partners: { treasuryDelta: -30, merchantSatDelta: -2, diplomacyDeltas: { empire_south: -5 } },
+    retaliate_economically:    { treasuryDelta: -20, merchantSatDelta: -3, diplomacyDeltas: { empire_south: -10 } },
+    accept_embargo:            { merchantSatDelta: -4, treasuryDelta: -40 },
+  },
+  evt_ambassador_respect: {
+    acknowledge: { stabilityDelta: +2, nobilitySatDelta: +1 },
+  },
+
+  // --- Chain 12: Royal Treasury Audit ---
+  evt_treasury_audit_root: {
+    conduct_full_investigation: { treasuryDelta: -30, stabilityDelta: +1 },
+    accept_report:             { stabilityDelta: -1 },
+  },
+  evt_audit_corruption_found: {
+    prosecute_officials:  { stabilityDelta: +3, nobilitySatDelta: -3, treasuryDelta: +20 },
+    demand_restitution:   { treasuryDelta: +40, nobilitySatDelta: -2 },
+    cover_up_findings:    { stabilityDelta: -2, commonerSatDelta: -2 },
+  },
+  evt_audit_clean: {
+    acknowledge: { stabilityDelta: +2 },
+  },
+  evt_audit_embezzlement: {
+    launch_crackdown:          { treasuryDelta: +30, nobilitySatDelta: -4, stabilityDelta: +2 },
+    reform_treasury_oversight: { treasuryDelta: -20, stabilityDelta: +3 },
+    ignore_and_absorb:         { treasuryDelta: -15, stabilityDelta: -2 },
+  },
+  evt_audit_whistleblower: {
+    protect_whistleblower:  { commonerSatDelta: +3, nobilitySatDelta: -2, stabilityDelta: +1 },
+    silence_whistleblower:  { commonerSatDelta: -3, nobilitySatDelta: +2, stabilityDelta: -2 },
+  },
+  evt_audit_quiet: {
+    acknowledge: {},
+  },
+
   // Phase 6.5 — Faction Request Effects
   ...FACTION_REQUEST_EFFECTS,
 };
