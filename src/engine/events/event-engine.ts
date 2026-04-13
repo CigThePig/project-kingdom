@@ -140,6 +140,9 @@ export interface EventDefinition {
     followUpDefinitionId: string;
     delayTurns: number;
     probability: number;
+    stateConditions?: EventTriggerCondition[];
+    exclusiveGroupId?: string | null;
+    maxStateRetries?: number;
   }[];
 }
 
