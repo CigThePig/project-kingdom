@@ -52,19 +52,15 @@ export function generateSummaryData(
   }
 
   // Petitions
-  const granted = decisions.petitionDecisions.filter((d) => d.granted).length;
-  const denied = decisions.petitionDecisions.filter((d) => !d.granted).length;
-  const total = granted + denied;
-  if (total > 0) {
+  const petitionTotal = decisions.petitionDecisions.length;
+  if (petitionTotal > 0) {
     parts.push(
-      `You heard ${total} petition${total !== 1 ? 's' : ''}, granting ${granted} and denying ${denied}.`,
+      `You heard ${petitionTotal} petition${petitionTotal !== 1 ? 's' : ''} and rendered judgment.`,
     );
-    // Add effects for granted petitions
     for (const d of decisions.petitionDecisions) {
       const card = petitionCards.find((p) => p.eventId === d.cardId);
       if (card) {
-        const choiceId = d.granted ? card.grantChoiceId : card.denyChoiceId;
-        const delta = EVENT_CHOICE_EFFECTS[card.definitionId]?.[choiceId] ?? {};
+        const delta = EVENT_CHOICE_EFFECTS[card.definitionId]?.[d.choiceId] ?? {};
         allEffects.push(...mechDeltaToEffectHints(delta));
       }
     }

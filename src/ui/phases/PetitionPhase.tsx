@@ -4,18 +4,18 @@ import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
-import { useSwipe } from '../hooks/useSwipe';
+import { SelectionBadge } from '../components/SelectionBadge';
 import type { PetitionCardData } from '../../bridge/petitionCardGenerator';
 
 interface PetitionPhaseProps {
-  onComplete: (decisions: { cardId: string; granted: boolean }[]) => void;
+  onComplete: (decisions: { cardId: string; choiceId: string }[]) => void;
   petitionCards?: PetitionCardData[];
 }
 
 export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [results, setResults] = useState<{ cardId: string; granted: boolean }[]>([]);
-  const [key, setKey] = useState(0);
+  const [results, setResults] = useState<{ cardId: string; choiceId: string }[]>([]);
+  const [selectedChoiceId, setSelectedChoiceId] = useState<string | null>(null);
 
   const petitions = useMemo(() => petitionCards ?? [], [petitionCards]);
 
@@ -27,29 +27,35 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
     }
   }, [petitions.length, onComplete]);
 
-  const handleDecision = useCallback(
-    (granted: boolean) => {
-      const petition = petitions[currentIndex];
-      const newResults = [...results, { cardId: petition.eventId, granted }];
+  const handleChoiceClick = useCallback(
+    (choiceId: string) => {
+      if (selectedChoiceId === choiceId) {
+        // Second tap — commit
+        const petition = petitions[currentIndex];
+        const newResults = [...results, { cardId: petition.eventId, choiceId }];
 
-      if (currentIndex >= petitions.length - 1) {
-        // All petitions resolved
-        setTimeout(() => onComplete(newResults), 400);
+        if (currentIndex >= petitions.length - 1) {
+          // All petitions resolved
+          setTimeout(() => onComplete(newResults), 400);
+        } else {
+          setResults(newResults);
+          setSelectedChoiceId(null);
+          setTimeout(() => {
+            setCurrentIndex((i) => i + 1);
+          }, 400);
+        }
       } else {
-        setResults(newResults);
-        setTimeout(() => {
-          setCurrentIndex((i) => i + 1);
-          setKey((k) => k + 1);
-        }, 400);
+        // First tap — select
+        setSelectedChoiceId(choiceId);
       }
     },
-    [currentIndex, results, petitions, onComplete],
+    [selectedChoiceId, currentIndex, results, petitions, onComplete],
   );
 
-  const { ref, handlers } = useSwipe({
-    onSwipeLeft: () => handleDecision(false),
-    onSwipeRight: () => handleDecision(true),
-  });
+  // Reset selection when advancing to next petition
+  useEffect(() => {
+    setSelectedChoiceId(null);
+  }, [currentIndex]);
 
   if (petitions.length === 0) {
     return (
@@ -110,135 +116,53 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
         PETITION {currentIndex + 1} OF {petitions.length}
       </div>
 
-      {/* Swipeable petition card */}
-      <div style={{ position: 'relative', minHeight: 180 }}>
-        {/* Ghost indicators */}
-        <div
-          className="absolute flex items-center justify-center"
-          style={{
-            left: 0,
-            top: 0,
-            bottom: 0,
-            width: 40,
-            color: 'var(--color-negative)',
-            fontSize: 20,
-            opacity: 0.3,
-          }}
-        >
-          &#10007;
-        </div>
-        <div
-          className="absolute flex items-center justify-center"
-          style={{
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: 40,
-            color: 'var(--color-positive)',
-            fontSize: 20,
-            opacity: 0.3,
-          }}
-        >
-          &#10003;
-        </div>
+      {/* Petition event card */}
+      <div style={{ animation: 'slideUp 400ms ease both' }}>
+        <Card family="petition">
+          <CardTitle>{petition.title}</CardTitle>
+          <CardBody>{petition.body}</CardBody>
+        </Card>
+      </div>
 
+      {/* Response cards — one per authored choice */}
+      {petition.allChoices.map((choice, i) => (
         <div
-          key={key}
-          ref={ref}
-          {...handlers}
-          style={{ touchAction: 'none' }}
+          key={choice.choiceId}
+          style={{ animation: `slideUp 400ms ease ${(i + 1) * 80}ms both` }}
         >
-          <Card family="petition">
-            <CardTitle>{petition.title}</CardTitle>
-            <CardBody>{petition.body}</CardBody>
-            <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  fontFamily: 'var(--font-family-mono)',
-                  fontSize: 9,
-                  fontWeight: 700,
-                  letterSpacing: 1,
-                  textTransform: 'uppercase',
-                  color: 'var(--color-positive)',
-                  marginBottom: 2,
-                }}>GRANT</div>
-                <EffectStrip effects={petition.grantEffects} />
-              </div>
-              <div style={{ flex: 1 }}>
-                <div style={{
-                  fontFamily: 'var(--font-family-mono)',
-                  fontSize: 9,
-                  fontWeight: 700,
-                  letterSpacing: 1,
-                  textTransform: 'uppercase',
-                  color: 'var(--color-negative)',
-                  marginBottom: 2,
-                }}>DENY</div>
-                <EffectStrip effects={petition.denyEffects} />
-              </div>
-            </div>
+          <Card
+            family="response"
+            onClick={() => handleChoiceClick(choice.choiceId)}
+            style={
+              selectedChoiceId === choice.choiceId
+                ? { borderColor: 'var(--color-accent-petition)' }
+                : undefined
+            }
+          >
+            <CardTitle>{choice.title}</CardTitle>
+            <EffectStrip effects={choice.effects} />
+            {selectedChoiceId === choice.choiceId && <SelectionBadge />}
           </Card>
         </div>
-      </div>
+      ))}
 
-      {/* Button fallbacks for non-touch / accessibility */}
-      <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
-        <button
-          onClick={() => handleDecision(false)}
+      {/* Confirm hint */}
+      {selectedChoiceId && (
+        <div
           style={{
-            flex: 1,
-            maxWidth: 140,
-            padding: '10px 16px',
+            textAlign: 'center',
             fontFamily: 'var(--font-family-mono)',
-            fontSize: 11,
+            fontSize: 10,
             fontWeight: 700,
             letterSpacing: 2,
             textTransform: 'uppercase',
-            color: 'var(--color-negative)',
-            background: 'transparent',
-            border: '1px solid var(--color-negative)',
-            borderRadius: 4,
-            cursor: 'pointer',
+            color: 'var(--color-text-disabled)',
+            animation: 'pop 300ms ease both',
           }}
         >
-          DENY
-        </button>
-        <button
-          onClick={() => handleDecision(true)}
-          style={{
-            flex: 1,
-            maxWidth: 140,
-            padding: '10px 16px',
-            fontFamily: 'var(--font-family-mono)',
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: 2,
-            textTransform: 'uppercase',
-            color: 'var(--color-positive)',
-            background: 'transparent',
-            border: '1px solid var(--color-positive)',
-            borderRadius: 4,
-            cursor: 'pointer',
-          }}
-        >
-          GRANT
-        </button>
-      </div>
-
-      {/* Swipe hint */}
-      <div
-        style={{
-          textAlign: 'center',
-          fontFamily: 'var(--font-family-mono)',
-          fontSize: 10,
-          fontWeight: 700,
-          letterSpacing: 2,
-          textTransform: 'uppercase',
-          color: 'var(--color-text-disabled)',
-        }}
-      >
-        SWIPE LEFT TO DENY &mdash; RIGHT TO GRANT
-      </div>
+          TAP AGAIN TO CONFIRM
+        </div>
+      )}
     </div>
   );
 }

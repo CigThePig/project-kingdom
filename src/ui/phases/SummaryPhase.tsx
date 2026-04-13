@@ -12,16 +12,15 @@ interface SummaryPhaseProps {
 }
 
 export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhaseProps) {
-  const petitionsGranted = decisions.petitionDecisions.filter((d) => d.granted).length;
-  const petitionsDenied = decisions.petitionDecisions.filter((d) => !d.granted).length;
+  const petitionCount = decisions.petitionDecisions.length;
   const decreeCount = decisions.selectedDecrees.length;
 
   const narrative = summaryData?.narrative ?? [
     decisions.crisisResponse
       ? 'The court addressed the crisis decisively.'
       : 'The crisis passed without royal intervention.',
-    petitionsGranted > 0 || petitionsDenied > 0
-      ? `You heard ${petitionsGranted + petitionsDenied} petition${petitionsGranted + petitionsDenied !== 1 ? 's' : ''}, granting ${petitionsGranted} and denying ${petitionsDenied}.`
+    petitionCount > 0
+      ? `You heard ${petitionCount} petition${petitionCount !== 1 ? 's' : ''} and rendered judgment.`
       : 'No petitions were brought before the throne.',
     decreeCount > 0
       ? `${decreeCount} royal decree${decreeCount !== 1 ? 's were' : ' was'} issued from the council chamber.`
@@ -34,8 +33,8 @@ export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhas
     ...(decreeCount > 0
       ? [{ label: `${decreeCount} Decree${decreeCount !== 1 ? 's' : ''}` as string, type: 'positive' as const }]
       : []),
-    ...(petitionsGranted > 0
-      ? [{ label: `${petitionsGranted} Granted` as string, type: 'positive' as const }]
+    ...(petitionCount > 0
+      ? [{ label: `${petitionCount} Petition${petitionCount !== 1 ? 's' : ''}` as string, type: 'positive' as const }]
       : []),
   ];
 

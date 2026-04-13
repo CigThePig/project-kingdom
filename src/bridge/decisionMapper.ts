@@ -40,7 +40,6 @@ export function mapDecisionsToActions(
   for (const d of decisions.petitionDecisions) {
     const card = petitionCards.find((p) => p.eventId === d.cardId);
     if (!card) continue;
-    const choiceId = d.granted ? card.grantChoiceId : card.denyChoiceId;
     actions.push({
       id: crypto.randomUUID(),
       type: ActionType.CrisisResponse,
@@ -51,7 +50,7 @@ export function mapDecisionsToActions(
       targetNeighborId: null,
       parameters: {
         eventId: card.eventId,
-        choiceId,
+        choiceId: d.choiceId,
       },
     });
   }
