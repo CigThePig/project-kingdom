@@ -2269,7 +2269,7 @@ export const EVENT_POOL: EventDefinition[] = [
 export const FOLLOW_UP_POOL: EventDefinition[] = [
   {
     id: 'evt_merchant_permanent_concessions',
-    severity: EventSeverity.Notable,
+    severity: EventSeverity.Serious,
     category: EventCategory.Economy,
     triggerConditions: [
       { type: 'always' },
