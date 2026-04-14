@@ -101,6 +101,9 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'full_public_audit', followUpDefinitionId: 'evt_exp_fu_kgd_audit_results', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // --- 5. National Celebration Demand (developing) ---
@@ -125,6 +128,9 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'grand_royal_festival', followUpDefinitionId: 'evt_exp_fu_kgd_celebration_goodwill', delayTurns: 2, probability: 0.7 },
+    ],
   },
 
   // --- 6. Governance Reform Proposal (established) ---
@@ -149,6 +155,9 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'accept_reforms', followUpDefinitionId: 'evt_exp_fu_kgd_reform_resistance', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // --- 7. Constitutional Crisis (established) ---
@@ -300,6 +309,9 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'comprehensive_restructuring', followUpDefinitionId: 'evt_exp_fu_kgd_centralization_tension', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // --- 13. Crown Land Management (any) ---

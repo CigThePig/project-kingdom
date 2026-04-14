@@ -53,6 +53,9 @@ export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'opening',
+    followUpEvents: [
+      { triggerChoiceId: 'crown_extraction', followUpDefinitionId: 'evt_exp_fu_reg_resource_boom', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // --- 3. Trade Route Disruption (developing) ---
@@ -101,6 +104,9 @@ export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'fund_road_network', followUpDefinitionId: 'evt_exp_fu_reg_infrastructure_complete', delayTurns: 4, probability: 0.8 },
+    ],
   },
 
   // --- 5. Regional Festival (developing) ---
@@ -150,6 +156,9 @@ export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'remove_governor', followUpDefinitionId: 'evt_exp_fu_reg_new_governor', delayTurns: 2, probability: 0.7 },
+    ],
   },
 
   // --- 7. Border Province Tensions (established) ---
@@ -225,6 +234,9 @@ export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'honor_at_court', followUpDefinitionId: 'evt_exp_fu_reg_hero_legend', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // --- 10. Provincial Development Rivalry (any) ---
