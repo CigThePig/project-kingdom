@@ -71,6 +71,9 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'public_trial_and_punishment', followUpDefinitionId: 'evt_exp_fu_chain_corruption_aftermath', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -203,6 +206,9 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'negotiate_ceasefire', followUpDefinitionId: 'evt_exp_fu_chain_ceasefire_holds', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -400,6 +406,9 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'declare_golden_age', followUpDefinitionId: 'evt_exp_fu_chain_golden_age_legacy', delayTurns: 2, probability: 0.8 },
+    ],
   },
 
   // ============================================================
