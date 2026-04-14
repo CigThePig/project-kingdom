@@ -3,6 +3,7 @@
 // These are directional indicators, not exact engine calculations.
 
 import type { MechanicalEffectDelta } from '../../engine/types';
+import { EXPANSION_DECREE_EFFECTS } from './expansion-effects';
 
 export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
   // ====================
@@ -388,4 +389,7 @@ export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
     clergySatDelta: +2,
     stabilityDelta: +3,
   },
+
+  // Expansion Decree Effects
+  ...EXPANSION_DECREE_EFFECTS,
 };

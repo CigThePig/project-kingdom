@@ -1,0 +1,198 @@
+import type { EventTextEntry } from '../events';
+
+export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
+  evt_exp_dip_foreign_emissary_arrives: {
+    title: 'Foreign Emissary at the Gates',
+    body: 'An emissary from a neighboring realm has arrived at the capital, bearing letters of introduction and requesting an audience. The nature of their mission is unclear, but the gesture suggests a desire for dialogue.',
+    choices: {
+      welcome_with_feast: 'Welcome with a Feast',
+      formal_audience_only: 'Grant a Formal Audience',
+    },
+  },
+  evt_exp_dip_border_greeting: {
+    title: 'Friendly Gesture at the Border',
+    body: 'The governor of Arenthal\'s border province has sent a delegation bearing gifts and warm words. The gesture appears genuine and suggests our neighbors seek closer ties with the crown.',
+    choices: {
+      reciprocate_warmly: 'Reciprocate Warmly',
+      acknowledge_politely: 'Acknowledge Politely',
+    },
+  },
+  evt_exp_dip_trade_proposal: {
+    title: 'Trade Agreement Proposed',
+    body: 'Valdris has proposed a formal trade agreement that would reduce tariffs on both sides of the border. Their merchants stand to benefit handsomely, though the terms could also enrich our own trading houses.',
+    choices: {
+      accept_trade_terms: 'Accept Their Terms',
+      counter_propose: 'Counter-Propose Better Terms',
+      decline_politely: 'Decline Politely',
+    },
+  },
+  evt_exp_dip_diplomatic_incident: {
+    title: 'Diplomatic Incident with Arenthal',
+    body: 'A clash between our border guards and Arenthal\'s patrol has escalated into a serious diplomatic incident. Their ambassador demands satisfaction, and failure to respond could poison relations for years to come.',
+    choices: {
+      issue_formal_apology: 'Issue a Formal Apology',
+      demand_reciprocal_apology: 'Demand They Apologize First',
+      downplay_the_incident: 'Downplay the Incident',
+    },
+  },
+  evt_exp_dip_refugee_plea: {
+    title: 'Refugees Seek Asylum',
+    body: 'A stream of refugees from a troubled neighboring realm has appeared at the kingdom\'s borders, pleading for sanctuary. They bring little but their labor and their desperation. The court debates whether charity or caution should prevail.',
+    choices: {
+      welcome_refugees: 'Welcome the Refugees',
+      limited_asylum: 'Grant Limited Asylum',
+      close_the_borders: 'Close the Borders',
+    },
+  },
+  evt_exp_dip_alliance_overture: {
+    title: 'Alliance Proposed by Valdris',
+    body: 'The court of Valdris has sent a formal proposal for a mutual defense alliance. Such a pact would strengthen both realms against external threats, though it would also bind the crown to foreign entanglements.',
+    choices: {
+      accept_alliance: 'Accept the Alliance',
+      propose_limited_pact: 'Propose a Limited Pact',
+      maintain_independence: 'Maintain Independence',
+    },
+  },
+  evt_exp_dip_hostage_exchange: {
+    title: 'Hostage Exchange Demanded',
+    body: 'A neighboring power holds several of our subjects and demands an exchange of prisoners. The captives include a minor noble whose family petitions the crown daily. Negotiations will be delicate and costly.',
+    choices: {
+      negotiate_exchange: 'Negotiate the Exchange',
+      refuse_and_retaliate: 'Refuse and Retaliate',
+      stall_for_time: 'Stall for Time',
+    },
+  },
+  evt_exp_dip_cultural_envoy: {
+    title: 'Cultural Envoy Arrives',
+    body: 'A troupe of scholars and artists has arrived from a neighboring court, offering to share knowledge and artistic traditions. Their visit could enrich the kingdom\'s cultural life, though some view foreign influence with suspicion.',
+    choices: {
+      host_cultural_exchange: 'Host a Cultural Exchange',
+      polite_reception: 'Offer a Polite Reception',
+    },
+  },
+  evt_exp_dip_treaty_violation: {
+    title: 'Arenthal Violates the Treaty',
+    body: 'Intelligence confirms that Arenthal has flagrantly violated the terms of our standing agreement. Their forces have been spotted in restricted territory, and their merchants operate outside sanctioned channels. This cannot stand unanswered.',
+    choices: {
+      demand_reparations: 'Demand Reparations',
+      military_posturing: 'Military Posturing',
+      seek_mediation: 'Seek Third-Party Mediation',
+      overlook_the_violation: 'Overlook the Violation',
+    },
+  },
+  evt_exp_dip_marriage_proposal: {
+    title: 'Royal Marriage Proposed',
+    body: 'The court of Valdris proposes a marriage between a member of their ruling family and ours. Such a union would cement diplomatic ties and bring a substantial dowry, though it would intertwine our dynasties permanently.',
+    choices: {
+      accept_the_match: 'Accept the Match',
+      negotiate_terms: 'Negotiate Better Terms',
+      politely_decline: 'Politely Decline',
+    },
+  },
+  evt_exp_dip_spy_scandal: {
+    title: 'Espionage Scandal Erupts',
+    body: 'A network of foreign spies has been uncovered operating within the kingdom. Both Arenthal and Valdris deny involvement, but the evidence is damning. The court must decide how to respond without further destabilizing relations.',
+    choices: {
+      deny_involvement: 'Deny Our Own Involvement',
+      expel_foreign_diplomats: 'Expel Foreign Diplomats',
+      offer_intelligence_sharing: 'Offer Intelligence Sharing',
+    },
+  },
+  evt_exp_dip_border_dispute_escalation: {
+    title: 'Border Dispute Escalates',
+    body: 'The long-simmering dispute over the northern borderlands with Arenthal has erupted into open confrontation. Both sides have moved troops to the contested region, and a single miscalculation could trigger armed conflict.',
+    choices: {
+      show_of_force: 'Show of Force',
+      propose_border_commission: 'Propose a Border Commission',
+      cede_disputed_territory: 'Cede the Disputed Territory',
+    },
+  },
+  evt_exp_dip_peace_conference: {
+    title: 'Regional Peace Conference',
+    body: 'The neighboring realms have expressed interest in a formal peace conference to address lingering tensions. Hosting such a gathering would be expensive but could establish the kingdom as a diplomatic leader in the region.',
+    choices: {
+      host_the_conference: 'Host the Conference',
+      attend_as_participant: 'Attend as Participant',
+      decline_invitation: 'Decline the Invitation',
+    },
+  },
+  evt_exp_dip_trade_embargo_threat: {
+    title: 'Valdris Threatens Trade Embargo',
+    body: 'Valdris has threatened to impose a complete trade embargo unless the kingdom meets a series of demands. Our merchants are alarmed, as Valdris controls key trade routes that our economy depends upon.',
+    choices: {
+      negotiate_compromise: 'Negotiate a Compromise',
+      counter_embargo: 'Impose a Counter-Embargo',
+      seek_alternative_markets: 'Seek Alternative Markets',
+      accept_the_embargo: 'Accept the Embargo',
+    },
+  },
+  evt_exp_dip_diplomatic_gift: {
+    title: 'Generous Diplomatic Gift',
+    body: 'A neighboring realm has sent a lavish gift to the crown — fine textiles, rare spices, and a beautifully illuminated manuscript. The gesture speaks of genuine goodwill, though diplomacy rarely comes without expectation.',
+    choices: {
+      accept_graciously: 'Accept Graciously',
+      reciprocate_generously: 'Reciprocate Generously',
+    },
+  },
+  evt_exp_dip_war_reparations_demand: {
+    title: 'War Reparations Demanded',
+    body: 'Arenthal has issued a formal demand for war reparations, citing damages from past border conflicts. The sum is staggering, and refusal would almost certainly lead to military confrontation — yet paying would cripple the treasury.',
+    choices: {
+      pay_reparations: 'Pay the Reparations',
+      refuse_and_mobilize: 'Refuse and Mobilize',
+      request_arbitration: 'Request Arbitration',
+      stall_negotiations: 'Stall the Negotiations',
+    },
+  },
+  evt_exp_dip_visiting_dignitary: {
+    title: 'Visiting Dignitary',
+    body: 'A dignitary of modest rank but considerable influence has arrived from a neighboring court. The visit offers an opportunity to strengthen informal ties and gather intelligence about our neighbors\' intentions.',
+    choices: {
+      grand_welcome: 'Arrange a Grand Welcome',
+      standard_reception: 'Standard Reception',
+    },
+  },
+  evt_exp_dip_foreign_merchant_dispute: {
+    title: 'Foreign Merchant Dispute',
+    body: 'A dispute has erupted between local and foreign merchants over trading rights in the capital\'s market district. Both sides appeal to the crown for a ruling, and the decision will set a precedent for future commerce.',
+    choices: {
+      side_with_local_merchants: 'Side with Local Merchants',
+      side_with_foreign_traders: 'Side with Foreign Traders',
+      impose_neutral_ruling: 'Impose a Neutral Ruling',
+    },
+  },
+  evt_exp_dip_border_patrol_contact: {
+    title: 'Border Patrol Encounter',
+    body: 'Our border patrols report increased activity along the frontier. Foreign soldiers have been sighted near the boundary markers, their intentions unclear. The situation calls for either vigilance or outreach.',
+    choices: {
+      reinforce_patrols: 'Reinforce the Patrols',
+      open_dialogue: 'Open Diplomatic Dialogue',
+      monitor_situation: 'Monitor the Situation',
+    },
+  },
+  evt_exp_dip_tribute_request: {
+    title: 'Tribute Demanded by Valdris',
+    body: 'The court of Valdris has sent envoys demanding annual tribute as a condition for continued peace. The demand is humiliating, but our military position leaves us vulnerable should diplomacy fail.',
+    choices: {
+      pay_the_tribute: 'Pay the Tribute',
+      refuse_defiantly: 'Refuse Defiantly',
+      negotiate_lesser_amount: 'Negotiate a Lesser Amount',
+    },
+  },
+  evt_exp_dip_diplomatic_marriage_offer: {
+    title: 'Marriage Alliance Offered',
+    body: 'A noble house from Arenthal proposes a marriage alliance that would bind our families and strengthen the bond between our realms. The match is advantageous, though it would create lasting obligations.',
+    choices: {
+      arrange_the_marriage: 'Arrange the Marriage',
+      delay_decision: 'Delay the Decision',
+    },
+  },
+  evt_exp_dip_joint_military_exercise: {
+    title: 'Joint Military Exercise Proposed',
+    body: 'Our allies propose joint military exercises along the shared border — a show of unity that would strengthen both armies and deter potential aggressors. Participation would demonstrate commitment to the alliance.',
+    choices: {
+      participate_fully: 'Participate Fully',
+      send_observers_only: 'Send Observers Only',
+    },
+  },
+};

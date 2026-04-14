@@ -6,6 +6,22 @@
 // with entries for every branchId and every choiceId.
 
 import { FACTION_REQUEST_TEXT as FACTION_REQUEST_TEXT_ENTRIES } from './faction-requests';
+import { EXPANSION_ECONOMY_TEXT } from './expansion/economy-text';
+import { EXPANSION_FOOD_TEXT } from './expansion/food-text';
+import { EXPANSION_MILITARY_TEXT } from './expansion/military-text';
+import { EXPANSION_DIPLOMACY_TEXT } from './expansion/diplomacy-text';
+import { EXPANSION_ENVIRONMENT_TEXT } from './expansion/environment-text';
+import { EXPANSION_PUBLIC_ORDER_TEXT } from './expansion/public-order-text';
+import { EXPANSION_RELIGION_TEXT } from './expansion/religion-text';
+import { EXPANSION_CULTURE_TEXT } from './expansion/culture-text';
+import { EXPANSION_ESPIONAGE_TEXT } from './expansion/espionage-text';
+import { EXPANSION_KNOWLEDGE_TEXT } from './expansion/knowledge-text';
+import { EXPANSION_CLASS_CONFLICT_TEXT } from './expansion/class-conflict-text';
+import { EXPANSION_REGION_TEXT } from './expansion/region-text';
+import { EXPANSION_KINGDOM_TEXT } from './expansion/kingdom-text';
+import { EXPANSION_CHAIN_TEXT } from './expansion/chain-text';
+import { EXPANSION_FOLLOWUP_TEXT } from './expansion/followup-text';
+import { EXPANSION_STORYLINE_TEXT } from './expansion/storyline-text';
 
 export interface EventTextEntry {
   title: string;
@@ -1888,6 +1904,23 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
 
   // Phase 6.5 — Faction Request Text
   ...FACTION_REQUEST_TEXT_ENTRIES,
+
+  // Expansion Content Text
+  ...EXPANSION_ECONOMY_TEXT,
+  ...EXPANSION_FOOD_TEXT,
+  ...EXPANSION_MILITARY_TEXT,
+  ...EXPANSION_DIPLOMACY_TEXT,
+  ...EXPANSION_ENVIRONMENT_TEXT,
+  ...EXPANSION_PUBLIC_ORDER_TEXT,
+  ...EXPANSION_RELIGION_TEXT,
+  ...EXPANSION_CULTURE_TEXT,
+  ...EXPANSION_ESPIONAGE_TEXT,
+  ...EXPANSION_KNOWLEDGE_TEXT,
+  ...EXPANSION_CLASS_CONFLICT_TEXT,
+  ...EXPANSION_REGION_TEXT,
+  ...EXPANSION_KINGDOM_TEXT,
+  ...EXPANSION_CHAIN_TEXT,
+  ...EXPANSION_FOLLOWUP_TEXT,
 };
 
 // ============================================================
@@ -2254,4 +2287,7 @@ export const STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
       },
     },
   },
+
+  // Expansion Storyline Text
+  ...EXPANSION_STORYLINE_TEXT,
 };

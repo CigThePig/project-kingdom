@@ -8,6 +8,7 @@ import {
   StorylineCategory,
 } from '../../engine/types';
 import { STORYLINE_ACTIVATION_PROFILES } from '../narrative-pressure/thresholds';
+import { EXPANSION_STORYLINE_POOL } from './expansion-storylines';
 
 export const STORYLINE_POOL: StorylineDefinition[] = [
   // ============================================================
@@ -801,4 +802,7 @@ export const STORYLINE_POOL: StorylineDefinition[] = [
     ],
     initialTurnsUntilFirstBranchPoint: 2,
   },
+
+  // Expansion Storylines
+  ...EXPANSION_STORYLINE_POOL,
 ];

@@ -9,6 +9,21 @@ import {
   Season,
 } from '../../engine/types';
 import { FACTION_REQUEST_POOL } from './faction-requests';
+import { EXPANSION_ECONOMY_EVENTS } from './expansion/economy-events';
+import { EXPANSION_FOOD_EVENTS } from './expansion/food-events';
+import { EXPANSION_MILITARY_EVENTS } from './expansion/military-events';
+import { EXPANSION_DIPLOMACY_EVENTS } from './expansion/diplomacy-events';
+import { EXPANSION_ENVIRONMENT_EVENTS } from './expansion/environment-events';
+import { EXPANSION_PUBLIC_ORDER_EVENTS } from './expansion/public-order-events';
+import { EXPANSION_RELIGION_EVENTS } from './expansion/religion-events';
+import { EXPANSION_CULTURE_EVENTS } from './expansion/culture-events';
+import { EXPANSION_ESPIONAGE_EVENTS } from './expansion/espionage-events';
+import { EXPANSION_KNOWLEDGE_EVENTS } from './expansion/knowledge-events';
+import { EXPANSION_CLASS_CONFLICT_EVENTS } from './expansion/class-conflict-events';
+import { EXPANSION_REGION_EVENTS } from './expansion/region-events';
+import { EXPANSION_KINGDOM_EVENTS } from './expansion/kingdom-events';
+import { EXPANSION_CHAIN_EVENTS } from './expansion/chain-events';
+import { EXPANSION_FOLLOWUP_EVENTS } from './expansion/followup-events';
 
 export const EVENT_POOL: EventDefinition[] = [
   // ============================================================
@@ -2814,6 +2829,24 @@ export const EVENT_POOL: EventDefinition[] = [
   // so the event engine can surface them through the standard pipeline.
   // ============================================================
   ...FACTION_REQUEST_POOL,
+
+  // ============================================================
+  // Expansion Content
+  // ============================================================
+  ...EXPANSION_ECONOMY_EVENTS,
+  ...EXPANSION_FOOD_EVENTS,
+  ...EXPANSION_MILITARY_EVENTS,
+  ...EXPANSION_DIPLOMACY_EVENTS,
+  ...EXPANSION_ENVIRONMENT_EVENTS,
+  ...EXPANSION_PUBLIC_ORDER_EVENTS,
+  ...EXPANSION_RELIGION_EVENTS,
+  ...EXPANSION_CULTURE_EVENTS,
+  ...EXPANSION_ESPIONAGE_EVENTS,
+  ...EXPANSION_KNOWLEDGE_EVENTS,
+  ...EXPANSION_CLASS_CONFLICT_EVENTS,
+  ...EXPANSION_REGION_EVENTS,
+  ...EXPANSION_KINGDOM_EVENTS,
+  ...EXPANSION_CHAIN_EVENTS,
 ];
 
 // ============================================================
@@ -4334,4 +4367,9 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     phase: 'any',
     classification: 'notification',
   },
+
+  // ============================================================
+  // Expansion Follow-up Content
+  // ============================================================
+  ...EXPANSION_FOLLOWUP_EVENTS,
 ];

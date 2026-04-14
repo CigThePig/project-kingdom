@@ -1,0 +1,113 @@
+import type { EventTextEntry } from '../events';
+
+export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
+  // --- 1. Provincial Autonomy Dispute ---
+  evt_exp_reg_autonomy_dispute: {
+    title: 'Provincial Demands for Autonomy',
+    body: 'The governor of a restive province has petitioned the crown for expanded powers of self-governance. Local lords echo the call, citing the particular needs and traditions of their region. Yielding may preserve peace, yet it risks emboldening others to seek the same.',
+    choices: {
+      grant_limited_autonomy: 'Grant Limited Autonomy',
+      reassert_central_control: 'Reassert Central Control',
+      send_mediator: 'Send a Royal Mediator',
+    },
+  },
+
+  // --- 2. Resource Discovery ---
+  evt_exp_reg_resource_discovery: {
+    title: 'Discovery in the Provinces',
+    body: 'Prospectors working a remote province have uncovered a deposit of valuable ore. The discovery could enrich the crown\'s coffers or transform the local economy, though the manner of its exploitation will determine who benefits and at what cost to the land.',
+    choices: {
+      crown_extraction: 'Claim for Crown Extraction',
+      local_development: 'Support Local Development',
+      survey_further: 'Commission Further Surveys',
+    },
+  },
+
+  // --- 3. Trade Route Disruption ---
+  evt_exp_reg_trade_disruption: {
+    title: 'Trade Routes Under Threat',
+    body: 'Merchants report that a vital trade route passing through the border provinces has become perilous. Bandits — or perhaps agents of a neighboring power — have been seizing caravans with alarming regularity. Commerce through the affected region has slowed to a trickle.',
+    choices: {
+      military_escort: 'Deploy Military Escorts',
+      negotiate_safe_passage: 'Negotiate Safe Passage',
+      reroute_trade: 'Reroute Through Alternate Paths',
+    },
+  },
+
+  // --- 4. Infrastructure Proposal ---
+  evt_exp_reg_infrastructure_proposal: {
+    title: 'Provincial Infrastructure Petition',
+    body: 'Provincial leaders have submitted detailed proposals for infrastructure improvements, citing the kingdom\'s growing population and the strain it places upon existing roads and markets. The investment would be substantial, but the potential returns are not inconsiderable.',
+    choices: {
+      fund_road_network: 'Fund a New Road Network',
+      build_regional_market: 'Build a Regional Market',
+      defer_construction: 'Defer Construction for Now',
+    },
+  },
+
+  // --- 5. Regional Festival ---
+  evt_exp_reg_festival: {
+    title: 'A Provincial Harvest Festival',
+    body: 'A prosperous province has organized an elaborate harvest celebration that has drawn attention across the realm. The local population looks to the crown for recognition, and your response will be taken as a measure of royal regard for the provinces.',
+    choices: {
+      royal_patronage: 'Extend Royal Patronage',
+      attend_personally: 'Attend in Person',
+      send_regards: 'Send Royal Regards',
+    },
+  },
+
+  // --- 6. Provincial Governor Corruption ---
+  evt_exp_reg_governor_corruption: {
+    title: 'A Governor\'s Misrule',
+    body: 'Petitions from common folk in a distant province paint a damning portrait of their governor\'s administration. Taxes collected never reach the crown\'s coffers, justice is sold to the highest bidder, and the governor\'s personal estates swell while the province withers.',
+    choices: {
+      remove_governor: 'Remove the Governor from Office',
+      demand_restitution: 'Demand Restitution of Funds',
+      issue_warning: 'Issue a Formal Warning',
+    },
+  },
+
+  // --- 7. Border Province Tensions ---
+  evt_exp_reg_border_tensions: {
+    title: 'Unrest in the Border Provinces',
+    body: 'The provinces bordering our neighbors have grown anxious. Rumors of foreign troop movements and diplomatic insults have reached the populace, and the local garrison commanders report that morale falters without visible crown support. The border folk demand assurance.',
+    choices: {
+      fortify_border: 'Fortify the Border Defenses',
+      diplomatic_reassurance: 'Pursue Diplomatic Reassurance',
+      increase_patrols: 'Increase Border Patrols',
+    },
+  },
+
+  // --- 8. Regional Specialization ---
+  evt_exp_reg_specialization: {
+    title: 'A Province Seeks Its Purpose',
+    body: 'A well-situated province has the potential to develop a distinct economic identity, but its leaders seek the crown\'s guidance on which path to pursue. Artisans and merchants vie for royal favor, each arguing their craft would bring the greatest prosperity.',
+    choices: {
+      encourage_artisan_quarter: 'Encourage an Artisan Quarter',
+      develop_agricultural_hub: 'Develop an Agricultural Hub',
+      let_market_decide: 'Let the Market Decide',
+    },
+  },
+
+  // --- 9. Local Hero Emerges ---
+  evt_exp_reg_local_hero: {
+    title: 'A Hero of the Provinces',
+    body: 'Word reaches the capital of a commoner who has performed a remarkable deed in one of the provinces — rescuing travelers from brigands, or perhaps organizing flood defenses that saved an entire village. The people celebrate this figure, and the court must decide how to respond.',
+    choices: {
+      honor_at_court: 'Honor Them at Court',
+      appoint_local_office: 'Appoint to Local Office',
+      acknowledge_from_afar: 'Acknowledge from Afar',
+    },
+  },
+
+  // --- 10. Provincial Development Rivalry ---
+  evt_exp_reg_development_rivalry: {
+    title: 'Rivalry Between the Provinces',
+    body: 'Two provinces have submitted competing petitions for crown investment, each claiming greater strategic importance and more pressing need. The rivalry has taken on a bitter edge, with provincial lords publicly disparaging their counterparts. Favoritism risks deepening the divide.',
+    choices: {
+      favor_petitioning_province: 'Favor the Petitioning Province',
+      distribute_equally: 'Distribute Resources Equally',
+      encourage_competition: 'Encourage Productive Competition',
+    },
+  },
+};

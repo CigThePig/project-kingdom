@@ -3,6 +3,7 @@
 // No logic — pure data definitions.
 
 import type { StorylineActivationProfile } from '../../engine/types';
+import { EXPANSION_STORYLINE_ACTIVATION_PROFILES } from './expansion-profiles';
 
 /**
  * Activation profiles keyed by storyline definition ID.
@@ -128,4 +129,7 @@ export const STORYLINE_ACTIVATION_PROFILES: Record<string, StorylineActivationPr
     minTurn: 9,
     priority: 4,
   },
+
+  // Expansion Storyline Activation Profiles
+  ...EXPANSION_STORYLINE_ACTIVATION_PROFILES,
 };
