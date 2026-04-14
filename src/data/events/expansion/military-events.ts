@@ -217,6 +217,9 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'accept_arms_shipment', followUpDefinitionId: 'evt_exp_fu_mil_arms_breakthrough', delayTurns: 3, probability: 0.5 },
+    ],
   },
 
   // ============================================================
@@ -243,6 +246,9 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'full_restoration', followUpDefinitionId: 'evt_exp_fu_mil_fortress_garrison', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -270,6 +276,9 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'public_ceremony', followUpDefinitionId: 'evt_exp_fu_mil_parade_recruitment', delayTurns: 2, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -432,6 +441,9 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'defensive_preparations_only', followUpDefinitionId: 'evt_exp_fu_mil_peace_dividend', delayTurns: 2, probability: 0.6 },
+    ],
   },
 
   // ============================================================

@@ -75,6 +75,9 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'opening',
+    followUpEvents: [
+      { triggerChoiceId: 'accept_trade_terms', followUpDefinitionId: 'evt_exp_fu_dip_trade_profits', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // --- Developing Phase (5) ---
@@ -100,6 +103,9 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'issue_formal_apology', followUpDefinitionId: 'evt_exp_fu_dip_apology_accepted', delayTurns: 2, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_dip_refugee_plea',
@@ -125,6 +131,9 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'welcome_refugees', followUpDefinitionId: 'evt_exp_fu_dip_refugee_integration', delayTurns: 3, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_exp_dip_alliance_overture',
@@ -148,6 +157,9 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'accept_alliance', followUpDefinitionId: 'evt_exp_fu_dip_alliance_first_test', delayTurns: 4, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_dip_hostage_exchange',
@@ -219,6 +231,9 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'demand_reparations', followUpDefinitionId: 'evt_exp_fu_dip_reparation_partial', delayTurns: 3, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_exp_dip_marriage_proposal',

@@ -33,6 +33,9 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'opening',
+    followUpEvents: [
+      { triggerChoiceId: 'build_emergency_levees', followUpDefinitionId: 'evt_exp_fu_env_levee_success', delayTurns: 3, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_env_mild_winter_blessing',
@@ -100,6 +103,9 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'mobilize_firefighting_brigades', followUpDefinitionId: 'evt_exp_fu_env_fire_recovery', delayTurns: 2, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_env_locust_swarm',
@@ -238,6 +244,9 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'establish_royal_forest_reserves', followUpDefinitionId: 'evt_exp_fu_env_logging_ban_impact', delayTurns: 3, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_exp_env_coastal_erosion',
@@ -310,6 +319,9 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'shut_down_mine', followUpDefinitionId: 'evt_exp_fu_env_mine_reopening', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // --- Any Phase (5) ---
@@ -377,6 +389,9 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'build_healing_baths', followUpDefinitionId: 'evt_exp_fu_env_mining_wealth', delayTurns: 3, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_env_summer_heat_wave',

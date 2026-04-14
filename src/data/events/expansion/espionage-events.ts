@@ -101,6 +101,9 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'turn_agent_double', followUpDefinitionId: 'evt_exp_fu_esp_agent_intel', delayTurns: 3, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_exp_esp_foreign_spy_ring',
@@ -123,6 +126,9 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'surveil_and_exploit', followUpDefinitionId: 'evt_exp_fu_esp_disinformation_success', delayTurns: 3, probability: 0.5 },
+    ],
   },
   {
     id: 'evt_exp_esp_blackmail_discovery',
@@ -240,6 +246,9 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'preemptive_arrests', followUpDefinitionId: 'evt_exp_fu_esp_conspiracy_trial', delayTurns: 2, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_esp_counter_espionage_raid',
@@ -310,6 +319,9 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'rebuild_network', followUpDefinitionId: 'evt_exp_fu_esp_network_rebuilt', delayTurns: 3, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_esp_secret_alliance_exposed',

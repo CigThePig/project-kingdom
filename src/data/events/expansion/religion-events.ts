@@ -56,6 +56,9 @@ export const EXPANSION_RELIGION_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'opening',
+    followUpEvents: [
+      { triggerChoiceId: 'suppress_quietly', followUpDefinitionId: 'evt_exp_fu_rel_underground_copies', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // --- 3. Religious Order Expansion (developing) ---
@@ -104,6 +107,9 @@ export const EXPANSION_RELIGION_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'fund_grand_temple', followUpDefinitionId: 'evt_exp_fu_rel_temple_consecration', delayTurns: 4, probability: 0.8 },
+    ],
   },
 
   // --- 5. Interfaith Dialogue (developing) ---
@@ -204,6 +210,9 @@ export const EXPANSION_RELIGION_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'royal_inquisition', followUpDefinitionId: 'evt_exp_fu_rel_clergy_reform', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // --- 9. Religious Holiday Observance (any) ---

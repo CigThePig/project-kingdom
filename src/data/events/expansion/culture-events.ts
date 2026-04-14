@@ -81,6 +81,9 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'enforce_common_tongue', followUpDefinitionId: 'evt_exp_fu_cul_language_resistance', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // --- 4. Harvest Festival Tradition (Informational, any) ---
@@ -156,6 +159,9 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'fund_royal_arts_guild', followUpDefinitionId: 'evt_exp_fu_cul_masterwork_completed', delayTurns: 4, probability: 0.6 },
+    ],
   },
 
   // --- 7. Folk Tradition Revival (Informational, any) ---
@@ -179,6 +185,9 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'endorse_revival', followUpDefinitionId: 'evt_exp_fu_cul_folk_festival', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // --- 8. Literary Movement (Notable, established) ---
@@ -227,6 +236,9 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'send_cultural_delegation', followUpDefinitionId: 'evt_exp_fu_cul_cultural_tension', delayTurns: 3, probability: 0.5 },
+    ],
   },
 
   // --- 10. Oral History Keeper (Serious, established) ---
@@ -372,6 +384,9 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'destroy_offensive_works', followUpDefinitionId: 'evt_exp_fu_cul_underground_theater', delayTurns: 2, probability: 0.6 },
+    ],
   },
 
   // --- 16. Cultural Identity Crisis (Critical, established) ---
