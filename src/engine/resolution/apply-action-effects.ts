@@ -316,9 +316,19 @@ function applyDecreeEffect(state: GameState, action: QueuedAction): GameState {
     turnIssued: state.turn.turnNumber,
   };
 
+  // 4. Record a persistent consequence so future conditions can query decree history.
+  const consequence: PersistentConsequence = {
+    sourceId: action.actionDefinitionId,
+    sourceType: 'event',
+    choiceMade: action.actionDefinitionId,
+    turnApplied: state.turn.turnNumber,
+    tag: `decree:${action.actionDefinitionId}`,
+  };
+
   return {
     ...stateAfterEffects,
     issuedDecrees: [...stateAfterEffects.issuedDecrees, issuedRecord],
+    persistentConsequences: [...stateAfterEffects.persistentConsequences, consequence],
   };
 }
 
