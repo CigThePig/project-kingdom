@@ -109,6 +109,9 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'hire_additional_watchmen', followUpDefinitionId: 'evt_exp_fu_po_purge_aftermath', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // ============================================================
@@ -135,6 +138,9 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'arrest_vigilantes', followUpDefinitionId: 'evt_exp_fu_po_militia_overreach', delayTurns: 3, probability: 0.5 },
+    ],
   },
 
   // ============================================================
@@ -161,6 +167,9 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'build_new_prison', followUpDefinitionId: 'evt_exp_fu_po_prison_complete', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -239,6 +248,9 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'military_sweep', followUpDefinitionId: 'evt_exp_fu_po_gang_driven_underground', delayTurns: 2, probability: 0.6 },
+    ],
   },
 
   // ============================================================
@@ -424,6 +436,9 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'declare_martial_law', followUpDefinitionId: 'evt_exp_fu_po_martial_law_tension', delayTurns: 2, probability: 0.7 },
+    ],
   },
 
   // ============================================================

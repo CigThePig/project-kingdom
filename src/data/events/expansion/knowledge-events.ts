@@ -31,6 +31,9 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'side_with_traditionalists', followUpDefinitionId: 'evt_exp_fu_kno_academic_breakthrough', delayTurns: 4, probability: 0.5 },
+    ],
   },
 
   // ============================================================
@@ -82,6 +85,9 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'fund_military_application', followUpDefinitionId: 'evt_exp_fu_kno_technology_restored', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // ============================================================
@@ -294,6 +300,9 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'fund_mass_production', followUpDefinitionId: 'evt_exp_fu_kno_printed_pamphlets', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // ============================================================
@@ -397,6 +406,9 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'opening',
+    followUpEvents: [
+      { triggerChoiceId: 'grant_patronage', followUpDefinitionId: 'evt_exp_fu_kno_scholar_contributions', delayTurns: 4, probability: 0.7 },
+    ],
   },
 
   // ============================================================

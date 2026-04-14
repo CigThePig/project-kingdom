@@ -32,6 +32,9 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'maintain_noble_exemptions', followUpDefinitionId: 'evt_exp_fu_cc_grievance_reforms', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // ============================================================
@@ -138,6 +141,9 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'curtail_guild_influence', followUpDefinitionId: 'evt_exp_fu_cc_noble_retaliation', delayTurns: 3, probability: 0.5 },
+    ],
   },
 
   // ============================================================
@@ -244,6 +250,9 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'open_ranks_to_merit', followUpDefinitionId: 'evt_exp_fu_cc_new_merchant_class', delayTurns: 4, probability: 0.5 },
+    ],
   },
 
   // ============================================================
@@ -322,6 +331,9 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     relatedStorylineId: null,
     phase: 'developing',
+    followUpEvents: [
+      { triggerChoiceId: 'grant_labor_protections', followUpDefinitionId: 'evt_exp_fu_cc_strike_settlement', delayTurns: 2, probability: 0.7 },
+    ],
   },
 
   // ============================================================
