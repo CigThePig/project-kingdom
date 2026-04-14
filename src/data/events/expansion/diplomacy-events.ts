@@ -3,7 +3,6 @@ import {
   EventCategory,
   EventSeverity,
   PopulationClass,
-  Season,
 } from '../../../engine/types';
 
 export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
