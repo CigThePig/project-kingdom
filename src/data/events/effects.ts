@@ -4,6 +4,21 @@
 
 import type { MechanicalEffectDelta } from '../../engine/types';
 import { FACTION_REQUEST_EFFECTS } from './faction-request-effects';
+import { EXPANSION_ECONOMY_EFFECTS } from './expansion/economy-effects';
+import { EXPANSION_FOOD_EFFECTS } from './expansion/food-effects';
+import { EXPANSION_MILITARY_EFFECTS } from './expansion/military-effects';
+import { EXPANSION_DIPLOMACY_EFFECTS } from './expansion/diplomacy-effects';
+import { EXPANSION_ENVIRONMENT_EFFECTS } from './expansion/environment-effects';
+import { EXPANSION_PUBLIC_ORDER_EFFECTS } from './expansion/public-order-effects';
+import { EXPANSION_RELIGION_EFFECTS } from './expansion/religion-effects';
+import { EXPANSION_CULTURE_EFFECTS } from './expansion/culture-effects';
+import { EXPANSION_ESPIONAGE_EFFECTS } from './expansion/espionage-effects';
+import { EXPANSION_KNOWLEDGE_EFFECTS } from './expansion/knowledge-effects';
+import { EXPANSION_CLASS_CONFLICT_EFFECTS } from './expansion/class-conflict-effects';
+import { EXPANSION_REGION_EFFECTS } from './expansion/region-effects';
+import { EXPANSION_KINGDOM_EFFECTS } from './expansion/kingdom-effects';
+import { EXPANSION_CHAIN_EFFECTS } from './expansion/chain-effects';
+import { EXPANSION_FOLLOWUP_EFFECTS } from './expansion/followup-effects';
 
 export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffectDelta>> = {
   // ============================================================
@@ -1149,6 +1164,23 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
 
   // Phase 6.5 — Faction Request Effects
   ...FACTION_REQUEST_EFFECTS,
+
+  // Expansion Content Effects
+  ...EXPANSION_ECONOMY_EFFECTS,
+  ...EXPANSION_FOOD_EFFECTS,
+  ...EXPANSION_MILITARY_EFFECTS,
+  ...EXPANSION_DIPLOMACY_EFFECTS,
+  ...EXPANSION_ENVIRONMENT_EFFECTS,
+  ...EXPANSION_PUBLIC_ORDER_EFFECTS,
+  ...EXPANSION_RELIGION_EFFECTS,
+  ...EXPANSION_CULTURE_EFFECTS,
+  ...EXPANSION_ESPIONAGE_EFFECTS,
+  ...EXPANSION_KNOWLEDGE_EFFECTS,
+  ...EXPANSION_CLASS_CONFLICT_EFFECTS,
+  ...EXPANSION_REGION_EFFECTS,
+  ...EXPANSION_KINGDOM_EFFECTS,
+  ...EXPANSION_CHAIN_EFFECTS,
+  ...EXPANSION_FOLLOWUP_EFFECTS,
 };
 
 // ============================================================

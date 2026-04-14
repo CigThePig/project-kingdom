@@ -2,6 +2,7 @@
 // Branch point effects and path-dependent resolution effects.
 
 import type { MechanicalEffectDelta } from '../../engine/types';
+import { EXPANSION_STORYLINE_CHOICE_EFFECTS, EXPANSION_STORYLINE_RESOLUTION_EFFECTS } from './expansion-effects';
 
 /**
  * Maps storylineDefinitionId -> choiceId -> MechanicalEffectDelta.
@@ -163,6 +164,9 @@ export const STORYLINE_CHOICE_EFFECTS: Record<string, Record<string, MechanicalE
     tax_the_wealthy:           { nobilitySatDelta: -5, merchantSatDelta: -3, treasuryDelta: +40, commonerSatDelta: +2 },
     abandon_outer_settlements: { regionConditionDelta: -5, commonerSatDelta: -4, stabilityDelta: -3, foodDelta: +10 },
   },
+
+  // Expansion Storyline Choice Effects
+  ...EXPANSION_STORYLINE_CHOICE_EFFECTS,
 };
 
 /**
@@ -279,4 +283,7 @@ export const STORYLINE_RESOLUTION_EFFECTS: Record<string, Record<string, Mechani
     tax_the_wealthy:           { nobilitySatDelta: -8, merchantSatDelta: -5, treasuryDelta: +60, commonerSatDelta: +4, stabilityDelta: -2 },
     abandon_outer_settlements: { regionConditionDelta: -10, commonerSatDelta: -6, stabilityDelta: -5, foodDelta: +20, treasuryDelta: +30 },
   },
+
+  // Expansion Storyline Resolution Effects
+  ...EXPANSION_STORYLINE_RESOLUTION_EFFECTS,
 };

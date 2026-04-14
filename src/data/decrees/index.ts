@@ -8,6 +8,7 @@ import {
   PopulationClass,
   ResourceType,
 } from '../../engine/types';
+import { EXPANSION_DECREE_POOL } from './expansion-decrees';
 
 // ============================================================
 // Decree State Condition — world-state prerequisites for decree availability
@@ -1391,4 +1392,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     turnMinimum: null,
     statePrerequisites: null,
   },
+
+  // Expansion Decrees
+  ...EXPANSION_DECREE_POOL,
 ];
