@@ -5,7 +5,7 @@ import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { GameContext } from '../../context/game-context';
-import { MONTH_PHRASES, MONTH_EFFECT_POOLS, MONTH_NAMES } from '../../data/text/month-openings';
+import { MONTH_PHRASES, MONTH_EFFECT_POOLS, MONTH_NAMES, MONTH_SEASON_LABELS } from '../../data/text/month-openings';
 import type { AdvisorBriefing } from '../../bridge/advisorGenerator';
 
 interface SeasonDawnProps {
@@ -27,7 +27,7 @@ export function SeasonDawn({ onComplete, advisorBriefing, phraseIndex, effectOrd
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12, animation: 'slideUp 400ms ease both' }}>
       <Card family="season">
-        <CardTitle>{MONTH_NAMES[month]}, Year {year}</CardTitle>
+        <CardTitle>{MONTH_NAMES[month]} — {MONTH_SEASON_LABELS[month]}, Year {year}</CardTitle>
         <CardBody>{MONTH_PHRASES[month][phraseIndex]}</CardBody>
         <EffectStrip effects={[pool[effectOrder[0]], pool[effectOrder[1]]]} />
 

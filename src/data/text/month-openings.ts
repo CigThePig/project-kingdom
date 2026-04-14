@@ -221,3 +221,18 @@ export const MONTH_NAMES: Record<number, string> = {
   11: 'November',
   12: 'December',
 };
+
+export const MONTH_SEASON_LABELS: Record<number, string> = {
+  1: 'Deep Winter',
+  2: 'Late Winter',
+  3: 'Early Spring',
+  4: 'Mid Spring',
+  5: 'Late Spring',
+  6: 'Early Summer',
+  7: 'Midsummer',
+  8: 'Late Summer',
+  9: 'Early Autumn',
+  10: 'Mid Autumn',
+  11: 'Late Autumn',
+  12: 'Early Winter',
+};

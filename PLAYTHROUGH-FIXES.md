@@ -4,7 +4,7 @@ This file contains phased instructions for fixing the world-state continuity pro
 
 ---
 
-## Phase 1 — Decrees create persistent consequences
+## Phase 1 — Decrees create persistent consequences [COMPLETED]
 
 **Problem:** Crisis responses create `PersistentConsequence` entries. Decrees don't. This means the game has no memory of what the player enacted as policy.
 
@@ -37,7 +37,7 @@ Append it to `state.persistentConsequences`. Make sure the import for `Persisten
 
 ---
 
-## Phase 2 — Season flavor in the month header
+## Phase 2 — Season flavor in the month header [COMPLETED]
 
 **Problem:** SeasonDawn shows "January, Year 1" but should show "January — Deep Winter, Year 1".
 
@@ -358,7 +358,7 @@ If the component filters or styles by situation type, add handling for `'kingdom
 
 ---
 
-## Phase 7 — Title screen defaults to New Crown
+## Phase 7 — Title screen defaults to New Crown [COMPLETED]
 
 **Problem:** All five scenarios appear as equal choices. New Crown should be the default and only starting option.
 
