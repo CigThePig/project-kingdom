@@ -172,6 +172,62 @@ export const EXPANSION_STORYLINE_CHOICE_EFFECTS: Record<string, Record<string, M
     scale_back_to_essentials:           { treasuryDelta: +15, commonerSatDelta: +1, nobilitySatDelta: -2, stabilityDelta: +2 },
     conscript_labor_force:              { commonerSatDelta: -5, treasuryDelta: +20, regionDevelopmentDelta: +2, stabilityDelta: -3 },
   },
+
+  // ============================================================
+  // Scenario-Derived: The Merchant's Gambit (TradeEcon)
+  // ============================================================
+  sl_exp_merchants_gambit: {
+    // Opening choices
+    court_the_merchant_guilds:       { merchantSatDelta: +4, treasuryDelta: +20, nobilitySatDelta: -3, militaryCasteSatDelta: -2 },
+    tax_merchant_profits:            { treasuryDelta: +30, merchantSatDelta: -4, stabilityDelta: +2, nobilitySatDelta: +2 },
+    establish_crown_trading_company: { treasuryDelta: -25, merchantSatDelta: -2, espionageNetworkDelta: +3, stabilityDelta: +1 },
+    // Mid-arc choices
+    grant_guild_monopoly_rights:  { merchantSatDelta: +5, treasuryDelta: +15, commonerSatDelta: -3, nobilitySatDelta: -3 },
+    nationalize_key_trade_routes: { treasuryDelta: +25, merchantSatDelta: -5, militaryCasteSatDelta: +2, stabilityDelta: -2 },
+    broker_foreign_trade_pact:    { treasuryDelta: +10, merchantSatDelta: +3, espionageNetworkDelta: +2, culturalCohesionDelta: -2 },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Frozen March (Military)
+  // ============================================================
+  sl_exp_frozen_march: {
+    // Opening choices
+    mobilize_winter_defenses:  { militaryReadinessDelta: +4, treasuryDelta: -30, militaryCasteSatDelta: +3, commonerSatDelta: -2 },
+    send_diplomatic_overture:  { stabilityDelta: +2, treasuryDelta: -15, militaryCasteSatDelta: -2, espionageNetworkDelta: +3 },
+    conscript_frontier_militia: { militaryForceSizeDelta: +4, commonerSatDelta: -4, militaryMoraleDelta: -2, treasuryDelta: -10 },
+    // Mid-arc choices
+    launch_winter_offensive:   { militaryReadinessDelta: -3, militaryMoraleDelta: +3, treasuryDelta: -35, militaryCasteSatDelta: +4 },
+    fortify_and_endure:        { militaryReadinessDelta: +3, stabilityDelta: +2, treasuryDelta: -20, commonerSatDelta: -2 },
+    negotiate_ceasefire_terms:  { stabilityDelta: +3, treasuryDelta: -15, militaryCasteSatDelta: -3, merchantSatDelta: +2 },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Fractured Inheritance (Political)
+  // ============================================================
+  sl_exp_fractured_inheritance: {
+    // Opening choices
+    appease_rival_claimants:          { nobilitySatDelta: +3, treasuryDelta: -25, stabilityDelta: +2, commonerSatDelta: -1 },
+    assert_undivided_authority:       { nobilitySatDelta: -4, stabilityDelta: -2, militaryCasteSatDelta: +3, espionageNetworkDelta: +2 },
+    play_factions_against_each_other: { espionageNetworkDelta: +4, nobilitySatDelta: -2, stabilityDelta: -1, treasuryDelta: -15 },
+    // Mid-arc choices
+    convene_unity_council:       { nobilitySatDelta: +3, clergySatDelta: +2, stabilityDelta: +3, treasuryDelta: -20 },
+    purge_disloyal_nobles:       { nobilitySatDelta: -5, stabilityDelta: -3, militaryCasteSatDelta: +2, espionageNetworkDelta: +3 },
+    offer_power_sharing_compact: { nobilitySatDelta: +4, commonerSatDelta: +2, stabilityDelta: +2, treasuryDelta: -15 },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Faithful Kingdom (Religious)
+  // ============================================================
+  sl_exp_faithful_kingdom: {
+    // Opening choices
+    elevate_the_high_clergy:    { clergySatDelta: +5, faithDelta: +3, merchantSatDelta: -3, heterodoxyDelta: -2 },
+    temper_clerical_influence:  { clergySatDelta: -3, nobilitySatDelta: +3, stabilityDelta: +2, faithDelta: -2 },
+    redirect_faith_to_charity:  { commonerSatDelta: +4, clergySatDelta: +1, treasuryDelta: -20, faithDelta: +2 },
+    // Mid-arc choices
+    declare_state_orthodoxy:         { faithDelta: +4, clergySatDelta: +4, heterodoxyDelta: -4, commonerSatDelta: -2 },
+    embrace_religious_tolerance:     { heterodoxyDelta: +3, commonerSatDelta: +3, clergySatDelta: -4, culturalCohesionDelta: +2 },
+    weaponize_faith_against_rivals:  { faithDelta: +2, militaryCasteSatDelta: +3, clergySatDelta: +2, stabilityDelta: -3 },
+  },
 };
 
 /**
@@ -287,5 +343,41 @@ export const EXPANSION_STORYLINE_RESOLUTION_EFFECTS: Record<string, Record<strin
     expand_scope_with_foreign_artisans: { culturalCohesionDelta: -3, merchantSatDelta: +5, regionDevelopmentDelta: +6, treasuryDelta: -50 },
     scale_back_to_essentials:           { stabilityDelta: +5, commonerSatDelta: +3, treasuryDelta: +20, nobilitySatDelta: -3 },
     conscript_labor_force:              { commonerSatDelta: -7, regionDevelopmentDelta: +5, treasuryDelta: +30, stabilityDelta: -5 },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Merchant's Gambit (TradeEcon)
+  // ============================================================
+  sl_exp_merchants_gambit: {
+    grant_guild_monopoly_rights:  { merchantSatDelta: +7, treasuryDelta: +40, commonerSatDelta: -5, nobilitySatDelta: -4 },
+    nationalize_key_trade_routes: { treasuryDelta: +50, merchantSatDelta: -7, stabilityDelta: -3, militaryCasteSatDelta: +4 },
+    broker_foreign_trade_pact:    { treasuryDelta: +30, merchantSatDelta: +5, culturalCohesionDelta: -3, espionageNetworkDelta: +4 },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Frozen March (Military)
+  // ============================================================
+  sl_exp_frozen_march: {
+    launch_winter_offensive:   { militaryReadinessDelta: -4, militaryMoraleDelta: +6, treasuryDelta: -50, militaryCasteSatDelta: +6 },
+    fortify_and_endure:        { militaryReadinessDelta: +6, stabilityDelta: +5, treasuryDelta: -30, commonerSatDelta: +3 },
+    negotiate_ceasefire_terms:  { stabilityDelta: +6, treasuryDelta: +20, militaryCasteSatDelta: -5, merchantSatDelta: +4 },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Fractured Inheritance (Political)
+  // ============================================================
+  sl_exp_fractured_inheritance: {
+    convene_unity_council:       { nobilitySatDelta: +5, stabilityDelta: +6, clergySatDelta: +3, treasuryDelta: -30 },
+    purge_disloyal_nobles:       { nobilitySatDelta: -8, stabilityDelta: -4, espionageNetworkDelta: +6, militaryCasteSatDelta: +4 },
+    offer_power_sharing_compact: { nobilitySatDelta: +6, commonerSatDelta: +4, stabilityDelta: +5, treasuryDelta: -25 },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Faithful Kingdom (Religious)
+  // ============================================================
+  sl_exp_faithful_kingdom: {
+    declare_state_orthodoxy:         { faithDelta: +7, clergySatDelta: +6, heterodoxyDelta: -5, commonerSatDelta: -4 },
+    embrace_religious_tolerance:     { heterodoxyDelta: +5, commonerSatDelta: +5, culturalCohesionDelta: +4, clergySatDelta: -6 },
+    weaponize_faith_against_rivals:  { faithDelta: +5, militaryCasteSatDelta: +5, clergySatDelta: +4, stabilityDelta: -5 },
   },
 };

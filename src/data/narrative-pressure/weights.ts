@@ -2126,4 +2126,84 @@ export const PRESSURE_WEIGHTS: Record<string, PressureWeightEntry> = {
     axisWeights: { isolation: 10, authority: 2 },
   },
 
+  // --- Scenario-Derived: sl_exp_merchants_gambit (TradeEcon) ---
+  'storyline:sl_exp_merchants_gambit:court_the_merchant_guilds': {
+    axisWeights: { commerce: 9, reform: 2 },
+  },
+  'storyline:sl_exp_merchants_gambit:tax_merchant_profits': {
+    axisWeights: { authority: 8, commerce: 2 },
+  },
+  'storyline:sl_exp_merchants_gambit:establish_crown_trading_company': {
+    axisWeights: { authority: 7, commerce: 3 },
+  },
+  'storyline:sl_exp_merchants_gambit:grant_guild_monopoly_rights': {
+    axisWeights: { commerce: 10, reform: 2 },
+  },
+  'storyline:sl_exp_merchants_gambit:nationalize_key_trade_routes': {
+    axisWeights: { authority: 10, commerce: 1 },
+  },
+  'storyline:sl_exp_merchants_gambit:broker_foreign_trade_pact': {
+    axisWeights: { commerce: 8, openness: 3 },
+  },
+
+  // --- Scenario-Derived: sl_exp_frozen_march (Military) ---
+  'storyline:sl_exp_frozen_march:mobilize_winter_defenses': {
+    axisWeights: { militarism: 9, isolation: 1 },
+  },
+  'storyline:sl_exp_frozen_march:send_diplomatic_overture': {
+    axisWeights: { openness: 8, reform: 1 },
+  },
+  'storyline:sl_exp_frozen_march:conscript_frontier_militia': {
+    axisWeights: { militarism: 8, authority: 2 },
+  },
+  'storyline:sl_exp_frozen_march:launch_winter_offensive': {
+    axisWeights: { militarism: 12 },
+  },
+  'storyline:sl_exp_frozen_march:fortify_and_endure': {
+    axisWeights: { militarism: 8, isolation: 3 },
+  },
+  'storyline:sl_exp_frozen_march:negotiate_ceasefire_terms': {
+    axisWeights: { openness: 9, reform: 2 },
+  },
+
+  // --- Scenario-Derived: sl_exp_fractured_inheritance (Political) ---
+  'storyline:sl_exp_fractured_inheritance:appease_rival_claimants': {
+    axisWeights: { openness: 7, reform: 2 },
+  },
+  'storyline:sl_exp_fractured_inheritance:assert_undivided_authority': {
+    axisWeights: { authority: 9, militarism: 1 },
+  },
+  'storyline:sl_exp_fractured_inheritance:play_factions_against_each_other': {
+    axisWeights: { intrigue: 9, authority: 1 },
+  },
+  'storyline:sl_exp_fractured_inheritance:convene_unity_council': {
+    axisWeights: { reform: 8, openness: 2 },
+  },
+  'storyline:sl_exp_fractured_inheritance:purge_disloyal_nobles': {
+    axisWeights: { authority: 11, intrigue: 1 },
+  },
+  'storyline:sl_exp_fractured_inheritance:offer_power_sharing_compact': {
+    axisWeights: { reform: 9, openness: 2 },
+  },
+
+  // --- Scenario-Derived: sl_exp_faithful_kingdom (Religious) ---
+  'storyline:sl_exp_faithful_kingdom:elevate_the_high_clergy': {
+    axisWeights: { piety: 9, authority: 1 },
+  },
+  'storyline:sl_exp_faithful_kingdom:temper_clerical_influence': {
+    axisWeights: { reform: 8, authority: 2 },
+  },
+  'storyline:sl_exp_faithful_kingdom:redirect_faith_to_charity': {
+    axisWeights: { piety: 7, reform: 3 },
+  },
+  'storyline:sl_exp_faithful_kingdom:declare_state_orthodoxy': {
+    axisWeights: { piety: 11, authority: 1 },
+  },
+  'storyline:sl_exp_faithful_kingdom:embrace_religious_tolerance': {
+    axisWeights: { reform: 9, openness: 3 },
+  },
+  'storyline:sl_exp_faithful_kingdom:weaponize_faith_against_rivals': {
+    axisWeights: { piety: 8, militarism: 4 },
+  },
+
 };

@@ -794,4 +794,268 @@ export const EXPANSION_STORYLINE_POOL: StorylineDefinition[] = [
     ],
     initialTurnsUntilFirstBranchPoint: 2,
   },
+
+  // ============================================================
+  // Scenario-Derived: The Merchant's Gambit (TradeEcon)
+  // ============================================================
+  {
+    id: 'sl_exp_merchants_gambit',
+    category: StorylineCategory.TradeEcon,
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_exp_merchants_gambit'],
+    openingBranchId: 'bp_merchants_gambit_opening',
+    branches: [
+      {
+        branchId: 'bp_merchants_gambit_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'court_the_merchant_guilds',
+            nextBranchId: 'bp_merchants_gambit_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'tax_merchant_profits',
+            nextBranchId: 'bp_merchants_gambit_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'establish_crown_trading_company',
+            nextBranchId: 'bp_merchants_gambit_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_merchants_gambit_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'grant_guild_monopoly_rights',
+            nextBranchId: 'bp_merchants_gambit_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'nationalize_key_trade_routes',
+            nextBranchId: 'bp_merchants_gambit_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'broker_foreign_trade_pact',
+            nextBranchId: 'bp_merchants_gambit_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_merchants_gambit_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Frozen March (Military)
+  // ============================================================
+  {
+    id: 'sl_exp_frozen_march',
+    category: StorylineCategory.Military,
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_exp_frozen_march'],
+    openingBranchId: 'bp_frozen_march_exp_opening',
+    branches: [
+      {
+        branchId: 'bp_frozen_march_exp_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'mobilize_winter_defenses',
+            nextBranchId: 'bp_frozen_march_exp_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'send_diplomatic_overture',
+            nextBranchId: 'bp_frozen_march_exp_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'conscript_frontier_militia',
+            nextBranchId: 'bp_frozen_march_exp_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_frozen_march_exp_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'launch_winter_offensive',
+            nextBranchId: 'bp_frozen_march_exp_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'fortify_and_endure',
+            nextBranchId: 'bp_frozen_march_exp_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'negotiate_ceasefire_terms',
+            nextBranchId: 'bp_frozen_march_exp_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_frozen_march_exp_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Fractured Inheritance (Political)
+  // ============================================================
+  {
+    id: 'sl_exp_fractured_inheritance',
+    category: StorylineCategory.Political,
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_exp_fractured_inheritance'],
+    openingBranchId: 'bp_fractured_inherit_opening',
+    branches: [
+      {
+        branchId: 'bp_fractured_inherit_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'appease_rival_claimants',
+            nextBranchId: 'bp_fractured_inherit_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'assert_undivided_authority',
+            nextBranchId: 'bp_fractured_inherit_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'play_factions_against_each_other',
+            nextBranchId: 'bp_fractured_inherit_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_fractured_inherit_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'convene_unity_council',
+            nextBranchId: 'bp_fractured_inherit_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'purge_disloyal_nobles',
+            nextBranchId: 'bp_fractured_inherit_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'offer_power_sharing_compact',
+            nextBranchId: 'bp_fractured_inherit_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_fractured_inherit_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Faithful Kingdom (Religious)
+  // ============================================================
+  {
+    id: 'sl_exp_faithful_kingdom',
+    category: StorylineCategory.Religious,
+    activationProfile: STORYLINE_ACTIVATION_PROFILES['sl_exp_faithful_kingdom'],
+    openingBranchId: 'bp_faithful_kingdom_opening',
+    branches: [
+      {
+        branchId: 'bp_faithful_kingdom_opening',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'elevate_the_high_clergy',
+            nextBranchId: 'bp_faithful_kingdom_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'temper_clerical_influence',
+            nextBranchId: 'bp_faithful_kingdom_mid',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'redirect_faith_to_charity',
+            nextBranchId: 'bp_faithful_kingdom_mid',
+            turnsUntilNextBranchPoint: 2,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_faithful_kingdom_mid',
+        isResolutionBranch: false,
+        choices: [
+          {
+            choiceId: 'declare_state_orthodoxy',
+            nextBranchId: 'bp_faithful_kingdom_resolution',
+            turnsUntilNextBranchPoint: 2,
+          },
+          {
+            choiceId: 'embrace_religious_tolerance',
+            nextBranchId: 'bp_faithful_kingdom_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+          {
+            choiceId: 'weaponize_faith_against_rivals',
+            nextBranchId: 'bp_faithful_kingdom_resolution',
+            turnsUntilNextBranchPoint: 3,
+          },
+        ],
+      },
+      {
+        branchId: 'bp_faithful_kingdom_resolution',
+        isResolutionBranch: true,
+        choices: [
+          {
+            choiceId: 'conclude_arc',
+            nextBranchId: null,
+            turnsUntilNextBranchPoint: 0,
+          },
+        ],
+      },
+    ],
+    initialTurnsUntilFirstBranchPoint: 2,
+  },
 ];

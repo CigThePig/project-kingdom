@@ -138,4 +138,49 @@ export const EXPANSION_STORYLINE_ACTIVATION_PROFILES: Record<string, StorylineAc
     minTurn: 11,
     priority: 5,
   },
+
+  // ============================================================
+  // Scenario-Derived Storylines (Phase 8)
+  // Lower thresholds — these activate earlier as emergent scenario experiences.
+  // ============================================================
+
+  // The Merchant's Gambit — rising mercantile power threatens crown authority
+  sl_exp_merchants_gambit: {
+    primaryAxis: 'commerce',
+    primaryThreshold: 15,
+    suppressedByAxis: 'militarism',
+    suppressedByThreshold: 12,
+    minTurn: 8,
+    priority: 6,
+  },
+
+  // The Frozen March — winter military crisis on the border
+  sl_exp_frozen_march: {
+    primaryAxis: 'militarism',
+    primaryThreshold: 12,
+    secondaryAxis: 'isolation',
+    secondaryThreshold: 8,
+    minTurn: 8,
+    priority: 6,
+  },
+
+  // The Fractured Inheritance — noble factions vie for power
+  sl_exp_fractured_inheritance: {
+    primaryAxis: 'authority',
+    primaryThreshold: 15,
+    secondaryAxis: 'intrigue',
+    secondaryThreshold: 10,
+    minTurn: 8,
+    priority: 6,
+  },
+
+  // The Faithful Kingdom — clerical influence reshapes governance
+  sl_exp_faithful_kingdom: {
+    primaryAxis: 'piety',
+    primaryThreshold: 15,
+    suppressedByAxis: 'reform',
+    suppressedByThreshold: 10,
+    minTurn: 8,
+    priority: 6,
+  },
 };
