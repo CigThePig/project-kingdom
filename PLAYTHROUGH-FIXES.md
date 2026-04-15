@@ -383,7 +383,7 @@ Keep the file — other code may reference it. But it is no longer used for the 
 
 ---
 
-## Phase 8 — Convert alternate scenarios to pressure-activated storylines
+## Phase 8 — Convert alternate scenarios to pressure-activated storylines [COMPLETED]
 
 **Problem:** Merchant's Gambit, Frozen March, Fractured Inheritance, and Faithful Kingdom should emerge from player behavior rather than being selected up front.
 

@@ -384,4 +384,132 @@ export const EXPANSION_STORYLINE_TEXT: Record<string, StorylineTextEntry> = {
       },
     },
   },
+
+  // ============================================================
+  // Scenario-Derived: The Merchant's Gambit (TradeEcon)
+  // ============================================================
+  sl_exp_merchants_gambit: {
+    title: 'The Merchant\'s Gambit',
+    statusNote: 'The merchant class grows increasingly powerful, demanding influence that matches their wealth.',
+    branchPoints: {
+      bp_merchants_gambit_opening: {
+        body: 'The kingdom\'s merchant guilds have amassed wealth that rivals the treasury itself. Trade caravans crowd the roads, counting houses overflow with coin, and guild leaders openly lobby for political concessions. The nobility grumbles about upstarts, but the crown cannot ignore the merchants\' economic power. A choice must be made about how to manage this rising mercantile force.',
+        choices: {
+          court_the_merchant_guilds: 'Court the Merchant Guilds',
+          tax_merchant_profits: 'Tax Merchant Profits',
+          establish_crown_trading_company: 'Establish a Crown Trading Company',
+        },
+      },
+      bp_merchants_gambit_mid: {
+        body: 'The economic landscape has shifted decisively. Trade routes are contested, guild leaders form coalitions that rival noble houses in influence, and the balance between crown revenue and merchant independence has become the defining question of the realm. Foreign merchants watch with keen interest, sensing opportunity in the turmoil.',
+        choices: {
+          grant_guild_monopoly_rights: 'Grant Guild Monopoly Rights',
+          nationalize_key_trade_routes: 'Nationalize Key Trade Routes',
+          broker_foreign_trade_pact: 'Broker a Foreign Trade Pact',
+        },
+      },
+      bp_merchants_gambit_resolution: {
+        body: 'The struggle between crown authority and mercantile power has reached its conclusion. The economic order of the kingdom has been reshaped by the decisions made during this pivotal period.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Frozen March (Military)
+  // ============================================================
+  sl_exp_frozen_march: {
+    title: 'The Frozen March',
+    statusNote: 'A military crisis looms as winter tightens its grip and hostile forces mass at the border.',
+    branchPoints: {
+      bp_frozen_march_exp_opening: {
+        body: 'Reports of enemy troop movements along the northern border arrive as winter deepens. Food stores dwindle, soldiers shiver in inadequate shelters, and scouts report supply wagons massing beyond the frontier. The kingdom faces a war it may not be equipped to fight — not with snow choking the mountain passes and the granaries running low.',
+        choices: {
+          mobilize_winter_defenses: 'Mobilize Winter Defenses',
+          send_diplomatic_overture: 'Send a Diplomatic Overture',
+          conscript_frontier_militia: 'Conscript Frontier Militia',
+        },
+      },
+      bp_frozen_march_exp_mid: {
+        body: 'The enemy has probed the kingdom\'s defenses and found them strained. Soldiers are tested by cold and fear in equal measure, and the border settlements plead for protection. The initial response has bought time, but not a solution. The crown must commit to a definitive strategy before the spring thaw brings a full offensive.',
+        choices: {
+          launch_winter_offensive: 'Launch a Winter Offensive',
+          fortify_and_endure: 'Fortify and Endure',
+          negotiate_ceasefire_terms: 'Negotiate Ceasefire Terms',
+        },
+      },
+      bp_frozen_march_exp_resolution: {
+        body: 'The winter military crisis has reached its conclusion. Whether through force of arms, resilience, or diplomacy, the kingdom\'s response to this frozen trial will echo through its military doctrine for years to come.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Fractured Inheritance (Political)
+  // ============================================================
+  sl_exp_fractured_inheritance: {
+    title: 'The Fractured Inheritance',
+    statusNote: 'Noble factions vie for influence as old grievances and rival claims surface.',
+    branchPoints: {
+      bp_fractured_inherit_opening: {
+        body: 'Whispers in court corridors grow louder. A coalition of nobles, invoking ancient lineage and past grievances, openly questions the crown\'s authority. Rival claimants have surfaced, each backed by different factions of the nobility, clergy, and even foreign powers. Secret meetings proliferate, old alliances fracture, and the realm teeters on the edge of open conflict.',
+        choices: {
+          appease_rival_claimants: 'Appease the Rival Claimants',
+          assert_undivided_authority: 'Assert Undivided Authority',
+          play_factions_against_each_other: 'Play Factions Against Each Other',
+        },
+      },
+      bp_fractured_inherit_mid: {
+        body: 'The factional struggle has intensified beyond courtly maneuvering. Intercepted letters reveal foreign backing for certain claimants, public confrontations disrupt the capital, and provincial lords hedge their allegiance. The status quo cannot hold — the crown must choose between reconciliation, dominance, or compromise.',
+        choices: {
+          convene_unity_council: 'Convene a Unity Council',
+          purge_disloyal_nobles: 'Purge the Disloyal Nobles',
+          offer_power_sharing_compact: 'Offer a Power-Sharing Compact',
+        },
+      },
+      bp_fractured_inherit_resolution: {
+        body: 'The crisis of authority and inheritance has reached its resolution. The political order of the kingdom — whether consolidated, shared, or fractured — reflects the choices made during this period of turmoil.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
+
+  // ============================================================
+  // Scenario-Derived: The Faithful Kingdom (Religious)
+  // ============================================================
+  sl_exp_faithful_kingdom: {
+    title: 'The Faithful Kingdom',
+    statusNote: 'The clergy\'s growing influence reshapes the kingdom, demanding choices about faith and governance.',
+    branchPoints: {
+      bp_faithful_kingdom_opening: {
+        body: 'The kingdom\'s deep religious roots bear unexpected fruit. The clergy, long a pillar of stability, now exerts influence that rivals the crown itself. Temples overflow with the devoted, religious festivals dominate the calendar, and the high clergy speaks with an authority that even nobles heed. But this piety comes at a cost — the military withers from neglect, merchants chafe under religious restrictions, and a rival-faith neighbor grows bold.',
+        choices: {
+          elevate_the_high_clergy: 'Elevate the High Clergy',
+          temper_clerical_influence: 'Temper Clerical Influence',
+          redirect_faith_to_charity: 'Redirect Faith to Charity',
+        },
+      },
+      bp_faithful_kingdom_mid: {
+        body: 'The relationship between crown and clergy has reached a defining moment. Religious fervor shapes every aspect of kingdom life — from taxation to justice to foreign relations. Pilgrims arrive in droves, the treasury swells with tithes and shrinks with temple-building, and neighboring realms watch this theocratic drift with a mixture of awe and alarm.',
+        choices: {
+          declare_state_orthodoxy: 'Declare State Orthodoxy',
+          embrace_religious_tolerance: 'Embrace Religious Tolerance',
+          weaponize_faith_against_rivals: 'Weaponize Faith Against Rivals',
+        },
+      },
+      bp_faithful_kingdom_resolution: {
+        body: 'The question of faith and governance has reached its conclusion. The kingdom\'s spiritual identity — whether orthodox, pluralistic, or militant — has been forged by the crown\'s choices during this era of religious ascendancy.',
+        choices: {
+          conclude_arc: 'Conclude the Matter',
+        },
+      },
+    },
+  },
 };
