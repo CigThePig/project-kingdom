@@ -355,6 +355,7 @@ export function createMerchantsGambitScenario(): GameState {
     // --- Persistent History ---
     persistentConsequences: [],
     activeTemporaryModifiers: [],
+    activeKingdomFeatures: [],
     pendingFollowUps: [],
     issuedDecrees: [],
     narrativePacing: createInitialPacingState(),

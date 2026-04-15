@@ -337,6 +337,7 @@ export function createFrozenMarchScenario(): GameState {
     // --- Persistent History ---
     persistentConsequences: [],
     activeTemporaryModifiers: [],
+    activeKingdomFeatures: [],
     pendingFollowUps: [],
     issuedDecrees: [],
     narrativePacing: createInitialPacingState(),
