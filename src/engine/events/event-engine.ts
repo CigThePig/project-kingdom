@@ -368,7 +368,7 @@ export function evaluateCondition(
       }
       // Check any region
       return state.regions.some(
-        (r) => r.loyalty !== undefined && r.loyalty < condition.threshold,
+        (r) => r.loyalty !== undefined && r.loyalty < condition.threshold!,
       );
     }
 

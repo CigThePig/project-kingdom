@@ -4,7 +4,6 @@
 
 import type {
   ClassMobilityEvent,
-  ConstructionProject,
   FoodState,
   KingdomCondition,
   MilitaryState,
@@ -23,7 +22,6 @@ import {
   ReligiousTolerance,
   TradeOpenness,
 } from '../types';
-import type { Season } from '../types';
 import {
   POP_BASE_BIRTH_RATE,
   POP_BASE_DEATH_RATE,

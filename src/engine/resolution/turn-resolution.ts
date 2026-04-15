@@ -6,9 +6,11 @@ import {
   ActionType,
   ActiveEvent,
   ConditionCardTrigger,
+  ConditionSeverity,
   ConflictState,
   ConstructionProject,
   CrownBarData,
+  EventCategory,
   EventSeverity,
   FailureCondition,
   FailureWarning,
@@ -28,12 +30,10 @@ import {
   StorylineStatus,
   TurnHistoryEntry,
   TurnState,
-  TradeOpenness,
 } from '../types';
 import {
   resolveEnvironmentTick,
   createInitialEnvironmentState,
-  type ConditionModifiers,
 } from '../systems/environment';
 import {
   createTurnLedger,
@@ -373,7 +373,7 @@ export function resolveTurn(
     updatedEnvironment.activeConditions,
     state.turn.turnNumber,
   );
-  let updatedEconomy = economicResult.economy;
+  const updatedEconomy = economicResult.economy;
   const economicModifiers = economicResult.economicModifiers;
 
   // Add economic conditions (TradeDisruption, MarketPanic) to environment.
@@ -401,7 +401,7 @@ export function resolveTurn(
     updatedEconomy.cyclePhase,
     state.turn.turnNumber,
   );
-  let phase1cRegions = regionalTickResult.regions;
+  const phase1cRegions = regionalTickResult.regions;
 
   // Add regional conditions to environment and card triggers.
   if (regionalTickResult.newConditions.length > 0) {
@@ -1597,15 +1597,23 @@ export function resolveTurn(
     definitionId: `evt_cond_${trigger.conditionType.toLowerCase()}_${trigger.severity.toLowerCase()}`,
     title: '',
     description: '',
-    category: trigger.eventCategory,
-    severity: trigger.eventSeverity,
+    category: EventCategory.Environment,
+    severity: trigger.severity === ConditionSeverity.Severe ? EventSeverity.Critical
+      : trigger.severity === ConditionSeverity.Moderate ? EventSeverity.Serious
+      : EventSeverity.Notable,
     choices: [],
     isResolved: false,
     choiceMade: null,
     turnSurfaced: nextTurnNumber,
     chainId: null,
     chainStep: null,
-    affectedRegionId: null,
+    affectedRegionId: trigger.regionId,
+    affectedClassId: null,
+    affectedNeighborId: null,
+    relatedStorylineId: null,
+    outcomeQuality: null,
+    isFollowUp: false,
+    followUpSourceId: null,
   }));
 
   const activeEvents = [...eventsWithFollowUps, ...newEvents, ...conditionActiveEvents];
