@@ -161,6 +161,8 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
       { type: 'turn_range', minTurn: 6 },
       { type: 'food_below', threshold: 150 },
       { type: 'season_is', season: Season.Autumn },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_crop_rotation' },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_irrigation_works' },
     ],
     weight: 1.0,
     chainId: null,

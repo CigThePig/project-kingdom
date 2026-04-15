@@ -57,6 +57,7 @@ function makeResolvedEvent(overrides: Partial<ActiveEvent> = {}): ActiveEvent {
     turnSurfaced: 1,
     affectedRegionId: null,
     affectedClassId: null,
+    affectedNeighborId: null,
     relatedStorylineId: null,
     outcomeQuality: null,
     isFollowUp: false,

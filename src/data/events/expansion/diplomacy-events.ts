@@ -302,6 +302,11 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
       { type: 'turn_range', minTurn: 11 },
       { type: 'neighbor_relationship_below', neighborId: 'neighbor_arenthal', threshold: 30 },
       { type: 'military_readiness_above', threshold: 40 },
+      { type: 'any_of', conditions: [
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_dip_diplomatic_incident:issue_formal_apology' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_dip_diplomatic_incident:demand_reciprocal_apology' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_dip_diplomatic_incident:downplay_the_incident' },
+      ]},
     ],
     weight: 1.2,
     chainId: null,
@@ -507,7 +512,7 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: 'neighbor_valdris',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_dip_diplomatic_marriage_offer',
@@ -529,7 +534,7 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: 'neighbor_arenthal',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_dip_joint_military_exercise',
@@ -554,6 +559,6 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__FRIENDLY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 ];

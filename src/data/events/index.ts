@@ -85,6 +85,7 @@ export const EVENT_POOL: EventDefinition[] = [
     triggerConditions: [
       { type: 'season_is', season: Season.Summer },
       { type: 'random_chance', probability: 0.2 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_crop_rotation' },
     ],
     weight: 1.2,
     chainId: null,
@@ -297,6 +298,8 @@ export const EVENT_POOL: EventDefinition[] = [
     category: EventCategory.Military,
     triggerConditions: [
       { type: 'military_readiness_below', threshold: 50 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_arms_commission' },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_royal_arsenal' },
     ],
     weight: 1.0,
     chainId: 'chain_equipment_crisis',

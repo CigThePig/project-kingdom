@@ -104,6 +104,8 @@ export const EXPANSION_FOOD_EVENTS: EventDefinition[] = [
       { type: 'season_is', season: Season.Summer },
       { type: 'turn_range', minTurn: 9 },
       { type: 'random_chance', probability: 0.2 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_crop_rotation' },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_exp_agricultural_modernization' },
     ],
     weight: 1.2,
     chainId: null,
@@ -133,6 +135,7 @@ export const EXPANSION_FOOD_EVENTS: EventDefinition[] = [
         { type: 'season_is', season: Season.Spring },
         { type: 'season_is', season: Season.Summer },
       ]},
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_exp_agricultural_modernization' },
     ],
     weight: 1.4,
     chainId: null,
@@ -221,6 +224,7 @@ export const EXPANSION_FOOD_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'population_below', threshold: 700 },
       { type: 'food_below', threshold: 80 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_exp_land_reform' },
     ],
     weight: 1.1,
     chainId: null,
@@ -274,6 +278,7 @@ export const EXPANSION_FOOD_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'neighbor_relationship_below', neighborId: 'neighbor_valdris', threshold: 35 },
       { type: 'food_below', threshold: 70 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_trade_agreement' },
     ],
     weight: 1.3,
     chainId: null,
