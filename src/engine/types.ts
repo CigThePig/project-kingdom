@@ -514,6 +514,15 @@ export interface RegionState {
   culturalIdentity: string; // internal culture ID
   strategicValue: number; // 0–100
   isOccupied: boolean;
+
+  // Expansion 5 — Regional Life (optional for backward compatibility)
+  localPopulation?: number;             // actual population count in this region
+  loyalty?: number;                     // 0–100, how attached the region is to the crown
+  infrastructure?: RegionalInfrastructure;
+  localConditions?: KingdomCondition[]; // regional conditions (drought, plague, banditry)
+  localEconomy?: RegionalEconomy;
+  borderRegion?: boolean;               // true = adjacent to a neighbor
+  terrainType?: TerrainType;
 }
 
 // --- Policy ---
@@ -1059,6 +1068,82 @@ export interface ConditionCardTrigger {
 }
 
 // ============================================================
+// Section 18d — Economic System (Expansion 2)
+// ============================================================
+
+export enum EconomicPhase {
+  Depression = 'Depression',           // momentum < -50
+  Recession = 'Recession',            // momentum -50 to -15
+  Stagnation = 'Stagnation',          // momentum -15 to +15
+  Growth = 'Growth',                   // momentum +15 to +50
+  Boom = 'Boom',                       // momentum > +50
+}
+
+export interface EconomicState {
+  economicMomentum: number;            // -100 to +100. Positive = expansion, negative = contraction
+  cyclePhase: EconomicPhase;           // derived from momentum thresholds
+  turnsInCurrentPhase: number;
+
+  // Scarcity pricing
+  resourceDemandPressure: Record<ResourceType, number>;  // 0–100, drives price multipliers
+  foodPriceMultiplier: number;         // 0.5–3.0, affects treasury/satisfaction
+
+  // Inflation
+  inflationRate: number;               // 0.0–0.5, erodes treasury purchasing power
+  cumulativeInflation: number;         // cumulative multiplier since game start (starts at 1.0)
+
+  // Market confidence
+  merchantConfidence: number;          // 0–100, separate from satisfaction — represents market outlook
+  tradeVolume: number;                 // 0–100, represents kingdom commercial activity level
+
+  // Trend tracking (previous turn values for delta calculation)
+  previousTradeIncome: number;
+  previousMerchantSatisfaction: number;
+}
+
+// Modifiers returned by the economic cycle tick, applied downstream in turn resolution.
+export interface EconomicModifiers {
+  treasuryMultiplier: number;          // from economic phase (0.7–1.3)
+  tradeMultiplier: number;             // from economic phase (0.6–1.4)
+  merchantSatisfactionDelta: number;   // from economic phase (-3 to +2)
+  inflationCostMultiplier: number;     // from cumulative inflation (1.0+)
+  foodPriceSatisfactionPenalty: number; // from food price multiplier (0 to -6)
+}
+
+// ============================================================
+// Section 18e — Regional Life (Expansion 5)
+// ============================================================
+
+export enum TerrainType {
+  Plains = 'Plains',                   // food bonus, vulnerable to cavalry
+  Hills = 'Hills',                     // mining bonus, defensive terrain
+  Forest = 'Forest',                   // wood bonus, ambush terrain
+  Coastal = 'Coastal',                 // trade bonus, naval vulnerability
+  Mountain = 'Mountain',               // stone bonus, near-impregnable defense, low food
+  River = 'River',                     // food + trade bonus, flood risk
+}
+
+export interface RegionalInfrastructure {
+  roads: number;                       // 0–100, affects trade throughput and military movement
+  walls: number;                       // 0–100, affects siege defense
+  granaries: number;                   // 0–100, affects local food storage capacity
+  sanitation: number;                  // 0–100, affects disease vulnerability
+}
+
+export interface RegionalEconomy {
+  productionOutput: number;            // actual output this turn (after all modifiers)
+  localTradeActivity: number;          // 0–100, affects merchant population
+  taxContribution: number;             // this region's share of kingdom tax revenue
+}
+
+// Card trigger for regional loyalty events (loyalty warnings, separatism, rebellion)
+export interface RegionalCardTrigger {
+  regionId: string;
+  type: 'loyalty_warning' | 'separatist_event' | 'rebellion' | 'infrastructure_decay';
+  loyalty: number;
+}
+
+// ============================================================
 // Section 19 — Save File & Main GameState
 // ============================================================
 
@@ -1085,6 +1170,9 @@ export interface GameState {
 
   // Environment & Health (Expansion 3)
   environment: EnvironmentState;
+
+  // Economic System (Expansion 2)
+  economy: EconomicState;
 
   // Causal Legibility (Expansion 6)
   causalLedger: CausalLedger;
