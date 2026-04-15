@@ -19,6 +19,7 @@ import { EXPANSION_REGION_EFFECTS } from './expansion/region-effects';
 import { EXPANSION_KINGDOM_EFFECTS } from './expansion/kingdom-effects';
 import { EXPANSION_CHAIN_EFFECTS } from './expansion/chain-effects';
 import { EXPANSION_FOLLOWUP_EFFECTS } from './expansion/followup-effects';
+import { CONDITION_EVENT_EFFECTS } from './condition-effects';
 
 export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffectDelta>> = {
   // ============================================================
@@ -1181,6 +1182,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   ...EXPANSION_KINGDOM_EFFECTS,
   ...EXPANSION_CHAIN_EFFECTS,
   ...EXPANSION_FOLLOWUP_EFFECTS,
+  ...CONDITION_EVENT_EFFECTS,
 };
 
 // ============================================================

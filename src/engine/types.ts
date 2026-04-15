@@ -922,7 +922,114 @@ export interface RulingStyleState {
 }
 
 // ============================================================
-// Section 17 — Save File & Main GameState
+// Section 18 — Environment & Health System (Expansion 3)
+// ============================================================
+
+export enum ConditionType {
+  // Environmental
+  Drought = 'Drought',
+  Flood = 'Flood',
+  HarshWinter = 'HarshWinter',
+  Blight = 'Blight',
+  BountifulHarvest = 'BountifulHarvest',
+  // Health
+  Plague = 'Plague',
+  Pox = 'Pox',
+  Famine = 'Famine',
+  Pestilence = 'Pestilence',
+  // Social (reserved for Expansion 4)
+  Banditry = 'Banditry',
+  Corruption = 'Corruption',
+  Unrest = 'Unrest',
+  CriminalUnderworld = 'CriminalUnderworld',
+  // Economic (reserved for Expansion 2)
+  TradeDisruption = 'TradeDisruption',
+  MarketPanic = 'MarketPanic',
+  // Positive
+  GoldenAge = 'GoldenAge',
+  HarvestFestival = 'HarvestFestival',
+  PilgrimageSeason = 'PilgrimageSeason',
+  MilitaryTriumph = 'MilitaryTriumph',
+}
+
+export enum ConditionSeverity {
+  Mild = 'Mild',
+  Moderate = 'Moderate',
+  Severe = 'Severe',
+}
+
+export interface ConditionEffect {
+  target: string;                      // e.g., 'food.productionModifier', 'treasury.expenseModifier'
+  operator: 'add' | 'multiply';
+  value: number;
+}
+
+export interface KingdomCondition {
+  id: string;
+  type: ConditionType;
+  severity: ConditionSeverity;
+  turnsActive: number;
+  turnsRemaining: number | null;       // null = until resolved by player action or system threshold
+  systemEffects: ConditionEffect[];    // what this condition does each turn
+  regionId: string | null;             // null = kingdom-wide, string = regional
+  canEscalate: boolean;                // whether this condition can worsen if unaddressed
+  escalatesTo: ConditionType | null;   // condition type of the escalated form
+}
+
+export interface EnvironmentState {
+  activeConditions: KingdomCondition[];
+  weatherSeverity: number;             // -50 to +50. Negative = harsh, positive = mild
+  droughtAccumulator: number;          // 0–100, rises in dry conditions
+  floodRisk: number;                   // 0–100, rises after heavy weather events
+  diseaseVulnerability: number;        // 0–100, rises with overcrowding/famine/war
+  sanitationLevel: number;             // 0–100, improved by civic construction/knowledge
+  plagueMemoryTurns: number;           // turns since last plague, affects population caution
+}
+
+// ============================================================
+// Section 18b — Causal Legibility System (Expansion 6)
+// ============================================================
+
+export interface CausalNode {
+  system: string;                      // 'food', 'treasury', 'population', 'military', etc.
+  description: string;                 // internal code, NOT player text: 'conscription_labor_loss'
+  numericDelta: number | null;         // the actual value change, if quantifiable
+}
+
+export interface CausalEntry {
+  cause: CausalNode;
+  effect: CausalNode;
+}
+
+export interface CausalChain {
+  id: string;
+  rootCause: CausalNode;
+  finalEffect: CausalNode;
+  intermediateSteps: CausalNode[];
+  totalMagnitude: number;              // abstract importance score for filtering
+  turnRecorded: number;
+}
+
+export interface CausalLedger {
+  currentTurnEntries: CausalEntry[];
+  currentTurnChains: CausalChain[];
+  recentChains: CausalChain[];         // last 4 turns, for advisor analysis
+}
+
+// ============================================================
+// Section 18c — Condition Card Trigger (bridges environment → events)
+// ============================================================
+
+export interface ConditionCardTrigger {
+  conditionId: string;
+  conditionType: ConditionType;
+  severity: ConditionSeverity;
+  triggerType: 'emergence' | 'escalation' | 'resolution';
+  regionId: string | null;
+}
+
+// ============================================================
+// Section 19 — Save File & Main GameState
 // ============================================================
 
 export interface GameState {
@@ -944,6 +1051,12 @@ export interface GameState {
   diplomacy: DiplomacyState;
   espionage: EspionageState;
   knowledge: KnowledgeState;
+
+  // Environment & Health (Expansion 3)
+  environment: EnvironmentState;
+
+  // Causal Legibility (Expansion 6)
+  causalLedger: CausalLedger;
 
   // Spatial
   regions: RegionState[];

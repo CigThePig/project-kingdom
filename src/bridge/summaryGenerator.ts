@@ -5,7 +5,7 @@ import type { PhaseDecisions, EffectHint, MonthDecision } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import { InteractionType } from '../engine/types';
-import type { RulingStyleState, StyleAxis } from '../engine/types';
+import type { RulingStyleState, StyleAxis, CausalLedger } from '../engine/types';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
@@ -303,4 +303,22 @@ export function generateMonthlySummaryData(
     legacyCards,
     updatedRulingStyle,
   };
+}
+
+/**
+ * Generates a short causal breakdown string from the current turn's chains.
+ * Returns null if no significant chains exist.
+ * Intended to be appended to summary narrative by the UI layer.
+ */
+export function generateCausalBreakdown(ledger: CausalLedger | undefined): string | null {
+  if (!ledger || ledger.currentTurnChains.length === 0) return null;
+  const sorted = [...ledger.currentTurnChains].sort(
+    (a, b) => b.totalMagnitude - a.totalMagnitude,
+  );
+  const top = sorted.slice(0, 3);
+  const lines = top.map(
+    (chain) =>
+      `${chain.rootCause.description} \u2192 ${chain.finalEffect.description}`,
+  );
+  return lines.join('; ');
 }

@@ -309,7 +309,7 @@ export const TRADE_INCOME_MULTIPLIER: Record<TradeOpenness, number> = {
 // Block 13 — Save & Failure Tracking (§13, §10.4)
 // ============================================================
 
-export const SAVE_SCHEMA_VERSION = 4;
+export const SAVE_SCHEMA_VERSION = 5;
 
 // Overthrow failure condition (§10.4): triggers when nobility intrigue risk is high
 // and any class is at or below the breaking point for consecutive turns.
@@ -763,3 +763,167 @@ export const ESPIONAGE_EXPOSURE_RELATIONSHIP_PENALTY = -12;
 
 // Tension ID added when espionage is discovered.
 export const ESPIONAGE_EXPOSURE_TENSION_ID = 'espionage_discovered';
+
+// ============================================================
+// Block 18 — Environment & Health System (Expansion 3)
+// ============================================================
+
+// --- Weather ---
+
+export const WEATHER_SEVERITY_MIN = -50;
+export const WEATHER_SEVERITY_MAX = 50;
+export const WEATHER_STARTING_SEVERITY = 0;
+
+// Seasonal bias: how weather drifts each season.
+export const WEATHER_SEASONAL_BIAS: Record<Season, number> = {
+  [Season.Spring]: 5,       // Mild, wet — flood risk
+  [Season.Summer]: -5,      // Hot, dry — drought risk
+  [Season.Autumn]: 0,       // Variable
+  [Season.Winter]: -15,     // Harsh — severe winter risk
+};
+
+// Random swing applied each turn (+/- this value).
+export const WEATHER_RANDOM_SWING = 15;
+
+// Maximum weather trend carry-forward from previous turn.
+export const WEATHER_TREND_CLAMP = 5;
+
+// Mean-reversion: multiplied by current severity to pull toward 0.
+export const WEATHER_MEAN_REVERSION = 0.1;
+
+// --- Drought ---
+
+// Per-turn accumulation when weatherSeverity < -10 in Summer/Autumn.
+export const DROUGHT_ACCUMULATION_RATE = 10;
+
+// Per-turn decay when not accumulating.
+export const DROUGHT_DECAY_RATE = 5;
+
+// Threshold for each drought severity.
+export const DROUGHT_MILD_THRESHOLD = 30;
+export const DROUGHT_MODERATE_THRESHOLD = 60;
+export const DROUGHT_SEVERE_THRESHOLD = 85;
+
+// Food production multiplier deltas per drought severity (applied as multiplier).
+export const DROUGHT_FOOD_MODIFIER_MILD = 0.80;        // -20%
+export const DROUGHT_FOOD_MODIFIER_MODERATE = 0.65;     // -35%
+export const DROUGHT_FOOD_MODIFIER_SEVERE = 0.50;       // -50%
+
+// Commoner satisfaction penalty per drought severity.
+export const DROUGHT_COMMONER_SAT_MILD = 0;
+export const DROUGHT_COMMONER_SAT_MODERATE = -2;
+export const DROUGHT_COMMONER_SAT_SEVERE = -4;
+
+// --- Flood ---
+
+// Per-turn accumulation when weatherSeverity > +15 in Spring.
+export const FLOOD_RISK_ACCUMULATION_RATE = 8;
+
+// Per-turn decay when not accumulating.
+export const FLOOD_RISK_DECAY_RATE = 4;
+
+// Threshold at which flood triggers.
+export const FLOOD_TRIGGER_THRESHOLD = 70;
+
+// Fraction of food reserves destroyed by flood.
+export const FLOOD_FOOD_RESERVE_DAMAGE = 0.15;
+
+// Region localConditionModifier penalty from flood damage.
+export const FLOOD_REGION_CONDITION_PENALTY = -0.15;
+
+// Next-season food production bonus (replenished farmland).
+export const FLOOD_NEXT_SEASON_FOOD_BONUS = 0.05;
+
+// --- Harsh Winter ---
+
+// Weather severity below which triggers harsh winter condition.
+export const HARSH_WINTER_WEATHER_THRESHOLD = -35;
+
+// Food consumption increase multiplier during harsh winter.
+export const HARSH_WINTER_FOOD_CONSUMPTION_MULTIPLIER = 1.20;
+
+// Military readiness decay multiplier during harsh winter.
+export const HARSH_WINTER_READINESS_DECAY_MULTIPLIER = 1.5;
+
+// --- Bountiful Harvest ---
+
+// Weather severity above which triggers bountiful harvest (Summer/Autumn, no drought).
+export const BOUNTIFUL_HARVEST_WEATHER_THRESHOLD = 20;
+
+// Food production multiplier during bountiful harvest.
+export const BOUNTIFUL_HARVEST_FOOD_MODIFIER = 1.30;    // +30%
+
+// Commoner satisfaction bonus during bountiful harvest.
+export const BOUNTIFUL_HARVEST_COMMONER_SAT_BONUS = 3;
+
+// Merchant confidence bonus during bountiful harvest.
+export const BOUNTIFUL_HARVEST_MERCHANT_SAT_BONUS = 2;
+
+// --- Disease & Plague ---
+
+// Starting disease vulnerability.
+export const DISEASE_VULNERABILITY_STARTING = 10;
+export const DISEASE_VULNERABILITY_MAX = 100;
+
+// Per-turn disease vulnerability changes from various sources.
+export const DISEASE_FAMINE_ACCUMULATION = 8;
+export const DISEASE_WAR_ACCUMULATION = 3;
+export const DISEASE_LOW_SANITATION_ACCUMULATION = 2;
+export const DISEASE_TRADE_OPENNESS_ACCUMULATION = 1;
+
+// Per-turn disease vulnerability reduction from protective factors.
+export const DISEASE_HEALING_ORDER_REDUCTION = 3;
+export const DISEASE_CIVIC_MILESTONE_REDUCTION = 2;
+export const DISEASE_NATURAL_DECAY = 1;
+
+// Plague emerges when diseaseVulnerability > this threshold.
+export const PLAGUE_TRIGGER_VULNERABILITY_THRESHOLD = 60;
+
+// Per-turn probability factor: (vulnerability - 40) * this = chance.
+export const PLAGUE_BASE_PROBABILITY_FACTOR = 0.01;
+
+// Turns of plague memory (reduced risk after a plague resolves).
+export const PLAGUE_MEMORY_IMMUNITY_TURNS = 8;
+
+// Death rate modifier per plague severity (future Expansion 1; also affects satisfaction now).
+export const PLAGUE_DEATH_RATE_MILD = 0.15;
+export const PLAGUE_DEATH_RATE_MODERATE = 0.30;
+export const PLAGUE_DEATH_RATE_SEVERE = 0.50;
+
+// Duration range [min, max] turns per plague severity.
+export const PLAGUE_DURATION_MILD: readonly [number, number] = [3, 5];
+export const PLAGUE_DURATION_MODERATE: readonly [number, number] = [4, 8];
+export const PLAGUE_DURATION_SEVERE: readonly [number, number] = [6, 12];
+
+// Satisfaction penalty per plague severity (across all classes).
+export const PLAGUE_STABILITY_PENALTY_MILD = -3;
+export const PLAGUE_STABILITY_PENALTY_MODERATE = -6;
+export const PLAGUE_STABILITY_PENALTY_SEVERE = -10;
+
+// --- Sanitation ---
+
+export const SANITATION_STARTING = 30;
+export const SANITATION_MIN = 0;
+export const SANITATION_MAX = 100;
+export const SANITATION_NATURAL_DECAY = 1;
+
+// --- Condition Escalation ---
+
+// Turns before unaddressed conditions are checked for escalation.
+export const CONDITION_ESCALATION_CHECK_TURNS = 4;
+
+// Probability of escalation per eligible check.
+export const CONDITION_ESCALATION_PROBABILITY = 0.4;
+
+// ============================================================
+// Block 19 — Causal Legibility System (Expansion 6)
+// ============================================================
+
+// Minimum absolute delta value to record a causal entry.
+export const CAUSAL_SIGNIFICANCE_THRESHOLD = 5;
+
+// How many turns of causal chain history to keep.
+export const CAUSAL_RECENT_TURNS_KEPT = 4;
+
+// Minimum total magnitude for a chain to be included in the ledger.
+export const CAUSAL_CHAIN_MIN_MAGNITUDE = 10;

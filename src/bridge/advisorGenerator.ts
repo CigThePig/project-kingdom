@@ -7,6 +7,16 @@ export interface AdvisorBriefing {
   lines: string[];
 }
 
+/** Map condition types to advisor warning text. */
+const CONDITION_ADVISOR_WARNINGS: Partial<Record<string, string>> = {
+  Drought: 'Drought conditions persist — crops suffer.',
+  Flood: 'Flooding threatens lowland settlements.',
+  HarshWinter: 'A harsh winter strains supplies and morale.',
+  Plague: 'Plague spreads through the populace.',
+  Famine: 'Famine grips the kingdom.',
+  Blight: 'Blight afflicts the fields.',
+};
+
 export function generateAdvisorBriefing(state: GameState): AdvisorBriefing {
   const warnings: string[] = [];
 
@@ -33,10 +43,35 @@ export function generateAdvisorBriefing(state: GameState): AdvisorBriefing {
     warnings.push('Revenue is falling. Consider revising tax policy.');
   }
 
+  // Active condition warnings from the environment system
+  if (state.environment) {
+    for (const condition of state.environment.activeConditions) {
+      const text = CONDITION_ADVISOR_WARNINGS[condition.type];
+      if (text && !warnings.includes(text)) {
+        warnings.push(text);
+      }
+    }
+  }
+
+  // Causal trend detection: if the same system appears as a root cause
+  // in 3+ recent chains, surface a trend warning.
+  if (state.causalLedger) {
+    const rootCauseCounts = new Map<string, number>();
+    for (const chain of state.causalLedger.recentChains) {
+      const system = chain.rootCause.system;
+      rootCauseCounts.set(system, (rootCauseCounts.get(system) ?? 0) + 1);
+    }
+    for (const [system, count] of rootCauseCounts) {
+      if (count >= 3) {
+        warnings.push(`Recurring pressure from ${system} — a pattern is forming.`);
+      }
+    }
+  }
+
   if (warnings.length === 0) {
     return { lines: ['The kingdom is stable. The court awaits your word.'] };
   }
 
-  // Cap at 3 most important warnings
-  return { lines: warnings.slice(0, 3) };
+  // Cap at 4 most important warnings (expanded from 3 to accommodate conditions)
+  return { lines: warnings.slice(0, 4) };
 }
