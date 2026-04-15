@@ -3,7 +3,7 @@
 
 import type { ActiveEvent, GameState, PendingFollowUp } from '../types';
 import type { EventDefinition } from './event-engine';
-import { evaluateCondition } from './event-engine';
+import { evaluateCondition, resolveNeighborId } from './event-engine';
 import { DEFAULT_MAX_STATE_RETRIES } from '../constants';
 
 /**
@@ -161,6 +161,7 @@ export function processDueFollowUps(
       turnSurfaced: currentTurn,
       affectedRegionId: definition.affectsRegion ? pickRegionId(state) : null,
       affectedClassId: definition.affectsClass,
+      affectedNeighborId: resolveNeighborId(definition.affectsNeighbor, state),
       relatedStorylineId: definition.relatedStorylineId,
       outcomeQuality: null,
       isFollowUp: true,

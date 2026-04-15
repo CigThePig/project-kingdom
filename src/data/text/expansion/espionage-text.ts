@@ -34,7 +34,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_double_agent_dilemma: {
     title: 'The Double Agent\'s Dilemma',
-    body: 'Your spymaster presents a delicate situation: one of your agents embedded in a foreign court has been approached to serve as a double agent. The opportunity could yield extraordinary intelligence, but the risks of exposure and disinformation are considerable.',
+    body: 'Your spymaster presents a delicate situation: one of your agents embedded in {neighbor}\'s court has been approached to serve as a double agent. The opportunity could yield extraordinary intelligence, but the risks of exposure and disinformation are considerable.',
     choices: {
       turn_agent_double: 'Accept the Double Role',
       extract_and_debrief: 'Extract and Debrief',
@@ -43,7 +43,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_foreign_spy_ring: {
     title: 'Foreign Spy Ring Discovered',
-    body: 'Counter-intelligence operatives have uncovered a network of Valdrian agents operating within the capital. The ring has been gathering information on troop deployments, fortification plans, and courtly alliances. Your advisors debate whether to crush the network outright or exploit it for your own ends.',
+    body: 'Counter-intelligence operatives have uncovered a network of agents from {neighbor} operating within the capital. The ring has been gathering information on troop deployments, fortification plans, and courtly alliances. Your advisors debate whether to crush the network outright or exploit it for your own ends.',
     choices: {
       dismantle_network: 'Dismantle the Network',
       surveil_and_exploit: 'Monitor and Exploit',
@@ -52,7 +52,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_blackmail_discovery: {
     title: 'Compromising Documents Uncovered',
-    body: 'Your agents have discovered documents revealing that a prominent noble has been secretly corresponding with foreign interests, promising favors in exchange for personal enrichment. The evidence is damning, and how you wield it will shape the balance of power at court.',
+    body: 'Your agents have discovered documents revealing that a prominent noble has been secretly corresponding with {neighbor}, promising favors in exchange for personal enrichment. The evidence is damning, and how you wield it will shape the balance of power at court.',
     choices: {
       confront_noble_privately: 'Confront Privately',
       use_leverage_quietly: 'Use as Leverage',
@@ -61,7 +61,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_intercepted_dispatches: {
     title: 'Intercepted Diplomatic Dispatches',
-    body: 'Your agents have intercepted sealed dispatches between Valdris and a minor border principality, detailing plans that could threaten Arenthal\'s southern trade routes. The contents are valuable to multiple parties, and how you share — or withhold — this intelligence will have diplomatic consequences.',
+    body: 'Your agents have intercepted sealed dispatches from {neighbor} to a minor border principality, detailing plans that could threaten regional trade routes. The contents are valuable to multiple parties, and how you share — or withhold — this intelligence will have diplomatic consequences.',
     choices: {
       share_with_arenthal: 'Share with Arenthal',
       confront_valdris: 'Confront Valdris Directly',
@@ -78,8 +78,8 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_exp_esp_defector_opportunity: {
-    title: 'An Arenthalian Defector',
-    body: 'A senior official from Arenthal\'s intelligence apparatus has made contact through back channels, offering to defect to your kingdom. The official claims to possess detailed knowledge of Arenthal\'s military capabilities and diplomatic strategy, but granting asylum will strain relations.',
+    title: 'A Defector from {neighbor}',
+    body: 'A senior official from {neighbor}\'s intelligence apparatus has made contact through back channels, offering to defect to your kingdom. The official claims to possess detailed knowledge of {neighbor}\'s military capabilities and diplomatic strategy, but granting asylum will strain relations.',
     choices: {
       grant_asylum: 'Grant Asylum',
       debrief_and_return: 'Debrief and Return',
@@ -92,7 +92,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_assassination_plot: {
     title: 'Assassination Plot Uncovered',
-    body: 'Your spymaster has uncovered a plot against the royal person — a conspiracy involving disaffected nobles and possibly foreign agents. The plotters have already procured poison and suborned members of the household guard. Swift action is required, though the scope of the conspiracy remains unclear.',
+    body: 'Your spymaster has uncovered a plot against the royal person — a conspiracy involving disaffected nobles and possibly agents of {neighbor}. The plotters have already procured poison and suborned members of the household guard. Swift action is required, though the scope of the conspiracy remains unclear.',
     choices: {
       preemptive_arrests: 'Order Preemptive Arrests',
       double_royal_guard: 'Double the Royal Guard',
@@ -101,7 +101,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_counter_espionage_raid: {
     title: 'Counter-Espionage Operation',
-    body: 'Intelligence has pinpointed a Valdrian safe house operating brazenly within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation\'s scale and diplomatic fallout require careful consideration.',
+    body: 'Intelligence has pinpointed a safe house operated by {neighbor} within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation\'s scale and diplomatic fallout require careful consideration.',
     choices: {
       full_scale_raid: 'Launch Full Raid',
       surgical_strike: 'Conduct Surgical Strike',
@@ -128,7 +128,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_secret_alliance_exposed: {
     title: 'Secret Alliance Brought to Light',
-    body: 'Your covert understanding with Arenthal — kept carefully hidden from Valdris — has been exposed through unknown means. Valdrian ambassadors are furious, and even Arenthal\'s diplomats are nervous about the revelation. The court must decide how to navigate this diplomatic crisis.',
+    body: 'Your covert understanding with {neighbor} — kept carefully hidden from rivals — has been exposed through unknown means. Foreign ambassadors are furious, and even {neighbor}\'s diplomats are nervous about the revelation. The court must decide how to navigate this diplomatic crisis.',
     choices: {
       publicly_confirm: 'Publicly Confirm the Alliance',
       deny_and_distance: 'Deny and Create Distance',
@@ -141,7 +141,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_enemy_infiltration: {
     title: 'Deep Enemy Infiltration',
-    body: 'The unthinkable has been confirmed: enemy operatives have penetrated the highest levels of the kingdom\'s administration. Critical military plans, treasury figures, and diplomatic correspondence have been flowing to hostile powers for months. The rot runs deep, and excising it will be painful.',
+    body: 'The unthinkable has been confirmed: operatives of {neighbor} have penetrated the highest levels of the kingdom\'s administration. Critical military plans, treasury figures, and diplomatic correspondence have been flowing to them for months. The rot runs deep, and excising it will be painful.',
     choices: {
       martial_law_purge: 'Declare Martial Law and Purge',
       targeted_counter_ops: 'Targeted Counter-Operations',
@@ -159,7 +159,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_military_secrets_stolen: {
     title: 'Military Secrets Stolen',
-    body: 'A breach of devastating proportions has occurred: detailed plans for the kingdom\'s frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to Arenthal. Winter\'s cover aided the thieves, and by now the intelligence may already be in enemy hands.',
+    body: 'A breach of devastating proportions has occurred: detailed plans for the kingdom\'s frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {neighbor}. Winter\'s cover aided the thieves, and by now the intelligence may already be in enemy hands.',
     choices: {
       change_all_plans: 'Overhaul All Defenses',
       hunt_the_thief: 'Hunt Down the Thief',

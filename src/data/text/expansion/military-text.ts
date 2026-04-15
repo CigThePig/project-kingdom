@@ -32,7 +32,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_cavalry_training: {
     title: 'Proposal for a Cavalry Academy',
-    body: 'Your master-at-arms argues that the kingdom\'s mounted forces lag behind those of neighboring realms. He proposes converting fertile pastureland into dedicated training grounds, a plan that would strengthen the cavalry but displease those who farm the land.',
+    body: 'Your master-at-arms argues that the kingdom\'s mounted forces lag behind those of {neighbor}. He proposes converting fertile pastureland into dedicated training grounds, a plan that would strengthen the cavalry but displease those who farm the land.',
     choices: {
       build_cavalry_academy: 'Build a Cavalry Academy',
       expand_existing_stables: 'Expand Existing Stables',
@@ -44,8 +44,8 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // 4. Siege Preparations
   // ============================================================
   evt_exp_mil_siege_preparations: {
-    title: 'Valdris Masses Near the Border',
-    body: 'Scouts confirm that Valdris has assembled siege engines and supply trains within striking distance of your southern fortifications. Your generals urge immediate preparations, but full mobilization would strain the treasury and alarm the populace.',
+    title: '{neighbor} Masses Near the Border',
+    body: 'Scouts confirm that {neighbor} has assembled siege engines and supply trains within striking distance of your southern fortifications. Your generals urge immediate preparations, but full mobilization would strain the treasury and alarm the populace.',
     choices: {
       full_siege_mobilization: 'Order Full Mobilization',
       reinforce_key_fortifications: 'Reinforce Key Fortifications',
@@ -96,8 +96,8 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // 8. Arms Deal with Arenthal
   // ============================================================
   evt_exp_mil_arms_deal: {
-    title: 'Arenthal Offers Arms',
-    body: 'Envoys from Arenthal propose a shipment of crossbows and plate armor at favorable terms. The deal would strengthen your forces and deepen ties with Arenthal, though Valdris may view such an arrangement as a provocation.',
+    title: '{neighbor} Offers Arms',
+    body: 'Envoys from {neighbor} propose a shipment of crossbows and plate armor at favorable terms. The deal would strengthen your forces and deepen ties with {neighbor}, though rivals may view such an arrangement as a provocation.',
     choices: {
       accept_arms_shipment: 'Accept the Shipment',
       negotiate_mutual_pact: 'Negotiate a Mutual Pact',
@@ -175,7 +175,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_intel_report: {
     title: 'Whispers from the Border',
-    body: 'Your spymaster presents a troubling intelligence briefing. Valdris has been conducting nighttime patrols along disputed territory and stockpiling timber suitable for siege construction. The activity may be routine, or it may signal darker intentions.',
+    body: 'Your spymaster presents a troubling intelligence briefing. {neighbor} has been conducting nighttime patrols along disputed territory and stockpiling timber suitable for siege construction. The activity may be routine, or it may signal darker intentions.',
     choices: {
       increase_border_watch: 'Increase the Border Watch',
       deploy_counter_intelligence: 'Deploy Counter-Intelligence',
@@ -201,7 +201,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_war_preparations: {
     title: 'The Drums of War',
-    body: 'Relations with Valdris have deteriorated beyond recovery. Your war council convenes in grim assembly, laying out the costs and consequences of full mobilization. Every path forward demands sacrifice; the only question is what kind.',
+    body: 'Relations with {neighbor} have deteriorated beyond recovery. Your war council convenes in grim assembly, laying out the costs and consequences of full mobilization. Every path forward demands sacrifice; the only question is what kind.',
     choices: {
       full_war_mobilization: 'Order Full War Mobilization',
       defensive_preparations_only: 'Prepare Defenses Only',
@@ -226,8 +226,8 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // 18. Strategic Alliance
   // ============================================================
   evt_exp_mil_strategic_alliance: {
-    title: 'Arenthal Proposes a Military Pact',
-    body: 'Arenthal\'s ambassador arrives with a formal proposal for a mutual defense treaty. The alliance would present a united front against Valdris, but binding your armies to another sovereign\'s wars is a commitment the nobility views with alarm.',
+    title: '{neighbor} Proposes a Military Pact',
+    body: '{neighbor}\'s ambassador arrives with a formal proposal for a mutual defense treaty. The alliance would present a united front against common threats, but binding your armies to another sovereign\'s wars is a commitment the nobility views with alarm.',
     choices: {
       formal_military_pact: 'Sign a Formal Pact',
       limited_cooperation: 'Agree to Limited Cooperation',

@@ -121,6 +121,12 @@ export interface EventDefinition {
    * affectedRegionId on the resulting ActiveEvent.
    */
   affectsRegion: boolean;
+  /**
+   * When non-null, the engine assigns this neighbor as the affectedNeighborId.
+   * Value can be a literal neighbor ID or '__HOSTILE__' / '__FRIENDLY__' / '__ANY__'
+   * for dynamic resolution at surfacing time.
+   */
+  affectsNeighbor?: string | null;
   /** Links this event to an active or soon-to-activate storyline. */
   relatedStorylineId: string | null;
   /**
@@ -350,6 +356,29 @@ function pickEligibleRegionId(state: GameState): string | null {
 }
 
 /**
+ * Resolves an affectsNeighbor directive to a concrete neighbor ID.
+ */
+export function resolveNeighborId(
+  directive: string | null | undefined,
+  state: GameState,
+): string | null {
+  if (!directive) return null;
+  if (directive.startsWith('neighbor_')) return directive;
+  const neighbors = state.diplomacy.neighbors;
+  if (neighbors.length === 0) return null;
+  switch (directive) {
+    case '__HOSTILE__':
+      return neighbors.reduce((a, b) => a.relationshipScore < b.relationshipScore ? a : b).id;
+    case '__FRIENDLY__':
+      return neighbors.reduce((a, b) => a.relationshipScore > b.relationshipScore ? a : b).id;
+    case '__ANY__':
+      return neighbors[Math.floor(Math.random() * neighbors.length)].id;
+    default:
+      return null;
+  }
+}
+
+/**
  * Constructs a fresh ActiveEvent instance from a definition.
  */
 function buildActiveEvent(
@@ -370,6 +399,7 @@ function buildActiveEvent(
     turnSurfaced: turnNumber,
     affectedRegionId: definition.affectsRegion ? pickEligibleRegionId(state) : null,
     affectedClassId: definition.affectsClass,
+    affectedNeighborId: resolveNeighborId(definition.affectsNeighbor, state),
     relatedStorylineId: definition.relatedStorylineId,
     outcomeQuality: null,
     isFollowUp: false,
@@ -524,6 +554,7 @@ export function advanceEventChains(
       turnSurfaced: turnNumber,
       affectedRegionId: nextDef.affectsRegion ? event.affectedRegionId : null,
       affectedClassId: nextDef.affectsClass,
+      affectedNeighborId: event.affectedNeighborId,
       relatedStorylineId: nextDef.relatedStorylineId,
       outcomeQuality: null,
       isFollowUp: false,
