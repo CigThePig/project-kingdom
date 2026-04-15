@@ -7,6 +7,7 @@ import type { EffectHint } from '../ui/types';
 import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
+import { NEIGHBOR_LABELS } from '../data/text/labels';
 
 // ============================================================
 // Shared utility — MechanicalEffectDelta → EffectHint[]
@@ -109,8 +110,14 @@ export function generateCrisisPhaseData(event: ActiveEvent): CrisisPhaseData {
   const def = EVENT_POOL.find((e) => e.id === event.definitionId)
     ?? FOLLOW_UP_POOL.find((e) => e.id === event.definitionId);
 
-  const title = textEntry?.title ?? 'CRISIS';
-  const body = textEntry?.body ?? 'The court faces an urgent matter requiring your decision.';
+  let title = textEntry?.title ?? 'CRISIS';
+  let body = textEntry?.body ?? 'The court faces an urgent matter requiring your decision.';
+
+  if (event.affectedNeighborId) {
+    const neighborName = NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId;
+    title = title.replace(/\{neighbor\}/g, neighborName);
+    body = body.replace(/\{neighbor\}/g, neighborName);
+  }
 
   const crisisCard: CrisisCardData = {
     eventId: event.id,

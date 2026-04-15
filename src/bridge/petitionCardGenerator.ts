@@ -7,6 +7,7 @@ import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
+import { NEIGHBOR_LABELS } from '../data/text/labels';
 
 // ============================================================
 // Card data type
@@ -29,6 +30,16 @@ export interface PetitionCardData {
   denyEffects: EffectHint[];
   /** All authored choices, preserving middle options for 3+ choice events. */
   allChoices: PetitionChoiceData[];
+}
+
+// ============================================================
+// Neighbor substitution helper
+// ============================================================
+
+function substituteNeighbor(text: string, event: ActiveEvent): string {
+  if (!event.affectedNeighborId) return text;
+  const name = NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId;
+  return text.replace(/\{neighbor\}/g, name);
 }
 
 // ============================================================
@@ -68,8 +79,8 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
       cards.push({
         eventId: event.id,
         definitionId: event.definitionId,
-        title: textEntry.title,
-        body: textEntry.body,
+        title: substituteNeighbor(textEntry.title, event),
+        body: substituteNeighbor(textEntry.body, event),
         grantChoiceId: onlyChoice.choiceId,
         denyChoiceId: onlyChoice.choiceId,
         grantEffects: onlyEffects,
@@ -90,8 +101,8 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
     cards.push({
       eventId: event.id,
       definitionId: event.definitionId,
-      title: textEntry.title,
-      body: textEntry.body,
+      title: substituteNeighbor(textEntry.title, event),
+      body: substituteNeighbor(textEntry.body, event),
       grantChoiceId: grantChoice.choiceId,
       denyChoiceId: denyChoice.choiceId,
       grantEffects: mechDeltaToEffectHints(choiceEffects[grantChoice.choiceId] ?? {}),
@@ -128,8 +139,8 @@ export function generateNotificationCards(events: ActiveEvent[]): NotificationCa
     cards.push({
       eventId: event.id,
       definitionId: event.definitionId,
-      title: textEntry.title,
-      body: textEntry.body,
+      title: substituteNeighbor(textEntry.title, event),
+      body: substituteNeighbor(textEntry.body, event),
       acknowledgeChoiceId: def.choices[0].choiceId,
     });
   }

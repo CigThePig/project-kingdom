@@ -112,7 +112,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_foreign_grain_offer: {
     title: 'Foreign Grain Merchants Arrive',
-    body: 'A delegation of merchants from a neighboring kingdom has arrived at court with an enticing offer: surplus grain at favorable prices. They hint at the possibility of establishing a longer-term supply arrangement, though some advisors caution against dependency on foreign food sources.',
+    body: 'A delegation of merchants from {neighbor} has arrived at court with an enticing offer: surplus grain at favorable prices. They hint at the possibility of establishing a longer-term supply arrangement, though some advisors caution against dependency on foreign food sources.',
     choices: {
       accept_bulk_purchase: 'Accept Bulk Purchase',
       negotiate_ongoing_supply: 'Negotiate Ongoing Supply',
@@ -165,7 +165,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_supply_agreement_renewal: {
     title: 'Grain Supply Agreement Due',
-    body: 'The standing grain supply agreement with the neighboring kingdom is approaching its renewal date. The foreign merchants have sent word that they are willing to continue the arrangement, though they seek to renegotiate certain terms in their favor.',
+    body: 'The standing grain supply agreement with {neighbor} is approaching its renewal date. Their merchants have sent word that they are willing to continue the arrangement, though they seek to renegotiate certain terms in their favor.',
     choices: {
       renew_agreement: 'Renew the Agreement',
       renegotiate_terms: 'Renegotiate Terms',
@@ -196,7 +196,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Diplomacy (2) ---
   evt_neighbor_trade_overture: {
     title: 'Foreign Trade Overture',
-    body: 'An envoy from a neighboring kingdom has arrived bearing proposals for expanded trade agreements. The terms appear favorable, though the nobility bristles at the growing influence of merchant-class wealth that foreign trade enables. Accepting would deepen economic ties and mutual dependency with a foreign power.',
+    body: 'An envoy from {neighbor} has arrived bearing proposals for expanded trade agreements. The terms appear favorable, though the nobility bristles at the growing influence of merchant-class wealth that foreign trade enables. Accepting would deepen economic ties and mutual dependency with {neighbor}.',
     choices: {
       accept_trade_terms: 'Accept the Terms',
       propose_modifications: 'Propose Modifications',
@@ -205,7 +205,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_tension_escalation: {
     title: 'Border Tensions Escalate',
-    body: 'Incidents along the kingdom\'s border have intensified. Disputed territorial claims, coupled with provocative military posturing by a neighbor, have raised the prospect of open conflict. The court awaits the crown\'s judgment.',
+    body: 'Incidents along the kingdom\'s border have intensified. Disputed territorial claims, coupled with provocative military posturing by {neighbor}, have raised the prospect of open conflict. The court awaits the crown\'s judgment.',
     choices: {
       reinforce_border_garrisons: 'Reinforce Border Garrisons',
       dispatch_diplomatic_envoy: 'Dispatch a Diplomatic Envoy',
@@ -296,7 +296,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Espionage (2) ---
   evt_foreign_agent_detected: {
     title: 'Foreign Agent Detected',
-    body: 'Intelligence operatives have identified a suspected foreign agent operating within the kingdom. The individual appears to be gathering information on military deployments and economic capacity. The intelligence services await orders.',
+    body: 'Intelligence operatives have identified a suspected agent of {neighbor} operating within the kingdom. The individual appears to be gathering information on military deployments and economic capacity. The intelligence services await orders.',
     choices: {
       arrest_and_interrogate: 'Arrest and Interrogate',
       monitor_covertly: 'Monitor Covertly',
@@ -469,7 +469,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_merchant_foreign_traders: {
     title: 'Foreign Traders Seek Access',
-    body: 'A delegation of foreign merchants has arrived at the capital, seeking permission to establish permanent trading posts within the kingdom. They offer exotic goods and new commercial connections, though their presence would compete with established local traders.',
+    body: 'A delegation of merchants from {neighbor} has arrived at the capital, seeking permission to establish permanent trading posts within the kingdom. They offer exotic goods and new commercial connections, though their presence would compete with established local traders.',
     choices: {
       welcome_foreign_merchants: 'Welcome Foreign Merchants',
       negotiate_trade_terms: 'Negotiate Terms',
@@ -805,7 +805,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
 
   evt_foreign_grain_dependency: {
     title: 'Kingdom Grows Reliant on Foreign Grain',
-    body: 'The emergency grain purchases that averted famine have created an uncomfortable dependency. Foreign merchants now supply a significant portion of the kingdom\'s food, and they have begun raising prices. Advisors warn that this reliance leaves the realm vulnerable to supply disruptions, trade disputes, or deliberate economic pressure from neighboring kingdoms.',
+    body: 'The emergency grain purchases that averted famine have created an uncomfortable dependency. Merchants from {neighbor} now supply a significant portion of the kingdom\'s food, and they have begun raising prices. Advisors warn that this reliance leaves the realm vulnerable to supply disruptions, trade disputes, or deliberate economic pressure.',
     choices: {
       invest_in_domestic_agriculture: 'Invest in Domestic Agriculture',
       negotiate_long_term_supply: 'Negotiate a Long-Term Supply Agreement',
@@ -919,7 +919,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_trade_war_tariffs: {
     title: 'Trade Dispute',
-    body: 'A neighboring kingdom has imposed harsh new tariffs on goods crossing its borders. The kingdom\'s merchants report significant losses, and trade caravans sit idle at border crossings. The neighbor\'s motives appear to be both economic and political — a calculated provocation that demands a measured response.',
+    body: '{neighbor} has imposed harsh new tariffs on goods crossing its borders. The kingdom\'s merchants report significant losses, and trade caravans sit idle at border crossings. Their motives appear to be both economic and political — a calculated provocation that demands a measured response.',
     choices: {
       retaliatory_tariffs: 'Impose Retaliatory Tariffs',
       negotiate_terms: 'Negotiate New Terms',
@@ -928,7 +928,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_trade_war_escalation: {
     title: 'Trade War Deepens',
-    body: 'The trade dispute has escalated beyond tariffs into something resembling economic warfare. Commerce between the two kingdoms has ground to a halt, prices of imported goods have soared, and merchants on both sides suffer. The longer this continues, the deeper the damage to the kingdom\'s prosperity.',
+    body: 'The trade dispute with {neighbor} has escalated beyond tariffs into something resembling economic warfare. Commerce has ground to a halt, prices of imported goods have soared, and merchants on both sides suffer. The longer this continues, the deeper the damage to the kingdom\'s prosperity.',
     choices: {
       embargo_neighbor: 'Impose Full Embargo',
       seek_alternative_markets: 'Seek Alternative Markets',
@@ -937,7 +937,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_trade_war_resolution: {
     title: 'Trade Settlement',
-    body: 'Both kingdoms have exhausted their appetite for economic conflict. Envoys from the neighboring court have arrived with proposals for resolution, and the kingdom\'s own merchants plead for an end to the disruption. The terms of any settlement will determine the balance of commercial power for years to come.',
+    body: 'Both kingdoms have exhausted their appetite for economic conflict. Envoys from {neighbor} have arrived with proposals for resolution, and the kingdom\'s own merchants plead for an end to the disruption. The terms of any settlement will determine the balance of commercial power for years to come.',
     choices: {
       favorable_treaty: 'Press for Favorable Treaty',
       mutual_concessions: 'Offer Mutual Concessions',
@@ -1092,7 +1092,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_foreign_invasion_rumor: {
     title: 'Armies on the Horizon',
-    body: 'Border patrols have reported unusual troop movements in a neighboring kingdom. The scale and direction of the mobilization suggest preparations for an incursion into the realm\'s territory. Whether this is genuine preparation for war or a calculated display of force remains uncertain, but the threat cannot be ignored.',
+    body: 'Border patrols have reported unusual troop movements from {neighbor}. The scale and direction of the mobilization suggest preparations for an incursion into the realm\'s territory. Whether this is genuine preparation for war or a calculated display of force remains uncertain, but the threat cannot be ignored.',
     choices: {
       mobilize_defenses: 'Mobilize the Defenses',
       dispatch_scouts: 'Dispatch Forward Scouts',
@@ -1404,7 +1404,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Chain 2: Border Incursion ---
   evt_border_incursion_root: {
     title: 'Border Incursion',
-    body: 'Raiders from the northern rival kingdom have crossed the border in force. Villages near the frontier report burned farms, stolen livestock, and displaced families. The incursion is too organized to be mere banditry — this bears the hallmarks of state-sanctioned aggression. The court demands a response.',
+    body: 'Raiders from {neighbor} have crossed the border in force. Villages near the frontier report burned farms, stolen livestock, and displaced families. The incursion is too organized to be mere banditry — this bears the hallmarks of state-sanctioned aggression. The court demands a response.',
     choices: {
       retaliate_with_force: 'Retaliate with Force',
       send_diplomatic_envoy: 'Send a Diplomatic Envoy',
@@ -1413,7 +1413,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_campaign_victory: {
     title: 'Campaign Victory',
-    body: 'The retaliatory campaign has succeeded. The kingdom\'s forces drove the raiders back across the border, secured key positions, and extracted a formal apology from the northern court. The victory strengthens the kingdom\'s reputation and sends a clear message about the cost of aggression.',
+    body: 'The retaliatory campaign has succeeded. The kingdom\'s forces drove the raiders back across the border, secured key positions, and extracted a formal apology from {neighbor}. The victory strengthens the kingdom\'s reputation and sends a clear message about the cost of aggression.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_border_campaign_stalemate: {
@@ -1435,12 +1435,12 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_envoy_success: {
     title: 'Envoy Secures Ceasefire',
-    body: 'The diplomatic envoy has secured a ceasefire with the northern kingdom. The agreement includes a withdrawal of raiders, compensation for damages, and a commitment to formal border negotiations. Diplomacy has prevailed where force might have failed.',
+    body: 'The diplomatic envoy has secured a ceasefire with {neighbor}. The agreement includes a withdrawal of raiders, compensation for damages, and a commitment to formal border negotiations. Diplomacy has prevailed where force might have failed.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_border_envoy_hostage: {
     title: 'Envoy Taken Hostage',
-    body: 'The diplomatic mission has ended in disaster — the envoy has been taken hostage by the northern kingdom. Ransom demands have arrived at court, and the hostage-takers threaten harm if their conditions are not met. The kingdom\'s honor and the envoy\'s life hang in the balance.',
+    body: 'The diplomatic mission has ended in disaster — the envoy has been taken hostage by {neighbor}. Ransom demands have arrived at court, and the hostage-takers threaten harm if their conditions are not met. The kingdom\'s honor and the envoy\'s life hang in the balance.',
     choices: {
       pay_ransom: 'Pay the Ransom',
       rescue_mission: 'Launch a Rescue Mission',
@@ -1449,7 +1449,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_envoy_terms: {
     title: 'Unfavorable Peace Terms Offered',
-    body: 'The northern kingdom has offered peace terms, but they are unfavorable — territorial concessions, trade advantages, and a public acknowledgment of the kingdom\'s "provocation." The terms are humiliating but would end the immediate crisis and prevent further bloodshed.',
+    body: '{neighbor} has offered peace terms, but they are unfavorable — territorial concessions, trade advantages, and a public acknowledgment of the kingdom\'s "provocation." The terms are humiliating but would end the immediate crisis and prevent further bloodshed.',
     choices: {
       accept_unfavorable_terms: 'Accept the Terms',
       reject_terms: 'Reject the Terms',
@@ -1803,7 +1803,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Chain 10: Foreign Ambassador ---
   evt_foreign_ambassador_root: {
     title: 'Foreign Ambassador Arrives',
-    body: 'An ambassador from the southern empire has arrived at court bearing a formal proposal. The empire offers a partnership — trade agreements, mutual defense, and cultural exchange — but the terms suggest the empire views the kingdom as a junior partner. The court is divided on how to respond.',
+    body: 'An ambassador from {neighbor} has arrived at court bearing a formal proposal. {neighbor} offers a partnership — trade agreements, mutual defense, and cultural exchange — but the terms suggest they view the kingdom as a junior partner. The court is divided on how to respond.',
     choices: {
       accept_proposal: 'Accept the Proposal',
       counter_propose: 'Counter-Propose',
@@ -1812,12 +1812,12 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_ambassador_alliance_benefit: {
     title: 'Alliance Bears Fruit',
-    body: 'The alliance with the southern empire has begun to yield tangible benefits. Trade routes are more secure, goods flow more freely, and the kingdom\'s merchants report increased profits from access to imperial markets. The partnership, whatever its political costs, is proving economically sound.',
+    body: 'The alliance with {neighbor} has begun to yield tangible benefits. Trade routes are more secure, goods flow more freely, and the kingdom\'s merchants report increased profits from access to new markets. The partnership, whatever its political costs, is proving economically sound.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_ambassador_dependency: {
     title: 'Growing Dependency Concerns',
-    body: 'Advisors have raised alarms about the kingdom\'s growing reliance on the southern empire. Key imports now flow exclusively through imperial channels, and the empire has begun using this leverage to influence domestic policy. The crown must decide whether to renegotiate from a position of weakness or accept the new reality.',
+    body: 'Advisors have raised alarms about the kingdom\'s growing reliance on {neighbor}. Key imports now flow exclusively through their channels, and {neighbor} has begun using this leverage to influence domestic policy. The crown must decide whether to renegotiate from a position of weakness or accept the new reality.',
     choices: {
       renegotiate_terms: 'Renegotiate Terms',
       accept_dependency: 'Accept the Arrangement',
@@ -1825,12 +1825,12 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_ambassador_counter_accepted: {
     title: 'Counter-Proposal Accepted',
-    body: 'The southern empire has accepted the kingdom\'s counter-proposal. The revised terms are more favorable — a true partnership of equals, with balanced trade provisions and mutual obligations. Diplomats on both sides express cautious optimism about the new arrangement.',
+    body: '{neighbor} has accepted the kingdom\'s counter-proposal. The revised terms are more favorable — a true partnership of equals, with balanced trade provisions and mutual obligations. Diplomats on both sides express cautious optimism about the new arrangement.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_ambassador_counter_rejected: {
     title: 'Counter-Proposal Rejected',
-    body: 'The southern empire has rejected the kingdom\'s counter-proposal with barely concealed displeasure. The ambassador warns that the empire\'s patience is not infinite and that continued resistance will have consequences. The court must decide how to proceed in the face of imperial pressure.',
+    body: '{neighbor} has rejected the kingdom\'s counter-proposal with barely concealed displeasure. The ambassador warns that their patience is not infinite and that continued resistance will have consequences. The court must decide how to proceed in the face of external pressure.',
     choices: {
       concede_to_terms: 'Concede to Their Terms',
       stand_firm: 'Stand Firm',
@@ -1839,7 +1839,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_ambassador_trade_embargo: {
     title: 'Trade Embargo Imposed',
-    body: 'The southern empire has imposed a formal trade embargo on the kingdom in retaliation for the diplomatic rejection. Imperial merchants have withdrawn, border crossings are restricted, and goods that once flowed freely are now contraband. The economic impact is immediate and severe.',
+    body: '{neighbor} has imposed a formal trade embargo on the kingdom in retaliation for the diplomatic rejection. Their merchants have withdrawn, border crossings are restricted, and goods that once flowed freely are now contraband. The economic impact is immediate and severe.',
     choices: {
       seek_alternative_partners: 'Seek Alternative Partners',
       retaliate_economically: 'Retaliate Economically',
@@ -1848,7 +1848,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_ambassador_respect: {
     title: 'Rejection Earns Respect',
-    body: 'The kingdom\'s firm rejection of the imperial proposal, backed by visible military strength, has earned a grudging respect from the southern empire. The ambassador departed with formal courtesy, and intelligence suggests the empire has revised its assessment of the kingdom upward. Sometimes strength speaks louder than diplomacy.',
+    body: 'The kingdom\'s firm rejection of the proposal, backed by visible military strength, has earned a grudging respect from {neighbor}. The ambassador departed with formal courtesy, and intelligence suggests they have revised their assessment of the kingdom upward. Sometimes strength speaks louder than diplomacy.',
     choices: { acknowledge: 'Acknowledged' },
   },
 

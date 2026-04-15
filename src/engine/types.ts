@@ -618,6 +618,7 @@ export interface ActiveEvent {
   turnSurfaced: number;
   affectedRegionId: string | null;
   affectedClassId: PopulationClass | null;
+  affectedNeighborId: string | null;
   relatedStorylineId: string | null;
   outcomeQuality: OutcomeQuality | null; // determined when choice is resolved; null if pending
   isFollowUp: boolean; // true if this event arose from a prior choice
