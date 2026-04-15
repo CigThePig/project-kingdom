@@ -132,6 +132,7 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'neighbor_relationship_below', neighborId: 'neighbor_arenthal', threshold: 40 },
       { type: 'turn_range', minTurn: 9 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_trade_agreement' },
     ],
     weight: 1.2,
     chainId: null,

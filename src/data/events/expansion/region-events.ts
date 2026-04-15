@@ -66,6 +66,8 @@ export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'neighbor_relationship_below', neighborId: 'neighbor_valdris', threshold: 40 },
       { type: 'random_chance', probability: 0.4 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_trade_agreement' },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_trade_subsidies' },
     ],
     weight: 1.2,
     chainId: null,
@@ -172,6 +174,7 @@ export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
         { type: 'neighbor_relationship_below', neighborId: 'neighbor_valdris', threshold: 35 },
       ]},
       { type: 'military_readiness_below', threshold: 50 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_fortify_borders' },
     ],
     weight: 1.3,
     chainId: null,

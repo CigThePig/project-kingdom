@@ -17,6 +17,10 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'military_readiness_below', threshold: 55 },
       { type: 'random_chance', probability: 0.3 },
+      { type: 'any_of', conditions: [
+        { type: 'neighbor_relationship_below', neighborId: 'neighbor_arenthal', threshold: 45 },
+        { type: 'neighbor_relationship_below', neighborId: 'neighbor_valdris', threshold: 45 },
+      ]},
     ],
     weight: 0.8,
     chainId: null,
@@ -44,6 +48,7 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
       { type: 'treasury_above', threshold: 300 },
       { type: 'turn_range', minTurn: 4 },
       { type: 'random_chance', probability: 0.25 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_arms_commission' },
     ],
     weight: 1.0,
     chainId: null,
@@ -98,6 +103,11 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'neighbor_relationship_below', neighborId: 'neighbor_valdris', threshold: 25 },
       { type: 'military_readiness_below', threshold: 40 },
+      { type: 'any_of', conditions: [
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_mil_intel_report:increase_border_watch' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_mil_intel_report:deploy_counter_intelligence' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_mil_intel_report:file_the_report' },
+      ]},
     ],
     weight: 1.4,
     chainId: null,
@@ -235,6 +245,12 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'turn_range', minTurn: 5 },
       { type: 'random_chance', probability: 0.25 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_fortify_borders' },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_advanced_fortifications' },
+      { type: 'any_of', conditions: [
+        { type: 'neighbor_relationship_below', neighborId: 'neighbor_arenthal', threshold: 45 },
+        { type: 'neighbor_relationship_below', neighborId: 'neighbor_valdris', threshold: 45 },
+      ]},
     ],
     weight: 0.9,
     chainId: null,
@@ -431,6 +447,11 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'neighbor_relationship_below', neighborId: 'neighbor_valdris', threshold: 20 },
       { type: 'turn_range', minTurn: 10 },
+      { type: 'any_of', conditions: [
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_mil_intel_report:increase_border_watch' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_mil_intel_report:deploy_counter_intelligence' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_mil_intel_report:file_the_report' },
+      ]},
     ],
     weight: 1.5,
     chainId: null,
@@ -517,6 +538,7 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
       { type: 'treasury_above', threshold: 200 },
       { type: 'turn_range', minTurn: 6 },
       { type: 'random_chance', probability: 0.2 },
+      { type: 'consequence_tag_absent', consequenceTag: 'decree:decree_arms_commission' },
     ],
     weight: 0.7,
     chainId: null,
