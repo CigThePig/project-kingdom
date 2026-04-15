@@ -339,6 +339,14 @@ export function resolveTurn(
       null,
     );
   }
+  // Apply ongoing effects from permanent kingdom features (no expiration).
+  for (const feature of stateAfterActions.activeKingdomFeatures) {
+    stateAfterActions = applyMechanicalEffectDelta(
+      stateAfterActions,
+      feature.ongoingEffect,
+      null,
+    );
+  }
   const tempModifierStabilityDelta = stateAfterActions.stability.value - stabilityBeforeModifiers;
   stateAfterActions = {
     ...stateAfterActions,
@@ -1744,6 +1752,7 @@ export function resolveTurn(
     consecutiveTurnsOverthrowRisk: nextConsecutiveTurnsOverthrowRisk,
     persistentConsequences: updatedPersistentConsequences,
     activeTemporaryModifiers: stateAfterActions.activeTemporaryModifiers,
+    activeKingdomFeatures: stateAfterActions.activeKingdomFeatures,
     pendingFollowUps: followUpResult.remainingFollowUps,
     narrativePacing: updatedNarrativePacing,
     resolvedStorylineIds: allResolvedStorylineIds,

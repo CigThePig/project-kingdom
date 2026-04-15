@@ -339,6 +339,7 @@ export function createFaithfulKingdomScenario(): GameState {
     // --- Persistent History ---
     persistentConsequences: [],
     activeTemporaryModifiers: [],
+    activeKingdomFeatures: [],
     pendingFollowUps: [],
     issuedDecrees: [],
     narrativePacing: createInitialPacingState(),

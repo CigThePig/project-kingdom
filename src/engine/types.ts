@@ -585,6 +585,18 @@ export interface PersistentConsequence {
 }
 
 /**
+ * A permanent kingdom improvement established by decree or event choice.
+ * Applies an ongoing mechanical effect every turn without expiring.
+ */
+export interface KingdomFeature {
+  id: string;
+  sourceTag: string;
+  turnEstablished: number;
+  ongoingEffect: MechanicalEffectDelta;
+  category: 'infrastructure' | 'military' | 'diplomatic' | 'cultural' | 'economic';
+}
+
+/**
  * A time-limited effect applied each turn until it expires.
  * Created by event/storyline choices that produce ongoing consequences.
  */
@@ -967,6 +979,9 @@ export interface GameState {
 
   // Temporary modifiers from event/storyline choices (applied each turn, expire after N turns)
   activeTemporaryModifiers: TemporaryModifier[];
+
+  // Permanent kingdom features established by decrees and event choices (applied each turn, never expire)
+  activeKingdomFeatures: KingdomFeature[];
 
   // Follow-up events scheduled by prior choices
   pendingFollowUps: PendingFollowUp[];

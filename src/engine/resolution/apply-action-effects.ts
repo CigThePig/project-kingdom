@@ -19,6 +19,7 @@ import {
   GameState,
   IntelligenceFundingLevel,
   IssuedDecree,
+  KingdomFeature,
   KnowledgeBranch,
   MilitaryPosture,
   MilitaryRecruitmentStance,
@@ -43,6 +44,7 @@ import { STORYLINE_POOL } from '../../data/storylines/index';
 import { applyDiplomaticActionEffect as applyNeighborRelDelta } from '../systems/diplomacy';
 import { applyEventChoiceEffects, applyStorylineBranchEffects } from '../events/apply-event-effects';
 import { recordBranchDecision } from '../events/storyline-engine';
+import { KINGDOM_FEATURE_REGISTRY } from '../../data/kingdom-features/index';
 import {
   CONSTRUCTION_DEFAULT_TURNS,
   DECREE_EFFECTS,
@@ -325,11 +327,29 @@ function applyDecreeEffect(state: GameState, action: QueuedAction): GameState {
     tag: `decree:${action.actionDefinitionId}`,
   };
 
-  return {
+  let finalState = {
     ...stateAfterEffects,
     issuedDecrees: [...stateAfterEffects.issuedDecrees, issuedRecord],
     persistentConsequences: [...stateAfterEffects.persistentConsequences, consequence],
   };
+
+  // 5. Create a kingdom feature if this decree has a registry entry.
+  const featureDef = KINGDOM_FEATURE_REGISTRY[consequence.tag];
+  if (featureDef) {
+    const feature: KingdomFeature = {
+      id: `kf-${featureDef.featureId}-t${state.turn.turnNumber}`,
+      sourceTag: consequence.tag,
+      turnEstablished: state.turn.turnNumber,
+      ongoingEffect: featureDef.ongoingEffect,
+      category: featureDef.category,
+    };
+    finalState = {
+      ...finalState,
+      activeKingdomFeatures: [...finalState.activeKingdomFeatures, feature],
+    };
+  }
+
+  return finalState;
 }
 
 function applyPolicyChangeEffect(state: GameState, action: QueuedAction): GameState {
@@ -670,6 +690,22 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
     ...updatedState,
     persistentConsequences: [...updatedState.persistentConsequences, consequence],
   };
+
+  // Create a kingdom feature if this event choice has a registry entry.
+  const featureDef = KINGDOM_FEATURE_REGISTRY[consequence.tag];
+  if (featureDef) {
+    const feature: KingdomFeature = {
+      id: `kf-${featureDef.featureId}-t${state.turn.turnNumber}`,
+      sourceTag: consequence.tag,
+      turnEstablished: state.turn.turnNumber,
+      ongoingEffect: featureDef.ongoingEffect,
+      category: featureDef.category,
+    };
+    updatedState = {
+      ...updatedState,
+      activeKingdomFeatures: [...updatedState.activeKingdomFeatures, feature],
+    };
+  }
 
   // Create a temporary modifier if the choice specifies one.
   const modifierSpec = EVENT_CHOICE_TEMPORARY_MODIFIERS[event.definitionId]?.[choiceId];

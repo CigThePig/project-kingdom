@@ -345,6 +345,7 @@ export function createDefaultScenario(): GameState {
     // --- Persistent History ---
     persistentConsequences: [],
     activeTemporaryModifiers: [],
+    activeKingdomFeatures: [],
     pendingFollowUps: [],
     issuedDecrees: [],
     narrativePacing: createInitialPacingState(),
