@@ -6,7 +6,6 @@ import type {
   ConditionCardTrigger,
   ConditionEffect,
   EnvironmentState,
-  EspionageState,
   KingdomCondition,
   PolicyState,
   PopulationState,
@@ -14,7 +13,6 @@ import type {
 import {
   ConditionSeverity,
   ConditionType,
-  IntelligenceFundingLevel,
   PopulationClass,
   TaxationLevel,
   TradeOpenness,

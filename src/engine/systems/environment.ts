@@ -5,7 +5,6 @@
 import type {
   ConditionCardTrigger,
   ConditionEffect,
-  ConditionType,
   EnvironmentState,
   FaithCultureState,
   FoodState,
@@ -19,6 +18,7 @@ import type {
 } from '../types';
 import {
   ConditionSeverity,
+  ConditionType,
   KnowledgeBranch,
   PopulationClass,
   ReligiousOrderType,
@@ -42,7 +42,6 @@ import {
   DROUGHT_FOOD_MODIFIER_MILD,
   DROUGHT_FOOD_MODIFIER_MODERATE,
   DROUGHT_FOOD_MODIFIER_SEVERE,
-  DROUGHT_COMMONER_SAT_MILD,
   DROUGHT_COMMONER_SAT_MODERATE,
   DROUGHT_COMMONER_SAT_SEVERE,
   FLOOD_RISK_ACCUMULATION_RATE,
@@ -192,7 +191,7 @@ export function updateFloodRisk(
 export function updateDiseaseVulnerability(
   current: number,
   food: FoodState,
-  population: PopulationState,
+  _population: PopulationState,
   policies: PolicyState,
   knowledge: KnowledgeState,
   sanitationLevel: number,
@@ -655,8 +654,8 @@ export function resolveEnvironmentTick(
   season: Season,
   food: FoodState,
   population: PopulationState,
-  regions: RegionState[],
-  military: MilitaryState,
+  _regions: RegionState[],
+  _military: MilitaryState,
   policies: PolicyState,
   knowledge: KnowledgeState,
   faithCulture: FaithCultureState,
