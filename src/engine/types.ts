@@ -330,6 +330,36 @@ export interface ClassState {
 
 export type PopulationState = Record<PopulationClass, ClassState>;
 
+// --- Population Dynamics (Expansion 1) ---
+
+export interface PopulationDynamicsState {
+  birthRateModifier: number;           // kingdom-wide, 0.8–1.2, affected by food/faith/stability
+  deathRateModifier: number;           // kingdom-wide, 0.8–1.5, affected by disease/famine/war
+  migrationPressure: number;           // -100 to +100. Positive = inflow, negative = outflow
+  pendingMobility: ClassMobilityEvent[];
+  housingCapacity: number;             // derived from regions + construction
+  currentTotalPopulation: number;      // cached sum of all class populations
+  recentBirthSurplus: number;          // rolling 4-turn sum of net births
+  recentDeathSurplus: number;          // rolling 4-turn sum of net deaths
+  consecutiveTurnsIntelNone: number;   // for CriminalUnderworld emergence check
+}
+
+export interface ClassMobilityEvent {
+  fromClass: PopulationClass;
+  toClass: PopulationClass;
+  count: number;
+  reason: string;                      // internal code: 'merchant_prosperity', 'conscription', etc.
+}
+
+// Card trigger for population events (migration, overcrowding, mobility)
+export interface PopulationCardTrigger {
+  type: 'migration_inflow' | 'migration_petition' | 'migration_crisis'
+    | 'overcrowding_petition' | 'overcrowding_crisis'
+    | 'merchant_titles' | 'conscription_harvest' | 'clergy_exodus'
+    | 'population_boom' | 'population_decline';
+  magnitude: number;                   // for severity determination
+}
+
 // --- Resources ---
 
 export interface ResourceStockState {
@@ -1043,6 +1073,7 @@ export interface GameState {
 
   // Population
   population: PopulationState;
+  populationDynamics: PopulationDynamicsState;
 
   // Systems
   military: MilitaryState;

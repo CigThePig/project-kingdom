@@ -13,6 +13,7 @@ import {
   FailureCondition,
   FailureWarning,
   GameState,
+  IntelligenceFundingLevel,
   IntelligenceOperationType,
   IntelligenceReport,
   KnowledgeBranch,
@@ -141,6 +142,8 @@ import {
   initiateConflict,
   applyConflictConsequences,
 } from '../systems/military';
+import { resolvePopulationGrowth } from '../systems/population-dynamics';
+import { resolveSocialFabric } from '../systems/social-fabric';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../../data/events/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
@@ -282,10 +285,12 @@ export function resolveTurn(
     stateWithAcceptedProposals.activeConflicts.length,
     state.turn.turnNumber,
     Math.random(),
+    stateWithAcceptedProposals.stability.value,
+    stateWithAcceptedProposals.espionage,
   );
   let updatedEnvironment = environmentResult.environment;
   const conditionModifiers = environmentResult.modifiers;
-  const conditionCardTriggers = environmentResult.conditionCards;
+  let conditionCardTriggers = environmentResult.conditionCards;
 
   // ---- Phase 1: Income and Production ----
   // Compute all regional outputs in one pass; reused by downstream calculations.
@@ -354,9 +359,11 @@ export function resolveTurn(
     getTradeBonus(stateAfterActions.knowledge),
   );
 
-  // Apply condition modifiers to trade income (Phase 0b environment effects).
+  // Apply condition modifiers to trade income (Phase 0b environment + social fabric effects).
   const conditionAdjustedTradeIncome = tradeIncomePostAction * conditionModifiers.tradeIncomeMultiplier;
-  const incomeBreakdownPostAction = calculateIncome(taxationIncomePostAction, conditionAdjustedTradeIncome, 0);
+  // Apply treasury income multiplier from social conditions (e.g. Corruption, CriminalUnderworld).
+  const adjustedTaxation = taxationIncomePostAction * conditionModifiers.treasuryIncomeMultiplier;
+  const incomeBreakdownPostAction = calculateIncome(adjustedTaxation, conditionAdjustedTradeIncome, 0);
 
   // Record trade income loss from conditions to causal ledger.
   const tradeLossFromConditions = tradeIncomePostAction - conditionAdjustedTradeIncome;
@@ -500,6 +507,9 @@ export function resolveTurn(
   // Apply condition satisfaction modifiers (Phase 0b environment effects).
   satisfactionDeltas[PopulationClass.Commoners] += conditionModifiers.commonerSatisfactionDelta;
   satisfactionDeltas[PopulationClass.Merchants] += conditionModifiers.merchantSatisfactionDelta;
+  satisfactionDeltas[PopulationClass.Nobility] += conditionModifiers.nobilitySatisfactionDelta;
+  satisfactionDeltas[PopulationClass.Clergy] += conditionModifiers.clergySatisfactionDelta;
+  satisfactionDeltas[PopulationClass.MilitaryCaste] += conditionModifiers.militaryCasteSatisfactionDelta;
 
   const populationAfterDeltas = applyPopulationSatisfactionDeltas(
     stateAfterActions.population,
@@ -513,6 +523,69 @@ export function resolveTurn(
       populationAfterDeltas[PopulationClass.Nobility],
     ),
   };
+
+  // ---- Phase 4b: Population Growth (Expansion 1) ----
+  const popGrowthResult = resolvePopulationGrowth(
+    updatedPopulation,
+    stateAfterActions.populationDynamics,
+    updatedFood,
+    stateAfterActions.faithCulture.faithLevel,
+    stateAfterActions.stability.value,
+    stateAfterActions.policies,
+    stateAfterActions.military,
+    updatedEnvironment.activeConditions,
+    stateAfterActions.regions,
+    stateAfterActions.activeConflicts.length > 0,
+  );
+  updatedPopulation = popGrowthResult.population;
+  let updatedPopulationDynamics = popGrowthResult.dynamics;
+
+  // Record significant population changes to causal ledger.
+  const totalPopBefore = Object.values(stateAfterActions.population).reduce((s, c) => s + c.population, 0);
+  const totalPopAfter = Object.values(updatedPopulation).reduce((s, c) => s + c.population, 0);
+  maybeRecord(ledger, 'population', 'growth_and_death', 'population', 'total_changed', totalPopAfter - totalPopBefore);
+  if (Math.abs(updatedPopulationDynamics.migrationPressure) > 30) {
+    maybeRecord(ledger, 'governance', 'migration_pressure', 'population', 'migration_flow', updatedPopulationDynamics.migrationPressure);
+  }
+
+  // ---- Phase 4c: Social Fabric (Expansion 4) ----
+  const socialFabricResult = resolveSocialFabric(
+    updatedPopulation,
+    stateAfterActions.stability.value,
+    stateAfterActions.policies,
+    updatedEnvironment,
+    stateAfterActions.activeConflicts.length > 0,
+    state.turn.turnNumber,
+    updatedPopulationDynamics.consecutiveTurnsIntelNone,
+  );
+
+  // Apply class interaction satisfaction deltas.
+  for (const cls of Object.values(PopulationClass)) {
+    const interactionDelta = socialFabricResult.satisfactionDeltas[cls];
+    if (interactionDelta !== 0) {
+      updatedPopulation = {
+        ...updatedPopulation,
+        [cls]: {
+          ...updatedPopulation[cls],
+          satisfaction: clamp(updatedPopulation[cls].satisfaction + interactionDelta, 0, 100),
+        },
+      };
+    }
+  }
+
+  // Add newly emerged social conditions to the environment.
+  if (socialFabricResult.newConditions.length > 0) {
+    updatedEnvironment = {
+      ...updatedEnvironment,
+      activeConditions: [...updatedEnvironment.activeConditions, ...socialFabricResult.newConditions],
+    };
+    conditionCardTriggers = [...conditionCardTriggers, ...socialFabricResult.conditionCards];
+
+    // Record social condition emergence to causal ledger.
+    for (const cond of socialFabricResult.newConditions) {
+      maybeRecord(ledger, 'social_fabric', `${cond.type}_emerged`, 'stability', 'social_condition', -10);
+    }
+  }
 
   // ---- Phase 5: Military, Diplomacy, Intelligence ----
   const moraleDelta = calculateMoraleDelta(
@@ -639,7 +712,8 @@ export function resolveTurn(
       networkStrengthDeltas,
     ),
     counterIntelligenceLevel: clamp(
-      stateAfterActions.espionage.counterIntelligenceLevel + counterIntelDelta,
+      stateAfterActions.espionage.counterIntelligenceLevel + counterIntelDelta
+        + conditionModifiers.counterIntelligenceDelta,
       0,
       100,
     ),
@@ -1440,12 +1514,14 @@ export function resolveTurn(
     treasury: updatedTreasury,
     food: updatedFood,
     population: updatedPopulation,
+    populationDynamics: updatedPopulationDynamics,
     military: updatedMilitary,
     stability: updatedStability,
     faithCulture: updatedFaithCulture,
     diplomacy: updatedDiplomacy,
     espionage: updatedEspionage,
     regions: updatedRegions,
+    environment: updatedEnvironment,
   };
   const newlyResolvedStorylineIds: string[] = [];
   const storylineConsequences: PersistentConsequence[] = [];
@@ -1825,6 +1901,15 @@ export function resolveTurn(
     state.causalLedger ?? createEmptyLedger(),
   );
 
+  // ---- Phase 11 bookkeeping: update intel none counter (Expansion 4) ----
+  const nextIntelNoneTurns = stateAfterActions.policies.intelligenceFundingLevel === IntelligenceFundingLevel.None
+    ? updatedPopulationDynamics.consecutiveTurnsIntelNone + 1
+    : 0;
+  updatedPopulationDynamics = {
+    ...updatedPopulationDynamics,
+    consecutiveTurnsIntelNone: nextIntelNoneTurns,
+  };
+
   // Assemble the complete next game state.
   const nextState: GameState = {
     turn: nextTurn,
@@ -1832,6 +1917,7 @@ export function resolveTurn(
     food: constructionFood,
     resources: workingResources,
     population: updatedPopulation,
+    populationDynamics: updatedPopulationDynamics,
     military: constructionMilitary,
     stability: constructionStability,
     faithCulture: constructionFaithCulture,

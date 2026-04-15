@@ -25,6 +25,8 @@ import { EXPANSION_KINGDOM_EVENTS } from './expansion/kingdom-events';
 import { EXPANSION_CHAIN_EVENTS } from './expansion/chain-events';
 import { EXPANSION_FOLLOWUP_EVENTS } from './expansion/followup-events';
 import { CONDITION_EVENT_POOL } from './condition-events';
+import { SOCIAL_CONDITION_EVENT_POOL } from './social-condition-events';
+import { POPULATION_EVENT_POOL } from './population-events';
 
 export const EVENT_POOL: EventDefinition[] = [
   // ============================================================
@@ -4399,4 +4401,6 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
   // Condition Events (Phase 0b environment system)
   // ============================================================
   ...CONDITION_EVENT_POOL,
+  ...SOCIAL_CONDITION_EVENT_POOL,
+  ...POPULATION_EVENT_POOL,
 ];
