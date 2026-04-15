@@ -264,6 +264,114 @@ export const DECREE_CATEGORY_LABELS: Record<DecreeCategory, string> = {
   [DecreeCategory.Social]: 'Social Decree',
 };
 
+export const DECREE_DISPLAY_NAMES: Record<string, string> = {
+  // Economic — Market Chain
+  decree_market_charter: 'Grant Market Charter',
+  decree_trade_guild_expansion: 'Expand Trade Guilds',
+  decree_merchant_republic_charter: 'Charter Merchant Republic',
+  // Economic — Trade Subsidies Chain
+  decree_trade_subsidies: 'Subsidize Trade Routes',
+  decree_trade_monopoly: 'Establish Trade Monopoly',
+  decree_international_trade_empire: 'Proclaim International Trade Empire',
+  // Economic — Emergency
+  decree_emergency_levy: 'Impose Emergency Levy',
+  // Military — Fortification Chain
+  decree_fortify_borders: 'Fortify Border Outposts',
+  decree_integrated_defense_network: 'Build Integrated Defense Network',
+  decree_fortress_kingdom: 'Declare Fortress Kingdom',
+  // Military — Armaments Chain
+  decree_arms_commission: 'Commission New Armaments',
+  decree_royal_arsenal: 'Establish Royal Arsenal',
+  decree_war_machine_industry: 'Industrialize War Production',
+  // Military — Mobilization
+  decree_general_mobilization: 'Order General Mobilization',
+  // Civic — Infrastructure Chain
+  decree_road_improvement: 'Improve Royal Roads',
+  decree_provincial_highway_system: 'Build Provincial Highways',
+  decree_kingdom_transit_network: 'Establish Kingdom Transit Network',
+  // Civic — Administration Chain
+  decree_census: 'Conduct Kingdom Census',
+  decree_administrative_reform: 'Enact Administrative Reform',
+  decree_royal_bureaucracy: 'Establish Royal Bureaucracy',
+  decree_centralized_governance: 'Centralize Royal Governance',
+  // Cultural
+  decree_call_festival: 'Call a Grand Festival',
+  // Religious — Investment Chain
+  decree_invest_religious_order: 'Invest in Religious Order',
+  decree_expand_religious_authority: 'Expand Religious Authority',
+  decree_theocratic_council: 'Convene Theocratic Council',
+  // Religious — Suppression Chain
+  decree_suppress_heresy: 'Suppress Heterodox Movements',
+  decree_inquisitorial_authority: 'Establish Inquisitorial Authority',
+  decree_religious_unification: 'Decree Religious Unification',
+  // Diplomatic — Envoy Chain
+  decree_diplomatic_envoy: 'Dispatch Diplomatic Envoy',
+  decree_permanent_embassy: 'Establish Permanent Embassy',
+  decree_diplomatic_supremacy: 'Pursue Diplomatic Supremacy',
+  // Diplomatic — Marriage Chain
+  decree_trade_agreement: 'Propose Trade Agreement',
+  decree_royal_marriage: 'Arrange Royal Marriage',
+  decree_dynasty_alliance: 'Forge Dynasty Alliance Network',
+  decree_imperial_confederation: 'Propose Imperial Confederation',
+  // Food — Granary Chain
+  decree_public_granary: 'Establish Public Granaries',
+  decree_regional_food_distribution: 'Organize Regional Food Distribution',
+  decree_kingdom_breadbasket: 'Launch Kingdom Breadbasket Program',
+  // Food — Military Rations Chain
+  decree_military_ration_reform: 'Reform Military Rations',
+  decree_seasonal_reserve_mandate: 'Mandate Seasonal Food Reserves',
+  decree_agricultural_trade_compact: 'Negotiate Agricultural Trade Compact',
+  // Food — Harvest
+  decree_harvest_tithe_exemption: 'Waive Harvest Tithe',
+  // Social — Labor Chain
+  decree_labor_rights: 'Proclaim Labor Protections',
+  decree_workers_guild_charter: "Charter Workers' Guilds",
+  decree_social_contract: 'Enact Social Contract Reform',
+  // Standalone
+  decree_land_redistribution: 'Order Land Redistribution',
+  decree_crop_rotation: 'Implement Crop Rotation',
+  decree_irrigation_works: 'Commission Irrigation Works',
+  decree_advanced_fortifications: 'Build Advanced Fortifications',
+  decree_elite_training_program: 'Establish Elite Training Program',
+  decree_tax_code_reform: 'Reform the Tax Code',
+  decree_provincial_governance: 'Establish Provincial Governance',
+  decree_harbor_expansion: 'Expand Harbor Facilities',
+  decree_trade_fleet_commission: 'Commission a Trade Fleet',
+  decree_university_charter: 'Charter a Royal University',
+  decree_diplomatic_academy: 'Found a Diplomatic Academy',
+  decree_engineering_corps: 'Establish Engineering Corps',
+  decree_medical_reforms: 'Institute Medical Reforms',
+  // Expansion — Espionage Chain
+  decree_exp_spy_network: 'Establish Spy Network',
+  decree_exp_intelligence_bureau: 'Found Intelligence Bureau',
+  decree_exp_shadow_council: 'Convene the Shadow Council',
+  // Expansion — Education Chain
+  decree_exp_village_schools: 'Establish Village Schools',
+  decree_exp_provincial_academies: 'Found Provincial Academies',
+  decree_exp_university_system: 'Establish Royal University System',
+  // Expansion — Agriculture Chain
+  decree_exp_land_reform: 'Enact Land Reform',
+  decree_exp_irrigation_authority: 'Create Irrigation Authority',
+  decree_exp_agricultural_modernization: 'Agricultural Modernization Program',
+  // Expansion — Justice Chain
+  decree_exp_circuit_courts: 'Establish Circuit Courts',
+  decree_exp_common_law: 'Codify Common Law',
+  decree_exp_supreme_tribunal: 'Found the Supreme Tribunal',
+  // Expansion — Standalone
+  decree_exp_trade_caravan: 'Commission Trade Caravan',
+  decree_exp_mint_coinage: 'Mint New Coinage',
+  decree_exp_levy_militia: 'Levy Provincial Militia',
+  decree_exp_war_engineers: 'Commission War Engineers',
+  decree_exp_infrastructure_audit: 'Infrastructure Audit',
+  decree_exp_anti_corruption_campaign: 'Anti-Corruption Campaign',
+  decree_exp_interfaith_council: 'Convene Interfaith Council',
+  decree_exp_blessing_ceremony: 'Royal Blessing Ceremony',
+  decree_exp_peace_envoy: 'Dispatch Peace Envoy',
+  decree_exp_cultural_exchange_program: 'Cultural Exchange Program',
+  decree_exp_emergency_grain: 'Emergency Grain Distribution',
+  decree_exp_public_works: 'Public Works Program',
+};
+
 export const CONSTRUCTION_CATEGORY_LABELS: Record<ConstructionCategory, string> = {
   [ConstructionCategory.Economic]: 'Economic Structure',
   [ConstructionCategory.Military]: 'Military Fortification',

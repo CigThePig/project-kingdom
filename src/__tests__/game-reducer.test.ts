@@ -45,7 +45,7 @@ describe('gameReducer', () => {
       completedConstructionIds: [],
     } as unknown as TurnResolutionResult;
 
-    const result = gameReducer(initial, { type: 'TURN_RESOLVED', result: mockResult });
+    const result = gameReducer(initial, { type: 'TURN_RESOLVED', result: mockResult, decisions: [] });
     expect(result.isGameOver).toBe(true);
     expect(result.gameOverConditions).toEqual([FailureCondition.Famine]);
   });
@@ -68,7 +68,7 @@ describe('gameReducer', () => {
       completedConstructionIds: [],
     } as unknown as TurnResolutionResult;
 
-    const result = gameReducer(initial, { type: 'TURN_RESOLVED', result: mockResult });
+    const result = gameReducer(initial, { type: 'TURN_RESOLVED', result: mockResult, decisions: [] });
     expect(result.isGameOver).toBe(false);
     expect(result.gameOverConditions).toEqual([]);
   });

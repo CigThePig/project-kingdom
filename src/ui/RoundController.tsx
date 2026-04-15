@@ -351,7 +351,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       };
 
       const result = resolveTurn(stateWithActions, applyActionEffects, ctx.state.eventHistory);
-      ctx.dispatch({ type: 'TURN_RESOLVED', result });
+      ctx.dispatch({ type: 'TURN_RESOLVED', result, decisions: accumulatedDecisions });
 
       // If failure conditions triggered, signal game over instead of cycling.
       if (result.triggeredFailureConditions.length > 0) {

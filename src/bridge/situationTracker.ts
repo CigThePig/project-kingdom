@@ -6,6 +6,7 @@ import { StorylineStatus, FailureCondition } from '../engine/types';
 import type { GameState } from '../engine/types';
 import type { ActiveSituation } from '../ui/types';
 import { NEIGHBOR_LABELS, REGION_LABELS } from '../data/text/labels';
+import { KINGDOM_FEATURE_REGISTRY } from '../data/kingdom-features/index';
 import { CONFLICT_PHASE_LABELS, FAILURE_CONDITION_LABELS } from '../data/text/labels';
 import { CONSTRUCTION_CATEGORY_LABELS, STORYLINE_CATEGORY_LABELS } from '../data/text/labels';
 
@@ -159,6 +160,22 @@ export function compileActiveSituations(state: GameState): ActiveSituation[] {
       title: categoryLabel,
       statusLines,
       urgency,
+    });
+  }
+
+  // 7. Kingdom features (established improvements)
+  for (const feature of state.activeKingdomFeatures) {
+    const def = KINGDOM_FEATURE_REGISTRY[feature.sourceTag];
+    if (!def) continue;
+    situations.push({
+      id: `feature_${feature.id}`,
+      type: 'kingdom_feature',
+      title: def.title,
+      statusLines: [
+        def.description,
+        `Established season ${feature.turnEstablished}`,
+      ],
+      urgency: 'low' as const,
     });
   }
 
