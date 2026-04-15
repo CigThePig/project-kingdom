@@ -26,6 +26,7 @@ import { createInitialRulingStyleState } from '../../engine/systems/ruling-style
 import { createInitialEnvironmentState } from '../../engine/systems/environment';
 import { createEmptyLedger } from '../../engine/systems/causal-ledger';
 import { createInitialPopulationDynamicsState } from '../../engine/systems/population-dynamics';
+import { createInitialEconomicState } from '../../engine/systems/economic-cycle';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -40,6 +41,7 @@ import {
   ResourceType,
   Season,
   TaxationLevel,
+  TerrainType,
   TradeOpenness,
 } from '../../engine/types';
 
@@ -87,6 +89,14 @@ export function createDefaultScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 50,
       isOccupied: false,
+      // Expansion 5 — Regional Life
+      localPopulation: 12000,
+      loyalty: 60,
+      infrastructure: { roads: 30, walls: 20, granaries: 25, sanitation: 20 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 30, taxContribution: 0 },
+      borderRegion: false,
+      terrainType: TerrainType.Plains,
     },
     {
       id: 'region_ironvale',
@@ -98,6 +108,13 @@ export function createDefaultScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 60,
       isOccupied: false,
+      localPopulation: 5000,
+      loyalty: 55,
+      infrastructure: { roads: 20, walls: 25, granaries: 15, sanitation: 18 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 25, taxContribution: 0 },
+      borderRegion: false,
+      terrainType: TerrainType.Hills,
     },
     {
       id: 'region_timbermark',
@@ -109,6 +126,13 @@ export function createDefaultScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 40,
       isOccupied: false,
+      localPopulation: 7000,
+      loyalty: 55,
+      infrastructure: { roads: 20, walls: 15, granaries: 18, sanitation: 15 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 20, taxContribution: 0 },
+      borderRegion: true,
+      terrainType: TerrainType.Forest,
     },
   ];
 
@@ -369,6 +393,9 @@ export function createDefaultScenario(): GameState {
     // --- Scenario ---
     scenarioId: DEFAULT_SCENARIO_ID,
     environment: createInitialEnvironmentState(),
+    economy: createInitialEconomicState(
+      SATISFACTION_STARTING[PopulationClass.Merchants],
+    ),
     causalLedger: createEmptyLedger(),
   };
 }

@@ -110,4 +110,26 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
       encourage_competition: 'Encourage Productive Competition',
     },
   },
+
+  // --- 11. Loyalty Warning ---
+  evt_exp_reg_loyalty_warning: {
+    title: 'Discontent in the Provinces',
+    body: 'Reports from a distant region paint a troubling picture: the local populace speaks openly of the crown\'s neglect, and the loyalty of provincial leaders wavers. Taxes are collected grudgingly, royal decrees are met with foot-dragging, and the governor warns that patience is wearing thin.',
+    choices: {
+      send_envoy: 'Send a Royal Envoy',
+      increase_investment: 'Increase Provincial Investment',
+      ignore_complaints: 'Ignore the Complaints',
+    },
+  },
+
+  // --- 12. Separatist Threat ---
+  evt_exp_reg_separatist_threat: {
+    title: 'Separatist Rumblings',
+    body: 'A province has crossed from mere discontent into dangerous territory. Local lords and influential merchants openly discuss breaking away from the kingdom, and separatist pamphlets circulate in the markets. The provincial garrison\'s loyalty is uncertain, and delay may embolden the movement further.',
+    choices: {
+      negotiate_concessions: 'Negotiate Concessions',
+      military_presence: 'Establish Military Presence',
+      grant_autonomy: 'Grant Regional Autonomy',
+    },
+  },
 };

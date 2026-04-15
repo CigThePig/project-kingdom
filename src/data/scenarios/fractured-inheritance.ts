@@ -13,6 +13,7 @@ import {
   POPULATION_STARTING,
   RESOURCE_STARTING_EXTRACTION_RATES,
   RESOURCE_STARTING_STOCKPILES,
+  SATISFACTION_STARTING,
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
@@ -21,6 +22,7 @@ import { createInitialRulingStyleState } from '../../engine/systems/ruling-style
 import { createInitialEnvironmentState } from '../../engine/systems/environment';
 import { createEmptyLedger } from '../../engine/systems/causal-ledger';
 import { createInitialPopulationDynamicsState } from '../../engine/systems/population-dynamics';
+import { createInitialEconomicState } from '../../engine/systems/economic-cycle';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -35,6 +37,7 @@ import {
   ResourceType,
   Season,
   TaxationLevel,
+  TerrainType,
   TradeOpenness,
 } from '../../engine/types';
 
@@ -81,6 +84,14 @@ export function createFracturedInheritanceScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 50,
       isOccupied: false,
+      // Expansion 5 — Regional Life
+      localPopulation: 12000,
+      loyalty: 40,
+      infrastructure: { roads: 20, walls: 15, granaries: 18, sanitation: 15 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 30, taxContribution: 0 },
+      borderRegion: false,
+      terrainType: TerrainType.Plains,
     },
     {
       id: 'region_ironvale',
@@ -92,6 +103,13 @@ export function createFracturedInheritanceScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 60,
       isOccupied: false,
+      localPopulation: 5000,
+      loyalty: 35,
+      infrastructure: { roads: 12, walls: 18, granaries: 10, sanitation: 12 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 25, taxContribution: 0 },
+      borderRegion: false,
+      terrainType: TerrainType.Hills,
     },
     {
       id: 'region_timbermark',
@@ -103,6 +121,13 @@ export function createFracturedInheritanceScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 40,
       isOccupied: false,
+      localPopulation: 7000,
+      loyalty: 45,
+      infrastructure: { roads: 18, walls: 12, granaries: 15, sanitation: 14 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 20, taxContribution: 0 },
+      borderRegion: true,
+      terrainType: TerrainType.Forest,
     },
   ];
 
@@ -364,6 +389,9 @@ export function createFracturedInheritanceScenario(): GameState {
     // --- Scenario ---
     scenarioId: FRACTURED_INHERITANCE_SCENARIO_ID,
     environment: createInitialEnvironmentState(),
+    economy: createInitialEconomicState(
+      SATISFACTION_STARTING[PopulationClass.Merchants],
+    ),
     causalLedger: createEmptyLedger(),
   };
 }

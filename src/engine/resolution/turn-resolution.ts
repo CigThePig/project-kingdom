@@ -28,6 +28,7 @@ import {
   StorylineStatus,
   TurnHistoryEntry,
   TurnState,
+  TradeOpenness,
 } from '../types';
 import {
   resolveEnvironmentTick,
@@ -40,6 +41,13 @@ import {
   createEmptyLedger,
   maybeRecord,
 } from '../systems/causal-ledger';
+import {
+  resolveEconomicCycle,
+  createInitialEconomicState,
+} from '../systems/economic-cycle';
+import {
+  resolveRegionalTick,
+} from '../systems/regional-life';
 import {
   SEASON_MONTHS,
   OVERTHROW_CONSECUTIVE_TURNS,
@@ -59,7 +67,7 @@ import {
 import { applyMechanicalEffectDelta, applyStorylineResolutionEffects } from '../events/apply-event-effects';
 import { STORYLINE_RESOLUTION_EFFECTS } from '../../data/storylines/effects';
 import { resetActionBudgetForNextTurn } from './action-budget';
-import { summarizeRegionalOutputs, checkTotalConquest, getOccupiedFraction, applyRegionDevelopmentChange } from '../systems/regions';
+import { summarizeRegionalOutputs, checkTotalConquest, getOccupiedFraction, applyRegionDevelopmentChange, computeAdjustedRegionalSummary } from '../systems/regions';
 import {
   calculateTaxationIncome,
   calculateIncome,
@@ -330,6 +338,90 @@ export function resolveTurn(
     neighborRelScores[n.id] = n.relationshipScore;
   }
 
+  // ---- Phase 1b: Economic Cycle Update (Expansion 2) ----
+  // Updates economic momentum, cycle phase, scarcity pricing, inflation, confidence.
+  const currentEconomy = stateWithAcceptedProposals.economy ?? createInitialEconomicState();
+  const currentMerchantSat = stateWithAcceptedProposals.population[PopulationClass.Merchants].satisfaction;
+  const preActionTradeIncome = calculateTradeIncome(
+    currentMerchantSat,
+    stateWithAcceptedProposals.policies.tradeOpenness,
+    neighborRelScores,
+    regionalSummary.tradeModifier,
+    getTradeBonus(stateWithAcceptedProposals.knowledge),
+  );
+
+  const economicResult = resolveEconomicCycle(
+    currentEconomy,
+    preActionTradeIncome,
+    currentMerchantSat,
+    stateWithAcceptedProposals.stability.value,
+    stateWithAcceptedProposals.constructionProjects.filter((p) => p.turnsRemaining > 0).length,
+    stateWithAcceptedProposals.activeConflicts.length > 0,
+    stateWithAcceptedProposals.food.reserves <= 0,
+    phase1Resources,
+    stateWithAcceptedProposals.food.reserves,
+    state.treasury.expenses
+      ? (state.treasury.expenses.militaryUpkeep + state.treasury.expenses.constructionCosts
+        + state.treasury.expenses.intelligenceFunding + state.treasury.expenses.religiousUpkeep
+        + state.treasury.expenses.festivalCosts)
+      : 0,
+    state.treasury.income
+      ? (state.treasury.income.taxation + state.treasury.income.trade + state.treasury.income.miscellaneous)
+      : 0,
+    stateWithAcceptedProposals.policies.tradeOpenness,
+    neighborRelScores,
+    updatedEnvironment.activeConditions,
+    state.turn.turnNumber,
+  );
+  let updatedEconomy = economicResult.economy;
+  const economicModifiers = economicResult.economicModifiers;
+
+  // Add economic conditions (TradeDisruption, MarketPanic) to environment.
+  if (economicResult.newConditions.length > 0) {
+    updatedEnvironment = {
+      ...updatedEnvironment,
+      activeConditions: [...updatedEnvironment.activeConditions, ...economicResult.newConditions],
+    };
+    conditionCardTriggers = [...conditionCardTriggers, ...economicResult.conditionCards];
+  }
+
+  // Record economic cycle changes to causal ledger.
+  if (Math.abs(economicResult.momentumDelta) > 5) {
+    maybeRecord(ledger, 'economy', 'momentum_shift', 'economy', 'cycle_phase_changed', economicResult.momentumDelta);
+  }
+
+  // ---- Phase 1c: Regional Tick (Expansion 5) ----
+  // Updates loyalty, infrastructure decay, local economy, regional conditions.
+  const regionalTickResult = resolveRegionalTick(
+    stateWithAcceptedProposals.regions,
+    stateWithAcceptedProposals.stability.value,
+    stateWithAcceptedProposals.constructionProjects,
+    stateWithAcceptedProposals.policies.taxationLevel,
+    stateWithAcceptedProposals.faithCulture.kingdomCultureIdentityId,
+    updatedEconomy.cyclePhase,
+    state.turn.turnNumber,
+  );
+  let phase1cRegions = regionalTickResult.regions;
+
+  // Add regional conditions to environment and card triggers.
+  if (regionalTickResult.newConditions.length > 0) {
+    updatedEnvironment = {
+      ...updatedEnvironment,
+      activeConditions: [...updatedEnvironment.activeConditions, ...regionalTickResult.newConditions],
+    };
+    conditionCardTriggers = [...conditionCardTriggers, ...regionalTickResult.conditionCards];
+  }
+
+  // Record loyalty and infrastructure changes to causal ledger.
+  for (const warning of regionalTickResult.loyaltyWarnings) {
+    if (warning.type === 'rebellion' || warning.type === 'separatist_event') {
+      maybeRecord(ledger, 'region', 'loyalty_crisis', 'stability', 'regional_unrest', -10);
+    }
+  }
+
+  // Compute adjusted regional summary accounting for loyalty and infrastructure.
+  const adjustedRegionalSummary = computeAdjustedRegionalSummary(phase1cRegions);
+
   // ---- Phase 2: Action Execution ----
   // Pass updated resources and accepted proposals into action effects.
   // Snapshot existing construction project IDs so Phase 10 can skip new ones.
@@ -337,7 +429,7 @@ export function resolveTurn(
     stateWithAcceptedProposals.constructionProjects.map((p) => p.id),
   );
   let stateAfterActions = applyActionEffects(
-    { ...stateWithAcceptedProposals, resources: phase1Resources },
+    { ...stateWithAcceptedProposals, resources: phase1Resources, regions: phase1cRegions, economy: updatedEconomy },
     stateWithAcceptedProposals.actionBudget.queuedActions,
   );
 
@@ -360,9 +452,17 @@ export function resolveTurn(
   );
 
   // Apply condition modifiers to trade income (Phase 0b environment + social fabric effects).
-  const conditionAdjustedTradeIncome = tradeIncomePostAction * conditionModifiers.tradeIncomeMultiplier;
+  // Apply economic cycle trade multiplier (Phase 1b) and regional roads adjustment (Phase 1c).
+  const conditionAdjustedTradeIncome = tradeIncomePostAction
+    * conditionModifiers.tradeIncomeMultiplier
+    * economicModifiers.tradeMultiplier
+    * adjustedRegionalSummary.tradeModifierAdjusted;
   // Apply treasury income multiplier from social conditions (e.g. Corruption, CriminalUnderworld).
-  const adjustedTaxation = taxationIncomePostAction * conditionModifiers.treasuryIncomeMultiplier;
+  // Apply economic cycle treasury multiplier (Phase 1b) and regional loyalty tax adjustment (Phase 1c).
+  const adjustedTaxation = taxationIncomePostAction
+    * conditionModifiers.treasuryIncomeMultiplier
+    * economicModifiers.treasuryMultiplier
+    * adjustedRegionalSummary.loyaltyTaxMultiplier;
   const incomeBreakdownPostAction = calculateIncome(adjustedTaxation, conditionAdjustedTradeIncome, 0);
 
   // Record trade income loss from conditions to causal ledger.
@@ -422,13 +522,23 @@ export function resolveTurn(
   // Construction gold cost: placeholder 0 until data layer defines per-project gold costs.
   const constructionCostThisTurn = 0;
 
-  const expenseBreakdown = calculateExpenses(
+  const rawExpenseBreakdown = calculateExpenses(
     stateAfterActions.military,
     stateAfterActions.faithCulture.activeOrders,
     stateAfterActions.policies.intelligenceFundingLevel,
     stateAfterActions.policies.festivalInvestmentLevel,
     constructionCostThisTurn,
   );
+
+  // Apply inflation cost multiplier to expenses (Phase 1b Economic Depth).
+  // Inflation erodes purchasing power: military upkeep, construction, and religious upkeep cost more.
+  const inflationMult = economicModifiers.inflationCostMultiplier;
+  const expenseBreakdown = {
+    ...rawExpenseBreakdown,
+    militaryUpkeep: rawExpenseBreakdown.militaryUpkeep * inflationMult,
+    constructionCosts: rawExpenseBreakdown.constructionCosts * inflationMult,
+    religiousUpkeep: rawExpenseBreakdown.religiousUpkeep * inflationMult,
+  };
 
   let updatedTreasury = applyTreasuryFlow(
     stateAfterActions.treasury,
@@ -510,6 +620,11 @@ export function resolveTurn(
   satisfactionDeltas[PopulationClass.Nobility] += conditionModifiers.nobilitySatisfactionDelta;
   satisfactionDeltas[PopulationClass.Clergy] += conditionModifiers.clergySatisfactionDelta;
   satisfactionDeltas[PopulationClass.MilitaryCaste] += conditionModifiers.militaryCasteSatisfactionDelta;
+
+  // Apply economic cycle satisfaction modifiers (Phase 1b Economic Depth).
+  satisfactionDeltas[PopulationClass.Merchants] += economicModifiers.merchantSatisfactionDelta;
+  // Food price multiplier impact on commoners: high food prices hurt the poor.
+  satisfactionDeltas[PopulationClass.Commoners] += economicModifiers.foodPriceSatisfactionPenalty;
 
   const populationAfterDeltas = applyPopulationSatisfactionDeltas(
     stateAfterActions.population,
@@ -1948,6 +2063,7 @@ export function resolveTurn(
     rulingStyle: updatedRulingStyle,
     scenarioId: stateAfterActions.scenarioId,
     environment: updatedEnvironment,
+    economy: updatedEconomy,
     causalLedger: finalizedLedger,
   };
 

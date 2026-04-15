@@ -10,6 +10,7 @@ import {
   POPULATION_STARTING,
   RESOURCE_STARTING_EXTRACTION_RATES,
   RESOURCE_STARTING_STOCKPILES,
+  SATISFACTION_STARTING,
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
@@ -18,6 +19,7 @@ import { createInitialRulingStyleState } from '../../engine/systems/ruling-style
 import { createInitialEnvironmentState } from '../../engine/systems/environment';
 import { createEmptyLedger } from '../../engine/systems/causal-ledger';
 import { createInitialPopulationDynamicsState } from '../../engine/systems/population-dynamics';
+import { createInitialEconomicState } from '../../engine/systems/economic-cycle';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -32,6 +34,7 @@ import {
   ResourceType,
   Season,
   TaxationLevel,
+  TerrainType,
   TradeOpenness,
 } from '../../engine/types';
 
@@ -78,6 +81,14 @@ export function createFrozenMarchScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 50,
       isOccupied: false,
+      // Expansion 5 — Regional Life
+      localPopulation: 12000,
+      loyalty: 55,
+      infrastructure: { roads: 22, walls: 25, granaries: 20, sanitation: 18 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 30, taxContribution: 0 },
+      borderRegion: false,
+      terrainType: TerrainType.Plains,
     },
     {
       id: 'region_ironvale',
@@ -89,6 +100,13 @@ export function createFrozenMarchScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 60,
       isOccupied: false,
+      localPopulation: 5000,
+      loyalty: 50,
+      infrastructure: { roads: 15, walls: 30, granaries: 15, sanitation: 15 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 25, taxContribution: 0 },
+      borderRegion: false,
+      terrainType: TerrainType.Hills,
     },
     {
       id: 'region_timbermark',
@@ -100,6 +118,13 @@ export function createFrozenMarchScenario(): GameState {
       culturalIdentity: 'highland',
       strategicValue: 40,
       isOccupied: false,
+      localPopulation: 7000,
+      loyalty: 40,
+      infrastructure: { roads: 15, walls: 18, granaries: 12, sanitation: 12 },
+      localConditions: [],
+      localEconomy: { productionOutput: 0, localTradeActivity: 20, taxContribution: 0 },
+      borderRegion: true,
+      terrainType: TerrainType.Forest,
     },
   ];
 
@@ -361,6 +386,9 @@ export function createFrozenMarchScenario(): GameState {
     // --- Scenario ---
     scenarioId: FROZEN_MARCH_SCENARIO_ID,
     environment: createInitialEnvironmentState(),
+    economy: createInitialEconomicState(
+      SATISFACTION_STARTING[PopulationClass.Merchants],
+    ),
     causalLedger: createEmptyLedger(),
   };
 }

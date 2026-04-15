@@ -3,7 +3,12 @@
 // No React imports. No player-facing text.
 
 import { RegionState, ResourceType } from '../types';
-import { REGION_DEVELOPMENT_OUTPUT_SCALAR } from '../constants';
+import {
+  REGION_DEVELOPMENT_OUTPUT_SCALAR,
+  REGION_LOYALTY_REDUCED_TAX_MULTIPLIER,
+  REGION_LOYALTY_REDUCED_TAX_THRESHOLD,
+  REGION_ROADS_TRADE_BONUS_PER_POINT,
+} from '../constants';
 
 // ============================================================
 // Summary Interface
@@ -204,4 +209,49 @@ export function checkTotalConquest(regions: RegionState[]): boolean {
 export function getOccupiedFraction(regions: RegionState[]): number {
   if (regions.length === 0) return 0;
   return regions.filter((r) => r.isOccupied).length / regions.length;
+}
+
+// ============================================================
+// Expansion 5 — Adjusted Regional Summary
+// ============================================================
+
+export interface AdjustedRegionalSummary {
+  tradeModifierAdjusted: number;        // trade modifier accounting for roads infrastructure
+  loyaltyTaxMultiplier: number;         // aggregate tax multiplier from regional loyalty
+}
+
+/**
+ * Computes loyalty- and infrastructure-adjusted regional modifiers.
+ * Called after Phase 1c (regional tick) to provide adjusted values for Phase 2a.
+ * The base summary (summarizeRegionalOutputs) handles resource extraction and is unaffected.
+ */
+export function computeAdjustedRegionalSummary(regions: RegionState[]): AdjustedRegionalSummary {
+  let totalRoadsBonus = 0;
+  let loyaltyPenaltyCount = 0;
+  let activeRegionCount = 0;
+
+  for (const region of regions) {
+    if (region.isOccupied) continue;
+    activeRegionCount++;
+
+    // Infrastructure roads boost trade
+    if (region.infrastructure) {
+      totalRoadsBonus += region.infrastructure.roads * REGION_ROADS_TRADE_BONUS_PER_POINT;
+    }
+
+    // Low loyalty reduces tax contribution
+    if (region.loyalty !== undefined && region.loyalty < REGION_LOYALTY_REDUCED_TAX_THRESHOLD) {
+      loyaltyPenaltyCount++;
+    }
+  }
+
+  // Trade modifier: 1.0 base + average roads bonus across active regions
+  const avgRoadsBonus = activeRegionCount > 0 ? totalRoadsBonus / activeRegionCount : 0;
+  const tradeModifierAdjusted = 1.0 + avgRoadsBonus;
+
+  // Loyalty tax multiplier: proportional to how many regions have low loyalty
+  const penaltyFraction = activeRegionCount > 0 ? loyaltyPenaltyCount / activeRegionCount : 0;
+  const loyaltyTaxMultiplier = 1.0 - penaltyFraction * (1.0 - REGION_LOYALTY_REDUCED_TAX_MULTIPLIER);
+
+  return { tradeModifierAdjusted, loyaltyTaxMultiplier };
 }

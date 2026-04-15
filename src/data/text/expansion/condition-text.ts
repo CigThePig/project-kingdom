@@ -146,4 +146,66 @@ export const CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
       acknowledge: 'Acknowledge',
     },
   },
+
+  // ============================================================
+  // Trade Disruption
+  // ============================================================
+  evt_cond_trade_disruption_mild: {
+    title: 'Trade Slowdown',
+    body: 'Caravans grow scarce along the kingdom\'s trade roads, and market stalls that once overflowed with foreign goods now sit empty. Merchants grumble about rising costs and dwindling customers. The slowdown has yet to bite deeply, but left unchecked it will worsen.',
+    choices: {
+      subsidize_merchants: 'Subsidize Merchant Routes',
+      restrict_imports: 'Protect Local Goods',
+      wait_it_out: 'Let the Market Correct Itself',
+    },
+  },
+  evt_cond_trade_disruption_moderate: {
+    title: 'Trade Disruption',
+    body: 'Trade routes have become unreliable. Shipments arrive late or not at all, warehouses run low on essential supplies, and the price of imported goods climbs steeply. The merchant class grows desperate for crown intervention before the situation deteriorates further.',
+    choices: {
+      emergency_trade_deals: 'Negotiate Emergency Deals',
+      military_escorts: 'Escort Caravans with Soldiers',
+      accept_losses: 'Accept the Losses',
+    },
+  },
+  evt_cond_trade_disruption_severe: {
+    title: 'Commerce Collapse',
+    body: 'Trade has ground to a halt across the realm. Merchants flee to more hospitable kingdoms, warehouses stand bare, and entire market districts have shuttered. Without swift and decisive action, the economic lifeblood of the kingdom will drain away entirely.',
+    choices: {
+      crown_monopoly: 'Crown Takes Over Trade',
+      foreign_aid: 'Beg Neighbors for Aid',
+      endure: 'Endure the Collapse',
+    },
+  },
+
+  // ============================================================
+  // Market Panic
+  // ============================================================
+  evt_cond_market_panic_mild: {
+    title: 'Market Jitters',
+    body: 'Nervous merchants have begun pulling their investments from the kingdom\'s markets. Rumors of instability swirl through the trading houses, and confidence wavers. The decline is still manageable, but fear has a way of becoming its own prophecy.',
+    choices: {
+      reassure_merchants: 'Issue Public Reassurance',
+      price_controls: 'Impose Price Controls',
+      let_market_settle: 'Let the Market Settle',
+    },
+  },
+  evt_cond_market_panic_moderate: {
+    title: 'Market Panic',
+    body: 'Merchants flee the markets in droves, selling their holdings at ruinous prices. Confidence has shattered, and the trading floors echo with shouts of desperation rather than commerce. The crown must act boldly or watch the kingdom\'s wealth evaporate.',
+    choices: {
+      bailout_merchants: 'Offer a Crown Bailout',
+      seize_goods: 'Seize Merchant Assets',
+      appeal_to_guilds: 'Appeal to the Guilds',
+    },
+  },
+  evt_cond_market_panic_severe: {
+    title: 'Financial Ruin',
+    body: 'The markets have collapsed completely. Trading houses are boarded up, the currency is nearly worthless, and riots erupt wherever the desperate gather. The kingdom stands on the brink of total financial ruin, and only the most extreme measures can pull it back.',
+    choices: {
+      nationalize_trade: 'Nationalize All Trade',
+      emergency_decree: 'Issue an Emergency Decree',
+      accept_collapse: 'Accept the Collapse',
+    },
+  },
 };

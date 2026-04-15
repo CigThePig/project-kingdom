@@ -1,6 +1,7 @@
 import {
   ActionType,
   DiplomaticPosture,
+  EconomicPhase,
   FestivalInvestmentLevel,
   IntelligenceFundingLevel,
   IntelligenceOperationType,
@@ -15,6 +16,7 @@ import {
   Season,
   StyleAxis,
   TaxationLevel,
+  TerrainType,
   TradeOpenness,
 } from './types';
 
@@ -1111,3 +1113,172 @@ export const CLASS_INTERACTION_CLERGY_MERCHANT_DELTA = -1;
 export const CLASS_INTERACTION_MILITARY_COMMONER_DELTA = -1;
 export const CLASS_INTERACTION_NOBILITY_COMMONER_DELTA = -2;
 export const CLASS_INTERACTION_COMMONER_NOBILITY_DELTA = -2;
+
+// ============================================================
+// Block 22 — Economic Depth (Expansion 2)
+// ============================================================
+
+// --- Momentum Drift Weights ---
+// momentumDelta = (tradeTrend × TRADE_WEIGHT) + (merchantSatTrend × MERCHANT_WEIGHT) + ...
+export const ECON_MOMENTUM_TRADE_TREND_WEIGHT = 0.3;
+export const ECON_MOMENTUM_MERCHANT_SAT_TREND_WEIGHT = 0.2;
+export const ECON_MOMENTUM_STABILITY_WEIGHT = 0.15;
+export const ECON_MOMENTUM_CONSTRUCTION_WEIGHT = 0.1;
+export const ECON_MOMENTUM_WAR_PENALTY = -15;
+export const ECON_MOMENTUM_FAMINE_PENALTY = -20;
+export const ECON_MOMENTUM_MEAN_REVERSION = 0.05;
+
+// --- Phase Thresholds ---
+// EconomicPhase is derived from momentum: Depression < -50 < Recession < -15 < Stagnation < +15 < Growth < +50 < Boom
+export const ECON_PHASE_DEPRESSION_THRESHOLD = -50;
+export const ECON_PHASE_RECESSION_THRESHOLD = -15;
+export const ECON_PHASE_GROWTH_THRESHOLD = 15;
+export const ECON_PHASE_BOOM_THRESHOLD = 50;
+
+// --- Phase Modifier Tables ---
+// Treasury income multiplier by economic phase.
+export const ECON_PHASE_TREASURY_MULTIPLIER: Record<EconomicPhase, number> = {
+  [EconomicPhase.Depression]: 0.7,
+  [EconomicPhase.Recession]: 0.85,
+  [EconomicPhase.Stagnation]: 1.0,
+  [EconomicPhase.Growth]: 1.15,
+  [EconomicPhase.Boom]: 1.3,
+};
+
+// Trade income multiplier by economic phase.
+export const ECON_PHASE_TRADE_MULTIPLIER: Record<EconomicPhase, number> = {
+  [EconomicPhase.Depression]: 0.6,
+  [EconomicPhase.Recession]: 0.8,
+  [EconomicPhase.Stagnation]: 1.0,
+  [EconomicPhase.Growth]: 1.2,
+  [EconomicPhase.Boom]: 1.4,
+};
+
+// Per-turn merchant satisfaction delta by economic phase.
+export const ECON_PHASE_MERCHANT_SAT_DELTA: Record<EconomicPhase, number> = {
+  [EconomicPhase.Depression]: -3,
+  [EconomicPhase.Recession]: -1,
+  [EconomicPhase.Stagnation]: 0,
+  [EconomicPhase.Growth]: 1,
+  [EconomicPhase.Boom]: 2,
+};
+
+// --- Scarcity Pricing ---
+// Resource demand pressure rises when stockpile < threshold.
+export const ECON_SCARCITY_STOCKPILE_THRESHOLD = 20;
+export const ECON_SCARCITY_DEMAND_RISE_RATE = 5;     // per turn when scarce
+export const ECON_SCARCITY_DEMAND_DECAY_RATE = 3;    // per turn when plentiful
+
+// Food price multiplier: 1.0 + max(0, (100 - foodReserves) / DENOMINATOR)
+export const ECON_FOOD_PRICE_DENOMINATOR = 50;
+export const ECON_FOOD_PRICE_MIN = 0.5;
+export const ECON_FOOD_PRICE_MAX = 3.0;
+
+// --- Inflation ---
+// Inflation accumulates when expenses > income by this margin.
+export const ECON_INFLATION_HIGH_SPENDING_RATE = 0.01;  // per turn when overspending
+export const ECON_INFLATION_BOOM_RATE = 0.02;           // per turn when in Boom for > 4 turns
+export const ECON_INFLATION_BOOM_TURNS_THRESHOLD = 4;
+export const ECON_INFLATION_DEFLATION_RATE = 0.01;      // per turn during Recession/Depression
+export const ECON_INFLATION_MAX = 0.5;
+export const ECON_INFLATION_MIN = 0.0;
+export const ECON_CUMULATIVE_INFLATION_STARTING = 1.0;  // no inflation at game start
+
+// --- Merchant Confidence ---
+export const ECON_CONFIDENCE_STARTING = 60;
+export const ECON_CONFIDENCE_STABILITY_BONUS_THRESHOLD = 50;  // stability above this boosts confidence
+export const ECON_CONFIDENCE_TRADE_WEIGHT = 0.3;
+export const ECON_CONFIDENCE_STABILITY_WEIGHT = 0.2;
+export const ECON_CONFIDENCE_WAR_PENALTY = -10;
+export const ECON_CONFIDENCE_MIN = 0;
+export const ECON_CONFIDENCE_MAX = 100;
+
+// --- Trade Volume ---
+export const ECON_TRADE_VOLUME_STARTING = 50;
+export const ECON_TRADE_VOLUME_MIN = 0;
+export const ECON_TRADE_VOLUME_MAX = 100;
+
+// --- Starting Values ---
+export const ECON_MOMENTUM_STARTING = 0;
+export const ECON_INFLATION_RATE_STARTING = 0;
+
+// --- Condition Emergence ---
+// TradeDisruption emerges when tradeVolume < threshold for N turns.
+export const ECON_TRADE_DISRUPTION_VOLUME_THRESHOLD = 20;
+export const ECON_TRADE_DISRUPTION_TURNS = 2;
+// MarketPanic emerges when merchantConfidence < threshold.
+export const ECON_MARKET_PANIC_CONFIDENCE_THRESHOLD = 15;
+
+// ============================================================
+// Block 23 — Regional Life (Expansion 5)
+// ============================================================
+
+// --- Loyalty ---
+export const REGION_LOYALTY_STARTING = 60;
+// Loyalty drift: +/- DRIFT_PER_STABILITY_POINT × (stability - 50)
+export const REGION_LOYALTY_STABILITY_DRIFT_PER_POINT = 0.1;
+export const REGION_LOYALTY_STABILITY_MIDPOINT = 50;
+// Per unaddressed regional condition.
+export const REGION_LOYALTY_CONDITION_PENALTY = -2;
+// One-time bonus when construction completes in region.
+export const REGION_LOYALTY_CONSTRUCTION_BONUS = 5;
+// Per-turn penalty when taxation is High/Punitive with low regional benefit.
+export const REGION_LOYALTY_TAX_BURDEN_PENALTY = -1;
+// Per-turn penalty for cultural mismatch with kingdom identity.
+export const REGION_LOYALTY_CULTURAL_MISMATCH_PENALTY = -1;
+export const REGION_LOYALTY_MIN = 0;
+export const REGION_LOYALTY_MAX = 100;
+
+// Loyalty consequence thresholds.
+export const REGION_LOYALTY_REDUCED_TAX_THRESHOLD = 40;    // below: -30% tax contribution
+export const REGION_LOYALTY_REDUCED_TAX_MULTIPLIER = 0.7;
+export const REGION_LOYALTY_SEPARATIST_THRESHOLD = 25;     // below: separatist events
+export const REGION_LOYALTY_REBELLION_THRESHOLD = 15;      // below: rebellion
+
+// --- Infrastructure ---
+// Starting values.
+export const REGION_INFRA_ROADS_STARTING = 25;
+export const REGION_INFRA_WALLS_STARTING = 20;
+export const REGION_INFRA_GRANARIES_STARTING = 20;
+export const REGION_INFRA_SANITATION_STARTING = 20;
+
+// Decay per season without maintenance.
+export const REGION_INFRA_DECAY_BASE = 1;
+export const REGION_INFRA_DECAY_MAX = 2;
+export const REGION_INFRA_MIN = 0;
+export const REGION_INFRA_MAX = 100;
+
+// Infrastructure effects on kingdom systems.
+export const REGION_ROADS_TRADE_BONUS_PER_POINT = 0.003;       // trade modifier per roads point
+export const REGION_WALLS_DEFENSE_BONUS_PER_POINT = 0.005;     // siege defense per walls point
+export const REGION_GRANARIES_FOOD_BUFFER_PER_POINT = 0.5;     // food buffer per granaries point
+export const REGION_SANITATION_DISEASE_REDUCTION_PER_POINT = 0.003;
+
+// --- Terrain Modifiers ---
+// Multipliers applied to primary economic output by terrain type.
+export const REGION_TERRAIN_FOOD_MODIFIER: Record<TerrainType, number> = {
+  [TerrainType.Plains]: 1.3,
+  [TerrainType.Hills]: 0.8,
+  [TerrainType.Forest]: 0.9,
+  [TerrainType.Coastal]: 1.0,
+  [TerrainType.Mountain]: 0.5,
+  [TerrainType.River]: 1.2,
+};
+
+export const REGION_TERRAIN_TRADE_MODIFIER: Record<TerrainType, number> = {
+  [TerrainType.Plains]: 1.0,
+  [TerrainType.Hills]: 0.8,
+  [TerrainType.Forest]: 0.7,
+  [TerrainType.Coastal]: 1.4,
+  [TerrainType.Mountain]: 0.5,
+  [TerrainType.River]: 1.3,
+};
+
+export const REGION_TERRAIN_DEFENSE_MODIFIER: Record<TerrainType, number> = {
+  [TerrainType.Plains]: 0.8,
+  [TerrainType.Hills]: 1.3,
+  [TerrainType.Forest]: 1.2,
+  [TerrainType.Coastal]: 0.9,
+  [TerrainType.Mountain]: 1.5,
+  [TerrainType.River]: 1.0,
+};

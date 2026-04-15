@@ -4,6 +4,7 @@
 
 import {
   ActiveEvent,
+  EconomicPhase,
   EventCategory,
   EventSeverity,
   GameState,
@@ -52,7 +53,15 @@ export interface EventTriggerCondition {
     | 'population_above'
     | 'population_below'
     | 'any_of'
-    | 'always';
+    | 'always'
+    // Economic Depth (Expansion 2)
+    | 'economic_phase_is'
+    | 'merchant_confidence_below'
+    | 'merchant_confidence_above'
+    | 'inflation_above'
+    | 'trade_volume_below'
+    // Regional Life (Expansion 5)
+    | 'region_loyalty_below';
   /** Numeric threshold for above/below condition types. */
   threshold?: number;
   /** Required for class_satisfaction_* conditions. */
@@ -77,6 +86,10 @@ export interface EventTriggerCondition {
   withinTurns?: number;
   /** Required for any_of: sub-conditions evaluated with OR semantics. */
   conditions?: EventTriggerCondition[];
+  /** Required for economic_phase_is condition. */
+  economicPhase?: EconomicPhase;
+  /** Required for region_loyalty_below: which region to check (null = any). */
+  regionId?: string | null;
 }
 
 /**
@@ -327,6 +340,36 @@ export function evaluateCondition(
     case 'any_of': {
       if (!condition.conditions || condition.conditions.length === 0) return false;
       return condition.conditions.some((sub) => evaluateCondition(sub, state, turnNumber));
+    }
+
+    // Economic Depth (Expansion 2) trigger conditions
+    case 'economic_phase_is':
+      return condition.economicPhase !== undefined && state.economy?.cyclePhase === condition.economicPhase;
+
+    case 'merchant_confidence_below':
+      return condition.threshold !== undefined && (state.economy?.merchantConfidence ?? 50) < condition.threshold;
+
+    case 'merchant_confidence_above':
+      return condition.threshold !== undefined && (state.economy?.merchantConfidence ?? 50) > condition.threshold;
+
+    case 'inflation_above':
+      return condition.threshold !== undefined && (state.economy?.inflationRate ?? 0) > condition.threshold;
+
+    case 'trade_volume_below':
+      return condition.threshold !== undefined && (state.economy?.tradeVolume ?? 50) < condition.threshold;
+
+    // Regional Life (Expansion 5) trigger conditions
+    case 'region_loyalty_below': {
+      if (condition.threshold === undefined) return false;
+      if (condition.regionId) {
+        // Check specific region
+        const region = state.regions.find((r) => r.id === condition.regionId);
+        return region?.loyalty !== undefined && region.loyalty < condition.threshold;
+      }
+      // Check any region
+      return state.regions.some(
+        (r) => r.loyalty !== undefined && r.loyalty < condition.threshold,
+      );
     }
 
     default:

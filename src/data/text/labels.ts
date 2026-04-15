@@ -1,9 +1,11 @@
 import {
   ActionType,
+  ConditionType,
   ConflictPhase,
   ConstructionCategory,
   DecreeCategory,
   DiplomaticPosture,
+  EconomicPhase,
   EventCategory,
   EventSeverity,
   FailureCondition,
@@ -23,6 +25,7 @@ import {
   Season,
   StorylineCategory,
   TaxationLevel,
+  TerrainType,
   TradeOpenness,
 } from '../../engine/types';
 
@@ -496,6 +499,28 @@ export const REGION_LABELS: Record<string, string> = {
   region_heartlands: 'The Heartlands',
   region_ironvale: 'Ironvale',
   region_timbermark: 'Timbermark',
+};
+
+export const ECONOMIC_PHASE_LABELS: Record<EconomicPhase, string> = {
+  [EconomicPhase.Depression]: 'Depression',
+  [EconomicPhase.Recession]: 'Recession',
+  [EconomicPhase.Stagnation]: 'Stagnation',
+  [EconomicPhase.Growth]: 'Growth',
+  [EconomicPhase.Boom]: 'Boom',
+};
+
+export const TERRAIN_TYPE_LABELS: Record<TerrainType, string> = {
+  [TerrainType.Plains]: 'Plains',
+  [TerrainType.Hills]: 'Hills',
+  [TerrainType.Forest]: 'Forest',
+  [TerrainType.Coastal]: 'Coastal',
+  [TerrainType.Mountain]: 'Mountain',
+  [TerrainType.River]: 'River',
+};
+
+export const CONDITION_TYPE_LABELS: Partial<Record<ConditionType, string>> = {
+  [ConditionType.TradeDisruption]: 'Trade Disruption',
+  [ConditionType.MarketPanic]: 'Market Panic',
 };
 
 export const ECONOMIC_OUTPUT_LABELS: Record<string, string> = {
