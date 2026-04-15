@@ -15,6 +15,8 @@ import type { GameState } from '../../engine/types';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
 import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
+import { createInitialEnvironmentState } from '../../engine/systems/environment';
+import { createEmptyLedger } from '../../engine/systems/causal-ledger';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -352,5 +354,7 @@ export function createFrozenMarchScenario(): GameState {
 
     // --- Scenario ---
     scenarioId: FROZEN_MARCH_SCENARIO_ID,
+    environment: createInitialEnvironmentState(),
+    causalLedger: createEmptyLedger(),
   };
 }

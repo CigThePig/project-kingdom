@@ -126,5 +126,43 @@ export function generateWorldPulse(
     }
   }
 
+  // Add condition-related pulse entries from the environment system
+  if (results.length < 2 && state.environment) {
+    const conditionLines = getConditionPulseLines(state);
+    const freshConditionLines = conditionLines.filter(
+      (l) => !results.some((r) => r.sourceId === l.sourceId),
+    );
+    if (freshConditionLines.length > 0) {
+      const idx = Math.floor(Math.random() * freshConditionLines.length);
+      results.push(freshConditionLines[idx]);
+    }
+  }
+
   return results.slice(0, 2);
+}
+
+// ============================================================
+// Condition Pulse Lines
+// ============================================================
+
+const CONDITION_PULSE_TEXT: Record<string, string> = {
+  Drought: 'The land thirsts. Wells run low and fields lie parched.',
+  Flood: 'Rivers swell beyond their banks. The lowlands are awash.',
+  HarshWinter: 'A bitter cold grips the realm. Frost covers everything.',
+  BountifulHarvest: 'The fields overflow with abundance this season.',
+  Plague: 'Sickness spreads through the streets. The healers are overwhelmed.',
+  Famine: 'Hunger stalks the kingdom. The granaries echo with emptiness.',
+  Blight: 'A creeping blight withers the crops.',
+  Pox: 'A pox afflicts the populace.',
+};
+
+function getConditionPulseLines(state: GameState): WorldPulseLine[] {
+  if (!state.environment) return [];
+  return state.environment.activeConditions
+    .filter((c) => CONDITION_PULSE_TEXT[c.type])
+    .map((c) => ({
+      text: CONDITION_PULSE_TEXT[c.type]!,
+      category: WorldPulseCategory.KingdomCondition,
+      sourceId: `condition_${c.id}`,
+    }));
 }

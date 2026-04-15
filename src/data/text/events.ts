@@ -21,6 +21,7 @@ import { EXPANSION_REGION_TEXT } from './expansion/region-text';
 import { EXPANSION_KINGDOM_TEXT } from './expansion/kingdom-text';
 import { EXPANSION_CHAIN_TEXT } from './expansion/chain-text';
 import { EXPANSION_FOLLOWUP_TEXT } from './expansion/followup-text';
+import { CONDITION_EVENT_TEXT } from './expansion/condition-text';
 import { EXPANSION_STORYLINE_TEXT } from './expansion/storyline-text';
 
 export interface EventTextEntry {
@@ -1921,6 +1922,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   ...EXPANSION_KINGDOM_TEXT,
   ...EXPANSION_CHAIN_TEXT,
   ...EXPANSION_FOLLOWUP_TEXT,
+  ...CONDITION_EVENT_TEXT,
 };
 
 // ============================================================

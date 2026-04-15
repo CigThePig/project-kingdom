@@ -20,6 +20,7 @@ const DOMAIN_TITLES: Record<string, string> = {
   infrastructure: 'Infrastructure',
   armies: 'The Armies',
   faith: 'Faith & Culture',
+  pressures: 'Kingdom Pressures',
 };
 
 // ============================================================
@@ -123,12 +124,51 @@ export function compileKingdomState(state: GameState): CodexDomain[] {
     { id: 'faith', tier: assignStandardTier(faithScore) },
   ];
 
+  // Build the "Kingdom Pressures" domain from active conditions and causal chains.
+  const pressuresNarrative = buildPressuresNarrative(state);
+  if (pressuresNarrative) {
+    const conditionCount = state.environment?.activeConditions.length ?? 0;
+    const pressureTier = conditionCount >= 3 ? QualitativeTier.Dire
+      : conditionCount >= 2 ? QualitativeTier.Troubled
+      : conditionCount >= 1 ? QualitativeTier.Stable
+      : QualitativeTier.Flourishing;
+    domains.push({ id: 'pressures', tier: pressureTier });
+  }
+
   return domains.map(({ id, tier }) => ({
     id,
     title: DOMAIN_TITLES[id],
     tier,
-    narrative: lookupNarrative(id, tier, turn.turnNumber),
+    narrative: id === 'pressures' && pressuresNarrative
+      ? pressuresNarrative
+      : lookupNarrative(id, tier, turn.turnNumber),
   }));
+}
+
+function buildPressuresNarrative(state: GameState): string | null {
+  const parts: string[] = [];
+
+  // Active conditions
+  if (state.environment && state.environment.activeConditions.length > 0) {
+    const conditionNames = state.environment.activeConditions.map(
+      (c) => `${c.type} (${c.severity})`,
+    );
+    parts.push(`Active conditions: ${conditionNames.join(', ')}.`);
+  }
+
+  // Top causal chains by magnitude
+  if (state.causalLedger && state.causalLedger.recentChains.length > 0) {
+    const topChains = [...state.causalLedger.recentChains]
+      .sort((a, b) => b.totalMagnitude - a.totalMagnitude)
+      .slice(0, 3);
+    for (const chain of topChains) {
+      parts.push(
+        `${chain.rootCause.description} \u2192 ${chain.finalEffect.description} (magnitude ${Math.round(chain.totalMagnitude)})`,
+      );
+    }
+  }
+
+  return parts.length > 0 ? parts.join(' ') : null;
 }
 
 // ============================================================
