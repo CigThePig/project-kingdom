@@ -927,3 +927,187 @@ export const CAUSAL_RECENT_TURNS_KEPT = 4;
 
 // Minimum total magnitude for a chain to be included in the ledger.
 export const CAUSAL_CHAIN_MIN_MAGNITUDE = 10;
+
+// ============================================================
+// Block 20 — Population Dynamics (Expansion 1)
+// ============================================================
+
+// Base demographic rates per turn (1 turn = 1 season ≈ 3 months).
+export const POP_BASE_BIRTH_RATE = 0.008;   // ~3.2% annual under stable conditions
+export const POP_BASE_DEATH_RATE = 0.005;   // ~2.0% annual under stable conditions
+
+// --- Birth Rate Modifier Inputs ---
+
+// Food reserves above this threshold grant a birth rate bonus.
+export const POP_BIRTH_FOOD_SURPLUS_THRESHOLD = 200;
+export const POP_BIRTH_FOOD_SURPLUS_BONUS = 0.1;
+
+// Food reserves below this threshold impose a birth rate penalty.
+export const POP_BIRTH_FOOD_LOW_THRESHOLD = 50;
+export const POP_BIRTH_FOOD_LOW_PENALTY = -0.2;
+
+// High faith encourages families.
+export const POP_BIRTH_FAITH_HIGH_THRESHOLD = 70;
+export const POP_BIRTH_FAITH_HIGH_BONUS = 0.05;
+
+// Low stability suppresses births.
+export const POP_BIRTH_STABILITY_LOW_THRESHOLD = 30;
+export const POP_BIRTH_STABILITY_LOW_PENALTY = -0.15;
+
+// Emergency rationing suppresses births.
+export const POP_BIRTH_RATIONING_EMERGENCY_PENALTY = -0.2;
+
+// --- Death Rate Modifier Inputs ---
+
+// Famine (food reserves = 0) increases death rate.
+export const POP_DEATH_FAMINE_BONUS = 0.3;
+
+// Active disease conditions increase death rate by severity.
+export const POP_DEATH_DISEASE_BONUS_MILD = 0.2;
+export const POP_DEATH_DISEASE_BONUS_MODERATE = 0.35;
+export const POP_DEATH_DISEASE_BONUS_SEVERE = 0.5;
+
+// Active war increases death rate for commoners and military.
+export const POP_DEATH_WAR_COMMONER_BONUS = 0.1;
+export const POP_DEATH_WAR_MILITARY_BONUS = 0.3;
+
+// Civil violence from very low stability.
+export const POP_DEATH_LOW_STABILITY_THRESHOLD = 15;
+export const POP_DEATH_LOW_STABILITY_BONUS = 0.1;
+
+// --- Class-Specific Birth Rate Multipliers ---
+// Commoners grow fastest; nobility grows slowest.
+export const POP_CLASS_BIRTH_MULTIPLIER: Record<PopulationClass, number> = {
+  [PopulationClass.Commoners]: 1.2,
+  [PopulationClass.Merchants]: 1.0,
+  [PopulationClass.Clergy]: 0.7,
+  [PopulationClass.Nobility]: 0.5,
+  [PopulationClass.MilitaryCaste]: 0.8,
+};
+
+// --- Military Death Rate Posture Multipliers ---
+export const POP_MILITARY_DEATH_POSTURE_MULTIPLIER: Record<MilitaryPosture, number> = {
+  [MilitaryPosture.Defensive]: 1.0,
+  [MilitaryPosture.Standby]: 1.0,
+  [MilitaryPosture.Mobilized]: 1.2,
+  [MilitaryPosture.Aggressive]: 1.5,
+};
+
+// --- Migration Pressure Inputs ---
+// Migration pressure is a composite score (-100 to +100).
+export const POP_MIGRATION_FOOD_SECURITY_WEIGHT = 20;
+export const POP_MIGRATION_TAX_BURDEN_WEIGHT = 15;
+export const POP_MIGRATION_STABILITY_WEIGHT = 20;
+export const POP_MIGRATION_WAR_PENALTY = -25;
+export const POP_MIGRATION_TRADE_ENCOURAGED_BONUS = 15;
+export const POP_MIGRATION_TRADE_OPEN_BONUS = 10;
+export const POP_MIGRATION_TOLERANCE_SUPPRESSED_PENALTY = -10;
+
+// Per-point migration flow rates (fraction of commoner/merchant population).
+export const POP_MIGRATION_INFLOW_RATE = 0.003;
+export const POP_MIGRATION_OUTFLOW_RATE = 0.002;
+
+// Card surfacing thresholds for migration events.
+export const POP_MIGRATION_ADVISOR_THRESHOLD = 50;
+export const POP_MIGRATION_PETITION_THRESHOLD = -30;
+export const POP_MIGRATION_CRISIS_THRESHOLD = -60;
+
+// --- Class Mobility Rates ---
+// Fraction of source class population per season at peak conditions.
+export const POP_MOBILITY_COMMONER_TO_MERCHANT_RATE = 0.005;
+export const POP_MOBILITY_MERCHANT_TO_NOBILITY_RATE = 0.001;
+export const POP_MOBILITY_COMMONER_TO_MILITARY_CONSCRIPT_RATE = 0.01;
+export const POP_MOBILITY_COMMONER_TO_MILITARY_WARFOOTING_RATE = 0.02;
+export const POP_MOBILITY_CLERGY_TO_COMMONER_RATE = 0.003;
+
+// Satisfaction thresholds for mobility triggers.
+export const POP_MOBILITY_MERCHANT_SAT_THRESHOLD = 60;
+export const POP_MOBILITY_COMMONER_SAT_THRESHOLD = 40;
+export const POP_MOBILITY_MERCHANT_TO_NOBLE_SAT = 80;
+export const POP_MOBILITY_MERCHANT_TO_NOBLE_STABILITY = 60;
+export const POP_MOBILITY_CLERGY_FAITH_THRESHOLD = 30;
+
+// --- Carrying Capacity ---
+// Housing capacity per point of regional development level.
+export const POP_BASE_HOUSING_PER_REGION_DEV = 300;
+
+// Per 10% over capacity, death rate modifier increase.
+export const POP_OVERCAPACITY_DEATH_RATE_PER_10PCT = 0.05;
+
+// Per 10% over capacity, disease vulnerability increase.
+export const POP_OVERCAPACITY_DISEASE_VULN_PER_10PCT = 5;
+
+// Rolling window for demographic momentum tracking.
+export const POP_MOMENTUM_WINDOW_TURNS = 4;
+
+// Starting defaults.
+export const POP_DYNAMICS_STARTING_BIRTH_MODIFIER = 1.0;
+export const POP_DYNAMICS_STARTING_DEATH_MODIFIER = 1.0;
+export const POP_DYNAMICS_STARTING_MIGRATION = 0;
+
+// ============================================================
+// Block 21 — Social Fabric (Expansion 4)
+// ============================================================
+
+// --- Banditry ---
+// Emerges when commoner satisfaction < threshold AND stability < threshold, OR during/after war.
+export const SOCIAL_BANDITRY_COMMONER_SAT_THRESHOLD = 35;
+export const SOCIAL_BANDITRY_STABILITY_THRESHOLD = 40;
+export const SOCIAL_BANDITRY_TRADE_INCOME_PENALTY = 0.85;
+export const SOCIAL_BANDITRY_FOOD_PRODUCTION_PENALTY = 0.90;
+export const SOCIAL_BANDITRY_MERCHANT_SAT_DELTA = -5;
+export const SOCIAL_BANDITRY_ESCALATION_TURNS = 4;
+// Severe banditry: region output multiplier.
+export const SOCIAL_BANDITRY_SEVERE_REGION_PENALTY = 0.60;
+// Resolution: stability above this clears banditry.
+export const SOCIAL_BANDITRY_RESOLUTION_STABILITY = 50;
+
+// --- Corruption ---
+// Emerges when nobility satisfaction > threshold AND taxation is High/Punitive.
+export const SOCIAL_CORRUPTION_NOBILITY_SAT_THRESHOLD = 80;
+export const SOCIAL_CORRUPTION_TREASURY_PENALTY = 0.90;
+export const SOCIAL_CORRUPTION_CONSTRUCTION_COST = 1.15;
+export const SOCIAL_CORRUPTION_STABILITY_DELTA = -2;
+
+// --- Unrest ---
+// Emerges when ANY class satisfaction < threshold AND stability < threshold.
+export const SOCIAL_UNREST_CLASS_SAT_THRESHOLD = 20;
+export const SOCIAL_UNREST_STABILITY_THRESHOLD = 35;
+export const SOCIAL_UNREST_STABILITY_DELTA = -5;
+// Escalation timeline: turns until riot, then rebellion.
+export const SOCIAL_UNREST_ESCALATION_RIOT_TURNS = 3;
+export const SOCIAL_UNREST_ESCALATION_REBELLION_TURNS = 6;
+// Resolution: stability above this AND no class below 25 clears unrest.
+export const SOCIAL_UNREST_RESOLUTION_STABILITY = 45;
+export const SOCIAL_UNREST_RESOLUTION_CLASS_SAT = 25;
+
+// --- Criminal Underworld ---
+// Emerges when merchant sat < threshold AND trade Restricted/Closed, OR intel funding None for N turns.
+export const SOCIAL_CRIMINAL_MERCHANT_SAT_THRESHOLD = 30;
+export const SOCIAL_CRIMINAL_INTEL_NONE_TURNS = 4;
+export const SOCIAL_CRIMINAL_COUNTER_INTEL_PENALTY = -15;
+export const SOCIAL_CRIMINAL_TREASURY_PENALTY = 0.95;
+// Perverse incentive: black market helps merchants slightly.
+export const SOCIAL_CRIMINAL_MERCHANT_SAT_BONUS = 3;
+// Resolution: counter-intelligence above this clears criminal underworld.
+export const SOCIAL_CRIMINAL_RESOLUTION_COUNTER_INTEL = 50;
+
+// --- Class Interaction Thresholds ---
+// When source class satisfaction exceeds its rising threshold and target is below its falling threshold.
+export const CLASS_INTERACTION_MERCHANT_RISING = 75;
+export const CLASS_INTERACTION_CLERGY_RISING = 80;
+export const CLASS_INTERACTION_MILITARY_RISING = 70;
+export const CLASS_INTERACTION_NOBILITY_RISING = 80;
+export const CLASS_INTERACTION_COMMONER_RISING = 70;
+
+export const CLASS_INTERACTION_NOBILITY_FALLING = 50;
+export const CLASS_INTERACTION_MERCHANT_FALLING = 60;
+export const CLASS_INTERACTION_COMMONER_FALLING_LOW = 40;
+export const CLASS_INTERACTION_COMMONER_FALLING = 50;
+
+// Per-turn satisfaction delta applied to target class.
+export const CLASS_INTERACTION_MERCHANT_NOBILITY_DELTA = -2;
+export const CLASS_INTERACTION_CLERGY_MERCHANT_DELTA = -1;
+export const CLASS_INTERACTION_MILITARY_COMMONER_DELTA = -1;
+export const CLASS_INTERACTION_NOBILITY_COMMONER_DELTA = -2;
+export const CLASS_INTERACTION_COMMONER_NOBILITY_DELTA = -2;

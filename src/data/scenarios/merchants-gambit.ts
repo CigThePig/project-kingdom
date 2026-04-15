@@ -18,6 +18,7 @@ import { createInitialNarrativePressure } from '../../engine/systems/narrative-p
 import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
 import { createInitialEnvironmentState } from '../../engine/systems/environment';
 import { createEmptyLedger } from '../../engine/systems/causal-ledger';
+import { createInitialPopulationDynamicsState } from '../../engine/systems/population-dynamics';
 import {
   DiplomaticPosture,
   FestivalInvestmentLevel,
@@ -38,6 +39,71 @@ import {
 export const MERCHANTS_GAMBIT_SCENARIO_ID = 'merchants_gambit';
 
 export function createMerchantsGambitScenario(): GameState {
+  const population: GameState['population'] = {
+    [PopulationClass.Nobility]: {
+      population: POPULATION_STARTING[PopulationClass.Nobility],
+      satisfaction: 40,
+      satisfactionDeltaLastTurn: 0,
+      intrigueRisk: 10,
+    },
+    [PopulationClass.Clergy]: {
+      population: POPULATION_STARTING[PopulationClass.Clergy],
+      satisfaction: 50,
+      satisfactionDeltaLastTurn: 0,
+    },
+    [PopulationClass.Merchants]: {
+      population: 3500,
+      satisfaction: 70,
+      satisfactionDeltaLastTurn: 0,
+    },
+    [PopulationClass.Commoners]: {
+      population: POPULATION_STARTING[PopulationClass.Commoners],
+      satisfaction: 55,
+      satisfactionDeltaLastTurn: 0,
+    },
+    [PopulationClass.MilitaryCaste]: {
+      population: POPULATION_STARTING[PopulationClass.MilitaryCaste],
+      satisfaction: 40,
+      satisfactionDeltaLastTurn: 0,
+    },
+  };
+
+  const regions: GameState['regions'] = [
+    {
+      id: 'region_heartlands',
+      primaryEconomicOutput: 'Food',
+      localConditionModifier: 1.0,
+      populationContribution: 12000,
+      developmentLevel: 40,
+      localFaithProfile: 'orthodox',
+      culturalIdentity: 'highland',
+      strategicValue: 50,
+      isOccupied: false,
+    },
+    {
+      id: 'region_ironvale',
+      primaryEconomicOutput: ResourceType.Iron,
+      localConditionModifier: 1.0,
+      populationContribution: 5000,
+      developmentLevel: 35,
+      localFaithProfile: 'orthodox',
+      culturalIdentity: 'highland',
+      strategicValue: 60,
+      isOccupied: false,
+    },
+    {
+      id: 'region_timbermark',
+      primaryEconomicOutput: ResourceType.Wood,
+      localConditionModifier: 1.0,
+      populationContribution: 7000,
+      developmentLevel: 30,
+      localFaithProfile: 'orthodox',
+      culturalIdentity: 'highland',
+      strategicValue: 40,
+      isOccupied: false,
+    },
+  ];
+
   return {
     // --- Time ---
     turn: {
@@ -94,34 +160,8 @@ export function createMerchantsGambitScenario(): GameState {
     },
 
     // --- Population ---
-    population: {
-      [PopulationClass.Nobility]: {
-        population: POPULATION_STARTING[PopulationClass.Nobility],
-        satisfaction: 40,
-        satisfactionDeltaLastTurn: 0,
-        intrigueRisk: 10,
-      },
-      [PopulationClass.Clergy]: {
-        population: POPULATION_STARTING[PopulationClass.Clergy],
-        satisfaction: 50,
-        satisfactionDeltaLastTurn: 0,
-      },
-      [PopulationClass.Merchants]: {
-        population: 3500,
-        satisfaction: 70,
-        satisfactionDeltaLastTurn: 0,
-      },
-      [PopulationClass.Commoners]: {
-        population: POPULATION_STARTING[PopulationClass.Commoners],
-        satisfaction: 55,
-        satisfactionDeltaLastTurn: 0,
-      },
-      [PopulationClass.MilitaryCaste]: {
-        population: POPULATION_STARTING[PopulationClass.MilitaryCaste],
-        satisfaction: 40,
-        satisfactionDeltaLastTurn: 0,
-      },
-    },
+    population,
+    populationDynamics: createInitialPopulationDynamicsState(population, regions),
 
     // --- Military ---
     military: {
@@ -271,41 +311,7 @@ export function createMerchantsGambitScenario(): GameState {
     },
 
     // --- Regions ---
-    regions: [
-      {
-        id: 'region_heartlands',
-        primaryEconomicOutput: 'Food',
-        localConditionModifier: 1.0,
-        populationContribution: 12000,
-        developmentLevel: 40,
-        localFaithProfile: 'orthodox',
-        culturalIdentity: 'highland',
-        strategicValue: 50,
-        isOccupied: false,
-      },
-      {
-        id: 'region_ironvale',
-        primaryEconomicOutput: ResourceType.Iron,
-        localConditionModifier: 1.0,
-        populationContribution: 5000,
-        developmentLevel: 35,
-        localFaithProfile: 'orthodox',
-        culturalIdentity: 'highland',
-        strategicValue: 60,
-        isOccupied: false,
-      },
-      {
-        id: 'region_timbermark',
-        primaryEconomicOutput: ResourceType.Wood,
-        localConditionModifier: 1.0,
-        populationContribution: 7000,
-        developmentLevel: 30,
-        localFaithProfile: 'orthodox',
-        culturalIdentity: 'highland',
-        strategicValue: 40,
-        isOccupied: false,
-      },
-    ],
+    regions,
 
     // --- Policies ---
     policies: {

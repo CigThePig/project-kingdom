@@ -25,6 +25,9 @@ import {
   TradeOpenness,
 } from '../types';
 import {
+  getSocialConditionEscalatedEffects,
+} from './social-fabric';
+import {
   WEATHER_SEVERITY_MIN,
   WEATHER_SEVERITY_MAX,
   WEATHER_STARTING_SEVERITY,
@@ -93,6 +96,13 @@ export interface ConditionModifiers {
   commonerSatisfactionDelta: number;
   merchantSatisfactionDelta: number;
   constructionHalted: boolean;
+  // Social fabric (Expansion 4) — consumed by downstream phases
+  treasuryIncomeMultiplier: number;
+  constructionCostMultiplier: number;
+  counterIntelligenceDelta: number;
+  nobilitySatisfactionDelta: number;
+  clergySatisfactionDelta: number;
+  militaryCasteSatisfactionDelta: number;
 }
 
 // ============================================================
@@ -440,6 +450,9 @@ export function tickExistingConditions(
   conditions: KingdomCondition[],
   environment: EnvironmentState,
   food: FoodState,
+  population?: PopulationState,
+  stability?: number,
+  espionage?: { counterIntelligenceLevel: number },
 ): { active: KingdomCondition[]; resolved: KingdomCondition[] } {
   const active: KingdomCondition[] = [];
   const resolved: KingdomCondition[] = [];
@@ -470,6 +483,32 @@ export function tickExistingConditions(
         resolved.push(updated);
         continue;
       }
+
+      // Social condition resolution (Expansion 4)
+      if (stability !== undefined) {
+        // Banditry resolves when stability recovers above 50
+        if (updated.type === ConditionType.Banditry && stability > 50) {
+          resolved.push(updated);
+          continue;
+        }
+        // Unrest resolves when stability > 45 and no class below 25
+        if (updated.type === ConditionType.Unrest && stability > 45 && population) {
+          const allAbove25 = Object.values(PopulationClass).every(
+            cls => population[cls].satisfaction >= 25,
+          );
+          if (allAbove25) {
+            resolved.push(updated);
+            continue;
+          }
+        }
+      }
+      // CriminalUnderworld resolves when counter-intelligence is high
+      if (updated.type === ConditionType.CriminalUnderworld &&
+          espionage && espionage.counterIntelligenceLevel >= 50) {
+        resolved.push(updated);
+        continue;
+      }
+      // Corruption does NOT auto-resolve — requires player decree action
     }
 
     active.push(updated);
@@ -509,8 +548,12 @@ export function checkConditionEscalation(
     case 'Pox' as ConditionType:
       newEffects = buildPlagueEffects(nextSeverity);
       break;
-    default:
-      newEffects = condition.systemEffects;
+    default: {
+      // Social fabric conditions (Expansion 4) — delegate to social-fabric module
+      const socialEffects = getSocialConditionEscalatedEffects(condition.type, nextSeverity);
+      newEffects = socialEffects ?? condition.systemEffects;
+      break;
+    }
   }
 
   return {
@@ -539,6 +582,12 @@ export function aggregateConditionEffects(
     commonerSatisfactionDelta: 0,
     merchantSatisfactionDelta: 0,
     constructionHalted: false,
+    treasuryIncomeMultiplier: 1.0,
+    constructionCostMultiplier: 1.0,
+    counterIntelligenceDelta: 0,
+    nobilitySatisfactionDelta: 0,
+    clergySatisfactionDelta: 0,
+    militaryCasteSatisfactionDelta: 0,
   };
 
   for (const condition of conditions) {
@@ -571,6 +620,25 @@ export function aggregateConditionEffects(
         case 'construction.halted':
           modifiers.constructionHalted = true;
           break;
+        // Social fabric condition targets (Expansion 4)
+        case 'treasury.income':
+          if (effect.operator === 'multiply') modifiers.treasuryIncomeMultiplier *= effect.value;
+          break;
+        case 'construction.cost':
+          if (effect.operator === 'multiply') modifiers.constructionCostMultiplier *= effect.value;
+          break;
+        case 'espionage.counterIntel':
+          if (effect.operator === 'add') modifiers.counterIntelligenceDelta += effect.value;
+          break;
+        case 'nobility.satisfaction':
+          if (effect.operator === 'add') modifiers.nobilitySatisfactionDelta += effect.value;
+          break;
+        case 'clergy.satisfaction':
+          if (effect.operator === 'add') modifiers.clergySatisfactionDelta += effect.value;
+          break;
+        case 'militaryCaste.satisfaction':
+          if (effect.operator === 'add') modifiers.militaryCasteSatisfactionDelta += effect.value;
+          break;
       }
     }
   }
@@ -595,6 +663,8 @@ export function resolveEnvironmentTick(
   activeConflictCount: number,
   turnNumber: number,
   random: number,
+  stability?: number,
+  espionage?: { counterIntelligenceLevel: number },
 ): {
   environment: EnvironmentState;
   conditionCards: ConditionCardTrigger[];
@@ -643,9 +713,10 @@ export function resolveEnvironmentTick(
     plagueMemoryTurns: newPlagueMemory,
   };
 
-  // 3. Tick existing conditions
+  // 3. Tick existing conditions (includes social condition resolution checks)
   const { active: tickedConditions, resolved } = tickExistingConditions(
     intermediateEnv.activeConditions, intermediateEnv, food,
+    population, stability, espionage,
   );
 
   // Generate resolution card triggers

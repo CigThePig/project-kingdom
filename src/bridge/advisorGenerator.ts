@@ -15,6 +15,10 @@ const CONDITION_ADVISOR_WARNINGS: Partial<Record<string, string>> = {
   Plague: 'Plague spreads through the populace.',
   Famine: 'Famine grips the kingdom.',
   Blight: 'Blight afflicts the fields.',
+  Banditry: 'Banditry plagues the roads — trade suffers.',
+  Corruption: 'Corruption festers among the nobility.',
+  Unrest: 'Civil unrest threatens the kingdom\'s stability.',
+  CriminalUnderworld: 'A criminal underworld undermines security.',
 };
 
 export function generateAdvisorBriefing(state: GameState): AdvisorBriefing {
@@ -65,6 +69,21 @@ export function generateAdvisorBriefing(state: GameState): AdvisorBriefing {
       if (count >= 3) {
         warnings.push(`Recurring pressure from ${system} — a pattern is forming.`);
       }
+    }
+  }
+
+  // Population dynamics warnings
+  if (state.populationDynamics) {
+    if (state.populationDynamics.migrationPressure < -40) {
+      warnings.push('People are fleeing the kingdom in alarming numbers.');
+    } else if (state.populationDynamics.migrationPressure < -20) {
+      warnings.push('Migration outflow is a growing concern.');
+    }
+    if (state.populationDynamics.currentTotalPopulation > state.populationDynamics.housingCapacity) {
+      warnings.push('The population exceeds housing capacity — overcrowding worsens.');
+    }
+    if (state.populationDynamics.recentDeathSurplus > state.populationDynamics.recentBirthSurplus * 1.5) {
+      warnings.push('Deaths outpace births — the population declines.');
     }
   }
 
