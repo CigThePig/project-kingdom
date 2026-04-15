@@ -60,6 +60,10 @@ export function rulingStyleThresholdText(axis: string, value: number): string {
   return `The crown's ${axis.toLowerCase()} stance has become notably ${direction}.`;
 }
 
+export function decreeEnactedText(decreeName: string): string {
+  return `The crown enacted: ${decreeName}.`;
+}
+
 export function constructionCompletedText(projectName: string, regionId: string): string {
   if (regionId) {
     return `Construction completed: ${projectName} in ${regionId}.`;

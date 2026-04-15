@@ -2,7 +2,7 @@
 // Evaluates the just-resolved turn and returns 0-3 chronicle entries
 // for events significant enough to record.
 
-import { EventSeverity } from '../engine/types';
+import { EventSeverity, InteractionType } from '../engine/types';
 import type { GameState, ActiveEvent, Season, KnowledgeBranch, FailureCondition } from '../engine/types';
 import type { ChronicleEntry } from '../ui/types';
 import type { MonthDecision } from '../ui/types';
@@ -16,7 +16,9 @@ import {
   storylineResolvedText,
   failureWarningText,
   constructionCompletedText,
+  decreeEnactedText,
 } from '../data/text/chronicle-templates';
+import { DECREE_DISPLAY_NAMES } from '../data/text/labels';
 
 // ============================================================
 // Chronicle entry generation
@@ -33,7 +35,7 @@ export interface ChronicleLogEntry {
 export function generateChronicleEntries(
   preState: GameState,
   postState: GameState,
-  _decisions: MonthDecision[],
+  decisions: MonthDecision[],
   resolvedEvents: ActiveEvent[],
   newMilestones: Array<{ branch: KnowledgeBranch; milestoneIndex: number }>,
   failureWarnings: FailureCondition[],
@@ -45,7 +47,11 @@ export function generateChronicleEntries(
 
   // 1. Crisis events resolved (Serious or Critical severity)
   for (const event of resolvedEvents) {
-    if (event.severity === EventSeverity.Serious || event.severity === EventSeverity.Critical) {
+    if (
+      event.severity === EventSeverity.Notable ||
+      event.severity === EventSeverity.Serious ||
+      event.severity === EventSeverity.Critical
+    ) {
       entries.push({
         turnNumber,
         season,
@@ -148,6 +154,20 @@ export function generateChronicleEntries(
       text: `${seasonYear} \u2014 ${constructionCompletedText(projectId, '')}`,
       isProtected: false,
     });
+  }
+
+  // 9. Decree enactments
+  for (const decision of decisions) {
+    if (decision.interactionType === InteractionType.Decree) {
+      const decreeName = DECREE_DISPLAY_NAMES[decision.cardId] ?? decision.cardId;
+      entries.push({
+        turnNumber,
+        season,
+        year,
+        text: `${seasonYear} \u2014 ${decreeEnactedText(decreeName)}`,
+        isProtected: false,
+      });
+    }
   }
 
   // Limit to 3 most significant entries per season

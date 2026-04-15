@@ -13,7 +13,7 @@ import {
   type SaveFile,
   type TurnHistoryEntry,
 } from '../engine/types';
-import type { ChronicleEntry } from '../ui/types';
+import type { ChronicleEntry, MonthDecision } from '../ui/types';
 import {
   generateChronicleEntries,
   toChronicleEntry,
@@ -58,7 +58,7 @@ export type GameAction =
   | { type: 'LOAD_SAVE'; save: SaveFile }
   | { type: 'QUEUE_ACTION'; action: QueuedAction }
   | { type: 'REMOVE_ACTION'; actionId: string }
-  | { type: 'TURN_RESOLVED'; result: TurnResolutionResult }
+  | { type: 'TURN_RESOLVED'; result: TurnResolutionResult; decisions: MonthDecision[] }
   | { type: 'SAVE_COMPLETED'; savedAt: number }
   | { type: 'UPDATE_GAME_STATE'; updater: (state: GameState) => GameState }
   | { type: 'DECREES_OFFERED'; decreeIds: string[] };
@@ -235,7 +235,7 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
       const newChronicleLogEntries = generateChronicleEntries(
         state.gameState,
         result.nextState,
-        [], // decisions are already consumed by the resolution pipeline
+        action.decisions,
         newlyResolved,
         result.newlyUnlockedMilestones,
         failureWarningConditions,

@@ -145,7 +145,7 @@ export interface RivalDossier {
 
 export interface ActiveSituation {
   id: string;
-  type: 'war' | 'construction' | 'treaty' | 'trade' | 'espionage' | 'failureWarning' | 'storyline';
+  type: 'war' | 'construction' | 'treaty' | 'trade' | 'espionage' | 'failureWarning' | 'storyline' | 'kingdom_feature';
   title: string;
   statusLines: string[];   // 2-4 short status descriptors
   urgency: 'low' | 'medium' | 'high';

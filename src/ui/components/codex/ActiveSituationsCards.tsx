@@ -19,6 +19,8 @@ function situationFamily(type: ActiveSituation['type']): CardFamily {
       return 'advisor';
     case 'storyline':
       return 'season';
+    case 'kingdom_feature':
+      return 'status';
   }
 }
 
