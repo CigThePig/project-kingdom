@@ -5,6 +5,7 @@ import type { GameState } from '../engine/types';
 import { EconomicPhase } from '../engine/types';
 import type { ContextLine } from '../ui/types';
 import { ECONOMIC_PHASE_LABELS } from '../data/text/labels';
+import { extractRulingStyleContext } from './contextExtractor';
 
 export interface AdvisorBriefing {
   lines: string[];
@@ -123,6 +124,10 @@ export function generateAdvisorBriefing(state: GameState): AdvisorBriefing {
       tone: hasSevere ? 'crisis' : 'pressure',
     });
   }
+
+  // Ruling style drift — the reflective moment
+  const styleLine = extractRulingStyleContext(state);
+  if (styleLine) statusBadges.push(styleLine);
 
   if (warnings.length === 0) {
     return {

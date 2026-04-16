@@ -24,12 +24,20 @@ export interface PhaseDecisions {
 export interface EffectHint {
   label: string;
   type: 'positive' | 'negative' | 'warning' | 'neutral';
+  /** Short modifier tags indicating active forces that will scale this delta. */
+  modifiers?: string[];
 }
 
 /** A single line of simulation context attached to a card. */
 export interface ContextLine {
   text: string;             // e.g. "Drought (Severe) — 3 turns active"
   tone: 'crisis' | 'pressure' | 'opportunity' | 'info';
+}
+
+/** A qualitative signal tag attached to a response or petition choice card. */
+export interface SignalTag {
+  label: string;              // e.g. "AUTHORITY ↑", "+AUSTERE", "FOLLOW-UP LIKELY"
+  tone: 'style' | 'followup' | 'consequence';
 }
 
 export type ConfidenceLevel = 'low' | 'moderate' | 'high';

@@ -4,6 +4,7 @@ import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
+import { ContextStrip } from '../components/ContextStrip';
 import { GameContext } from '../../context/game-context';
 import { MONTH_PHRASES, MONTH_EFFECT_POOLS, MONTH_NAMES, MONTH_SEASON_LABELS } from '../../data/text/month-openings';
 import type { AdvisorBriefing } from '../../bridge/advisorGenerator';
@@ -68,6 +69,7 @@ export function SeasonDawn({ onComplete, advisorBriefing, phraseIndex, effectOrd
               </div>
             ))}
           </div>
+          <ContextStrip lines={advisorBriefing.statusBadges} maxLines={4} />
         </Card>
       )}
     </div>

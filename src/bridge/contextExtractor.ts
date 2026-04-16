@@ -9,10 +9,12 @@ import {
   ConditionSeverity,
   EconomicPhase,
   DiplomaticPosture,
+  StyleAxis,
+  KnowledgeBranch,
 } from '../engine/types';
 import type { ContextLine } from '../ui/types';
 import { CONDITION_TYPE_LABELS, CONDITION_SEVERITY_LABELS, ECONOMIC_PHASE_LABELS } from '../data/text/labels';
-import { NEIGHBOR_LABELS, CLASS_LABELS, REGION_LABELS, DIPLOMATIC_POSTURE_LABELS } from '../data/text/labels';
+import { NEIGHBOR_LABELS, CLASS_LABELS, REGION_LABELS, DIPLOMATIC_POSTURE_LABELS, KNOWLEDGE_BRANCH_LABELS } from '../data/text/labels';
 
 // ============================================================
 // Positive condition types (for tone classification)
@@ -347,19 +349,22 @@ const CATEGORY_SYSTEM_MAP: Partial<Record<EventCategory, string>> = {
 };
 
 // ============================================================
-// Main dispatcher: extract 1-2 context lines for an event
+// Main dispatcher: extract context lines for an event
 // ============================================================
 
 /**
- * Extracts up to 2 context lines for an event, using the event's metadata
+ * Extracts up to `limit` context lines for an event, using the event's metadata
  * (category, region, class, neighbor) to pick the most relevant extractors.
+ * Default limit is 2 for petitions, pass 4 for crisis cards.
  *
  * Priority: active conditions > economic phase > class pressure >
- *           diplomacy > region > causal chain > population
+ *           diplomacy > region > faith > public order > causal chain >
+ *           persistent consequences > population
  */
 export function extractEventContext(
   state: GameState,
   event: ActiveEvent,
+  limit: number = 2,
 ): ContextLine[] {
   const lines: ContextLine[] = [];
 
@@ -368,7 +373,7 @@ export function extractEventContext(
   if (condLine) lines.push(condLine);
 
   // 2. Economic context for economy/trade events
-  if (lines.length < 2 && (
+  if (lines.length < limit && (
     event.category === EventCategory.Economy ||
     event.category === EventCategory.Food
   )) {
@@ -377,31 +382,31 @@ export function extractEventContext(
   }
 
   // 3. Class pressure for class-related events
-  if (lines.length < 2 && event.affectedClassId) {
+  if (lines.length < limit && event.affectedClassId) {
     const classLine = extractClassPressureContext(state, event.affectedClassId);
     if (classLine) lines.push(classLine);
   }
 
   // 4. Diplomacy context for neighbor-related events
-  if (lines.length < 2 && event.affectedNeighborId) {
+  if (lines.length < limit && event.affectedNeighborId) {
     const diploLine = extractDiplomacyContext(state, event.affectedNeighborId);
     if (diploLine) lines.push(diploLine);
   }
 
   // 5. Region context
-  if (lines.length < 2 && event.affectedRegionId) {
+  if (lines.length < limit && event.affectedRegionId) {
     const regionLine = extractRegionContext(state, event.affectedRegionId);
     if (regionLine) lines.push(regionLine);
   }
 
   // 6. Faith context for religion events
-  if (lines.length < 2 && event.category === EventCategory.Religion) {
+  if (lines.length < limit && event.category === EventCategory.Religion) {
     const faithLine = extractFaithContext(state);
     if (faithLine) lines.push(faithLine);
   }
 
   // 7. Public order → class pressure for lowest class
-  if (lines.length < 2 && event.category === EventCategory.PublicOrder && !event.affectedClassId) {
+  if (lines.length < limit && event.category === EventCategory.PublicOrder && !event.affectedClassId) {
     const lowestClass = findLowestSatisfactionClass(state);
     if (lowestClass) {
       const classLine = extractClassPressureContext(state, lowestClass);
@@ -410,19 +415,26 @@ export function extractEventContext(
   }
 
   // 8. Causal chain as fallback
-  if (lines.length < 2) {
+  if (lines.length < limit) {
     const system = CATEGORY_SYSTEM_MAP[event.category] ?? null;
     const causalLine = extractCausalSnippet(state.causalLedger, system);
     if (causalLine) lines.push(causalLine);
   }
 
-  // 9. Population dynamics as final fallback
-  if (lines.length < 2) {
+  // 9. Persistent consequence context — show when a prior decision tag
+  //    is relevant to this event's category
+  if (lines.length < limit) {
+    const pcLine = extractPersistentConsequenceContext(state, event.category);
+    if (pcLine) lines.push(pcLine);
+  }
+
+  // 10. Population dynamics as final fallback
+  if (lines.length < limit) {
     const popLine = extractPopulationContext(state);
     if (popLine) lines.push(popLine);
   }
 
-  return lines.slice(0, 2);
+  return lines.slice(0, limit);
 }
 
 // ============================================================
@@ -430,7 +442,8 @@ export function extractEventContext(
 // ============================================================
 
 /**
- * Extracts up to 2 context lines for a decree based on its category.
+ * Extracts up to 3 context lines for a decree based on its category.
+ * Includes knowledge milestone context when a branch just opened new options.
  */
 export function extractDecreeContext(
   state: GameState,
@@ -438,12 +451,18 @@ export function extractDecreeContext(
 ): ContextLine[] {
   const lines: ContextLine[] = [];
 
+  // Knowledge milestone — shown first when a branch just unlocked something
+  const knowledgeLine = extractKnowledgeContext(state, category);
+  if (knowledgeLine) lines.push(knowledgeLine);
+
   switch (category) {
     case 'Economic': {
       const econLine = extractEconomicContext(state);
       if (econLine) lines.push(econLine);
-      const condLine = extractConditionContext(state, EventCategory.Economy, null);
-      if (condLine) lines.push(condLine);
+      if (lines.length < 3) {
+        const condLine = extractConditionContext(state, EventCategory.Economy, null);
+        if (condLine) lines.push(condLine);
+      }
       break;
     }
     case 'Military': {
@@ -455,17 +474,21 @@ export function extractDecreeContext(
         const diploLine = extractDiplomacyContext(state, tensest.id);
         if (diploLine) lines.push(diploLine);
       }
-      const milClass = extractClassPressureContext(state, 'MilitaryCaste' as PopulationClass);
-      if (milClass) lines.push(milClass);
+      if (lines.length < 3) {
+        const milClass = extractClassPressureContext(state, 'MilitaryCaste' as PopulationClass);
+        if (milClass) lines.push(milClass);
+      }
       break;
     }
     case 'Civic': {
       const popLine = extractPopulationContext(state);
       if (popLine) lines.push(popLine);
-      const lowestClass = findLowestSatisfactionClass(state);
-      if (lowestClass) {
-        const classLine = extractClassPressureContext(state, lowestClass);
-        if (classLine) lines.push(classLine);
+      if (lines.length < 3) {
+        const lowestClass = findLowestSatisfactionClass(state);
+        if (lowestClass) {
+          const classLine = extractClassPressureContext(state, lowestClass);
+          if (classLine) lines.push(classLine);
+        }
       }
       break;
     }
@@ -487,10 +510,12 @@ export function extractDecreeContext(
     case 'Social': {
       const condLine = extractConditionContext(state, EventCategory.PublicOrder, null);
       if (condLine) lines.push(condLine);
-      const lowestClass = findLowestSatisfactionClass(state);
-      if (lowestClass) {
-        const classLine = extractClassPressureContext(state, lowestClass);
-        if (classLine) lines.push(classLine);
+      if (lines.length < 3) {
+        const lowestClass = findLowestSatisfactionClass(state);
+        if (lowestClass) {
+          const classLine = extractClassPressureContext(state, lowestClass);
+          if (classLine) lines.push(classLine);
+        }
       }
       break;
     }
@@ -501,7 +526,163 @@ export function extractDecreeContext(
     }
   }
 
-  return lines.slice(0, 2);
+  return lines.slice(0, 3);
+}
+
+// ============================================================
+// Knowledge context: surfaces when a branch recently unlocked a milestone
+// ============================================================
+
+/**
+ * Returns context when a knowledge branch has just reached a new milestone
+ * (unlocked advancements count > 0 and milestone is recent).
+ * Useful on decree cards whose prerequisites just became available.
+ */
+export function extractKnowledgeContext(
+  state: GameState,
+  category?: string,
+): ContextLine | null {
+  if (!state.knowledge) return null;
+
+  // Map decree categories to relevant knowledge branches
+  const branchForCategory: Record<string, KnowledgeBranch> = {
+    Military: KnowledgeBranch.Military,
+    Economic: KnowledgeBranch.MaritimeTrade,
+    Civic: KnowledgeBranch.Civic,
+    Religious: KnowledgeBranch.CulturalScholarly,
+    Social: KnowledgeBranch.Civic,
+    Diplomatic: KnowledgeBranch.MaritimeTrade,
+  };
+
+  // Find the most advanced branch or the category-matched branch
+  const targetBranch = category ? branchForCategory[category] : null;
+  const branches = Object.values(state.knowledge.branches);
+
+  // Pick the branch that just unlocked something
+  const recentlyAdvanced = branches.filter(
+    (b) => b.unlockedAdvancements.length > 0 && b.currentMilestoneIndex > 0,
+  );
+  if (recentlyAdvanced.length === 0) return null;
+
+  // Prefer the category-matched branch if it advanced, otherwise pick highest
+  let best = targetBranch
+    ? recentlyAdvanced.find((b) => b.branch === targetBranch)
+    : null;
+  if (!best) {
+    best = recentlyAdvanced.sort(
+      (a, b) => b.currentMilestoneIndex - a.currentMilestoneIndex,
+    )[0];
+  }
+  if (!best) return null;
+
+  const branchLabel = KNOWLEDGE_BRANCH_LABELS[best.branch];
+  const milestone = best.currentMilestoneIndex;
+  return {
+    text: `${branchLabel}: milestone ${milestone} reached — new options available`,
+    tone: 'opportunity',
+  };
+}
+
+// ============================================================
+// Ruling-style context: shows current reign drift on dawn cards
+// ============================================================
+
+const AXIS_POSITIVE_NAMES: Record<StyleAxis, string> = {
+  [StyleAxis.Authority]: 'Authoritarian',
+  [StyleAxis.Economy]:   'Mercantilist',
+  [StyleAxis.Military]:  'Martial',
+  [StyleAxis.Faith]:     'Theocratic',
+};
+
+const AXIS_NEGATIVE_NAMES: Record<StyleAxis, string> = {
+  [StyleAxis.Authority]: 'Permissive',
+  [StyleAxis.Economy]:   'Populist',
+  [StyleAxis.Military]:  'Pacifist',
+  [StyleAxis.Faith]:     'Secular',
+};
+
+/**
+ * Returns a context line summarizing the player's ruling style drift.
+ * Only surfaces when at least one axis has a notable lean (|value| >= 15).
+ * Designed for dawn/advisor cards — the reflective moment in the round loop.
+ */
+export function extractRulingStyleContext(state: GameState): ContextLine | null {
+  if (!state.rulingStyle) return null;
+
+  const axes = state.rulingStyle.axes;
+  const notable: string[] = [];
+
+  for (const axis of Object.values(StyleAxis)) {
+    const value = axes[axis];
+    if (Math.abs(value) >= 15) {
+      const label = value > 0
+        ? AXIS_POSITIVE_NAMES[axis]
+        : AXIS_NEGATIVE_NAMES[axis];
+      notable.push(label);
+    }
+  }
+
+  if (notable.length === 0) return null;
+
+  const text = `Your reign leans ${notable.join(', ')}`;
+  return { text, tone: 'info' };
+}
+
+// ============================================================
+// Persistent consequence context: when a prior decision tag
+// is about to interact with the current situation
+// ============================================================
+
+/**
+ * Maps event categories to consequence tag prefixes that are relevant.
+ */
+const CATEGORY_CONSEQUENCE_PREFIXES: Partial<Record<EventCategory, string[]>> = {
+  [EventCategory.Economy]: ['merchant', 'trade', 'treasury', 'tax'],
+  [EventCategory.Food]: ['harvest', 'famine', 'grain', 'food'],
+  [EventCategory.Military]: ['military', 'army', 'border', 'desertion'],
+  [EventCategory.Religion]: ['heresy', 'clergy', 'faith', 'schism', 'prophecy'],
+  [EventCategory.PublicOrder]: ['unrest', 'bandit', 'crime', 'labor'],
+  [EventCategory.Diplomacy]: ['neighbor', 'trade_war', 'treaty', 'envoy'],
+  [EventCategory.ClassConflict]: ['noble', 'merchant', 'commoner', 'labor'],
+  [EventCategory.Espionage]: ['intelligence', 'agent', 'spy'],
+};
+
+/**
+ * Returns context when a persistent consequence from a prior decision
+ * is relevant to the current event's category. This makes visible
+ * the "your past decisions shape current outcomes" loop.
+ */
+export function extractPersistentConsequenceContext(
+  state: GameState,
+  category: EventCategory | null,
+): ContextLine | null {
+  if (!category || !state.persistentConsequences?.length) return null;
+
+  const prefixes = CATEGORY_CONSEQUENCE_PREFIXES[category];
+  if (!prefixes) return null;
+
+  // Find the most recent consequence whose tag matches any prefix
+  const sorted = [...state.persistentConsequences].sort(
+    (a, b) => b.turnApplied - a.turnApplied,
+  );
+
+  for (const consequence of sorted) {
+    const tagLower = consequence.tag.toLowerCase();
+    if (prefixes.some((prefix) => tagLower.includes(prefix))) {
+      const turnsAgo = state.turn.turnNumber - consequence.turnApplied;
+      const timeLabel = turnsAgo === 1
+        ? 'last turn'
+        : turnsAgo <= 3
+        ? `${turnsAgo} turns ago`
+        : 'earlier';
+      return {
+        text: `Prior decision (${timeLabel}) shapes this outcome`,
+        tone: 'info',
+      };
+    }
+  }
+
+  return null;
 }
 
 // ============================================================
