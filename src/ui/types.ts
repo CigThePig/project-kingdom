@@ -26,6 +26,12 @@ export interface EffectHint {
   type: 'positive' | 'negative' | 'warning' | 'neutral';
 }
 
+/** A single line of simulation context attached to a card. */
+export interface ContextLine {
+  text: string;             // e.g. "Drought (Severe) — 3 turns active"
+  tone: 'crisis' | 'pressure' | 'opportunity' | 'info';
+}
+
 export type ConfidenceLevel = 'low' | 'moderate' | 'high';
 
 // ============================================================

@@ -4,6 +4,7 @@ import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
+import { ContextStrip } from '../components/ContextStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
 import type { DecreeCardData } from '../../bridge/decreeCardGenerator';
 
@@ -63,6 +64,7 @@ export function DecreePhase({ onComplete, decreeCards }: DecreePhaseProps) {
           >
             <CardTitle>{decree.title}</CardTitle>
             <CardBody>{decree.body}</CardBody>
+            <ContextStrip lines={decree.context} />
             <EffectStrip effects={decree.effects} />
             {selected.has(decree.decreeId) && <SelectionBadge />}
           </Card>

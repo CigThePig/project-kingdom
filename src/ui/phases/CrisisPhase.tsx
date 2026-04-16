@@ -4,6 +4,7 @@ import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
+import { ContextStrip } from '../components/ContextStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
 import type { CrisisPhaseData } from '../../bridge/crisisCardGenerator';
 
@@ -65,6 +66,7 @@ export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
           <Card family="crisis">
             <CardTitle>{crisisCard.title}</CardTitle>
             <CardBody>{crisisCard.body}</CardBody>
+            <ContextStrip lines={crisisCard.context} />
             <EffectStrip effects={crisisCard.effects} />
           </Card>
         </div>
@@ -98,6 +100,7 @@ export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
         <Card family="crisis">
           <CardTitle>{crisisCard.title}</CardTitle>
           <CardBody>{crisisCard.body}</CardBody>
+          <ContextStrip lines={crisisCard.context} />
           <EffectStrip effects={crisisCard.effects} />
         </Card>
       </div>

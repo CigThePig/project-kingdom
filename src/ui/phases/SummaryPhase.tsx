@@ -50,6 +50,40 @@ export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhas
       <Card family="summary">
         <CardTitle>Court Summary</CardTitle>
         <CardBody>{narrative}</CardBody>
+        {summaryData?.causalBreakdown && (
+          <div
+            style={{
+              paddingTop: 10,
+              marginTop: 10,
+              borderTop: '1px solid color-mix(in srgb, var(--color-border-default) 50%, transparent)',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--font-family-mono)',
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: 2,
+                textTransform: 'uppercase',
+                color: 'var(--color-text-disabled)',
+                marginBottom: 6,
+              }}
+            >
+              CAUSES &amp; EFFECTS
+            </div>
+            <div
+              style={{
+                fontFamily: 'var(--font-family-body)',
+                fontSize: 11,
+                fontStyle: 'italic',
+                color: 'var(--color-text-secondary)',
+                lineHeight: 1.5,
+              }}
+            >
+              {summaryData.causalBreakdown}
+            </div>
+          </div>
+        )}
         <EffectStrip effects={effects} />
       </Card>
 

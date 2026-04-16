@@ -28,6 +28,8 @@ export interface SummaryData {
   legacyCards: LegacyCardData[];
   /** Updated ruling style state with newly crossed thresholds marked. */
   updatedRulingStyle?: RulingStyleState;
+  /** Top causal chains from this turn, if available. */
+  causalBreakdown?: string | null;
 }
 
 export function generateSummaryData(
@@ -141,6 +143,7 @@ export function generateMonthlySummaryData(
   prevRulingStyle?: RulingStyleState,
   currentRulingStyle?: RulingStyleState,
   notificationCards: NotificationCardData[] = [],
+  causalLedger?: CausalLedger,
 ): SummaryData {
   const parts: string[] = [];
   const allEffects: EffectHint[] = [];
@@ -302,6 +305,7 @@ export function generateMonthlySummaryData(
     effectPreview: dedupedEffects,
     legacyCards,
     updatedRulingStyle,
+    causalBreakdown: generateCausalBreakdown(causalLedger),
   };
 }
 

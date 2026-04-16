@@ -4,6 +4,7 @@ import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
+import { ContextStrip } from '../components/ContextStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
 import type { PetitionCardData } from '../../bridge/petitionCardGenerator';
 
@@ -116,6 +117,7 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
         <Card family="petition">
           <CardTitle>{petition.title}</CardTitle>
           <CardBody>{petition.body}</CardBody>
+          <ContextStrip lines={petition.context} />
         </Card>
       </div>
 

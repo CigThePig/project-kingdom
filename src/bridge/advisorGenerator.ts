@@ -2,9 +2,13 @@
 // Generates a short advisor briefing for the Season Dawn phase.
 
 import type { GameState } from '../engine/types';
+import { EconomicPhase } from '../engine/types';
+import type { ContextLine } from '../ui/types';
+import { ECONOMIC_PHASE_LABELS } from '../data/text/labels';
 
 export interface AdvisorBriefing {
   lines: string[];
+  statusBadges?: ContextLine[];
 }
 
 /** Map condition types to advisor warning text. */
@@ -87,10 +91,49 @@ export function generateAdvisorBriefing(state: GameState): AdvisorBriefing {
     }
   }
 
+  // Build status badges — structured overview of kingdom state
+  const statusBadges: ContextLine[] = [];
+
+  if (state.economy) {
+    const phase = state.economy.cyclePhase;
+    const phaseLabel = ECONOMIC_PHASE_LABELS[phase];
+    const tone: ContextLine['tone'] =
+      phase === EconomicPhase.Depression || phase === EconomicPhase.Recession
+        ? 'pressure'
+        : phase === EconomicPhase.Growth || phase === EconomicPhase.Boom
+        ? 'opportunity'
+        : 'info';
+    statusBadges.push({ text: `Economy: ${phaseLabel}`, tone });
+  }
+
+  if (state.populationDynamics) {
+    const pd = state.populationDynamics;
+    if (pd.recentDeathSurplus > pd.recentBirthSurplus) {
+      statusBadges.push({ text: 'Population: declining', tone: 'pressure' });
+    } else if (pd.migrationPressure > 20) {
+      statusBadges.push({ text: 'Population: growing', tone: 'opportunity' });
+    }
+  }
+
+  if (state.environment?.activeConditions?.length) {
+    const count = state.environment.activeConditions.length;
+    const hasSevere = state.environment.activeConditions.some((c) => c.severity === 'Severe');
+    statusBadges.push({
+      text: `${count} active condition${count !== 1 ? 's' : ''}`,
+      tone: hasSevere ? 'crisis' : 'pressure',
+    });
+  }
+
   if (warnings.length === 0) {
-    return { lines: ['The kingdom is stable. The court awaits your word.'] };
+    return {
+      lines: ['The kingdom is stable. The court awaits your word.'],
+      statusBadges: statusBadges.length ? statusBadges : undefined,
+    };
   }
 
   // Cap at 4 most important warnings (expanded from 3 to accommodate conditions)
-  return { lines: warnings.slice(0, 4) };
+  return {
+    lines: warnings.slice(0, 4),
+    statusBadges: statusBadges.length ? statusBadges : undefined,
+  };
 }

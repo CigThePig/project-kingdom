@@ -1,13 +1,14 @@
 // Bridge Layer — Petition Card Generator
 // Translates petition-severity ActiveEvents into PetitionCardData[] for the UI.
 
-import type { ActiveEvent } from '../engine/types';
-import type { EffectHint } from '../ui/types';
+import type { ActiveEvent, GameState } from '../engine/types';
+import type { EffectHint, ContextLine } from '../ui/types';
 import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
+import { extractEventContext } from './contextExtractor';
 
 // ============================================================
 // Card data type
@@ -30,6 +31,7 @@ export interface PetitionCardData {
   denyEffects: EffectHint[];
   /** All authored choices, preserving middle options for 3+ choice events. */
   allChoices: PetitionChoiceData[];
+  context?: ContextLine[];
 }
 
 // ============================================================
@@ -46,7 +48,7 @@ function substituteNeighbor(text: string, event: ActiveEvent): string {
 // Generator
 // ============================================================
 
-export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[] {
+export function generatePetitionCards(events: ActiveEvent[], gameState?: GameState): PetitionCardData[] {
   // Dev assertion: notification events should use generateNotificationCards(), not this function.
   if (import.meta.env.DEV) {
     for (const event of events) {
@@ -71,6 +73,8 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
     if (!textEntry || !def || def.choices.length < 1) continue;
 
     const choiceEffects = EVENT_CHOICE_EFFECTS[event.definitionId] ?? {};
+    const context = gameState ? extractEventContext(gameState, event) : undefined;
+    const contextLines = context?.length ? context : undefined;
 
     // Single-choice (notification-style) events: present as acknowledge-only petition.
     if (def.choices.length === 1) {
@@ -86,6 +90,7 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
         grantEffects: onlyEffects,
         denyEffects: onlyEffects,
         allChoices: [{ choiceId: onlyChoice.choiceId, title: textEntry.choices[onlyChoice.choiceId] ?? onlyChoice.choiceId, effects: onlyEffects }],
+        context: contextLines,
       });
       continue;
     }
@@ -108,6 +113,7 @@ export function generatePetitionCards(events: ActiveEvent[]): PetitionCardData[]
       grantEffects: mechDeltaToEffectHints(choiceEffects[grantChoice.choiceId] ?? {}),
       denyEffects: mechDeltaToEffectHints(choiceEffects[denyChoice.choiceId] ?? {}),
       allChoices,
+      context: contextLines,
     });
   }
 

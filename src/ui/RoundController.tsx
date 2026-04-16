@@ -156,7 +156,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
 
     // Partition events into crisis/petition/notification
     const { crisisEvents, petitionEvents, notificationEvents } = partitionEvents(events);
-    const crisisDataList = crisisEvents.map(generateCrisisPhaseData);
+    const crisisDataList = crisisEvents.map((e) => generateCrisisPhaseData(e, gameState));
 
     // Generate crisis cards from active storylines at branch points
     const storylineCrises = (gameState.activeStorylines ?? [])
@@ -172,7 +172,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     setAllCrisesData(allCrises);
 
     // Generate petition and notification cards separately
-    const petitions = generatePetitionCards(petitionEvents);
+    const petitions = generatePetitionCards(petitionEvents, gameState);
     const allPetitions = [...petitions, ...neighborCards.petitionCards];
     setPetitionCards(allPetitions);
 
@@ -295,12 +295,13 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
           prevStyle,
           projectedStyle,
           notificationCards,
+          ctx.state.gameState.causalLedger,
         ),
       );
 
       setCurrentPhase('summary');
     },
-    [accumulatedDecisions, allCrisesData, petitionCards, notificationCards, negotiationId, ctx.state.gameState.rulingStyle, ctx.state.gameState.turn.turnNumber],
+    [accumulatedDecisions, allCrisesData, petitionCards, notificationCards, negotiationId, ctx.state.gameState.rulingStyle, ctx.state.gameState.turn.turnNumber, ctx.state.gameState.causalLedger],
   );
 
   const handleRoundComplete = useCallback(() => {
