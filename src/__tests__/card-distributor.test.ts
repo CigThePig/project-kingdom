@@ -16,7 +16,7 @@ function makeCrisis(id: string): CrisisPhaseData {
       effects: [],
     },
     responses: [
-      { id: `${id}:r1`, choiceId: 'r1', title: 'Response 1', effects: [], slotCost: 1, isFree: false },
+      { id: `${id}:r1`, choiceId: 'r1', title: 'Response 1', effects: [], signals: [], slotCost: 1, isFree: false },
     ],
   };
 }
@@ -31,6 +31,8 @@ function makePetition(id: string): PetitionCardData {
     denyChoiceId: 'deny',
     grantEffects: [],
     denyEffects: [],
+    grantSignals: [],
+    denySignals: [],
     allChoices: [],
   };
 }

@@ -15,8 +15,8 @@ function makeCrisis(id: string, title: string): CrisisPhaseData {
       effects: [],
     },
     responses: [
-      { id: `${id}:choice_a`, choiceId: 'choice_a', title: 'Option A', effects: [{ label: 'Treasury +10', type: 'positive' as const }], slotCost: 1, isFree: false },
-      { id: `${id}:choice_b`, choiceId: 'choice_b', title: 'Option B', effects: [{ label: 'Food -5', type: 'negative' as const }], slotCost: 0, isFree: true },
+      { id: `${id}:choice_a`, choiceId: 'choice_a', title: 'Option A', effects: [{ label: 'Treasury +10', type: 'positive' as const }], signals: [], slotCost: 1, isFree: false },
+      { id: `${id}:choice_b`, choiceId: 'choice_b', title: 'Option B', effects: [{ label: 'Food -5', type: 'negative' as const }], signals: [], slotCost: 0, isFree: true },
     ],
   };
 }

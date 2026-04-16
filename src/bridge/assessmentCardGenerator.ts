@@ -103,6 +103,9 @@ export function generateAssessmentPhaseData(
   const resolvedNeighborId = peaceful[0]?.id ?? neighbors[0]?.id ?? undefined;
 
   // Build response cards from choices
+  // Assessments don't have ruling-style tags or follow-up definitions,
+  // so signals are empty. If assessment style tags are authored later,
+  // a dedicated extractor should be wired here.
   const responses: ResponseCardData[] = selected.choices.map((choice) => {
     const choiceEffects = effects[choice.choiceId] ?? {};
     const resolved = resolveNeighborInEffects(choiceEffects, state);
@@ -111,6 +114,7 @@ export function generateAssessmentPhaseData(
       choiceId: choice.choiceId,
       title: text.choices[choice.choiceId] ?? choice.choiceId,
       effects: mechDeltaToEffectHints(resolved),
+      signals: [],
       slotCost: choice.slotCost,
       isFree: choice.isFree,
     };

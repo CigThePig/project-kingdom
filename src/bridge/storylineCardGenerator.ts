@@ -62,6 +62,7 @@ export function generateStorylineCrisisData(
         choiceId: choice.choiceId,
         title: branchText.choices[choice.choiceId] ?? choice.choiceId,
         effects: mechDeltaToEffectHints(delta),
+        signals: [],
         slotCost: 0,
         isFree: true,
       };
