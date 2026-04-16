@@ -5,6 +5,7 @@ import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { ContextStrip } from '../components/ContextStrip';
+import { SignalStrip } from '../components/SignalStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
 import type { PetitionCardData } from '../../bridge/petitionCardGenerator';
 
@@ -138,6 +139,7 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
           >
             <CardTitle>{choice.title}</CardTitle>
             <EffectStrip effects={choice.effects} />
+            <SignalStrip signals={choice.signals} />
             {selectedChoiceId === choice.choiceId && <SelectionBadge />}
           </Card>
         </div>

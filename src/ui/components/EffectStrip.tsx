@@ -27,6 +27,7 @@ export function EffectStrip({ effects }: EffectStripProps) {
     >
       {effects.map((effect, i) => {
         const { color, prefix } = TYPE_CONFIG[effect.type];
+        const hasModifiers = effect.modifiers && effect.modifiers.length > 0;
         return (
           <span
             key={i}
@@ -38,10 +39,25 @@ export function EffectStrip({ effects }: EffectStripProps) {
               background: `color-mix(in srgb, ${color} 12%, transparent)`,
               padding: '3px 8px',
               borderRadius: 6,
+              display: 'inline-flex',
+              alignItems: 'baseline',
+              gap: 4,
             }}
           >
             {prefix && `${prefix} `}
             {effect.label}
+            {hasModifiers && (
+              <span
+                style={{
+                  fontSize: 9,
+                  fontWeight: 500,
+                  opacity: 0.7,
+                  letterSpacing: 0.3,
+                }}
+              >
+                [{effect.modifiers!.join('][')}]
+              </span>
+            )}
           </span>
         );
       })}

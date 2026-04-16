@@ -2,13 +2,14 @@
 // Translates petition-severity ActiveEvents into PetitionCardData[] for the UI.
 
 import type { ActiveEvent, GameState } from '../engine/types';
-import type { EffectHint, ContextLine } from '../ui/types';
+import type { EffectHint, ContextLine, SignalTag } from '../ui/types';
 import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
 import { extractEventContext } from './contextExtractor';
+import { extractChoiceSignals } from './signalExtractor';
 
 // ============================================================
 // Card data type
@@ -18,6 +19,7 @@ export interface PetitionChoiceData {
   choiceId: string;
   title: string;
   effects: EffectHint[];
+  signals: SignalTag[];
 }
 
 export interface PetitionCardData {
@@ -29,6 +31,8 @@ export interface PetitionCardData {
   denyChoiceId: string;
   grantEffects: EffectHint[];
   denyEffects: EffectHint[];
+  grantSignals: SignalTag[];
+  denySignals: SignalTag[];
   /** All authored choices, preserving middle options for 3+ choice events. */
   allChoices: PetitionChoiceData[];
   context?: ContextLine[];
@@ -79,7 +83,8 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
     // Single-choice (notification-style) events: present as acknowledge-only petition.
     if (def.choices.length === 1) {
       const onlyChoice = def.choices[0];
-      const onlyEffects = mechDeltaToEffectHints(choiceEffects[onlyChoice.choiceId] ?? {});
+      const onlyEffects = mechDeltaToEffectHints(choiceEffects[onlyChoice.choiceId] ?? {}, gameState);
+      const onlySignals = extractChoiceSignals(event.definitionId, onlyChoice.choiceId);
       cards.push({
         eventId: event.id,
         definitionId: event.definitionId,
@@ -89,7 +94,9 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
         denyChoiceId: onlyChoice.choiceId,
         grantEffects: onlyEffects,
         denyEffects: onlyEffects,
-        allChoices: [{ choiceId: onlyChoice.choiceId, title: textEntry.choices[onlyChoice.choiceId] ?? onlyChoice.choiceId, effects: onlyEffects }],
+        grantSignals: onlySignals,
+        denySignals: onlySignals,
+        allChoices: [{ choiceId: onlyChoice.choiceId, title: textEntry.choices[onlyChoice.choiceId] ?? onlyChoice.choiceId, effects: onlyEffects, signals: onlySignals }],
         context: contextLines,
       });
       continue;
@@ -100,7 +107,8 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
     const allChoices: PetitionChoiceData[] = def.choices.map((c) => ({
       choiceId: c.choiceId,
       title: textEntry.choices[c.choiceId] ?? c.choiceId,
-      effects: mechDeltaToEffectHints(choiceEffects[c.choiceId] ?? {}),
+      effects: mechDeltaToEffectHints(choiceEffects[c.choiceId] ?? {}, gameState),
+      signals: extractChoiceSignals(event.definitionId, c.choiceId),
     }));
 
     cards.push({
@@ -110,8 +118,10 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
       body: substituteNeighbor(textEntry.body, event),
       grantChoiceId: grantChoice.choiceId,
       denyChoiceId: denyChoice.choiceId,
-      grantEffects: mechDeltaToEffectHints(choiceEffects[grantChoice.choiceId] ?? {}),
-      denyEffects: mechDeltaToEffectHints(choiceEffects[denyChoice.choiceId] ?? {}),
+      grantEffects: mechDeltaToEffectHints(choiceEffects[grantChoice.choiceId] ?? {}, gameState),
+      denyEffects: mechDeltaToEffectHints(choiceEffects[denyChoice.choiceId] ?? {}, gameState),
+      grantSignals: extractChoiceSignals(event.definitionId, grantChoice.choiceId),
+      denySignals: extractChoiceSignals(event.definitionId, denyChoice.choiceId),
       allChoices,
       context: contextLines,
     });

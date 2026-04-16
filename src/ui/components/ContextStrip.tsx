@@ -9,9 +9,11 @@ const TONE_COLORS: Record<ContextLine['tone'], string> = {
 
 interface ContextStripProps {
   lines?: ContextLine[];
+  /** Maximum number of context lines to display. Default: 2. */
+  maxLines?: number;
 }
 
-export function ContextStrip({ lines }: ContextStripProps) {
+export function ContextStrip({ lines, maxLines = 2 }: ContextStripProps) {
   if (!lines || lines.length === 0) return null;
 
   return (
@@ -25,7 +27,7 @@ export function ContextStrip({ lines }: ContextStripProps) {
         borderTop: '1px solid color-mix(in srgb, var(--color-border-default) 50%, transparent)',
       }}
     >
-      {lines.slice(0, 2).map((line, i) => (
+      {lines.slice(0, maxLines).map((line, i) => (
         <div
           key={i}
           style={{
@@ -34,9 +36,10 @@ export function ContextStrip({ lines }: ContextStripProps) {
             fontStyle: 'italic',
             color: TONE_COLORS[line.tone],
             lineHeight: 1.4,
+            display: '-webkit-box',
+            WebkitLineClamp: maxLines <= 2 ? 2 : 3,
+            WebkitBoxOrient: 'vertical',
             overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
           }}
         >
           {line.text}

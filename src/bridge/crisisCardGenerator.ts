@@ -3,12 +3,14 @@
 
 import type { ActiveEvent, MechanicalEffectDelta, GameState } from '../engine/types';
 import { EventSeverity } from '../engine/types';
-import type { EffectHint, ContextLine } from '../ui/types';
+import type { EffectHint, ContextLine, SignalTag } from '../ui/types';
 import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
 import { extractEventContext } from './contextExtractor';
+import { extractChoiceSignals } from './signalExtractor';
+import { extractModifierTags } from './modifierTagExtractor';
 
 // ============================================================
 // Shared utility — MechanicalEffectDelta → EffectHint[]
@@ -19,37 +21,46 @@ function fmt(n: number): string {
   return n >= 0 ? `+${n}` : `${n}`;
 }
 
-export function mechDeltaToEffectHints(delta: MechanicalEffectDelta): EffectHint[] {
+export function mechDeltaToEffectHints(
+  delta: MechanicalEffectDelta,
+  gameState?: GameState,
+): EffectHint[] {
   const hints: EffectHint[] = [];
+  const modTags = gameState ? extractModifierTags(gameState, delta) : {};
 
-  function push(label: string, value: number, forceWarning?: boolean) {
+  function push(field: string, label: string, value: number, forceWarning?: boolean) {
     if (value === 0) return;
     const type: EffectHint['type'] = forceWarning
       ? 'warning'
       : value > 0
       ? 'positive'
       : 'negative';
-    hints.push({ label: `${label} ${fmt(value)}`, type });
+    const mods = modTags[field];
+    hints.push({
+      label: `${label} ${fmt(value)}`,
+      type,
+      modifiers: mods?.length ? mods : undefined,
+    });
   }
 
-  if (delta.treasuryDelta !== undefined) push('Treasury', delta.treasuryDelta);
-  if (delta.foodDelta !== undefined) push('Food', delta.foodDelta);
-  if (delta.stabilityDelta !== undefined) push('Stability', delta.stabilityDelta);
-  if (delta.faithDelta !== undefined) push('Faith', delta.faithDelta);
-  if (delta.heterodoxyDelta !== undefined) push('Heterodoxy', delta.heterodoxyDelta, delta.heterodoxyDelta > 0);
-  if (delta.culturalCohesionDelta !== undefined) push('Culture', delta.culturalCohesionDelta);
-  if (delta.militaryReadinessDelta !== undefined) push('Readiness', delta.militaryReadinessDelta);
-  if (delta.militaryEquipmentDelta !== undefined) push('Equipment', delta.militaryEquipmentDelta);
-  if (delta.militaryMoraleDelta !== undefined) push('Morale', delta.militaryMoraleDelta);
-  if (delta.militaryForceSizeDelta !== undefined) push('Force Size', delta.militaryForceSizeDelta);
-  if (delta.espionageNetworkDelta !== undefined) push('Intel', delta.espionageNetworkDelta);
-  if (delta.nobilitySatDelta !== undefined) push('Nobility', delta.nobilitySatDelta);
-  if (delta.clergySatDelta !== undefined) push('Clergy', delta.clergySatDelta);
-  if (delta.merchantSatDelta !== undefined) push('Merchants', delta.merchantSatDelta);
-  if (delta.commonerSatDelta !== undefined) push('Commoners', delta.commonerSatDelta);
-  if (delta.militaryCasteSatDelta !== undefined) push('Military Caste', delta.militaryCasteSatDelta);
-  if (delta.regionDevelopmentDelta !== undefined) push('Region Dev', delta.regionDevelopmentDelta);
-  if (delta.regionConditionDelta !== undefined) push('Region', delta.regionConditionDelta);
+  if (delta.treasuryDelta !== undefined) push('treasuryDelta', 'Treasury', delta.treasuryDelta);
+  if (delta.foodDelta !== undefined) push('foodDelta', 'Food', delta.foodDelta);
+  if (delta.stabilityDelta !== undefined) push('stabilityDelta', 'Stability', delta.stabilityDelta);
+  if (delta.faithDelta !== undefined) push('faithDelta', 'Faith', delta.faithDelta);
+  if (delta.heterodoxyDelta !== undefined) push('heterodoxyDelta', 'Heterodoxy', delta.heterodoxyDelta, delta.heterodoxyDelta > 0);
+  if (delta.culturalCohesionDelta !== undefined) push('culturalCohesionDelta', 'Culture', delta.culturalCohesionDelta);
+  if (delta.militaryReadinessDelta !== undefined) push('militaryReadinessDelta', 'Readiness', delta.militaryReadinessDelta);
+  if (delta.militaryEquipmentDelta !== undefined) push('militaryEquipmentDelta', 'Equipment', delta.militaryEquipmentDelta);
+  if (delta.militaryMoraleDelta !== undefined) push('militaryMoraleDelta', 'Morale', delta.militaryMoraleDelta);
+  if (delta.militaryForceSizeDelta !== undefined) push('militaryForceSizeDelta', 'Force Size', delta.militaryForceSizeDelta);
+  if (delta.espionageNetworkDelta !== undefined) push('espionageNetworkDelta', 'Intel', delta.espionageNetworkDelta);
+  if (delta.nobilitySatDelta !== undefined) push('nobilitySatDelta', 'Nobility', delta.nobilitySatDelta);
+  if (delta.clergySatDelta !== undefined) push('clergySatDelta', 'Clergy', delta.clergySatDelta);
+  if (delta.merchantSatDelta !== undefined) push('merchantSatDelta', 'Merchants', delta.merchantSatDelta);
+  if (delta.commonerSatDelta !== undefined) push('commonerSatDelta', 'Commoners', delta.commonerSatDelta);
+  if (delta.militaryCasteSatDelta !== undefined) push('militaryCasteSatDelta', 'Military Caste', delta.militaryCasteSatDelta);
+  if (delta.regionDevelopmentDelta !== undefined) push('regionDevelopmentDelta', 'Region Dev', delta.regionDevelopmentDelta);
+  if (delta.regionConditionDelta !== undefined) push('regionConditionDelta', 'Region', delta.regionConditionDelta);
 
   if (delta.diplomacyDeltas) {
     for (const [neighborId, value] of Object.entries(delta.diplomacyDeltas)) {
@@ -85,6 +96,7 @@ export interface ResponseCardData {
   choiceId: string;
   title: string;
   effects: EffectHint[];
+  signals: SignalTag[];
   slotCost: number;
   isFree: boolean;
 }
@@ -123,7 +135,7 @@ export function generateCrisisPhaseData(event: ActiveEvent, gameState?: GameStat
     body = body.replace(/\{neighbor\}/g, neighborName);
   }
 
-  const context = gameState ? extractEventContext(gameState, event) : undefined;
+  const context = gameState ? extractEventContext(gameState, event, 4) : undefined;
 
   const crisisCard: CrisisCardData = {
     eventId: event.id,
@@ -146,7 +158,8 @@ export function generateCrisisPhaseData(event: ActiveEvent, gameState?: GameStat
       id: `${event.id}:${choice.choiceId}`,
       choiceId: choice.choiceId,
       title: textEntry.choices[choice.choiceId] ?? choice.choiceId,
-      effects: mechDeltaToEffectHints(delta),
+      effects: mechDeltaToEffectHints(delta, gameState),
+      signals: extractChoiceSignals(event.definitionId, choice.choiceId),
       slotCost: choice.slotCost,
       isFree: choice.isFree,
     };
