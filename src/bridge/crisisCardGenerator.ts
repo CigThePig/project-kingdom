@@ -76,6 +76,8 @@ export interface CrisisCardData {
   body: string;
   effects: EffectHint[];
   context?: ContextLine[];
+  storylineId?: string;
+  branchPointId?: string;
 }
 
 export interface ResponseCardData {
