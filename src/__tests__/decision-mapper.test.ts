@@ -133,6 +133,40 @@ describe('mapMonthDecisionsToActions', () => {
     expect(actions[2].actionDefinitionId).toBe('def_n1');
   });
 
+  it('maps storyline crisis decision with storylineId and branchPointId', () => {
+    const storylineCrisis: CrisisPhaseData = {
+      crisisCard: {
+        eventId: 'storyline:sl_001',
+        definitionId: 'def_plague_arc',
+        title: 'The Spreading Plague',
+        body: 'Test',
+        effects: [{ label: 'STORYLINE', type: 'warning' }],
+        storylineId: 'sl_001',
+        branchPointId: 'branch_mid',
+      },
+      responses: [
+        { id: 'storyline:sl_001:quarantine', choiceId: 'quarantine', title: 'Quarantine', effects: [], slotCost: 0, isFree: true },
+        { id: 'storyline:sl_001:ignore', choiceId: 'ignore', title: 'Ignore', effects: [], slotCost: 0, isFree: true },
+      ],
+    };
+    const decisions: MonthDecision[] = [{
+      cardId: 'storyline:sl_001',
+      choiceId: 'storyline:sl_001:quarantine',
+      interactionType: InteractionType.CrisisResponse,
+      month: SeasonMonth.Early,
+    }];
+
+    const actions = mapMonthDecisionsToActions(decisions, [], [storylineCrisis], [], null, []);
+
+    expect(actions.length).toBe(1);
+    expect(actions[0].parameters.storylineId).toBe('sl_001');
+    expect(actions[0].parameters.branchPointId).toBe('branch_mid');
+    expect(actions[0].parameters.choiceId).toBe('quarantine');
+    expect(actions[0].parameters).not.toHaveProperty('eventId');
+    expect(actions[0].actionDefinitionId).toBe('def_plague_arc');
+    expect(actions[0].isFree).toBe(true);
+  });
+
   it('falls back to decision fields when crisis data is not found', () => {
     const decisions: MonthDecision[] = [{
       cardId: 'unknown',

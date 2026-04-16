@@ -92,11 +92,32 @@ export function mapMonthDecisionsToActions(
   for (const decision of monthDecisions) {
     switch (decision.interactionType) {
       case InteractionType.CrisisResponse: {
-        // Find the matching crisis data by event id
         const matchedCrisis = allCrisesData.find(
           (c) => c.crisisCard.eventId === decision.cardId,
         );
         const response = matchedCrisis?.responses.find((r) => r.id === decision.choiceId);
+        const card = matchedCrisis?.crisisCard;
+
+        // Storyline branch decision — applyCrisisResponseEffect delegates when storylineId is present
+        if (card?.storylineId && card.branchPointId) {
+          actions.push({
+            id: crypto.randomUUID(),
+            type: ActionType.CrisisResponse,
+            actionDefinitionId: card.definitionId,
+            slotCost: response?.slotCost ?? 0,
+            isFree: response?.isFree ?? true,
+            targetRegionId: null,
+            targetNeighborId: null,
+            parameters: {
+              storylineId: card.storylineId,
+              branchPointId: card.branchPointId,
+              choiceId: response?.choiceId ?? decision.choiceId,
+            },
+          });
+          break;
+        }
+
+        // Regular event crisis
         actions.push({
           id: crypto.randomUUID(),
           type: ActionType.CrisisResponse,

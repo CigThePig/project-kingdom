@@ -24,6 +24,7 @@ export function generateStorylineCrisisData(
   storyline: ActiveStoryline,
 ): CrisisPhaseData | null {
   if (storyline.status !== StorylineStatus.Active) return null;
+  if (storyline.turnsUntilNextBranchPoint != null && storyline.turnsUntilNextBranchPoint > 0) return null;
 
   const textEntry = STORYLINE_TEXT[storyline.definitionId];
   if (!textEntry) return null;
@@ -48,6 +49,8 @@ export function generateStorylineCrisisData(
     title: textEntry.title,
     body: branchText.body,
     effects: [{ label: 'STORYLINE', type: 'warning' }],
+    storylineId: storyline.id,
+    branchPointId: storyline.currentBranchId,
   };
 
   const responses: ResponseCardData[] = branchDef.choices
