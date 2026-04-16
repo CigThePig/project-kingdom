@@ -15,8 +15,8 @@ function makeCrisis(id: string): CrisisPhaseData {
       effects: [],
     },
     responses: [
-      { id: `${id}:choice_a`, choiceId: 'choice_a', title: 'A', effects: [], slotCost: 1, isFree: false },
-      { id: `${id}:choice_b`, choiceId: 'choice_b', title: 'B', effects: [], slotCost: 0, isFree: true },
+      { id: `${id}:choice_a`, choiceId: 'choice_a', title: 'A', effects: [], signals: [], slotCost: 1, isFree: false },
+      { id: `${id}:choice_b`, choiceId: 'choice_b', title: 'B', effects: [], signals: [], slotCost: 0, isFree: true },
     ],
   };
 }
@@ -31,6 +31,8 @@ function makePetition(id: string): PetitionCardData {
     denyChoiceId: 'deny',
     grantEffects: [],
     denyEffects: [],
+    grantSignals: [],
+    denySignals: [],
     allChoices: [],
   };
 }
@@ -145,8 +147,8 @@ describe('mapMonthDecisionsToActions', () => {
         branchPointId: 'branch_mid',
       },
       responses: [
-        { id: 'storyline:sl_001:quarantine', choiceId: 'quarantine', title: 'Quarantine', effects: [], slotCost: 0, isFree: true },
-        { id: 'storyline:sl_001:ignore', choiceId: 'ignore', title: 'Ignore', effects: [], slotCost: 0, isFree: true },
+        { id: 'storyline:sl_001:quarantine', choiceId: 'quarantine', title: 'Quarantine', effects: [], signals: [], slotCost: 0, isFree: true },
+        { id: 'storyline:sl_001:ignore', choiceId: 'ignore', title: 'Ignore', effects: [], signals: [], slotCost: 0, isFree: true },
       ],
     };
     const decisions: MonthDecision[] = [{

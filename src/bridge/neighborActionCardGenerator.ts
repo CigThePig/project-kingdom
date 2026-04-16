@@ -106,6 +106,7 @@ function generateCrisisFromAction(
       choiceId: choice.choiceId,
       title: textEntry.choices[choice.choiceId] ?? choice.choiceId,
       effects: mechDeltaToEffectHints(delta),
+      signals: [],
       slotCost: choice.slotCost,
       isFree: choice.isFree,
     };
@@ -139,10 +140,13 @@ function generatePetitionFromAction(
     denyChoiceId: denyChoice.choiceId,
     grantEffects: mechDeltaToEffectHints(grantDelta),
     denyEffects: mechDeltaToEffectHints(denyDelta),
+    grantSignals: [],
+    denySignals: [],
     allChoices: template.choices.map((c) => ({
       choiceId: c.choiceId,
       title: textEntry.choices[c.choiceId] ?? c.choiceId,
       effects: mechDeltaToEffectHints(resolveEffects(effects[c.choiceId] ?? {}, action.neighborId)),
+      signals: [],
     })),
   };
 }
