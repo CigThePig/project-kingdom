@@ -4,11 +4,13 @@ Each task below is a self-contained prompt for Claude Code. Run them in order. E
 
 The design document `CROWN_AND_COUNCIL_EXPANSION.md` is the source of truth. When in doubt, defer to it. Do not invent features not in the design doc.
 
+**Completion tracking:** Mark each task heading with ✅ when done. A task is only done when its verification steps pass — not when the code is written. Do not mark a task complete if tests are failing or the build is broken.
+
 ---
 
 ## Phase 1 — Procedural Naming System
 
-### Task 1.1 — Word banks
+### Task 1.1 — Word banks ✅
 
 Create `src/data/text/word-banks.ts`. Export the following const arrays of strings:
 
@@ -29,7 +31,7 @@ All exported as `const` with inferred types. No runtime logic — just data.
 
 **Verify:** `npm run lint && tsc --noEmit`. No errors.
 
-### Task 1.2 — Procedural name generators
+### Task 1.2 — Procedural name generators ✅
 
 Create `src/data/text/name-generation.ts`. Implement:
 
@@ -90,7 +92,7 @@ In each `src/data/scenarios/*.ts`, modify the scenario creation function to:
 
 **Verify:** Start a new game in dev mode. Open the dossier card for any rival. The displayed name should be procedurally generated, not "Kingdom of Arenthal."
 
-### Task 1.5 — Name resolver bridge
+### Task 1.5 — Name resolver bridge ✅
 
 Create `src/bridge/nameResolver.ts`:
 
