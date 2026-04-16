@@ -2,7 +2,7 @@
 // Filters DECREE_POOL for available decrees and converts to DecreeCardData[].
 
 import type { GameState } from '../engine/types';
-import type { EffectHint } from '../ui/types';
+import type { EffectHint, ContextLine } from '../ui/types';
 import { DECREE_POOL } from '../data/decrees/index';
 import { DECREE_EFFECTS } from '../data/decrees/effects';
 import { DECREE_STYLE_TAGS } from '../data/ruling-style/flavor-tags';
@@ -10,6 +10,7 @@ import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import { getDecreeAvailability } from '../engine/systems/decree-progression';
 import { getDominantAxes } from '../engine/systems/ruling-style';
 import { StyleAxis } from '../engine/types';
+import { extractDecreeContext } from './contextExtractor';
 
 // ============================================================
 // Card data type
@@ -23,6 +24,7 @@ export interface DecreeCardData {
   effects: EffectHint[];
   slotCost: number;
   isHighImpact: boolean;
+  context?: ContextLine[];
 }
 
 // ============================================================
@@ -70,15 +72,19 @@ export function generateDecreeCards(
     return (1.0 + tierWeight + alignment * 0.5) * recentPenalty;
   });
 
-  return selected.map((decree) => ({
-    decreeId: decree.id,
-    title: decree.title,
-    category: decree.category,
-    body: decree.effectPreview,
-    effects: mechDeltaToEffectHints(DECREE_EFFECTS[decree.id] ?? {}),
-    slotCost: decree.slotCost,
-    isHighImpact: decree.isHighImpact,
-  }));
+  return selected.map((decree) => {
+    const context = extractDecreeContext(gameState, decree.category);
+    return {
+      decreeId: decree.id,
+      title: decree.title,
+      category: decree.category,
+      body: decree.effectPreview,
+      effects: mechDeltaToEffectHints(DECREE_EFFECTS[decree.id] ?? {}),
+      slotCost: decree.slotCost,
+      isHighImpact: decree.isHighImpact,
+      context: context.length ? context : undefined,
+    };
+  });
 }
 
 // ============================================================

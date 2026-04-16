@@ -6,6 +6,7 @@ import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
+import { ContextStrip } from '../components/ContextStrip';
 import { SeasonMonth } from '../../engine/types';
 import type { Season } from '../../engine/types';
 import { SEASON_MONTHS } from '../../engine/constants';
@@ -119,6 +120,7 @@ export function MonthDawn({
         <div style={{ animation: 'slideUp 400ms ease 100ms both' }}>
           <Card family="advisor">
             <CardTitle>Advisor Briefing</CardTitle>
+            <ContextStrip lines={advisorBriefing.statusBadges} />
             <div style={{ display: 'flex', flexDirection: 'column', gap: 6, padding: '4px 0' }}>
               {advisorBriefing.lines.map((line, i) => (
                 <div

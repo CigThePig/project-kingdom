@@ -27,6 +27,7 @@ import {
   TaxationLevel,
   TerrainType,
   TradeOpenness,
+  ConditionSeverity,
 } from '../../engine/types';
 
 // ============================================================
@@ -518,9 +519,32 @@ export const TERRAIN_TYPE_LABELS: Record<TerrainType, string> = {
   [TerrainType.River]: 'River',
 };
 
-export const CONDITION_TYPE_LABELS: Partial<Record<ConditionType, string>> = {
+export const CONDITION_TYPE_LABELS: Record<ConditionType, string> = {
+  [ConditionType.Drought]: 'Drought',
+  [ConditionType.Flood]: 'Flooding',
+  [ConditionType.HarshWinter]: 'Harsh Winter',
+  [ConditionType.Blight]: 'Crop Blight',
+  [ConditionType.BountifulHarvest]: 'Bountiful Harvest',
+  [ConditionType.Plague]: 'Plague',
+  [ConditionType.Pox]: 'Pox',
+  [ConditionType.Famine]: 'Famine',
+  [ConditionType.Pestilence]: 'Pestilence',
+  [ConditionType.Banditry]: 'Banditry',
+  [ConditionType.Corruption]: 'Corruption',
+  [ConditionType.Unrest]: 'Civil Unrest',
+  [ConditionType.CriminalUnderworld]: 'Criminal Underworld',
   [ConditionType.TradeDisruption]: 'Trade Disruption',
   [ConditionType.MarketPanic]: 'Market Panic',
+  [ConditionType.GoldenAge]: 'Golden Age',
+  [ConditionType.HarvestFestival]: 'Harvest Festival',
+  [ConditionType.PilgrimageSeason]: 'Pilgrimage Season',
+  [ConditionType.MilitaryTriumph]: 'Military Triumph',
+};
+
+export const CONDITION_SEVERITY_LABELS: Record<ConditionSeverity, string> = {
+  [ConditionSeverity.Mild]: 'Mild',
+  [ConditionSeverity.Moderate]: 'Moderate',
+  [ConditionSeverity.Severe]: 'Severe',
 };
 
 export const ECONOMIC_OUTPUT_LABELS: Record<string, string> = {

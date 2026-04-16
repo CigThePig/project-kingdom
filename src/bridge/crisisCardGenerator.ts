@@ -1,13 +1,14 @@
 // Bridge Layer — Crisis Card Generator
 // Translates a crisis-severity ActiveEvent into CrisisPhaseData for the UI.
 
-import type { ActiveEvent, MechanicalEffectDelta } from '../engine/types';
+import type { ActiveEvent, MechanicalEffectDelta, GameState } from '../engine/types';
 import { EventSeverity } from '../engine/types';
-import type { EffectHint } from '../ui/types';
+import type { EffectHint, ContextLine } from '../ui/types';
 import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
+import { extractEventContext } from './contextExtractor';
 
 // ============================================================
 // Shared utility — MechanicalEffectDelta → EffectHint[]
@@ -74,6 +75,7 @@ export interface CrisisCardData {
   title: string;
   body: string;
   effects: EffectHint[];
+  context?: ContextLine[];
 }
 
 export interface ResponseCardData {
@@ -105,7 +107,7 @@ function severityLabel(severity: EventSeverity): EffectHint {
   }
 }
 
-export function generateCrisisPhaseData(event: ActiveEvent): CrisisPhaseData {
+export function generateCrisisPhaseData(event: ActiveEvent, gameState?: GameState): CrisisPhaseData {
   const textEntry = EVENT_TEXT[event.definitionId];
   const def = EVENT_POOL.find((e) => e.id === event.definitionId)
     ?? FOLLOW_UP_POOL.find((e) => e.id === event.definitionId);
@@ -119,12 +121,15 @@ export function generateCrisisPhaseData(event: ActiveEvent): CrisisPhaseData {
     body = body.replace(/\{neighbor\}/g, neighborName);
   }
 
+  const context = gameState ? extractEventContext(gameState, event) : undefined;
+
   const crisisCard: CrisisCardData = {
     eventId: event.id,
     definitionId: event.definitionId,
     title,
     body,
     effects: [severityLabel(event.severity)],
+    context: context?.length ? context : undefined,
   };
 
   if (!def || !textEntry) {
