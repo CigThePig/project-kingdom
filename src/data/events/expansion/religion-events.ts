@@ -338,4 +338,28 @@ export const EXPANSION_RELIGION_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'any',
   },
+
+  // --- 14. Court Chaplain's Blessing (opening) ---
+  {
+    id: 'evt_exp_rel_chaplain_blessing',
+    severity: EventSeverity.Informational,
+    category: EventCategory.Religion,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 1, maxTurn: 2 },
+      { type: 'random_chance', probability: 0.4 },
+    ],
+    weight: 0.9,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'public_devotion', slotCost: 1, isFree: false },
+      { choiceId: 'private_piety', slotCost: 0, isFree: true },
+      { choiceId: 'emphasize_secular_duties', slotCost: 1, isFree: false },
+    ],
+    affectsClass: PopulationClass.Clergy,
+    affectsRegion: false,
+    relatedStorylineId: null,
+    phase: 'opening',
+  },
 ];

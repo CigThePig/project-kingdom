@@ -143,4 +143,15 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
       maintain_status_quo: 'Maintain the Status Quo',
     },
   },
+
+  // --- 14. Court Chaplain's Blessing ---
+  evt_exp_rel_chaplain_blessing: {
+    title: 'The Court Chaplain\'s Blessing',
+    body: 'The High Chaplain requests an audience to offer the traditional blessing upon a new reign. Beyond the ceremony, he gently inquires about Your Majesty\'s intentions regarding the faith. Will the crown be seen at morning prayers? Will tithes flow generously? The clergy watch this new sovereign with keen interest, measuring piety against pragmatism.',
+    choices: {
+      public_devotion: 'Demonstrate Public Devotion',
+      private_piety: 'Maintain Private Piety',
+      emphasize_secular_duties: 'Emphasize Secular Duties',
+    },
+  },
 };

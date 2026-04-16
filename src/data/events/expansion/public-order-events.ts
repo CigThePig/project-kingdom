@@ -466,4 +466,30 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'opening',
   },
+
+  // ============================================================
+  // 18. People's Mood — Informational, opening
+  // ============================================================
+  {
+    id: 'evt_exp_po_peoples_mood',
+    severity: EventSeverity.Informational,
+    category: EventCategory.PublicOrder,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 1, maxTurn: 3 },
+      { type: 'random_chance', probability: 0.35 },
+    ],
+    weight: 0.8,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'increase_watch_presence', slotCost: 1, isFree: false },
+      { choiceId: 'address_grievances', slotCost: 1, isFree: false },
+      { choiceId: 'take_no_action', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: false,
+    relatedStorylineId: null,
+    phase: 'opening',
+  },
 ];

@@ -132,4 +132,15 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
       grant_autonomy: 'Grant Regional Autonomy',
     },
   },
+
+  // --- 11. Royal Tour ---
+  evt_exp_reg_royal_tour: {
+    title: 'A Tour of the Realm',
+    body: 'Your advisors suggest that a newly crowned sovereign should be seen by the people. A procession through the provinces would let you observe conditions firsthand \u2014 the state of roads and bridges, the health of the harvest, the mood of the common folk. The local lords prepare their finest hospitality, but the people themselves watch with a harder question in their eyes: what manner of ruler have they gained?',
+    choices: {
+      invest_in_local_projects: 'Invest in Local Projects',
+      hold_open_audience: 'Hold an Open Audience',
+      observe_and_depart: 'Observe and Depart',
+    },
+  },
 };

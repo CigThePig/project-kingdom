@@ -260,4 +260,15 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
       focus_on_land_forces: 'Focus on Land Forces',
     },
   },
+
+  // --- 21. Garrison Inspection ---
+  evt_exp_mil_garrison_inspection: {
+    title: 'The State of Your Forces',
+    body: 'Your newly appointed marshal presents a candid assessment of the royal garrison. The soldiers are loyal but their equipment shows years of neglect \u2014 rust flecks the helms, and several crossbow strings have rotted through. The men stand at attention, watching their new sovereign with hopeful eyes.',
+    choices: {
+      fund_equipment_upgrades: 'Fund Equipment Upgrades',
+      host_a_feast_for_soldiers: 'Feast the Garrison in Your Name',
+      note_the_report: 'Note the Report for Later',
+    },
+  },
 };

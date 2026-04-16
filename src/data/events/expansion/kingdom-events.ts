@@ -362,4 +362,27 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'any',
   },
+
+  // --- 15. Royal Steward's Ledger (opening) ---
+  {
+    id: 'evt_exp_kgd_steward_ledger',
+    severity: EventSeverity.Informational,
+    category: EventCategory.Kingdom,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 1, maxTurn: 2 },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'prioritize_public_welfare', slotCost: 1, isFree: false },
+      { choiceId: 'invest_in_royal_authority', slotCost: 1, isFree: false },
+      { choiceId: 'maintain_current_allocations', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    relatedStorylineId: null,
+    phase: 'opening',
+  },
 ];

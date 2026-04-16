@@ -266,4 +266,28 @@ export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'any',
   },
+
+  // --- 11. Royal Tour (opening) ---
+  {
+    id: 'evt_exp_reg_royal_tour',
+    severity: EventSeverity.Informational,
+    category: EventCategory.Region,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 1, maxTurn: 3 },
+      { type: 'random_chance', probability: 0.35 },
+    ],
+    weight: 0.8,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'invest_in_local_projects', slotCost: 1, isFree: false },
+      { choiceId: 'hold_open_audience', slotCost: 1, isFree: false },
+      { choiceId: 'observe_and_depart', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Commoners,
+    affectsRegion: true,
+    relatedStorylineId: null,
+    phase: 'opening',
+  },
 ];

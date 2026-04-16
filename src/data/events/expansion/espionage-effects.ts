@@ -329,4 +329,13 @@ export const EXPANSION_ESPIONAGE_EFFECTS: Record<string, Record<string, Mechanic
       diplomacyDeltas: { neighbor_arenthal: -3 },
     },
   },
+
+  // ============================================================
+  // 18. Spymaster Introduction — Informational
+  // ============================================================
+  evt_exp_esp_spymaster_introduction: {
+    fund_intelligence_network:     { treasuryDelta: -20, espionageNetworkDelta: +4, stabilityDelta: +1 },
+    request_dossiers_on_neighbors: { treasuryDelta: -10, espionageNetworkDelta: +2, diplomacyDeltas: { neighbor_arenthal: +1, neighbor_valdris: +1 } },
+    acknowledge_and_dismiss:       { espionageNetworkDelta: -1 },
+  },
 };

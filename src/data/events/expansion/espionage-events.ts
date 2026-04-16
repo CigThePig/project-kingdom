@@ -429,4 +429,30 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'any',
   },
+
+  // ============================================================
+  // 18. Spymaster Introduction — Informational, opening
+  // ============================================================
+  {
+    id: 'evt_exp_esp_spymaster_introduction',
+    severity: EventSeverity.Informational,
+    category: EventCategory.Espionage,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 1, maxTurn: 3 },
+      { type: 'random_chance', probability: 0.4 },
+    ],
+    weight: 0.9,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'fund_intelligence_network', slotCost: 1, isFree: false },
+      { choiceId: 'request_dossiers_on_neighbors', slotCost: 1, isFree: false },
+      { choiceId: 'acknowledge_and_dismiss', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    relatedStorylineId: null,
+    phase: 'opening',
+  },
 ];

@@ -91,4 +91,11 @@ export const EXPANSION_RELIGION_EFFECTS: Record<string, Record<string, Mechanica
     secular_curriculum:        { faithDelta: -2, clergySatDelta: -4, merchantSatDelta: +3, commonerSatDelta: +3, heterodoxyDelta: +3, treasuryDelta: -25 },
     maintain_status_quo:       { clergySatDelta: +1, faithDelta: +1, heterodoxyDelta: +1 },
   },
+
+  // --- 14. Court Chaplain's Blessing (Informational: -15/+30, +1/+3 sat) ---
+  evt_exp_rel_chaplain_blessing: {
+    public_devotion:           { treasuryDelta: -15, faithDelta: +3, clergySatDelta: +3, commonerSatDelta: +1, nobilitySatDelta: -1 },
+    private_piety:             { faithDelta: +1, clergySatDelta: +1 },
+    emphasize_secular_duties:  { faithDelta: -1, clergySatDelta: -2, nobilitySatDelta: +2, stabilityDelta: +1 },
+  },
 };

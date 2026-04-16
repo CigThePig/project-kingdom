@@ -194,4 +194,15 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
       skip_ceremony: 'Skip the Ceremony',
     },
   },
+
+  // --- 19. Council Formation ---
+  evt_exp_cul_council_formation: {
+    title: 'Forming the Royal Council',
+    body: 'The throne room empties after the morning audience, and the matter of governance demands attention. Your predecessor\'s councilors wait with varying degrees of confidence \u2014 some expect to retain their seats, others sense the winds of change. How you compose the royal council will signal to every faction at court whether the old order endures or a new vision takes shape.',
+    choices: {
+      traditional_council: 'Appoint from the Old Families',
+      meritocratic_council: 'Choose Advisors by Merit',
+      retain_predecessors_council: 'Retain the Existing Council',
+    },
+  },
 };

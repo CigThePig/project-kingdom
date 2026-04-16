@@ -221,4 +221,17 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
       dismiss_as_rowdiness: 'Dismiss as Rowdiness',
     },
   },
+
+  // ============================================================
+  // 18. People's Mood
+  // ============================================================
+  evt_exp_po_peoples_mood: {
+    title: 'The People\'s Mood',
+    body: 'Your city watch captain reports on the state of the capital\'s streets. The transition of power has left the common folk uncertain \u2014 not hostile, but watchful. Some neighbourhoods hum with cautious optimism; others nurse old grievances that the change of crown has done nothing to ease. The captain awaits your direction on how to keep the peace during these early days.',
+    choices: {
+      increase_watch_presence: 'Increase the Watch Presence',
+      address_grievances: 'Address the People\'s Grievances',
+      take_no_action: 'Take No Special Action',
+    },
+  },
 };

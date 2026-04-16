@@ -70,4 +70,11 @@ export const EXPANSION_REGION_EFFECTS: Record<string, Record<string, MechanicalE
     distribute_equally:         { regionDevelopmentDelta: +3, regionConditionDelta: +2, treasuryDelta: -40, stabilityDelta: +3, commonerSatDelta: +2 },
     encourage_competition:      { regionDevelopmentDelta: +2, merchantSatDelta: +2, stabilityDelta: -2, commonerSatDelta: -1 },
   },
+
+  // --- 11. Royal Tour (Informational: -15/+30, +1/+3 sat) ---
+  evt_exp_reg_royal_tour: {
+    invest_in_local_projects:  { treasuryDelta: -25, regionDevelopmentDelta: +3, commonerSatDelta: +2, nobilitySatDelta: +1 },
+    hold_open_audience:        { treasuryDelta: -10, commonerSatDelta: +3, stabilityDelta: +2, nobilitySatDelta: -1 },
+    observe_and_depart:        { commonerSatDelta: -1, stabilityDelta: -1 },
+  },
 };

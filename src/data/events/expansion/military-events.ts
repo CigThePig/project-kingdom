@@ -581,4 +581,30 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'opening',
   },
+
+  // ============================================================
+  // 21. Garrison Inspection — Informational, opening
+  // ============================================================
+  {
+    id: 'evt_exp_mil_garrison_inspection',
+    severity: EventSeverity.Informational,
+    category: EventCategory.Military,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 1, maxTurn: 3 },
+      { type: 'random_chance', probability: 0.4 },
+    ],
+    weight: 0.9,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'fund_equipment_upgrades', slotCost: 1, isFree: false },
+      { choiceId: 'host_a_feast_for_soldiers', slotCost: 1, isFree: false },
+      { choiceId: 'note_the_report', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.MilitaryCaste,
+    affectsRegion: false,
+    relatedStorylineId: null,
+    phase: 'opening',
+  },
 ];
