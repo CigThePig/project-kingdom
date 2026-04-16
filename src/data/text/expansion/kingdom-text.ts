@@ -154,4 +154,15 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
       let_deeds_speak: 'Let Deeds Speak for Themselves',
     },
   },
+
+  // --- 15. Royal Steward's Ledger ---
+  evt_exp_kgd_steward_ledger: {
+    title: 'The Royal Steward\'s Ledger',
+    body: 'The royal steward kneels before you with the kingdom\'s accounts spread across a broad oak table. Five hundred gold marks sit in the treasury, the granaries hold a season\'s worth of grain, and the tax rolls are due for review. He asks how Your Majesty would like the crown\'s coin directed in this early season of your reign.',
+    choices: {
+      prioritize_public_welfare: 'Direct Funds to Public Welfare',
+      invest_in_royal_authority: 'Invest in Royal Authority',
+      maintain_current_allocations: 'Keep Current Allocations',
+    },
+  },
 };

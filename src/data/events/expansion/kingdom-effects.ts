@@ -98,4 +98,11 @@ export const EXPANSION_KINGDOM_EFFECTS: Record<string, Record<string, Mechanical
     endow_scholarly_archive:   { treasuryDelta: -20, stabilityDelta: +2, clergySatDelta: +3, culturalCohesionDelta: +2, commonerSatDelta: -1 },
     let_deeds_speak:           { stabilityDelta: +1 },
   },
+
+  // --- 15. Royal Steward's Ledger (Informational: -15/+30, +1/+3 sat) ---
+  evt_exp_kgd_steward_ledger: {
+    prioritize_public_welfare:     { treasuryDelta: -20, commonerSatDelta: +3, stabilityDelta: +2, nobilitySatDelta: -1 },
+    invest_in_royal_authority:     { treasuryDelta: -15, stabilityDelta: +3, nobilitySatDelta: +2, commonerSatDelta: -1 },
+    maintain_current_allocations:  { stabilityDelta: +1 },
+  },
 };

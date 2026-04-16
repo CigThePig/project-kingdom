@@ -464,4 +464,28 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'opening',
   },
+
+  // --- 19. Council Formation (Notable, opening) ---
+  {
+    id: 'evt_exp_cul_council_formation',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Culture,
+    triggerConditions: [
+      { type: 'turn_range', minTurn: 1, maxTurn: 2 },
+      { type: 'stability_above', threshold: 40 },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'traditional_council', slotCost: 1, isFree: false },
+      { choiceId: 'meritocratic_council', slotCost: 1, isFree: false },
+      { choiceId: 'retain_predecessors_council', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    relatedStorylineId: null,
+    phase: 'opening',
+  },
 ];

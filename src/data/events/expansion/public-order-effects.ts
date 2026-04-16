@@ -153,4 +153,13 @@ export const EXPANSION_PUBLIC_ORDER_EFFECTS: Record<string, Record<string, Mecha
     organize_public_games:  { treasuryDelta: -10, stabilityDelta: +1, commonerSatDelta: +3, nobilitySatDelta: -1 },
     dismiss_as_rowdiness:   { stabilityDelta: -1, commonerSatDelta: +1 },
   },
+
+  // ============================================================
+  // 18. People's Mood — Informational
+  // ============================================================
+  evt_exp_po_peoples_mood: {
+    increase_watch_presence:  { treasuryDelta: -15, stabilityDelta: +3, commonerSatDelta: -1, militaryCasteSatDelta: +1 },
+    address_grievances:       { treasuryDelta: -10, commonerSatDelta: +3, stabilityDelta: +1, nobilitySatDelta: -1 },
+    take_no_action:           { stabilityDelta: -1, commonerSatDelta: -1 },
+  },
 };

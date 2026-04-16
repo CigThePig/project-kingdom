@@ -180,4 +180,13 @@ export const EXPANSION_MILITARY_EFFECTS: Record<string, Record<string, Mechanica
     refit_merchant_vessels:  { treasuryDelta: -35, militaryReadinessDelta: +3, merchantSatDelta: -3, militaryEquipmentDelta: +2 },
     focus_on_land_forces:    { militaryCasteSatDelta: -1, militaryReadinessDelta: -1, merchantSatDelta: +1 },
   },
+
+  // ============================================================
+  // 21. Garrison Inspection — Informational
+  // ============================================================
+  evt_exp_mil_garrison_inspection: {
+    fund_equipment_upgrades:    { treasuryDelta: -25, militaryEquipmentDelta: +3, militaryReadinessDelta: +2, militaryCasteSatDelta: +2 },
+    host_a_feast_for_soldiers:  { treasuryDelta: -15, militaryMoraleDelta: +3, militaryCasteSatDelta: +3, commonerSatDelta: -1 },
+    note_the_report:            { militaryCasteSatDelta: -1, militaryMoraleDelta: -1 },
+  },
 };

@@ -166,4 +166,15 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
       feed_false_plans: 'Plant False Replacements',
     },
   },
+
+  // --- 18. Spymaster Introduction ---
+  evt_exp_esp_spymaster_introduction: {
+    title: 'A Shadow at Court',
+    body: 'A figure you do not recognize requests a private audience. He introduces himself as the crown\'s spymaster \u2014 a post your predecessor kept carefully hidden from public view. He speaks of watching eyes along every border and whispers gathered from foreign courts. His network, he admits, has grown thin of late and requires investment if it is to serve its new sovereign.',
+    choices: {
+      fund_intelligence_network: 'Fund the Intelligence Network',
+      request_dossiers_on_neighbors: 'Request Dossiers on Our Neighbors',
+      acknowledge_and_dismiss: 'Acknowledge and Dismiss',
+    },
+  },
 };

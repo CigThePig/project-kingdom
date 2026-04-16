@@ -377,4 +377,11 @@ export const EXPANSION_CULTURE_EFFECTS: Record<string, Record<string, Mechanical
       militaryMoraleDelta: -2,
     },
   },
+
+  // --- 19. Council Formation (Notable: -50/+40, -3/+5 sat) ---
+  evt_exp_cul_council_formation: {
+    traditional_council:         { nobilitySatDelta: +3, clergySatDelta: +2, culturalCohesionDelta: +2, commonerSatDelta: -2, merchantSatDelta: -1 },
+    meritocratic_council:        { merchantSatDelta: +3, commonerSatDelta: +2, nobilitySatDelta: -3, culturalCohesionDelta: -1, stabilityDelta: +1 },
+    retain_predecessors_council: { stabilityDelta: +1, nobilitySatDelta: +1, commonerSatDelta: -1 },
+  },
 };
