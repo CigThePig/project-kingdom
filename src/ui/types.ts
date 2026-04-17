@@ -191,7 +191,7 @@ export interface ChronicleEntry {
   isProtected: boolean; // legacy/milestone events can't be pruned
 }
 
-export type CodexSection = 'kingdom' | 'rivals' | 'situations' | 'chronicle';
+export type CodexSection = 'kingdom' | 'rivals' | 'situations' | 'chronicle' | 'combos';
 
 /** Maps a CardFamily to its CSS custom-property accent color. */
 export function getAccentColor(family: CardFamily): string {

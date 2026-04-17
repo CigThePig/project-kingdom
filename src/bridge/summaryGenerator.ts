@@ -13,6 +13,7 @@ import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { DECREE_EFFECTS } from '../data/decrees/effects';
 import { checkThresholdCrossings, markThresholdsCrossed } from '../engine/systems/ruling-style';
 import { LEGACY_TEXT } from '../data/text/legacy-text';
+import type { ComboProc } from '../engine/cards/combos';
 
 export interface LegacyCardData {
   title: string;
@@ -30,6 +31,9 @@ export interface SummaryData {
   updatedRulingStyle?: RulingStyleState;
   /** Top causal chains from this turn, if available. */
   causalBreakdown?: string | null;
+  /** Phase 6 — combos that fired this turn. Surfaced as prominent cards on
+   *  the Summary screen. Empty when no combos triggered. */
+  triggeredCombos?: ComboProc[];
 }
 
 export function generateSummaryData(
@@ -144,6 +148,7 @@ export function generateMonthlySummaryData(
   currentRulingStyle?: RulingStyleState,
   notificationCards: NotificationCardData[] = [],
   causalLedger?: CausalLedger,
+  triggeredCombos: ComboProc[] = [],
 ): SummaryData {
   const parts: string[] = [];
   const allEffects: EffectHint[] = [];
@@ -306,6 +311,7 @@ export function generateMonthlySummaryData(
     legacyCards,
     updatedRulingStyle,
     causalBreakdown: generateCausalBreakdown(causalLedger),
+    triggeredCombos,
   };
 }
 

@@ -21,6 +21,8 @@ import {
 } from '../../data/cards/hand-cards';
 import { getNeighborDisplayName } from '../../bridge/nameResolver';
 import type { GameState } from '../../engine/types';
+import { findPotentialCombosForCard } from '../../engine/systems/combo-engine';
+import { COMBOS } from '../../data/cards/combos';
 
 interface CourtHandPanelProps {
   hand: CourtHand;
@@ -124,6 +126,25 @@ export function CourtHandPanel({
             <Card key={slot.card.id} family="advisor">
               <CardTitle>{slot.card.title}</CardTitle>
               <CardBody>{slot.card.body}</CardBody>
+              {(() => {
+                const potential = findPotentialCombosForCard(slot.card, hand, COMBOS);
+                if (potential.length === 0) return null;
+                const names = potential.slice(0, 2).map((c) => c.name).join(', ');
+                return (
+                  <div
+                    style={{
+                      marginTop: 8,
+                      fontFamily: 'var(--font-family-mono)',
+                      fontSize: 10,
+                      letterSpacing: 1,
+                      textTransform: 'uppercase',
+                      color: 'var(--color-accent-response)',
+                    }}
+                  >
+                    Combos with: {names}
+                  </div>
+                );
+              })()}
               <div
                 style={{
                   display: 'flex',

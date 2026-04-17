@@ -451,6 +451,10 @@ export function createMerchantsGambitScenario(): GameState {
     // --- Court Hand (Phase 5) ---
     courtHand: createInitialCourtHand(),
 
+    // --- Discovered Combos (Phase 6) ---
+    discoveredCombos: [],
+    pendingComboKeysThisTurn: [],
+
     // --- Geography (Phase 2.5) ---
     // Merchant's Gambit: sea edges dominate; dense rival↔rival adjacency sets
     // up Phase 11 coalition dynamics. Minimal claims — the neighbors want

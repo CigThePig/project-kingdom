@@ -87,6 +87,34 @@ export function SummaryPhase({ decisions, onComplete, summaryData }: SummaryPhas
         <EffectStrip effects={effects} />
       </Card>
 
+      {summaryData?.triggeredCombos?.map((proc) => (
+        <div key={`combo-${proc.comboId}`}>
+          <Card family="legacy">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 8 }}>
+              <CardTitle>{proc.name}</CardTitle>
+              <span
+                style={{
+                  fontFamily: 'var(--font-family-mono)',
+                  fontSize: 9,
+                  fontWeight: 700,
+                  letterSpacing: 1.5,
+                  textTransform: 'uppercase',
+                  color: 'var(--color-accent-response)',
+                  padding: '2px 8px',
+                  borderRadius: 4,
+                  border: '1px solid var(--color-accent-response)',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                }}
+              >
+                {proc.isFirstDiscovery ? 'Combo · New' : 'Combo'}
+              </span>
+            </div>
+            <CardBody>{proc.description}</CardBody>
+          </Card>
+        </div>
+      ))}
+
       {summaryData?.legacyCards?.map((legacy, i) => (
         <div key={`legacy-${i}`}>
           <Card family="legacy">
