@@ -10,7 +10,12 @@ import { InteractionType } from '../engine/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import type { AssessmentPhaseData } from './assessmentCardGenerator';
-import type { NegotiationCard, MonthCardAllocation, MonthAllocation } from '../ui/types';
+import type {
+  NegotiationCard,
+  MonthCardAllocation,
+  MonthAllocation,
+  CourtOpportunityOffer,
+} from '../ui/types';
 import type { CardOfFamily } from '../engine/cards/types';
 import {
   crisisToCard,
@@ -20,6 +25,11 @@ import {
   assessmentToCard,
   overtureToCard,
 } from '../engine/cards/adapters';
+import {
+  COURT_OPPORTUNITIES,
+  pickCourtOpportunity,
+} from '../data/cards/court-opportunities';
+import { HAND_CARDS } from '../data/cards/hand-cards';
 
 const EMPTY_ALLOCATION: MonthAllocation = {
   interactionType: null,
@@ -54,6 +64,10 @@ export function distributeCardsToMonths(
   additionalCrises: CrisisPhaseData[] = [],
   notificationCards: NotificationCardData[] = [],
   overtureCards: PetitionCardData[] = [],
+  /** Phase 5 — deterministic RNG for court-opportunity selection. When
+   *  omitted (e.g. in unit tests that only exercise distribution), no
+   *  opportunities are generated. */
+  opportunityRng?: () => number,
 ): MonthCardAllocation {
   // Lift every legacy shape into a unified `Card` envelope at this boundary.
   // Phase 3 overtures piggyback the petition pool for distribution; putting
@@ -222,5 +236,40 @@ export function distributeCardsToMonths(
     }
   }
 
+  // ---- Phase 5: surface a Court Opportunity on fully quiet months ----
+  if (opportunityRng && COURT_OPPORTUNITIES.length > 0) {
+    const months = [month1, month2, month3];
+    for (const m of months) {
+      if (isFullyQuiet(m)) {
+        const offer = buildCourtOpportunityOffer(opportunityRng);
+        if (offer) m.courtOpportunity = offer;
+      }
+    }
+  }
+
   return { month1, month2, month3 };
+}
+
+function isFullyQuiet(m: MonthAllocation): boolean {
+  return (
+    m.interactionType === null &&
+    m.additionalCrises.length === 0 &&
+    m.petitionCards.length === 0 &&
+    m.notificationCards.length === 0
+  );
+}
+
+function buildCourtOpportunityOffer(rng: () => number): CourtOpportunityOffer | null {
+  const opp = pickCourtOpportunity(rng);
+  const handCard = HAND_CARDS[opp.handCardId];
+  if (!handCard) return null;
+  return {
+    id: opp.id,
+    title: opp.title,
+    body: opp.body,
+    handCardId: handCard.id,
+    handCardTitle: handCard.title,
+    handCardBody: handCard.body,
+    expiresAfterTurns: handCard.expiresAfterTurns,
+  };
 }

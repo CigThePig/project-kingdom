@@ -65,6 +65,7 @@ import {
   evaluateStorylineActivation,
 } from '../systems/narrative-pressure';
 import { applyMechanicalEffectDelta, applyStorylineResolutionEffects } from '../events/apply-event-effects';
+import { tickHandExpiry } from '../systems/court-hand';
 import { STORYLINE_RESOLUTION_EFFECTS } from '../../data/storylines/effects';
 import { resetActionBudgetForNextTurn } from './action-budget';
 import { turnRng } from './turn-rng';
@@ -535,6 +536,15 @@ export function resolveTurn(
       .map((m) => ({ ...m, turnsRemaining: m.turnsRemaining - 1 }))
       .filter((m) => m.turnsRemaining > 0),
   };
+
+  // ---- Phase 2c: Court Hand Expiry Tick ----
+  // Banked hand cards expire silently when their countdown hits zero.
+  // Guarded: tests that construct bare GameStates without a court hand
+  // skip this step; the LOAD_SAVE migration always populates the field.
+  if (stateAfterActions.courtHand) {
+    const { hand: tickedHand } = tickHandExpiry(stateAfterActions.courtHand);
+    stateAfterActions = { ...stateAfterActions, courtHand: tickedHand };
+  }
 
   // Compute readiness delta after actions so deploymentPosture changes take effect.
   // Apply condition modifier to readiness decay (e.g., harsh winter increases decay).
@@ -2151,6 +2161,7 @@ export function resolveTurn(
     environment: updatedEnvironment,
     economy: updatedEconomy,
     causalLedger: finalizedLedger,
+    courtHand: stateAfterActions.courtHand,
   };
 
   return {

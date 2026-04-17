@@ -39,7 +39,10 @@ function makeActiveEvent(overrides: Partial<ActiveEvent>): ActiveEvent {
 
 function makeState(overrides?: Partial<GameState>): GameState {
   const base = createDefaultScenario();
-  return { ...base, ...overrides };
+  // Pin runSeed for deterministic follow-up RNG across runs. The scenario
+  // factory seeds runSeed from Date.now, which shifts this test's probability
+  // check unpredictably.
+  return { ...base, runSeed: 'test-follow-up-seed', ...overrides };
 }
 
 afterEach(() => {

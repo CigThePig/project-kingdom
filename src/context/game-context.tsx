@@ -20,6 +20,7 @@ import { selectInitialAgenda } from '../engine/systems/rival-agendas';
 import { finalizeGeography } from '../engine/systems/geography';
 import { synthesizeGeographyFromScenario } from '../engine/systems/geography-migrations';
 import { createInitialEnvironmentState } from '../engine/systems/environment';
+import { createInitialCourtHand } from '../engine/systems/court-hand';
 import { seededRandom } from '../data/text/name-generation';
 import type { ChronicleEntry, MonthDecision } from '../ui/types';
 import {
@@ -150,6 +151,8 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         // both unconditionally, so missing values crash the first turn.
         environment: save.gameState.environment ?? createInitialEnvironmentState(),
         activeKingdomFeatures: save.gameState.activeKingdomFeatures ?? [],
+        // Phase 5 — pre-v4 saves have no courtHand; back-fill an empty hand.
+        courtHand: save.gameState.courtHand ?? createInitialCourtHand(),
         activeEvents: (save.gameState.activeEvents ?? []).map((e: ActiveEvent) => ({
           ...e,
           outcomeQuality: e.outcomeQuality ?? null,

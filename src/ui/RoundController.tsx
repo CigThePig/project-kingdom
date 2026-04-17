@@ -44,6 +44,17 @@ import { CodexOverlay } from './components/CodexOverlay';
 import { generateStorylineCrisisData } from '../bridge/storylineCardGenerator';
 import { generateNeighborActionCards } from '../bridge/neighborActionCardGenerator';
 import type { WorldPulseLine } from './types';
+import { seededRandom } from '../data/text/name-generation';
+import {
+  HAND_CARDS,
+  buildHandCard,
+  type HandCardId,
+  type HandCardChoice,
+} from '../data/cards/hand-cards';
+import {
+  addCardToHand,
+  removeCardFromHand,
+} from '../engine/systems/court-hand';
 
 /**
  * Returns the MonthAllocation for the given SeasonMonth from a MonthCardAllocation.
@@ -209,6 +220,9 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     // Phase 3 — rival-agenda-driven diplomatic overtures. Merged into the
     // petition pool inside the distributor.
     const overtures = generateOvertureCards(gameState);
+    const opportunityRng = seededRandom(
+      `${gameState.runSeed ?? 'opportunity'}_t${gameState.turn.turnNumber}_opportunity`,
+    );
     const allocations = distributeCardsToMonths(
       crisis,
       allPetitions,
@@ -217,6 +231,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       additionalCrises,
       notifications,
       overtures,
+      opportunityRng,
     );
     setMonthAllocations(allocations);
 
@@ -268,6 +283,47 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       }
     },
     [currentMonth],
+  );
+
+  // ---- Phase 5: Court Hand handlers ----
+  const handleAcceptOpportunity = useCallback(
+    (handCardId: string) => {
+      ctx.dispatch({
+        type: 'UPDATE_GAME_STATE',
+        updater: (s) => {
+          const card = buildHandCard(handCardId as HandCardId);
+          return { ...s, courtHand: addCardToHand(s.courtHand, card, s.turn.turnNumber) };
+        },
+      });
+    },
+    [ctx],
+  );
+
+  const handlePlayHandCard = useCallback(
+    (cardId: string, choice: HandCardChoice) => {
+      ctx.dispatch({
+        type: 'UPDATE_GAME_STATE',
+        updater: (s) => {
+          const id = cardId.startsWith('hand:') ? (cardId.slice(5) as HandCardId) : null;
+          if (!id) return s;
+          const def = HAND_CARDS[id];
+          if (!def) return s;
+          const applied = def.apply(s, choice);
+          return { ...applied, courtHand: removeCardFromHand(applied.courtHand, cardId) };
+        },
+      });
+    },
+    [ctx],
+  );
+
+  const handleDiscardHandCard = useCallback(
+    (cardId: string) => {
+      ctx.dispatch({
+        type: 'UPDATE_GAME_STATE',
+        updater: (s) => ({ ...s, courtHand: removeCardFromHand(s.courtHand, cardId) }),
+      });
+    },
+    [ctx],
   );
 
   const handleDecreeComplete = useCallback(
@@ -461,6 +517,12 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
           assessmentData={currentAllocation.assessmentData}
           currentMonth={currentMonth}
           onComplete={handleCourtBusinessComplete}
+          courtOpportunity={currentAllocation.courtOpportunity ?? null}
+          courtHand={ctx.state.gameState.courtHand}
+          gameState={ctx.state.gameState}
+          onAcceptOpportunity={handleAcceptOpportunity}
+          onPlayHandCard={handlePlayHandCard}
+          onDiscardHandCard={handleDiscardHandCard}
         />
       )}
 

@@ -1,4 +1,5 @@
 import type { EventTriggerCondition } from './events/event-engine';
+import type { Card } from './cards/types';
 
 // ============================================================
 // Section 1 — Time Enums & Interfaces
@@ -1391,12 +1392,29 @@ export interface GameState {
   // saves get synthesized geography in LOAD_SAVE via
   // synthesizeGeographyFromScenario().
   geography?: WorldGeography;
+
+  // Phase 5 — Court Hand. Holds banked cards for later use.
+  // LOAD_SAVE backfills pre-Phase-5 saves via createInitialCourtHand().
+  courtHand: CourtHand;
+}
+
+// Phase 5 — Court Hand
+export interface CourtHandSlot {
+  card: Card;
+  turnAdded: number;
+  turnsUntilExpiry: number;
+}
+
+export interface CourtHand {
+  slots: CourtHandSlot[];
+  capacity: number;
 }
 
 // Schema version for SaveFile. Bump when adding non-optional migration steps.
 // v1: original. v2: Phase 2.5 geography graph + procedural region/settlement names.
 // v3: Phase 3 rival agendas + memory.
-export const SAVE_VERSION = 3;
+// v4: Phase 5 court hand.
+export const SAVE_VERSION = 4;
 
 export interface SaveFile {
   version: number; // schema version integer, e.g. 1
