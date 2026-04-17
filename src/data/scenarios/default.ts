@@ -22,6 +22,7 @@ import {
 import type { GameState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
 import { createInitialRivalState } from '../../engine/systems/rival-simulation';
+import { seedRivalAgendas } from '../../engine/systems/rival-agendas';
 import { edge, finalizeGeography } from '../../engine/systems/geography';
 import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
@@ -465,5 +466,5 @@ export function createDefaultScenario(): GameState {
     },
   };
 
-  return finalizeGeography(baseState);
+  return seedRivalAgendas(finalizeGeography(baseState));
 }

@@ -41,7 +41,12 @@ export function distributeCardsToMonths(
   assessmentData: AssessmentPhaseData | null,
   additionalCrises: CrisisPhaseData[] = [],
   notificationCards: NotificationCardData[] = [],
+  overtureCards: PetitionCardData[] = [],
 ): MonthCardAllocation {
+  // Phase 3 overtures piggyback the petition pool for distribution. Putting
+  // them at the front ensures overtures always fit somewhere and are
+  // resolved in the earliest available petition slot.
+  petitionCards = [...overtureCards, ...petitionCards];
   const month1: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };
   const month2: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };
   const month3: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };

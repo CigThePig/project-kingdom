@@ -183,6 +183,22 @@ export enum RivalCrisisType {
   ReligiousSchism = 'ReligiousSchism',
 }
 
+// Phase 3 — Rival Agendas & Memory
+export enum RivalAgenda {
+  RestoreTheOldBorders = 'RestoreTheOldBorders',
+  BleedTheRivals = 'BleedTheRivals',
+  DominateTrade = 'DominateTrade',
+  ReligiousHegemony = 'ReligiousHegemony',
+  DynasticAlliance = 'DynasticAlliance',
+  SubjugateAVassal = 'SubjugateAVassal',
+  SackASettlement = 'SackASettlement',
+  DefensiveConsolidation = 'DefensiveConsolidation',
+  IsolationistRetreat = 'IsolationistRetreat',
+  EconomicRecovery = 'EconomicRecovery',
+  ConvertThePlayer = 'ConvertThePlayer',
+  ProveDominance = 'ProveDominance',
+}
+
 // ============================================================
 // Section 7 — Knowledge Enums
 // ============================================================
@@ -461,6 +477,11 @@ export interface NeighborState {
   // Phase 2 — Rival Kingdom Simulation Core. Optional for save migration;
   // pre-Phase-2 saves backfill via createInitialRivalState in LOAD_SAVE.
   kingdomSimulation?: RivalKingdomState;
+
+  // Phase 3 — Rival Agendas & Memory. Optional for save migration;
+  // pre-Phase-3 saves backfill via selectInitialAgenda in LOAD_SAVE.
+  agenda?: RivalAgendaState;
+  memory?: RivalMemoryEntry[];
 }
 
 // Phase 2 — Rival Kingdom Simulation types
@@ -489,6 +510,33 @@ export interface RivalKingdomState {
 
 /** Pressure score map, 0..1 per action type. Multiplies existing RNG gates in diplomacy AI. */
 export type RivalActionPressureScores = Record<NeighborActionType, number>;
+
+// Phase 3 — Rival Agendas & Memory types
+
+export interface RivalMemoryEntry {
+  turnRecorded: number;
+  type: 'slight' | 'favor' | 'breach' | 'demonstration' | 'territorial_loss';
+  /** Source tag describing what triggered this memory (e.g. 'rejected_proposal:trade'). */
+  source: string;
+  /** 0..1 magnitude. Decays over time; drift delta multiplies by this. */
+  weight: number;
+  /** Human-readable context string (internal, never rendered raw to player). */
+  context: string;
+  /** Phase 2.5 geography anchor — set for territorial_loss entries. */
+  regionId?: string;
+  /** Phase 2.5 geography anchor — set for settlement-scoped grievances. */
+  settlementId?: string;
+}
+
+export interface RivalAgendaState {
+  current: RivalAgenda;
+  /** region_* | neighbor_* | settlement_* | null (untargeted agendas). */
+  targetEntityId: string | null;
+  /** 0..100 — progress toward satisfaction. Ticked by tickAgenda. */
+  progressValue: number;
+  /** Turns since this agenda was adopted. Used by shouldAgendaShift. */
+  turnsActive: number;
+}
 
 export interface DiplomacyState {
   neighbors: NeighborState[];
@@ -1347,7 +1395,8 @@ export interface GameState {
 
 // Schema version for SaveFile. Bump when adding non-optional migration steps.
 // v1: original. v2: Phase 2.5 geography graph + procedural region/settlement names.
-export const SAVE_VERSION = 2;
+// v3: Phase 3 rival agendas + memory.
+export const SAVE_VERSION = 3;
 
 export interface SaveFile {
   version: number; // schema version integer, e.g. 1

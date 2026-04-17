@@ -33,6 +33,7 @@ import { mapMonthDecisionsToActions } from '../bridge/decisionMapper';
 import { generateNegotiationCard } from '../bridge/negotiationCardGenerator';
 import { generateAssessmentPhaseData } from '../bridge/assessmentCardGenerator';
 import { distributeCardsToMonths } from '../bridge/cardDistributor';
+import { generateOvertureCards } from '../bridge/diplomaticOvertureGenerator';
 import { applyDirectEffects } from '../bridge/directEffectApplier';
 import { generateWorldPulse } from '../bridge/worldPulseGenerator';
 import { compileKingdomState } from '../bridge/codexCompiler';
@@ -187,7 +188,18 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
 
     // Distribute cards across 3 months (pass additional crises beyond the first + notifications)
     const additionalCrises = allCrises.slice(1);
-    const allocations = distributeCardsToMonths(crisis, allPetitions, negotiation, assessment, additionalCrises, notifications);
+    // Phase 3 — rival-agenda-driven diplomatic overtures. Merged into the
+    // petition pool inside the distributor.
+    const overtures = generateOvertureCards(gameState);
+    const allocations = distributeCardsToMonths(
+      crisis,
+      allPetitions,
+      negotiation,
+      assessment,
+      additionalCrises,
+      notifications,
+      overtures,
+    );
     setMonthAllocations(allocations);
 
     // Generate decree cards (used in Month 3)
@@ -465,7 +477,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         onClose={() => setIsCodexOpen(false)}
         kingdomState={compileKingdomState(ctx.state.gameState)}
         rivals={ctx.state.gameState.diplomacy.neighbors.map((n) =>
-          compileDossier(n, ctx.state.gameState.espionage, ctx.state.gameState.neighborActions.filter((a) => a.neighborId === n.id), ctx.state.gameState.turn.turnNumber),
+          compileDossier(n, ctx.state.gameState.espionage, ctx.state.gameState.neighborActions.filter((a) => a.neighborId === n.id), ctx.state.gameState.turn.turnNumber, ctx.state.gameState),
         )}
         situations={compileActiveSituations(ctx.state.gameState)}
         chronicle={ctx.state.chronicle}

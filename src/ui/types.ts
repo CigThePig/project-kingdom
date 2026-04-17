@@ -153,6 +153,8 @@ export interface RivalDossier {
   knownStrengths: string[];          // gated by intel level
   recentActions: string[];           // gated by intel level, last 3-4 turns
   spymasterAssessment: string | null; // gated by intel level >= Strong
+  agendaAssessment: string | null;    // Phase 3: gated by intel level >= moderate
+  dispositionTowardPlayer: string | null; // Phase 3: derived from memory drift
   confidenceRating: string | null;    // "Low" | "Moderate" | "High" | "Very High"
   intelLevel: 'none' | 'minimal' | 'moderate' | 'strong' | 'exceptional';
 }

@@ -176,3 +176,63 @@ describe('LOAD_SAVE geography migration (Phase 2.5)', () => {
     }
   });
 });
+
+describe('LOAD_SAVE agenda + memory migration (Phase 3)', () => {
+  function makeV2Save(scenarioId: string): SaveFile {
+    const fresh = createScenarioState(scenarioId);
+    // Strip agenda + memory to emulate a pre-Phase-3 (v2) save.
+    const stripped: GameState = {
+      ...fresh,
+      diplomacy: {
+        ...fresh.diplomacy,
+        neighbors: fresh.diplomacy.neighbors.map((n) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { agenda: _a, memory: _m, ...rest } = n;
+          return rest as typeof n;
+        }),
+      },
+    };
+    return {
+      version: 2,
+      scenarioId,
+      savedAt: Date.now(),
+      isMidTurn: false,
+      gameState: stripped,
+      turnHistory: [],
+      eventHistory: [],
+      intelligenceReports: [],
+    };
+  }
+
+  it('populates agenda and empty memory on every neighbor when loading a v2 save', () => {
+    const save = makeV2Save('new_crown');
+    const initial = createInitialState();
+    const result = gameReducer(initial, { type: 'LOAD_SAVE', save });
+
+    for (const n of result.gameState.diplomacy.neighbors) {
+      expect(n.agenda).toBeDefined();
+      expect(n.agenda!.current).toBeTruthy();
+      expect(n.memory).toEqual([]);
+    }
+  });
+
+  it('preserves existing agendas on a v3 save round-trip', () => {
+    const initial = createScenarioState('new_crown');
+    const save: SaveFile = {
+      version: 3,
+      scenarioId: 'new_crown',
+      savedAt: Date.now(),
+      isMidTurn: false,
+      gameState: initial,
+      turnHistory: [],
+      eventHistory: [],
+      intelligenceReports: [],
+    };
+    const loaded = gameReducer(createInitialState(), { type: 'LOAD_SAVE', save });
+    for (let i = 0; i < initial.diplomacy.neighbors.length; i++) {
+      expect(loaded.gameState.diplomacy.neighbors[i].agenda).toEqual(
+        initial.diplomacy.neighbors[i].agenda,
+      );
+    }
+  });
+});
