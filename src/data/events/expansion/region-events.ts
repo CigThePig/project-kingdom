@@ -6,6 +6,53 @@ import {
   Season,
 } from '../../../engine/types';
 
+// These regional-warning events are surfaced directly by the regional-life
+// loyalty-threshold pipeline, never by `surfaceEvents()` trigger matching.
+// They live in FOLLOW_UP_POOL so resolution can still look them up by ID
+// (via FOLLOW_UP_REGISTRY) but they are not candidates for normal surfacing.
+export const EXPANSION_REGION_WARNING_EVENTS: EventDefinition[] = [
+  {
+    id: 'evt_exp_reg_loyalty_warning',
+    severity: EventSeverity.Notable,
+    category: EventCategory.Region,
+    triggerConditions: [{ type: 'always' }],
+    weight: 0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'send_envoy', slotCost: 1, isFree: false },
+      { choiceId: 'increase_investment', slotCost: 1, isFree: false },
+      { choiceId: 'ignore_complaints', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: true,
+    relatedStorylineId: null,
+    phase: 'any',
+    repeatable: true,
+  },
+  {
+    id: 'evt_exp_reg_separatist_threat',
+    severity: EventSeverity.Serious,
+    category: EventCategory.Region,
+    triggerConditions: [{ type: 'always' }],
+    weight: 0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'negotiate_concessions', slotCost: 1, isFree: false },
+      { choiceId: 'military_presence', slotCost: 2, isFree: false },
+      { choiceId: 'grant_autonomy', slotCost: 1, isFree: false },
+    ],
+    affectsClass: null,
+    affectsRegion: true,
+    relatedStorylineId: null,
+    phase: 'any',
+    repeatable: true,
+  },
+];
+
 export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
   // --- 1. Provincial Autonomy Dispute (opening) ---
   {

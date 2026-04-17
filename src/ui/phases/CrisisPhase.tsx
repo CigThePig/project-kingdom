@@ -16,6 +16,15 @@ interface CrisisPhaseProps {
 
 export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  // Reset selection when the crisis card changes so a first-tap never
+  // accidentally confirms a different crisis. Uses the "adjust state during
+  // render" pattern (https://react.dev/learn/you-might-not-need-an-effect).
+  const crisisEventId = crisisData?.payload.crisisCard.eventId ?? null;
+  const [prevEventId, setPrevEventId] = useState(crisisEventId);
+  if (prevEventId !== crisisEventId) {
+    setPrevEventId(crisisEventId);
+    setSelectedId(null);
+  }
 
   function handleResponseClick(id: string) {
     if (selectedId === id) {

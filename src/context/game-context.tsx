@@ -163,6 +163,12 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
           isFollowUp: e.isFollowUp ?? false,
           followUpSourceId: e.followUpSourceId ?? null,
         })),
+        // Phase C audit fix — back-fill consecutive low-trade counter so
+        // TradeDisruption emergence works correctly after load.
+        economy: {
+          ...save.gameState.economy,
+          consecutiveLowTradeTurns: save.gameState.economy?.consecutiveLowTradeTurns ?? 0,
+        },
         // Migrate saves that predate the pending proposals system, and
         // Phase 2 — saves without kingdomSimulation get a default rival state
         // seeded from the (possibly newly-generated) runSeed + neighbor id.

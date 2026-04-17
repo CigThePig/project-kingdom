@@ -9,6 +9,7 @@ import type { EventTriggerCondition, EventDefinition } from '../engine/events/ev
 import { ASSESSMENT_POOL } from '../data/events/assessments';
 import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { ASSESSMENT_TEXT } from '../data/text/assessments';
+import { turnRng } from '../engine/resolution/turn-rng';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import type { CrisisPhaseData, CrisisCardData, ResponseCardData } from './crisisCardGenerator';
 import type { ConfidenceLevel } from '../ui/types';
@@ -72,9 +73,10 @@ export function generateAssessmentPhaseData(
 
   if (eligible.length === 0) return null;
 
-  // Weighted random selection
+  // Weighted random selection. Seeded by run + turn so remounting the
+  // Assessment screen for the same state picks the same assessment.
   const totalWeight = eligible.reduce((sum, def) => sum + def.weight, 0);
-  let roll = Math.random() * totalWeight;
+  let roll = turnRng(state, 'bridge:assessment-select')() * totalWeight;
   let selected: EventDefinition = eligible[0];
   for (const def of eligible) {
     roll -= def.weight;

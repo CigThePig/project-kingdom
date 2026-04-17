@@ -136,6 +136,15 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
       tolerate_black_market: 'Tolerate the Black Market',
     },
   },
+  evt_social_criminal_severe: {
+    title: 'A Kingdom Beneath the Kingdom',
+    body: 'The syndicates no longer skulk in shadow — they parade through the docks with their own sigils. Customs officers answer to their paymasters before the crown, judges find silver pressed into their palms before verdicts are rendered, and whole harbors run on smuggled tonnage. The realm has, in all but name, a second sovereign.',
+    choices: {
+      martial_purge: 'Order a Martial Purge',
+      bribe_the_bosses: 'Buy the Bosses\' Cooperation',
+      cede_the_ports: 'Cede the Ports in All But Name',
+    },
+  },
   evt_social_criminal_resolved: {
     title: 'Underworld Dismantled',
     body: 'The criminal networks have been broken or driven underground. The markets feel safer, intelligence operations resume their effectiveness, and the treasury no longer suffers the constant drain of organized theft. Order has been restored to the shadows.',

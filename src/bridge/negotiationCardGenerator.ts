@@ -9,6 +9,7 @@ import { NEGOTIATION_POOL } from '../data/events/negotiations';
 import type { NegotiationDefinition } from '../data/events/negotiations';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 import { NEGOTIATION_TEXT } from '../data/text/negotiations';
+import { turnRng } from '../engine/resolution/turn-rng';
 import { getNeighborDisplayName } from './nameResolver';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import type { NegotiationCard, NegotiationTerm } from '../ui/types';
@@ -77,9 +78,10 @@ export function generateNegotiationCard(
 
   if (eligible.length === 0) return null;
 
-  // Weighted random selection
+  // Weighted random selection. Seeded by run + turn so the same state
+  // produces the same negotiation on re-render.
   const totalWeight = eligible.reduce((sum, def) => sum + def.weight, 0);
-  let roll = Math.random() * totalWeight;
+  let roll = turnRng(state, 'bridge:negotiation-select')() * totalWeight;
   let selected: NegotiationDefinition = eligible[0];
   for (const def of eligible) {
     roll -= def.weight;
