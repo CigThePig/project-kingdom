@@ -17,6 +17,16 @@ import {
   MAX_SERIOUS_EVENTS_PER_TURN,
   PHASE_TURN_RANGES,
 } from '../constants';
+import { seededRandom } from '../../data/text/name-generation';
+
+function eventRng(state: GameState, turnNumber: number, tag: string): () => number {
+  return seededRandom(`${state.runSeed}:t${turnNumber}:${tag}`);
+}
+
+function rngSuffix6(rng: () => number): string {
+  const n = Math.floor(rng() * Math.pow(36, 6));
+  return n.toString(36).padStart(6, '0');
+}
 
 // ============================================================
 // Data Contract Interfaces (fulfilled by Phase 5 data layer)
@@ -269,7 +279,14 @@ export function evaluateCondition(
     }
 
     case 'random_chance':
-      return condition.probability !== undefined && Math.random() < condition.probability;
+      // Deterministic per turn + condition type — re-evaluations within the
+      // same turn stay stable. The caller's event id is not available here,
+      // so we salt with the probability value to differentiate sites.
+      return (
+        condition.probability !== undefined &&
+        eventRng(state, turnNumber, `random-chance:${condition.probability}`)() <
+          condition.probability
+      );
 
     case 'consequence_tag_present': {
       if (condition.consequenceTag === undefined) return false;
@@ -392,10 +409,15 @@ export function allConditionsPass(
  * Picks an eligible (non-occupied) region ID for region-scoped events.
  * Returns null if no eligible region exists.
  */
-function pickEligibleRegionId(state: GameState): string | null {
+function pickEligibleRegionId(
+  state: GameState,
+  turnNumber: number,
+  definitionId: string,
+): string | null {
   const eligible = state.regions.filter((r) => !r.isOccupied);
   if (eligible.length === 0) return null;
-  return eligible[Math.floor(Math.random() * eligible.length)].id;
+  const rng = eventRng(state, turnNumber, `pick-region:${definitionId}`);
+  return eligible[Math.floor(rng() * eligible.length)].id;
 }
 
 /**
@@ -404,6 +426,8 @@ function pickEligibleRegionId(state: GameState): string | null {
 export function resolveNeighborId(
   directive: string | null | undefined,
   state: GameState,
+  turnNumber: number,
+  siteTag: string,
 ): string | null {
   if (!directive) return null;
   if (directive.startsWith('neighbor_')) return directive;
@@ -414,8 +438,10 @@ export function resolveNeighborId(
       return neighbors.reduce((a, b) => a.relationshipScore < b.relationshipScore ? a : b).id;
     case '__FRIENDLY__':
       return neighbors.reduce((a, b) => a.relationshipScore > b.relationshipScore ? a : b).id;
-    case '__ANY__':
-      return neighbors[Math.floor(Math.random() * neighbors.length)].id;
+    case '__ANY__': {
+      const rng = eventRng(state, turnNumber, `any-neighbor:${siteTag}`);
+      return neighbors[Math.floor(rng() * neighbors.length)].id;
+    }
     default:
       return null;
   }
@@ -429,7 +455,8 @@ function buildActiveEvent(
   turnNumber: number,
   state: GameState,
 ): ActiveEvent {
-  const id = `evt-${definition.id}-t${turnNumber}-${Math.random().toString(36).slice(2, 8)}`;
+  const idRng = eventRng(state, turnNumber, `evt-id:${definition.id}`);
+  const id = `evt-${definition.id}-t${turnNumber}-${rngSuffix6(idRng)}`;
   return {
     id,
     definitionId: definition.id,
@@ -440,9 +467,16 @@ function buildActiveEvent(
     chainId: definition.chainId,
     chainStep: definition.chainStep,
     turnSurfaced: turnNumber,
-    affectedRegionId: definition.affectsRegion ? pickEligibleRegionId(state) : null,
+    affectedRegionId: definition.affectsRegion
+      ? pickEligibleRegionId(state, turnNumber, definition.id)
+      : null,
     affectedClassId: definition.affectsClass,
-    affectedNeighborId: resolveNeighborId(definition.affectsNeighbor, state),
+    affectedNeighborId: resolveNeighborId(
+      definition.affectsNeighbor,
+      state,
+      turnNumber,
+      `evt:${definition.id}`,
+    ),
     relatedStorylineId: definition.relatedStorylineId,
     outcomeQuality: null,
     isFollowUp: false,
@@ -505,10 +539,11 @@ export function surfaceEvents(
   // Sort by severity (desc) then weight (desc), with optional category multipliers.
   // Add variety jitter so equal-weight events don't always sort identically.
   // Jitter range ±20% preserves intentional weight differences while
-  // randomizing ties.
+  // randomizing ties. Seeded per-turn+candidate for determinism.
   const jitterMap = new Map<string, number>();
   for (const c of candidates) {
-    jitterMap.set(c.id, 0.8 + Math.random() * 0.4); // 0.8–1.2
+    const jRng = eventRng(state, turnNumber, `jitter:${c.id}`);
+    jitterMap.set(c.id, 0.8 + jRng() * 0.4); // 0.8–1.2
   }
 
   candidates.sort((a, b) => {
@@ -556,6 +591,7 @@ export function advanceEventChains(
   turnNumber: number,
   eventPool: EventDefinition[],
   eventHistory: ActiveEvent[],
+  state: GameState,
 ): ActiveEvent[] {
   if (eventPool.length === 0) return activeEvents;
 
@@ -585,8 +621,9 @@ export function advanceEventChains(
     }
 
     // Carry the chain/region context forward.
+    const chainRng = eventRng(state, turnNumber, `chain-id:${nextDef.id}`);
     const nextEvent: ActiveEvent = {
-      id: `evt-${nextDef.id}-t${turnNumber}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `evt-${nextDef.id}-t${turnNumber}-${rngSuffix6(chainRng)}`,
       definitionId: nextDef.id,
       severity: nextDef.severity,
       category: nextDef.category,

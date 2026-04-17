@@ -49,6 +49,7 @@ import { STORYLINE_POOL } from '../../data/storylines/index';
 import { applyDiplomaticActionEffect as applyNeighborRelDelta } from '../systems/diplomacy';
 import { applyEventChoiceEffects, applyStorylineBranchEffects } from '../events/apply-event-effects';
 import { recordBranchDecision } from '../events/storyline-engine';
+import { turnRng, rngSuffix } from './turn-rng';
 import { KINGDOM_FEATURE_REGISTRY } from '../../data/kingdom-features/index';
 import {
   CONSTRUCTION_DEFAULT_TURNS,
@@ -728,7 +729,12 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
   let updatedState = { ...state, activeEvents: updatedEvents };
 
   // Apply mechanical effects for the player's choice (with outcome variance).
-  const eventResult = applyEventChoiceEffects(updatedState, resolvedEvent, EVENT_CHOICE_EFFECTS);
+  const eventResult = applyEventChoiceEffects(
+    updatedState,
+    resolvedEvent,
+    EVENT_CHOICE_EFFECTS,
+    turnRng(state, `event-choice:${eventId}:${choiceId}`),
+  );
   updatedState = eventResult.state;
 
   // Store outcome quality on the resolved event.
@@ -774,7 +780,7 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
   const modifierSpec = EVENT_CHOICE_TEMPORARY_MODIFIERS[event.definitionId]?.[choiceId];
   if (modifierSpec) {
     const modifier: TemporaryModifier = {
-      id: `tmod-${event.definitionId}-${choiceId}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `tmod-${event.definitionId}-${choiceId}-${rngSuffix(turnRng(state, `tmod:${event.definitionId}:${choiceId}`))}`,
       sourceTag: consequence.tag,
       turnsRemaining: modifierSpec.durationTurns,
       turnApplied: state.turn.turnNumber,
@@ -814,7 +820,12 @@ function applyStorylineBranchDecision(state: GameState, action: QueuedAction): G
   let updatedState = { ...state, activeStorylines: updatedStorylines };
 
   // Apply mechanical effects for the branch choice (with outcome variance).
-  const branchResult = applyStorylineBranchEffects(updatedState, updatedStoryline, STORYLINE_CHOICE_EFFECTS);
+  const branchResult = applyStorylineBranchEffects(
+    updatedState,
+    updatedStoryline,
+    STORYLINE_CHOICE_EFFECTS,
+    turnRng(state, `storyline-branch:${storylineId}:${branchPointId}:${choiceId}`),
+  );
   updatedState = branchResult.state;
 
   // Store outcome quality on the latest branch decision.

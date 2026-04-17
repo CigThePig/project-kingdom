@@ -324,8 +324,8 @@ describe('Follow-up event triage: evt_equipment_failure_field', () => {
   });
 
   it('surfaces after delay, routes as crisis, and generates correct card', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.1);
-
+    // probability: 1 guarantees surfacing under seeded RNG — every roll in [0,1)
+    // passes the `probRng() > probability` gate (1 is the exclusive upper bound).
     const pending = [{
       id: 'fu-test-equipment',
       definitionId: DEF_ID,
@@ -333,7 +333,7 @@ describe('Follow-up event triage: evt_equipment_failure_field', () => {
       triggerChoiceId: TRIGGER_CHOICE,
       triggerTurn: 1,
       delayTurns: 2,
-      probability: 0.6,
+      probability: 1,
       stateRetries: 0,
       exclusiveGroupId: null,
     }];
@@ -391,8 +391,7 @@ describe('Follow-up event triage: negative paths', () => {
   });
 
   it('probability roll failure prevents surfacing', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.99);
-
+    // probability: 0 guarantees discard under seeded RNG — any roll > 0 fails the gate.
     const pending = [{
       id: 'fu-test-fail',
       definitionId: 'evt_merchant_permanent_concessions',
@@ -400,7 +399,7 @@ describe('Follow-up event triage: negative paths', () => {
       triggerChoiceId: 'offer_tax_relief',
       triggerTurn: 1,
       delayTurns: 3,
-      probability: 0.7,
+      probability: 0,
       stateRetries: 0,
       exclusiveGroupId: null,
     }];

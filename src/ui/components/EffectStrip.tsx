@@ -30,7 +30,7 @@ export function EffectStrip({ effects }: EffectStripProps) {
         const hasModifiers = effect.modifiers && effect.modifiers.length > 0;
         return (
           <span
-            key={i}
+            key={`${effect.type}-${effect.label}-${i}`}
             style={{
               fontFamily: 'var(--font-family-mono)',
               fontSize: 11,
@@ -55,7 +55,7 @@ export function EffectStrip({ effects }: EffectStripProps) {
                   letterSpacing: 0.3,
                 }}
               >
-                [{effect.modifiers!.join('][')}]
+                [{(effect.modifiers ?? []).join('][')}]
               </span>
             )}
           </span>

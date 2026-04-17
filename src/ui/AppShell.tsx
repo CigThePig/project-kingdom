@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useCallback, lazy, Suspense } from 'react';
+import { useState, useContext, useEffect, useCallback, useRef, lazy, Suspense } from 'react';
 
 import { GameContext } from '../context/game-context';
 import { RoundController } from './RoundController';
@@ -14,26 +14,25 @@ export function AppShell() {
   if (!ctx) throw new Error('AppShell must be inside GameProvider');
 
   const [screen, setScreen] = useState<AppScreen>('title');
-  const [savedTurn, setSavedTurn] = useState<number | undefined>(undefined);
+  const [savedTurn] = useState<number | undefined>(() => {
+    if (!hasSavedGame()) return undefined;
+    const save = loadFromStorage();
+    return save?.gameState.turn.turnNumber;
+  });
 
-  // Check for existing save on mount
+  // Auto-save after each turn resolution. We only want this to fire when the
+  // turn number changes — not on every intra-turn state update — so we read
+  // the live context through a ref rather than listing ctx/state as a dep.
+  const ctxRef = useRef(ctx);
   useEffect(() => {
-    if (hasSavedGame()) {
-      const save = loadFromStorage();
-      if (save) {
-        setSavedTurn(save.gameState.turn.turnNumber);
-      }
-    }
-  }, []);
-
-  // Auto-save after each turn resolution (when turn number changes while playing)
+    ctxRef.current = ctx;
+  });
   const turnNumber = ctx.state.gameState.turn.turnNumber;
   useEffect(() => {
     if (screen === 'playing' && turnNumber > 1) {
-      const savedAt = saveToStorage(ctx.state);
-      ctx.dispatch({ type: 'SAVE_COMPLETED', savedAt });
+      const savedAt = saveToStorage(ctxRef.current.state);
+      ctxRef.current.dispatch({ type: 'SAVE_COMPLETED', savedAt });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [turnNumber, screen]);
 
   const handleStartGame = useCallback((scenarioId: string) => {

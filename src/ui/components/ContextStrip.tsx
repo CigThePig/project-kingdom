@@ -29,7 +29,7 @@ export function ContextStrip({ lines, maxLines = 2 }: ContextStripProps) {
     >
       {lines.slice(0, maxLines).map((line, i) => (
         <div
-          key={i}
+          key={`${line.tone}-${line.text.slice(0, 24)}-${i}`}
           style={{
             fontFamily: 'var(--font-family-body)',
             fontSize: 11,

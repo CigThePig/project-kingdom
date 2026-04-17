@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode, Ref } from 'react';
+import type { CSSProperties, KeyboardEvent, ReactNode, Ref } from 'react';
 
 import { getAccentColor, getFamilyLabel, type CardFamily } from '../types';
 
@@ -14,14 +14,28 @@ interface CardProps {
 export function Card({ family, children, style, onClick, className, innerRef }: CardProps) {
   const accent = getAccentColor(family);
 
+  const handleKeyDown = onClick
+    ? (e: KeyboardEvent<HTMLDivElement>) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick();
+        }
+      }
+    : undefined;
+
   return (
     <div
       ref={innerRef}
       onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
       className={[
         'relative overflow-hidden rounded-2xl',
         'transition-[transform,border-color,box-shadow] duration-200 ease-in-out',
-        onClick ? 'cursor-pointer active:scale-[0.97]' : '',
+        onClick
+          ? 'cursor-pointer active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-advisor)]'
+          : '',
         className ?? '',
       ]
         .filter(Boolean)

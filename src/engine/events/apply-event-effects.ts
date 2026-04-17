@@ -235,6 +235,7 @@ export function applyEventChoiceEffects(
   state: GameState,
   event: ActiveEvent,
   effectsRegistry: Record<string, Record<string, MechanicalEffectDelta>>,
+  rng: () => number,
 ): { state: GameState; outcomeQuality: OutcomeQuality | null } {
   if (!event.isResolved || event.choiceMade === null) return { state, outcomeQuality: null };
 
@@ -244,7 +245,7 @@ export function applyEventChoiceEffects(
   const choiceEffect = eventEffects[event.choiceMade];
   if (!choiceEffect) return { state, outcomeQuality: null };
 
-  const quality = rollOutcomeQuality();
+  const quality = rollOutcomeQuality(rng);
   const variedEffect = applyVariance(choiceEffect, quality);
 
   return {
@@ -266,6 +267,7 @@ export function applyStorylineBranchEffects(
   state: GameState,
   storyline: ActiveStoryline,
   effectsRegistry: Record<string, Record<string, MechanicalEffectDelta>>,
+  rng: () => number,
 ): { state: GameState; outcomeQuality: OutcomeQuality | null } {
   if (storyline.decisionHistory.length === 0) return { state, outcomeQuality: null };
 
@@ -276,7 +278,7 @@ export function applyStorylineBranchEffects(
   const choiceEffect = storylineEffects[latestDecision.choiceId];
   if (!choiceEffect) return { state, outcomeQuality: null };
 
-  const quality = rollOutcomeQuality();
+  const quality = rollOutcomeQuality(rng);
   const variedEffect = applyVariance(choiceEffect, quality);
 
   return {
@@ -296,6 +298,7 @@ export function applyStorylineResolutionEffects(
   state: GameState,
   storyline: ActiveStoryline,
   resolutionRegistry: Record<string, Record<string, MechanicalEffectDelta>>,
+  rng: () => number,
 ): { state: GameState; outcomeQuality: OutcomeQuality | null } {
   if (storyline.decisionHistory.length === 0) return { state, outcomeQuality: null };
 
@@ -306,7 +309,7 @@ export function applyStorylineResolutionEffects(
   const resolutionEffect = storylineResolutions[openingDecision.choiceId];
   if (!resolutionEffect) return { state, outcomeQuality: null };
 
-  const quality = rollOutcomeQuality();
+  const quality = rollOutcomeQuality(rng);
   const variedEffect = applyVariance(resolutionEffect, quality);
 
   return {

@@ -25,9 +25,11 @@ const VARIANCE_MULTIPLIERS: Record<OutcomeQuality, { positive: number; negative:
 
 /**
  * Rolls an outcome quality tier using weighted random selection.
+ * Caller must pass a seeded RNG (see engine/resolution/turn-rng.ts) so
+ * replay/determinism hold.
  */
-export function rollOutcomeQuality(): OutcomeQuality {
-  const roll = Math.random();
+export function rollOutcomeQuality(rng: () => number): OutcomeQuality {
+  const roll = rng();
   let cumulative = 0;
   for (const entry of OUTCOME_WEIGHTS) {
     cumulative += entry.weight;

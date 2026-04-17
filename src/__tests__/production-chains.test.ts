@@ -1037,8 +1037,7 @@ describe('Production chains: negative paths', () => {
   });
 
   it('probability roll failure prevents surfacing', () => {
-    vi.spyOn(Math, 'random').mockReturnValue(0.99);
-
+    // probability: 0 guarantees discard under seeded RNG — any roll > 0 fails the gate.
     const pending = [{
       id: 'fu-test-prob-fail',
       definitionId: 'evt_infra_bridge_collapse',
@@ -1046,7 +1045,7 @@ describe('Production chains: negative paths', () => {
       triggerChoiceId: 'defer_maintenance',
       triggerTurn: 1,
       delayTurns: 3,
-      probability: 0.5,
+      probability: 0,
       stateRetries: 0,
       exclusiveGroupId: 'excl_infra_defer',
     }];
