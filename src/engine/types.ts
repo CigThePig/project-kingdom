@@ -173,6 +173,16 @@ export enum NeighborActionType {
   ReligiousPressure = 'ReligiousPressure',
 }
 
+// Phase 2 — Rival Kingdom Simulation Core
+export enum RivalCrisisType {
+  Famine = 'Famine',
+  Insolvency = 'Insolvency',
+  CivilUnrest = 'CivilUnrest',
+  SuccessionStruggle = 'SuccessionStruggle',
+  Plague = 'Plague',
+  ReligiousSchism = 'ReligiousSchism',
+}
+
 // ============================================================
 // Section 7 — Knowledge Enums
 // ============================================================
@@ -447,7 +457,38 @@ export interface NeighborState {
   dynastyName?: string;
   epithet?: string | null;
   capitalName?: string;
+
+  // Phase 2 — Rival Kingdom Simulation Core. Optional for save migration;
+  // pre-Phase-2 saves backfill via createInitialRivalState in LOAD_SAVE.
+  kingdomSimulation?: RivalKingdomState;
 }
+
+// Phase 2 — Rival Kingdom Simulation types
+
+export interface RivalInternalEvent {
+  turnRecorded: number;
+  type: string; // internal code: 'famine_southern_provinces', 'minor_uprising', etc.
+  severity: 'minor' | 'notable' | 'major';
+  resolved: boolean;
+}
+
+export interface RivalKingdomState {
+  treasuryHealth: number; // 0–100
+  treasuryTrend: 'rising' | 'stable' | 'declining';
+  foodSecurity: number; // 0–100
+  foodTrend: 'rising' | 'stable' | 'declining';
+  internalStability: number; // 0–100
+  populationMood: number; // 0–100
+  expansionistPressure: number; // 0–100
+  mercantilePressure: number; // 0–100
+  pietisticPressure: number; // 0–100
+  recentInternalEvents: RivalInternalEvent[]; // capped at 8, oldest dropped first
+  isInCrisis: boolean;
+  crisisType: RivalCrisisType | null;
+}
+
+/** Pressure score map, 0..1 per action type. Multiplies existing RNG gates in diplomacy AI. */
+export type RivalActionPressureScores = Record<NeighborActionType, number>;
 
 export interface DiplomacyState {
   neighbors: NeighborState[];

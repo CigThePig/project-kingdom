@@ -7,6 +7,8 @@ import {
   IntelligenceFundingLevel,
   IntelligenceOperationType,
   IntelligenceReport,
+  RivalCrisisType,
+  RivalKingdomState,
 } from '../types';
 import {
   ESPIONAGE_BASE_SUCCESS_BY_OP_TYPE,
@@ -120,6 +122,7 @@ export function resolveOperation(
   targetEspionageCapability: number,
   turnNumber: number,
   randomSeed: number,
+  targetRivalSimulation?: RivalKingdomState,
 ): OperationResult {
   const successProbability = calculateOperationSuccessProbability(
     networkStrength,
@@ -155,14 +158,23 @@ export function resolveOperation(
   const falseIntelRoll = (randomSeed * 7.3 + 0.1) % 1;
   const isFalseIntelligence = canPlantFalseIntel && falseIntelRoll < falsePlantThreshold;
 
-  const findingsCode = buildFindingsCode(operationType, targetId, turnNumber);
+  const baseFindings = buildFindingsCode(operationType, targetId, turnNumber);
+  const confidence = Math.round(successProbability * 100);
+  // Phase 2 — append rival-simulation-derived findings when real state warrants
+  // them. Multiple codes are joined by ';' so the text layer can split and
+  // render each. Pre-Phase-2 reports continue to carry a single code.
+  const simFindings =
+    !isFalseIntelligence && targetRivalSimulation
+      ? buildRivalSimulationFindings(targetRivalSimulation, confidence)
+      : [];
+  const findingsCode = [baseFindings, ...simFindings].join(';');
 
   const report: IntelligenceReport = {
     id: `intel-${turnNumber}-${targetId}-${operationType}`,
     operationType,
     targetId,
     findings: findingsCode,
-    confidenceLevel: Math.round(successProbability * 100),
+    confidenceLevel: confidence,
     // IMPORTANT: isGenuine is engine-only. The UI layer must NOT surface this field.
     isGenuine: !isFalseIntelligence,
     isCorrectionPending: isFalseIntelligence,
@@ -240,3 +252,55 @@ function buildFindingsCode(
 ): string {
   return `${operationType.toLowerCase()}-${targetId}-t${turnNumber}`;
 }
+
+/**
+ * Phase 2 — surfaces simulation state as intelligence findings when real
+ * conditions warrant them. Codes are drawn from a small fixed vocabulary
+ * (see RIVAL_SIM_FINDING_CODES) and consumed by the text layer to build
+ * player-facing report sentences. Confidence gates low-capability reports
+ * from leaking too much information.
+ */
+function buildRivalSimulationFindings(
+  sim: RivalKingdomState,
+  confidenceLevel: number,
+): string[] {
+  if (confidenceLevel < 50) return [];
+  const findings: string[] = [];
+
+  if (sim.foodSecurity < 35 || sim.crisisType === RivalCrisisType.Famine) {
+    findings.push('rival_food_shortage');
+  }
+  if (sim.treasuryHealth < 35 || sim.crisisType === RivalCrisisType.Insolvency) {
+    findings.push('rival_treasury_strain');
+  }
+  if (
+    sim.internalStability < 40 ||
+    sim.crisisType === RivalCrisisType.CivilUnrest ||
+    sim.crisisType === RivalCrisisType.Plague
+  ) {
+    findings.push('rival_internal_unrest');
+  }
+  if (sim.crisisType === RivalCrisisType.SuccessionStruggle) {
+    findings.push('rival_succession_concern');
+  }
+  if (sim.expansionistPressure >= 70 && !sim.isInCrisis) {
+    findings.push('rival_expansionist_intent');
+  }
+
+  return findings;
+}
+
+/**
+ * Phase 2 — the canonical set of rival-simulation finding codes emitted
+ * by buildRivalSimulationFindings. Exported so text layers and tests can
+ * reference the vocabulary without duplicating string literals.
+ */
+export const RIVAL_SIM_FINDING_CODES = [
+  'rival_treasury_strain',
+  'rival_food_shortage',
+  'rival_internal_unrest',
+  'rival_expansionist_intent',
+  'rival_succession_concern',
+] as const;
+
+export type RivalSimFindingCode = (typeof RIVAL_SIM_FINDING_CODES)[number];

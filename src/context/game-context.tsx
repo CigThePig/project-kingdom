@@ -9,10 +9,12 @@ import {
   type FailureCondition,
   type GameState,
   type IntelligenceReport,
+  NeighborDisposition,
   type QueuedAction,
   type SaveFile,
   type TurnHistoryEntry,
 } from '../engine/types';
+import { createInitialRivalState } from '../engine/systems/rival-simulation';
 import type { ChronicleEntry, MonthDecision } from '../ui/types';
 import {
   generateChronicleEntries,
@@ -123,12 +125,13 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
     case 'LOAD_SAVE': {
       const { save } = action;
       // Migrate saves that predate the temporary modifiers system.
+      const migratedRunSeed = save.gameState.runSeed ?? generateRunSeed();
       const gameState = {
         ...save.gameState,
         // Phase 1 — pre-Phase-1 saves have no runSeed. Per-neighbor name fields
         // are optional; nameResolver falls back to NEIGHBOR_LABELS automatically
         // so old saves render consistent hand-authored names.
-        runSeed: save.gameState.runSeed ?? generateRunSeed(),
+        runSeed: migratedRunSeed,
         activeTemporaryModifiers: save.gameState.activeTemporaryModifiers ?? [],
         pendingFollowUps: save.gameState.pendingFollowUps ?? [],
         narrativePacing: save.gameState.narrativePacing ?? {
@@ -143,7 +146,9 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
           isFollowUp: e.isFollowUp ?? false,
           followUpSourceId: e.followUpSourceId ?? null,
         })),
-        // Migrate saves that predate the pending proposals system.
+        // Migrate saves that predate the pending proposals system, and
+        // Phase 2 — saves without kingdomSimulation get a default rival state
+        // seeded from the (possibly newly-generated) runSeed + neighbor id.
         diplomacy: {
           ...save.gameState.diplomacy,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -151,6 +156,12 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
             ...n,
             pendingProposals: n.pendingProposals ?? [],
             recentActionHistory: n.recentActionHistory ?? [],
+            kingdomSimulation:
+              n.kingdomSimulation ??
+              createInitialRivalState(
+                `${migratedRunSeed}_${n.id}_sim`,
+                (n.disposition as NeighborDisposition) ?? NeighborDisposition.Cautious,
+              ),
           })),
         },
       };

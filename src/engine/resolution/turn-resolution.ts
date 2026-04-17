@@ -141,6 +141,11 @@ import {
   applyPeaceResolution,
 } from '../systems/diplomacy';
 import {
+  computeRivalActionPressure,
+  tickRivalKingdom,
+} from '../systems/rival-simulation';
+import { seededRandom } from '../../data/text/name-generation';
+import {
   calculatePlayerCombatPower,
   calculateNeighborCombatPower,
   resolveConflictTurn,
@@ -805,6 +810,7 @@ export function resolveTurn(
       targetCapability,
       state.turn.turnNumber,
       Math.random(),
+      targetNeighbor?.kingdomSimulation,
     );
 
     networkStrengthDeltas.push(result.networkStrengthDelta);
@@ -840,12 +846,29 @@ export function resolveTurn(
     intelligenceAdvantage: updatedEspionage.networkStrength,
   };
 
+  // ---- Phase 5a: Rival Kingdom Simulation Tick ----
+  // Each rival's kingdomSimulation advances before AI action evaluation so
+  // that this turn's pressure scores reflect this turn's sim state.
+  const simRunSeed = state.runSeed ?? `fallback_${state.turn.turnNumber}`;
+  updatedDiplomacy = {
+    ...updatedDiplomacy,
+    neighbors: updatedDiplomacy.neighbors.map((n) => {
+      if (!n.kingdomSimulation) return n;
+      const tickRng = seededRandom(`${simRunSeed}_sim_${n.id}_t${state.turn.turnNumber}`);
+      const nextSim = tickRivalKingdom(n.kingdomSimulation, n.militaryStrength, tickRng);
+      return { ...n, kingdomSimulation: nextSim };
+    }),
+  };
+
   // ---- Phase 5b: AI Neighbor Autonomous Actions ----
   const allNeighborActions: NeighborAction[] = [];
   const knowledgeMilBonus = getMilitaryBonus(stateAfterActions.knowledge) * 100;
   let externalHeterodoxPressure = 0;
 
   for (const neighbor of updatedDiplomacy.neighbors) {
+    const pressure = neighbor.kingdomSimulation
+      ? computeRivalActionPressure(neighbor.kingdomSimulation, neighbor)
+      : undefined;
     const actions = generateNeighborActions(
       neighbor,
       updatedMilitary,
@@ -857,6 +880,7 @@ export function resolveTurn(
       state.turn.turnNumber,
       stateAfterActions.activeConflicts,
       Math.random(),
+      pressure,
     );
     allNeighborActions.push(...actions);
   }
