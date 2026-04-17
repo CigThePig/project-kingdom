@@ -25,6 +25,7 @@ import { generatePetitionCards, generateNotificationCards } from '../bridge/peti
 import type { PetitionCardData, NotificationCardData } from '../bridge/petitionCardGenerator';
 import { generateDecreeCards } from '../bridge/decreeCardGenerator';
 import type { DecreeCardData } from '../bridge/decreeCardGenerator';
+import { decreeToCard } from '../engine/cards/adapters';
 import { generateAdvisorBriefing } from '../bridge/advisorGenerator';
 import type { AdvisorBriefing } from '../bridge/advisorGenerator';
 import { generateMonthlySummaryData } from '../bridge/summaryGenerator';
@@ -465,7 +466,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
 
       {currentPhase === 'decree' && (
         <DecreePhase
-          decreeCards={decreeCards}
+          decreeCards={decreeCards.map((d) => decreeToCard(d))}
           onComplete={handleDecreeComplete}
         />
       )}

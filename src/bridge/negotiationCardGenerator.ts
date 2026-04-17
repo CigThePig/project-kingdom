@@ -12,6 +12,8 @@ import { NEGOTIATION_TEXT } from '../data/text/negotiations';
 import { getNeighborDisplayName } from './nameResolver';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import type { NegotiationCard, NegotiationTerm } from '../ui/types';
+import type { CardOfFamily } from '../engine/cards/types';
+import { negotiationToCard } from '../engine/cards/adapters';
 
 /**
  * Picks the best neighbor for external negotiations:
@@ -136,4 +138,12 @@ export function generateNegotiationCard(
     contextLabel: text.contextLabel ?? 'NEGOTIATION',
     resolvedNeighborId: neighbor.id || undefined,
   };
+}
+
+/** Phase 4 — emit a unified `Card<'negotiation'>` envelope. */
+export function generateNegotiationCardAsCard(
+  state: GameState,
+): CardOfFamily<'negotiation'> | null {
+  const data = generateNegotiationCard(state);
+  return data ? negotiationToCard(data) : null;
 }

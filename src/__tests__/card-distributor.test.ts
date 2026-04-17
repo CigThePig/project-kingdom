@@ -74,7 +74,7 @@ describe('distributeCardsToMonths', () => {
     const result = distributeCardsToMonths(crisis, [], null, null);
 
     expect(result.month1.interactionType).toBe(InteractionType.CrisisResponse);
-    expect(result.month1.crisisData).toBe(crisis);
+    expect(result.month1.crisisData?.payload).toBe(crisis);
   });
 
   it('distributes petitions when no other content exists', () => {
@@ -106,9 +106,9 @@ describe('distributeCardsToMonths', () => {
     const result = distributeCardsToMonths(crisis, [], null, null, additional);
 
     // c1 in month 1, c2 should be placed in month 2 or 3
-    expect(result.month1.crisisData?.crisisCard.eventId).toBe('c1');
+    expect(result.month1.crisisData?.payload.crisisCard.eventId).toBe('c1');
     const otherCrisis = result.month2.crisisData ?? result.month3.crisisData;
-    expect(otherCrisis?.crisisCard.eventId).toBe('c2');
+    expect(otherCrisis?.payload.crisisCard.eventId).toBe('c2');
   });
 
   // ---- Track B: Crisis overflow ----
@@ -129,7 +129,7 @@ describe('distributeCardsToMonths', () => {
       ...result.month3.additionalCrises,
     ];
     expect(allAdditional.length).toBe(1);
-    expect(allAdditional[0].crisisCard.eventId).toBe('c2');
+    expect(allAdditional[0].payload.crisisCard.eventId).toBe('c2');
   });
 
   it('places extra crisis as additionalCrisis on non-crisis month when possible', () => {
@@ -141,7 +141,7 @@ describe('distributeCardsToMonths', () => {
     const result = distributeCardsToMonths(crisis, [], negotiation, null, additional);
 
     // c2 placed in month 3 as primary (it's free)
-    expect(result.month3.crisisData?.crisisCard.eventId).toBe('c2');
+    expect(result.month3.crisisData?.payload.crisisCard.eventId).toBe('c2');
     // c3 has no free month → attached as additionalCrisis, preferring non-crisis month
     const allAdditional = [
       ...result.month1.additionalCrises,
@@ -149,7 +149,7 @@ describe('distributeCardsToMonths', () => {
       ...result.month3.additionalCrises,
     ];
     expect(allAdditional.length).toBe(1);
-    expect(allAdditional[0].crisisCard.eventId).toBe('c3');
+    expect(allAdditional[0].payload.crisisCard.eventId).toBe('c3');
   });
 
   // ---- Track B: Petition stacking ----

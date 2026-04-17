@@ -4,6 +4,8 @@
 import type { ActiveEvent, MechanicalEffectDelta, GameState } from '../engine/types';
 import { EventSeverity } from '../engine/types';
 import type { EffectHint, ContextLine, SignalTag } from '../ui/types';
+import type { CardOfFamily } from '../engine/cards/types';
+import { crisisToCard } from '../engine/cards/adapters';
 import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
@@ -169,4 +171,16 @@ export function generateCrisisPhaseData(event: ActiveEvent, gameState?: GameStat
   });
 
   return { crisisCard, responses };
+}
+
+/** Phase 4 — emits a unified `Card<'crisis'>` envelope. Use this in new
+ *  downstream paths; legacy bookkeeping code that wants the payload shape
+ *  can continue to call `generateCrisisPhaseData` directly. */
+export function generateCrisisCard(
+  event: ActiveEvent,
+  gameState?: GameState,
+): CardOfFamily<'crisis'> {
+  const def = EVENT_POOL.find((e) => e.id === event.definitionId)
+    ?? FOLLOW_UP_POOL.find((e) => e.id === event.definitionId);
+  return crisisToCard(generateCrisisPhaseData(event, gameState), def);
 }

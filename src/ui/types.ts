@@ -54,6 +54,7 @@ import type {
   RivalPersonality,
   MechanicalEffectDelta,
 } from '../engine/types';
+import type { CardOfFamily } from '../engine/cards/types';
 
 /** Generic card definition used by the card distributor and monthly structure. */
 export interface CardDefinition {
@@ -116,15 +117,19 @@ export interface NegotiationCard {
   resolvedNeighborId?: string;
 }
 
-// Monthly card allocation — output of the card distributor
+// Monthly card allocation — output of the card distributor.
+// Phase 4: each slot holds a unified `Card` envelope of the matching family.
+// Consumers reach legacy per-family fields via `card.payload`.
 export interface MonthAllocation {
   interactionType: InteractionType | null;
-  crisisData: import('../bridge/crisisCardGenerator').CrisisPhaseData | null;
-  additionalCrises: import('../bridge/crisisCardGenerator').CrisisPhaseData[];
-  petitionCards: import('../bridge/petitionCardGenerator').PetitionCardData[];
-  notificationCards: import('../bridge/petitionCardGenerator').NotificationCardData[];
-  negotiationCard: NegotiationCard | null;
-  assessmentData: import('../bridge/assessmentCardGenerator').AssessmentPhaseData | null;
+  crisisData: CardOfFamily<'crisis'> | null;
+  additionalCrises: CardOfFamily<'crisis'>[];
+  /** Holds both petition and diplomatic-overture envelopes — overtures
+   *  currently render and resolve identically to petitions. */
+  petitionCards: (CardOfFamily<'petition'> | CardOfFamily<'overture'>)[];
+  notificationCards: CardOfFamily<'notification'>[];
+  negotiationCard: CardOfFamily<'negotiation'> | null;
+  assessmentData: CardOfFamily<'assessment'> | null;
 }
 
 export interface MonthCardAllocation {

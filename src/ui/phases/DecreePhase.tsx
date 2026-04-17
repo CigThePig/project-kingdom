@@ -6,17 +6,17 @@ import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { ContextStrip } from '../components/ContextStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
-import type { DecreeCardData } from '../../bridge/decreeCardGenerator';
+import type { CardOfFamily } from '../../engine/cards/types';
 
 interface DecreePhaseProps {
   onComplete: (selectedDecrees: string[]) => void;
-  decreeCards?: DecreeCardData[];
+  decreeCards?: CardOfFamily<'decree'>[];
 }
 
 export function DecreePhase({ onComplete, decreeCards }: DecreePhaseProps) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
-  const decrees = decreeCards ?? [];
+  const decrees = (decreeCards ?? []).map((card) => card.payload);
 
   function toggleDecree(id: string) {
     setSelected((prev) => {

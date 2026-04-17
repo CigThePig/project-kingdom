@@ -7,11 +7,13 @@ import { EffectStrip } from '../components/EffectStrip';
 import { ContextStrip } from '../components/ContextStrip';
 import { SignalStrip } from '../components/SignalStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
-import type { PetitionCardData } from '../../bridge/petitionCardGenerator';
+import type { CardOfFamily } from '../../engine/cards/types';
+
+type PetitionLikeCard = CardOfFamily<'petition'> | CardOfFamily<'overture'>;
 
 interface PetitionPhaseProps {
   onComplete: (decisions: { cardId: string; choiceId: string }[]) => void;
-  petitionCards?: PetitionCardData[];
+  petitionCards?: PetitionLikeCard[];
 }
 
 export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps) {
@@ -33,7 +35,7 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
     (choiceId: string) => {
       if (selectedChoiceId === choiceId) {
         // Second tap — commit
-        const petition = petitions[currentIndex];
+        const petition = petitions[currentIndex].payload;
         const newResults = [...results, { cardId: petition.eventId, choiceId }];
 
         if (currentIndex >= petitions.length - 1) {
@@ -94,7 +96,7 @@ export function PetitionPhase({ onComplete, petitionCards }: PetitionPhaseProps)
     );
   }
 
-  const petition = petitions[currentIndex];
+  const petition = petitions[currentIndex].payload;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>

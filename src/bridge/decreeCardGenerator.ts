@@ -3,6 +3,8 @@
 
 import type { GameState } from '../engine/types';
 import type { EffectHint, ContextLine } from '../ui/types';
+import type { CardOfFamily } from '../engine/cards/types';
+import { decreeToCard } from '../engine/cards/adapters';
 import { DECREE_POOL } from '../data/decrees/index';
 import { DECREE_EFFECTS } from '../data/decrees/effects';
 import { DECREE_STYLE_TAGS } from '../data/ruling-style/flavor-tags';
@@ -148,4 +150,12 @@ function getDecreeStyleAlignment(decreeId: string, dominantAxes: StyleAxis[]): n
     }
   }
   return score;
+}
+
+/** Phase 4 — lift each decree card into a unified `Card<'decree'>`. */
+export function generateDecreeCardsAsCards(
+  gameState: GameState,
+  recentlyOfferedDecreeIds: string[] = [],
+): CardOfFamily<'decree'>[] {
+  return generateDecreeCards(gameState, recentlyOfferedDecreeIds).map((d) => decreeToCard(d));
 }

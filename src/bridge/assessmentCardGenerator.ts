@@ -13,6 +13,8 @@ import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import type { CrisisPhaseData, CrisisCardData, ResponseCardData } from './crisisCardGenerator';
 import type { ConfidenceLevel } from '../ui/types';
 import type { MechanicalEffectDelta } from '../engine/types';
+import type { CardOfFamily } from '../engine/cards/types';
+import { assessmentToCard } from '../engine/cards/adapters';
 
 export interface AssessmentPhaseData {
   crisisData: CrisisPhaseData;
@@ -125,4 +127,14 @@ export function generateAssessmentPhaseData(
     confidenceLevel: deriveConfidenceLevel(selected),
     resolvedNeighborId,
   };
+}
+
+/** Phase 4 — emit a unified `Card<'assessment'>` envelope. */
+export function generateAssessmentCard(
+  state: GameState,
+): CardOfFamily<'assessment'> | null {
+  const data = generateAssessmentPhaseData(state);
+  if (!data) return null;
+  const def = ASSESSMENT_POOL.find((d) => d.id === data.crisisData.crisisCard.definitionId);
+  return assessmentToCard(data, def);
 }

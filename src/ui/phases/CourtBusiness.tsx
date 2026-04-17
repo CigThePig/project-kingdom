@@ -9,10 +9,10 @@ import { CrisisPhase } from './CrisisPhase';
 import { PetitionPhase } from './PetitionPhase';
 import { NegotiationPhase } from './NegotiationPhase';
 import { AssessmentPhase } from './AssessmentPhase';
-import type { CrisisPhaseData } from '../../bridge/crisisCardGenerator';
-import type { PetitionCardData, NotificationCardData } from '../../bridge/petitionCardGenerator';
-import type { AssessmentPhaseData } from '../../bridge/assessmentCardGenerator';
-import type { NegotiationCard, MonthDecision } from '../types';
+import type { CardOfFamily } from '../../engine/cards/types';
+import type { MonthDecision } from '../types';
+
+type PetitionLikeCard = CardOfFamily<'petition'> | CardOfFamily<'overture'>;
 import { Card } from '../components/Card';
 import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
@@ -40,12 +40,12 @@ type RenderStage = 'primary' | 'additionalCrisis' | 'petitions' | 'notifications
 
 interface CourtBusinessProps {
   interactionType: InteractionType | null;
-  crisisData: CrisisPhaseData | null;
-  additionalCrises: CrisisPhaseData[];
-  petitionCards: PetitionCardData[];
-  notificationCards: NotificationCardData[];
-  negotiationCard: NegotiationCard | null;
-  assessmentData: AssessmentPhaseData | null;
+  crisisData: CardOfFamily<'crisis'> | null;
+  additionalCrises: CardOfFamily<'crisis'>[];
+  petitionCards: PetitionLikeCard[];
+  notificationCards: CardOfFamily<'notification'>[];
+  negotiationCard: CardOfFamily<'negotiation'> | null;
+  assessmentData: CardOfFamily<'assessment'> | null;
   currentMonth: SeasonMonth;
   onComplete: (decisions: MonthDecision[]) => void;
 }
@@ -57,9 +57,9 @@ interface CourtBusinessProps {
  */
 function getInitialStage(
   interactionType: InteractionType | null,
-  additionalCrises: CrisisPhaseData[],
-  petitionCards: PetitionCardData[],
-  notificationCards: NotificationCardData[],
+  additionalCrises: CardOfFamily<'crisis'>[],
+  petitionCards: PetitionLikeCard[],
+  notificationCards: CardOfFamily<'notification'>[],
 ): RenderStage | null {
   if (interactionType !== null) return 'primary';
   if (additionalCrises.length > 0) return 'additionalCrisis';
@@ -75,10 +75,10 @@ function getInitialStage(
 function getNextStage(
   currentStage: RenderStage,
   interactionType: InteractionType | null,
-  additionalCrises: CrisisPhaseData[],
+  additionalCrises: CardOfFamily<'crisis'>[],
   additionalCrisisIndex: number,
-  petitionCards: PetitionCardData[],
-  notificationCards: NotificationCardData[],
+  petitionCards: PetitionLikeCard[],
+  notificationCards: CardOfFamily<'notification'>[],
 ): RenderStage | null {
   switch (currentStage) {
     case 'primary':
@@ -176,7 +176,7 @@ export function CourtBusiness({
         return;
       }
       advanceStage([{
-        cardId: crisisData?.crisisCard.eventId ?? '',
+        cardId: crisisData?.payload.crisisCard.eventId ?? '',
         choiceId: crisisResponse,
         interactionType: InteractionType.CrisisResponse,
         month: currentMonth,
@@ -208,11 +208,11 @@ export function CourtBusiness({
   const handleAssessmentComplete = useCallback(
     (choiceId: string) => {
       advanceStage([{
-        cardId: assessmentData?.crisisData.crisisCard.eventId ?? '',
+        cardId: assessmentData?.payload.crisisData.crisisCard.eventId ?? '',
         choiceId,
         interactionType: InteractionType.Assessment,
         month: currentMonth,
-        targetNeighborId: assessmentData?.resolvedNeighborId,
+        targetNeighborId: assessmentData?.payload.resolvedNeighborId,
       }]);
     },
     [assessmentData, currentMonth, advanceStage],
@@ -228,7 +228,7 @@ export function CourtBusiness({
         return;
       }
       advanceStage([{
-        cardId: crisisItem.crisisCard.eventId,
+        cardId: crisisItem.payload.crisisCard.eventId,
         choiceId: crisisResponse,
         interactionType: InteractionType.CrisisResponse,
         month: currentMonth,
@@ -261,8 +261,8 @@ export function CourtBusiness({
     if (notifConfirming) {
       // Second tap — commit this notification
       const decision: MonthDecision = {
-        cardId: card.eventId,
-        choiceId: card.acknowledgeChoiceId,
+        cardId: card.payload.eventId,
+        choiceId: card.payload.acknowledgeChoiceId,
         interactionType: InteractionType.Notification,
         month: currentMonth,
       };
@@ -326,8 +326,7 @@ export function CourtBusiness({
         }
         return (
           <AssessmentPhase
-            assessmentData={assessmentData.crisisData}
-            confidenceLevel={assessmentData.confidenceLevel}
+            assessmentCard={assessmentData}
             onComplete={handleAssessmentComplete}
           />
         );
@@ -395,8 +394,8 @@ export function CourtBusiness({
         {/* Notification card */}
         <div style={{ animation: 'slideUp 400ms ease both' }}>
           <Card family="notification">
-            <CardTitle>{card.title}</CardTitle>
-            <CardBody>{card.body}</CardBody>
+            <CardTitle>{card.payload.title}</CardTitle>
+            <CardBody>{card.payload.body}</CardBody>
           </Card>
         </div>
 
