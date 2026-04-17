@@ -144,6 +144,13 @@ import {
   computeRivalActionPressure,
   tickRivalKingdom,
 } from '../systems/rival-simulation';
+import {
+  applyAgendaPressureModifier,
+  selectInitialAgenda,
+  shouldAgendaShift,
+  tickAgenda,
+} from '../systems/rival-agendas';
+import { decayMemoryWeights, recordMemory } from '../systems/rival-memory';
 import { seededRandom } from '../../data/text/name-generation';
 import {
   calculatePlayerCombatPower,
@@ -270,11 +277,23 @@ export function resolveTurn(
           const treatyBonus = n.pendingProposals.filter(
             (p) => p.agreementId.startsWith('treaty_'),
           ).length * 5;
+          // Phase 3: each accepted proposal records a favor in rival memory.
+          let nextMemory = n.memory ?? [];
+          for (const p of n.pendingProposals) {
+            nextMemory = recordMemory(nextMemory, {
+              turnRecorded: state.turn.turnNumber,
+              type: 'favor',
+              source: `accepted_proposal:${p.agreementId}`,
+              weight: 0.8,
+              context: 'Player accepted diplomatic proposal',
+            });
+          }
           return {
             ...n,
             activeAgreements: [...n.activeAgreements, ...n.pendingProposals],
             pendingProposals: [],
             relationshipScore: clamp(n.relationshipScore + treatyBonus, 0, 100),
+            memory: nextMemory,
           };
         }),
       },
@@ -846,17 +865,33 @@ export function resolveTurn(
     intelligenceAdvantage: updatedEspionage.networkStrength,
   };
 
-  // ---- Phase 5a: Rival Kingdom Simulation Tick ----
+  // ---- Phase 5a: Rival Kingdom Simulation + Agenda Tick ----
   // Each rival's kingdomSimulation advances before AI action evaluation so
-  // that this turn's pressure scores reflect this turn's sim state.
+  // that this turn's pressure scores reflect this turn's sim state. Phase 3
+  // also ticks the agenda (may shift to a new one) and decays memory weights.
   const simRunSeed = state.runSeed ?? `fallback_${state.turn.turnNumber}`;
   updatedDiplomacy = {
     ...updatedDiplomacy,
     neighbors: updatedDiplomacy.neighbors.map((n) => {
-      if (!n.kingdomSimulation) return n;
-      const tickRng = seededRandom(`${simRunSeed}_sim_${n.id}_t${state.turn.turnNumber}`);
-      const nextSim = tickRivalKingdom(n.kingdomSimulation, n.militaryStrength, tickRng);
-      return { ...n, kingdomSimulation: nextSim };
+      let next = n;
+      if (n.kingdomSimulation) {
+        const tickRng = seededRandom(`${simRunSeed}_sim_${n.id}_t${state.turn.turnNumber}`);
+        const nextSim = tickRivalKingdom(n.kingdomSimulation, n.militaryStrength, tickRng);
+        next = { ...next, kingdomSimulation: nextSim };
+      }
+      if (n.agenda) {
+        const agendaRng = seededRandom(`${simRunSeed}_agenda_${n.id}_t${state.turn.turnNumber}`);
+        let nextAgenda = tickAgenda(n.agenda, next, state, agendaRng);
+        if (shouldAgendaShift(nextAgenda, next, state)) {
+          nextAgenda = selectInitialAgenda(next, state, agendaRng);
+        }
+        next = { ...next, agenda: nextAgenda };
+      }
+      if (n.memory && n.memory.length > 0) {
+        // 1/12 years per turn (turns are months). Slow attrition.
+        next = { ...next, memory: decayMemoryWeights(n.memory, 1 / 12) };
+      }
+      return next;
     }),
   };
 
@@ -866,8 +901,11 @@ export function resolveTurn(
   let externalHeterodoxPressure = 0;
 
   for (const neighbor of updatedDiplomacy.neighbors) {
-    const pressure = neighbor.kingdomSimulation
+    const basePressure = neighbor.kingdomSimulation
       ? computeRivalActionPressure(neighbor.kingdomSimulation, neighbor)
+      : undefined;
+    const pressure = basePressure
+      ? applyAgendaPressureModifier(basePressure, neighbor.agenda, neighbor, state)
       : undefined;
     const actions = generateNeighborActions(
       neighbor,

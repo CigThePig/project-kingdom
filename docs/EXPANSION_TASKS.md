@@ -447,7 +447,7 @@ Phase gate: `npm test && npm run lint && npm run build` all green.
 
 ---
 
-## Phase 3 — Rival Agendas & Memory
+## Phase 3 — Rival Agendas & Memory ✅
 
 > **Prerequisite: Phase 2.5 (Geography Foundation).** Agendas reference
 > `geography.historicClaims` and `getInterRivalAdjacency`. All region /

@@ -39,6 +39,11 @@ import {
 } from '../types';
 import { DECREE_POOL } from '../../data/decrees/index';
 import { EVENT_CHOICE_EFFECTS, EVENT_CHOICE_TEMPORARY_MODIFIERS } from '../../data/events/effects';
+import {
+  isOvertureEventId,
+  parseOvertureEventId,
+} from '../../bridge/diplomaticOvertureGenerator';
+import { recordMemory } from '../systems/rival-memory';
 import { STORYLINE_CHOICE_EFFECTS } from '../../data/storylines/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
 import { applyDiplomaticActionEffect as applyNeighborRelDelta } from '../systems/diplomacy';
@@ -641,6 +646,58 @@ function applyResearchDirectiveEffect(state: GameState, action: QueuedAction): G
   };
 }
 
+/**
+ * Phase 3 — Applies a player decision on a diplomatic overture card.
+ * Writes a memory entry on the target neighbor and adjusts relationship
+ * score. Keeps the full event-resolution pipeline untouched — overtures
+ * are generated synthetically each turn and do not correspond to
+ * EVENT_POOL entries.
+ */
+function applyOvertureDecision(
+  state: GameState,
+  _eventId: string,
+  choiceId: string,
+): GameState {
+  const parsed = parseOvertureEventId(choiceId);
+  if (!parsed) return state;
+  const { neighborId, grant } = parsed;
+
+  const turn = state.turn.turnNumber;
+  const relationshipDelta = grant ? 6 : -6;
+
+  return {
+    ...state,
+    diplomacy: {
+      ...state.diplomacy,
+      neighbors: state.diplomacy.neighbors.map((n) => {
+        if (n.id !== neighborId) return n;
+        const nextMemory = recordMemory(n.memory ?? [], {
+          turnRecorded: turn,
+          type: grant ? 'favor' : 'slight',
+          source: grant ? 'overture_granted' : 'overture_denied',
+          weight: grant ? 1 : 0.9,
+          context: grant ? 'Player granted diplomatic overture' : 'Player denied diplomatic overture',
+        });
+        const nextScore = Math.max(
+          0,
+          Math.min(100, n.relationshipScore + relationshipDelta),
+        );
+        // Reset agenda progress so the same overture does not immediately
+        // surface again next turn.
+        const nextAgenda = n.agenda
+          ? { ...n.agenda, progressValue: Math.max(0, n.agenda.progressValue - 30) }
+          : n.agenda;
+        return {
+          ...n,
+          memory: nextMemory,
+          relationshipScore: nextScore,
+          agenda: nextAgenda,
+        };
+      }),
+    },
+  };
+}
+
 function applyCrisisResponseEffect(state: GameState, action: QueuedAction): GameState {
   // Handle storyline branch decisions (parameters contain storylineId + branchPointId).
   const storylineId = action.parameters['storylineId'];
@@ -652,6 +709,12 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
   const eventId = action.parameters['eventId'];
   const choiceId = action.parameters['choiceId'];
   if (!isString(eventId) || !isString(choiceId)) return state;
+
+  // Phase 3 — Diplomatic overture decisions bypass EVENT_CHOICE_EFFECTS;
+  // effects are applied inline (relationship delta + memory entry).
+  if (isOvertureEventId(eventId)) {
+    return applyOvertureDecision(state, eventId, choiceId);
+  }
 
   const event = state.activeEvents.find((e) => e.id === eventId);
   if (!event || event.isResolved) return state;

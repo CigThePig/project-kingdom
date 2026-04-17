@@ -6,7 +6,12 @@ import {
   RivalPersonality,
   NeighborDisposition,
 } from '../engine/types';
-import type { NeighborState, EspionageState, NeighborAction } from '../engine/types';
+import type {
+  NeighborState,
+  EspionageState,
+  NeighborAction,
+  GameState,
+} from '../engine/types';
 import type { RivalDossier } from '../ui/types';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
 import {
@@ -15,9 +20,18 @@ import {
   MILITARY_STRENGTH_DESCRIPTORS,
   RECENT_ACTION_LABELS,
   SPYMASTER_ASSESSMENTS,
+  SPYMASTER_AGENDA_LINES,
+  DISPOSITION_TOWARD_PLAYER,
+  getDispositionBucket,
   POSTURE_STATUS_LABELS,
   getSituationKey,
 } from '../data/text/dossier-templates';
+import {
+  getNeighborDisplayName,
+  getRegionDisplayName,
+  getSettlementDisplayName,
+} from './nameResolver';
+import { computeMemoryDriftDelta } from '../engine/systems/rival-memory';
 
 // ============================================================
 // Intel level determination
@@ -135,6 +149,7 @@ export function compileDossier(
   espionage: EspionageState,
   recentActions: NeighborAction[],
   turn: number,
+  gameState?: GameState,
 ): RivalDossier {
   const intelLevel = getIntelLevel(espionage.networkStrength);
   const personality = DISPOSITION_TO_PERSONALITY[neighbor.disposition];
@@ -157,6 +172,8 @@ export function compileDossier(
     knownStrengths: [],
     recentActions: [],
     spymasterAssessment: null,
+    agendaAssessment: null,
+    dispositionTowardPlayer: null,
     confidenceRating: null,
     intelLevel,
   };
@@ -186,6 +203,20 @@ export function compileDossier(
       actionTexts.push(label);
     }
     dossier.recentActions = actionTexts.slice(0, 4);
+
+    // Phase 3 — agenda-aware line, gated by moderate+ intel.
+    if (neighbor.agenda && gameState) {
+      dossier.agendaAssessment = buildAgendaLine(neighbor, gameState, turn);
+    }
+  }
+
+  // Phase 3 — Disposition toward player, derived from memory drift.
+  // Surfaces at all intel levels above 'none' so the player sees one
+  // relationship signal even without spymaster coverage.
+  if (intelLevel !== 'none' && neighbor.memory && gameState) {
+    const drift = computeMemoryDriftDelta(neighbor.memory, neighbor.id, gameState);
+    const bucket = getDispositionBucket(drift);
+    dossier.dispositionTowardPlayer = DISPOSITION_TOWARD_PLAYER[bucket];
   }
 
   // Strong: + spymaster assessment + confidence rating
@@ -200,4 +231,33 @@ export function compileDossier(
   }
 
   return dossier;
+}
+
+// Phase 3 — resolves the agenda's target placeholder and picks a line.
+function buildAgendaLine(
+  neighbor: NeighborState,
+  state: GameState,
+  turn: number,
+): string | null {
+  if (!neighbor.agenda) return null;
+  const situation = getSituationKey(neighbor.attitudePosture);
+  const key = `${neighbor.agenda.current}_${situation}`;
+  const variants = SPYMASTER_AGENDA_LINES[key];
+  if (!variants || variants.length === 0) return null;
+  const line = variants[turn % variants.length];
+
+  const targetId = neighbor.agenda.targetEntityId;
+  if (!targetId) {
+    // Strip {target} placeholder entirely (with surrounding spaces) for untargeted agendas.
+    return line.replace(/\s*\{target\}\s*/g, ' ').trim();
+  }
+  const resolved = resolveTargetName(targetId, state);
+  return line.replace(/\{target\}/g, resolved);
+}
+
+function resolveTargetName(entityId: string, state: GameState): string {
+  if (entityId.startsWith('region_')) return getRegionDisplayName(entityId, state);
+  if (entityId.startsWith('settlement_')) return getSettlementDisplayName(entityId, state);
+  if (entityId.startsWith('neighbor_')) return getNeighborDisplayName(entityId, state);
+  return entityId;
 }

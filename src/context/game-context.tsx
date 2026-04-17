@@ -15,8 +15,10 @@ import {
   type TurnHistoryEntry,
 } from '../engine/types';
 import { createInitialRivalState } from '../engine/systems/rival-simulation';
+import { selectInitialAgenda } from '../engine/systems/rival-agendas';
 import { finalizeGeography } from '../engine/systems/geography';
 import { synthesizeGeographyFromScenario } from '../engine/systems/geography-migrations';
+import { seededRandom } from '../data/text/name-generation';
 import type { ChronicleEntry, MonthDecision } from '../ui/types';
 import {
   generateChronicleEntries,
@@ -173,7 +175,23 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
       // indexes, procgen region/settlement names, and borderRegion flags.
       const geography = migratedGameState.geography
         ?? synthesizeGeographyFromScenario(migratedGameState.scenarioId, migratedGameState);
-      const gameState = finalizeGeography({ ...migratedGameState, geography });
+      const stateWithGeography = finalizeGeography({ ...migratedGameState, geography });
+
+      // Phase 3 — agendas depend on finalized geography (claims, adjacency),
+      // so agenda selection runs in a second pass after finalizeGeography.
+      const finalNeighbors = stateWithGeography.diplomacy.neighbors.map((n) => {
+        if (n.agenda && n.memory) return n;
+        const rng = seededRandom(`${migratedRunSeed}_${n.id}_agenda`);
+        return {
+          ...n,
+          agenda: n.agenda ?? selectInitialAgenda(n, stateWithGeography, rng),
+          memory: n.memory ?? [],
+        };
+      });
+      const gameState: GameState = {
+        ...stateWithGeography,
+        diplomacy: { ...stateWithGeography.diplomacy, neighbors: finalNeighbors },
+      };
       return {
         gameState,
         turnHistory: save.turnHistory,
