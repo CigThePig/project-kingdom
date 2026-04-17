@@ -22,6 +22,7 @@ import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
 import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
 import { createInitialEnvironmentState } from '../../engine/systems/environment';
+import { createInitialCourtHand } from '../../engine/systems/court-hand';
 import { createEmptyLedger } from '../../engine/systems/causal-ledger';
 import { createInitialPopulationDynamicsState } from '../../engine/systems/population-dynamics';
 import { createInitialEconomicState } from '../../engine/systems/economic-cycle';
@@ -418,6 +419,9 @@ export function createFrozenMarchScenario(): GameState {
       SATISFACTION_STARTING[PopulationClass.Merchants],
     ),
     causalLedger: createEmptyLedger(),
+
+    // --- Court Hand (Phase 5) ---
+    courtHand: createInitialCourtHand(),
 
     // --- Geography (Phase 2.5) ---
     // Frozen march: mountain passes dominate. The hostile northern neighbor

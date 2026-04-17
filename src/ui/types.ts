@@ -130,6 +130,19 @@ export interface MonthAllocation {
   notificationCards: CardOfFamily<'notification'>[];
   negotiationCard: CardOfFamily<'negotiation'> | null;
   assessmentData: CardOfFamily<'assessment'> | null;
+  /** Phase 5 — A Court Opportunity surfaced on a fully quiet month. Accept
+   *  adds the referenced hand card to the Court Hand; decline is a no-op. */
+  courtOpportunity?: CourtOpportunityOffer | null;
+}
+
+export interface CourtOpportunityOffer {
+  id: string;            // opportunity definition id
+  title: string;         // framing title ("A Visiting Knight")
+  body: string;          // flavor body
+  handCardId: string;    // HandCardId referenced from src/data/cards/hand-cards
+  handCardTitle: string; // preview of the hand card title
+  handCardBody: string;  // preview of the hand card body
+  expiresAfterTurns: number;
 }
 
 export interface MonthCardAllocation {
