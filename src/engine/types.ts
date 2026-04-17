@@ -1424,17 +1424,15 @@ export interface CourtHand {
   capacity: number;
 }
 
-// Schema version for SaveFile. Bump when adding non-optional migration steps.
-// v1: original. v2: Phase 2.5 geography graph + procedural region/settlement names.
-// v3: Phase 3 rival agendas + memory.
-// v4: Phase 5 court hand.
-// v5: Phase 6 discoveredCombos.
-export const SAVE_VERSION = 5;
-
 export interface SaveFile {
   version: number; // schema version integer, e.g. 1
   scenarioId: string;
   savedAt: number; // Unix timestamp ms
+  // True iff the engine had queued actions when the save was written.
+  // NOT a resume cursor — the UI's currentMonth/currentPhase/accumulatedDecisions
+  // are not persisted, so a reload always starts at month-dawn with the
+  // queued actions intact. Treat this as a "has pending work" indicator, not
+  // as permission to resume mid-phase.
   isMidTurn: boolean;
   gameState: GameState;
   turnHistory: TurnHistoryEntry[];

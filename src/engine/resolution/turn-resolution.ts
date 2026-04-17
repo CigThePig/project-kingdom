@@ -1496,31 +1496,20 @@ export function resolveTurn(
   // them to be immediately re-surfaced for the next turn.
   const mergedEventHistory = [...eventHistory, ...resolvedEvents];
 
-  // Apply mechanical effects, schedule follow-ups, and update class-favor tracking
-  // for all events the player resolved since the last turn.
+  // Schedule follow-ups and update class-favor tracking for all events the
+  // player resolved since the last turn. Mechanical effects were already
+  // applied in apply-action-effects.ts; we do not re-apply them here.
   const currentPacing = stateAfterActions.narrativePacing ?? createInitialPacingState();
   let pacingWithChoiceFavor = currentPacing;
   let pendingFollowUpsAfterChoices = stateAfterActions.pendingFollowUps ?? [];
-
-  // Snapshot pre-event state so we can forward deltas to the phase variables
-  // (which were computed in Phases 3-8 from the original stateAfterActions).
-  const preEventTreasuryBalance = stateAfterActions.treasury.balance;
-  const preEventFoodReserves = stateAfterActions.food.reserves;
-  const preEventStabilityValue = stateAfterActions.stability.value;
-  const preEventMilitary = stateAfterActions.military;
-  const preEventFaithCulture = stateAfterActions.faithCulture;
-  const preEventEspionageNetwork = stateAfterActions.espionage.networkStrength;
-  const preEventPopulation = stateAfterActions.population;
-  const preEventDiplomacy = stateAfterActions.diplomacy;
-  const preEventRegions = stateAfterActions.regions;
 
   for (const event of stateAfterActions.activeEvents) {
     if (!event.isResolved || event.choiceMade === null) continue;
     const effectDelta = EVENT_CHOICE_EFFECTS[event.definitionId]?.[event.choiceMade];
     if (effectDelta) {
-      stateAfterActions = applyMechanicalEffectDelta(
-        stateAfterActions, effectDelta, event.affectedRegionId,
-      );
+      // Mechanical effects already applied in apply-action-effects.ts via
+      // applyCrisisResponseEffect → applyEventChoiceEffects. Here we only
+      // run the side-effects that weren't handled there.
       pacingWithChoiceFavor = updateClassFavorFromChoice(pacingWithChoiceFavor, effectDelta);
     } else if (import.meta.env?.DEV) {
       // Authored-data gap: the event/choice has no registered effect. Warn
@@ -1532,104 +1521,10 @@ export function resolveTurn(
     pendingFollowUpsAfterChoices = scheduleFollowUps(
       pendingFollowUpsAfterChoices,
       event,
-      EVENT_REGISTRY,
+      FOLLOW_UP_REGISTRY,
       state.turn.turnNumber,
       state,
     );
-  }
-
-  // Forward event effect deltas to phase variables so workingState doesn't
-  // overwrite them with stale Phases 3-8 values.
-  const eventTreasuryDelta = stateAfterActions.treasury.balance - preEventTreasuryBalance;
-  const eventFoodDelta = stateAfterActions.food.reserves - preEventFoodReserves;
-  const eventStabilityDelta = stateAfterActions.stability.value - preEventStabilityValue;
-  if (eventTreasuryDelta !== 0) {
-    updatedTreasury = { ...updatedTreasury, balance: Math.max(0, updatedTreasury.balance + eventTreasuryDelta) };
-  }
-  if (eventFoodDelta !== 0) {
-    updatedFood = { ...updatedFood, reserves: Math.max(0, updatedFood.reserves + eventFoodDelta) };
-  }
-  if (eventStabilityDelta !== 0) {
-    updatedStability = { ...updatedStability, value: clamp(updatedStability.value + eventStabilityDelta, 0, 100) };
-  }
-  // Military deltas
-  if (stateAfterActions.military !== preEventMilitary) {
-    const milReadinessDelta = stateAfterActions.military.readiness - preEventMilitary.readiness;
-    const milMoraleDelta = stateAfterActions.military.morale - preEventMilitary.morale;
-    const milEquipDelta = stateAfterActions.military.equipmentCondition - preEventMilitary.equipmentCondition;
-    const milForceDelta = stateAfterActions.military.forceSize - preEventMilitary.forceSize;
-    if (milReadinessDelta !== 0 || milMoraleDelta !== 0 || milEquipDelta !== 0 || milForceDelta !== 0) {
-      updatedMilitary = {
-        ...updatedMilitary,
-        readiness: clamp(updatedMilitary.readiness + milReadinessDelta, 0, 100),
-        morale: clamp(updatedMilitary.morale + milMoraleDelta, 0, 100),
-        equipmentCondition: clamp(updatedMilitary.equipmentCondition + milEquipDelta, 0, 100),
-        forceSize: Math.max(0, updatedMilitary.forceSize + milForceDelta),
-      };
-    }
-  }
-  // Faith/culture deltas
-  if (stateAfterActions.faithCulture !== preEventFaithCulture) {
-    const faithDeltaEvt = stateAfterActions.faithCulture.faithLevel - preEventFaithCulture.faithLevel;
-    const heterDeltaEvt = stateAfterActions.faithCulture.heterodoxy - preEventFaithCulture.heterodoxy;
-    const cohDeltaEvt = stateAfterActions.faithCulture.culturalCohesion - preEventFaithCulture.culturalCohesion;
-    if (faithDeltaEvt !== 0 || heterDeltaEvt !== 0 || cohDeltaEvt !== 0) {
-      updatedFaithCulture = {
-        ...updatedFaithCulture,
-        faithLevel: clamp(updatedFaithCulture.faithLevel + faithDeltaEvt, 0, 100),
-        heterodoxy: clamp(updatedFaithCulture.heterodoxy + heterDeltaEvt, 0, 100),
-        culturalCohesion: clamp(updatedFaithCulture.culturalCohesion + cohDeltaEvt, 0, 100),
-      };
-    }
-  }
-  // Espionage delta
-  const eventEspDelta = stateAfterActions.espionage.networkStrength - preEventEspionageNetwork;
-  if (eventEspDelta !== 0) {
-    updatedEspionage = {
-      ...updatedEspionage,
-      networkStrength: clamp(updatedEspionage.networkStrength + eventEspDelta, 0, 100),
-    };
-  }
-  // Population satisfaction deltas
-  if (stateAfterActions.population !== preEventPopulation) {
-    for (const cls of Object.values(PopulationClass)) {
-      const satDelta = stateAfterActions.population[cls].satisfaction - preEventPopulation[cls].satisfaction;
-      if (satDelta !== 0) {
-        updatedPopulation = {
-          ...updatedPopulation,
-          [cls]: {
-            ...updatedPopulation[cls],
-            satisfaction: clamp(updatedPopulation[cls].satisfaction + satDelta, 0, 100),
-          },
-        };
-      }
-    }
-  }
-  // Diplomacy deltas
-  if (stateAfterActions.diplomacy !== preEventDiplomacy) {
-    updatedDiplomacy = {
-      ...updatedDiplomacy,
-      neighbors: updatedDiplomacy.neighbors.map((n) => {
-        const preN = preEventDiplomacy.neighbors.find((pn) => pn.id === n.id);
-        const postN = stateAfterActions.diplomacy.neighbors.find((pn) => pn.id === n.id);
-        if (!preN || !postN || preN.relationshipScore === postN.relationshipScore) return n;
-        const relDelta = postN.relationshipScore - preN.relationshipScore;
-        return { ...n, relationshipScore: clamp(n.relationshipScore + relDelta, 0, 100) };
-      }),
-    };
-  }
-  // Region deltas (development/condition changes from event effects)
-  if (stateAfterActions.regions !== preEventRegions) {
-    updatedRegions = stateAfterActions.regions.map((postR) => {
-      const preR = preEventRegions.find((r) => r.id === postR.id);
-      const curR = updatedRegions.find((r) => r.id === postR.id);
-      if (!preR || !curR) return curR ?? postR;
-      const devDelta = postR.developmentLevel - preR.developmentLevel;
-      if (devDelta !== 0) {
-        return { ...curR, developmentLevel: Math.max(0, curR.developmentLevel + devDelta) };
-      }
-      return curR;
-    });
   }
 
   stateAfterActions = {
@@ -2185,6 +2080,8 @@ export function resolveTurn(
     economy: updatedEconomy,
     causalLedger: finalizedLedger,
     courtHand: stateAfterActions.courtHand,
+    runSeed: state.runSeed,
+    geography: state.geography,
     // Phase 6 — combo state. Discovery list is updated below with proc IDs.
     // Pending keys are consumed each turn; `[]` here keeps the field present.
     discoveredCombos: state.discoveredCombos ?? [],

@@ -311,6 +311,12 @@ export const TRADE_INCOME_MULTIPLIER: Record<TradeOpenness, number> = {
 // Block 13 — Save & Failure Tracking (§13, §10.4)
 // ============================================================
 
+// Schema version for SaveFile. Bump when adding non-optional migration steps.
+// v1: original. v2: Phase 2.5 geography graph + procedural region/settlement names.
+// v3: Phase 3 rival agendas + memory.
+// v4: Phase 5 court hand.
+// v5: Phase 6 discoveredCombos.
+// v6: Phase 1 runSeed / Phase 2.5 geography carry-through in turn resolution.
 export const SAVE_SCHEMA_VERSION = 6;
 
 // Overthrow failure condition (§10.4): triggers when nobility intrigue risk is high
@@ -318,7 +324,9 @@ export const SAVE_SCHEMA_VERSION = 6;
 export const OVERTHROW_INTRIGUE_THRESHOLD = 75;
 export const OVERTHROW_CONSECUTIVE_TURNS = 3;
 
-// LocalStorage key must include the version to avoid loading incompatible saves.
+// Stable localStorage bucket for the save file. Compatibility is enforced by
+// the `version` field inside the save (see SAVE_SCHEMA_VERSION + loadFromStorage),
+// not by the key name, so this does not change when the schema version bumps.
 export const SAVE_STORAGE_KEY = 'kingdom-save-v1';
 
 // Consolidated failure consecutive-turn requirements for direct lookup by resolution code.
