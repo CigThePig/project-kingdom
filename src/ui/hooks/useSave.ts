@@ -23,11 +23,26 @@ export function saveToStorage(state: GameContextState): number {
 export function loadFromStorage(): SaveFile | null {
   const raw = localStorage.getItem(SAVE_STORAGE_KEY);
   if (!raw) return null;
+  let parsed: SaveFile;
   try {
-    return JSON.parse(raw) as SaveFile;
+    parsed = JSON.parse(raw) as SaveFile;
   } catch {
     return null;
   }
+  if (typeof parsed !== 'object' || parsed === null || typeof parsed.version !== 'number') {
+    return null;
+  }
+  // Refuse saves written by a newer schema than this build understands —
+  // migration is one-way (old → new), so a future save can't be loaded.
+  if (parsed.version > SAVE_SCHEMA_VERSION) {
+    if (import.meta.env?.DEV) {
+      console.warn(
+        `[useSave] Ignoring save at schema v${parsed.version}; this build only understands up to v${SAVE_SCHEMA_VERSION}.`,
+      );
+    }
+    return null;
+  }
+  return parsed;
 }
 
 export function hasSavedGame(): boolean {

@@ -38,6 +38,7 @@ import { generateOvertureCards } from '../bridge/diplomaticOvertureGenerator';
 import { applyDirectEffects } from '../bridge/directEffectApplier';
 import { generateWorldPulse } from '../bridge/worldPulseGenerator';
 import { compileKingdomState } from '../bridge/codexCompiler';
+import { deductActionCost } from '../engine/resolution/action-budget';
 import { compileDossier } from '../bridge/dossierCompiler';
 import { compileActiveSituations } from '../bridge/situationTracker';
 import { CodexOverlay } from './components/CodexOverlay';
@@ -441,23 +442,19 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         };
       }
 
-      // Merge card-derived actions with any pre-queued actions
-      const existingActions = stateAfterDirect.actionBudget.queuedActions;
-      const allActions = [...existingActions, ...cardActions];
-      const totalSlots = allActions.reduce((sum, a) => sum + a.slotCost, 0);
+      // Fold card-derived actions into the existing budget. deductActionCost
+      // respects the real rules (free actions don't consume slots; PolicyChange
+      // uses policyChangesUsedThisTurn, not slotCost) so slotsUsed,
+      // slotsRemaining, and the queue stay consistent with engine validation.
+      const mergedBudget = cardActions.reduce(
+        (budget, action) => deductActionCost(budget, action),
+        stateAfterDirect.actionBudget,
+      );
 
       const stateWithActions: GameState = {
         ...stateAfterDirect,
         activeEvents: [...surfacedEvents],
-        actionBudget: {
-          ...ctx.state.gameState.actionBudget,
-          queuedActions: allActions,
-          slotsUsed: totalSlots,
-          slotsRemaining: Math.max(
-            0,
-            ctx.state.gameState.actionBudget.slotsTotal - totalSlots,
-          ),
-        },
+        actionBudget: mergedBudget,
       };
 
       const result = resolveTurn(

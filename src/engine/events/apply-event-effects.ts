@@ -289,7 +289,9 @@ export function applyStorylineBranchEffects(
 
 /**
  * Applies path-dependent resolution effects for a completed storyline.
- * The path is determined by the opening decision (decisionHistory[0]).
+ * The path is determined by the most recent (branch) decision — the one that
+ * closed the storyline — since STORYLINE_RESOLUTION_EFFECTS is keyed by
+ * mid-arc branch choice IDs.
  * Resolution effects are larger magnitude than branch effects.
  * Rolls outcome variance for the resolution effects.
  * Returns state unchanged if no resolution effect mapping exists.
@@ -302,11 +304,11 @@ export function applyStorylineResolutionEffects(
 ): { state: GameState; outcomeQuality: OutcomeQuality | null } {
   if (storyline.decisionHistory.length === 0) return { state, outcomeQuality: null };
 
-  const openingDecision = storyline.decisionHistory[0];
+  const branchDecision = storyline.decisionHistory[storyline.decisionHistory.length - 1];
   const storylineResolutions = resolutionRegistry[storyline.definitionId];
   if (!storylineResolutions) return { state, outcomeQuality: null };
 
-  const resolutionEffect = storylineResolutions[openingDecision.choiceId];
+  const resolutionEffect = storylineResolutions[branchDecision.choiceId];
   if (!resolutionEffect) return { state, outcomeQuality: null };
 
   const quality = rollOutcomeQuality(rng);
