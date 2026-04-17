@@ -7,6 +7,7 @@ import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
+import { getNeighborDisplayName } from './nameResolver';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
 import { extractEventContext } from './contextExtractor';
 import { extractChoiceSignals } from './signalExtractor';
@@ -42,9 +43,11 @@ export interface PetitionCardData {
 // Neighbor substitution helper
 // ============================================================
 
-function substituteNeighbor(text: string, event: ActiveEvent): string {
+function substituteNeighbor(text: string, event: ActiveEvent, gameState?: GameState): string {
   if (!event.affectedNeighborId) return text;
-  const name = NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId;
+  const name = gameState
+    ? getNeighborDisplayName(event.affectedNeighborId, gameState)
+    : (NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId);
   return text.replace(/\{neighbor\}/g, name);
 }
 
@@ -88,8 +91,8 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
       cards.push({
         eventId: event.id,
         definitionId: event.definitionId,
-        title: substituteNeighbor(textEntry.title, event),
-        body: substituteNeighbor(textEntry.body, event),
+        title: substituteNeighbor(textEntry.title, event, gameState),
+        body: substituteNeighbor(textEntry.body, event, gameState),
         grantChoiceId: onlyChoice.choiceId,
         denyChoiceId: onlyChoice.choiceId,
         grantEffects: onlyEffects,
@@ -142,7 +145,10 @@ export interface NotificationCardData {
   acknowledgeChoiceId: string;
 }
 
-export function generateNotificationCards(events: ActiveEvent[]): NotificationCardData[] {
+export function generateNotificationCards(
+  events: ActiveEvent[],
+  gameState?: GameState,
+): NotificationCardData[] {
   const cards: NotificationCardData[] = [];
 
   for (const event of events) {
@@ -155,8 +161,8 @@ export function generateNotificationCards(events: ActiveEvent[]): NotificationCa
     cards.push({
       eventId: event.id,
       definitionId: event.definitionId,
-      title: substituteNeighbor(textEntry.title, event),
-      body: substituteNeighbor(textEntry.body, event),
+      title: substituteNeighbor(textEntry.title, event, gameState),
+      body: substituteNeighbor(textEntry.body, event, gameState),
       acknowledgeChoiceId: def.choices[0].choiceId,
     });
   }

@@ -14,7 +14,8 @@ import {
 } from '../engine/types';
 import type { ContextLine } from '../ui/types';
 import { CONDITION_TYPE_LABELS, CONDITION_SEVERITY_LABELS, ECONOMIC_PHASE_LABELS } from '../data/text/labels';
-import { NEIGHBOR_LABELS, CLASS_LABELS, REGION_LABELS, DIPLOMATIC_POSTURE_LABELS, KNOWLEDGE_BRANCH_LABELS } from '../data/text/labels';
+import { CLASS_LABELS, REGION_LABELS, DIPLOMATIC_POSTURE_LABELS, KNOWLEDGE_BRANCH_LABELS } from '../data/text/labels';
+import { getNeighborDisplayName } from './nameResolver';
 
 // ============================================================
 // Positive condition types (for tone classification)
@@ -184,7 +185,7 @@ export function extractDiplomacyContext(
     return null;
   }
 
-  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+  const name = getNeighborDisplayName(neighborId, state);
   const postureLabel = DIPLOMATIC_POSTURE_LABELS[posture];
   const text = `${name}: ${postureLabel} (relations ${Math.round(neighbor.relationshipScore)})`;
 

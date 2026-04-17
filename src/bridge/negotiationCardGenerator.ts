@@ -9,7 +9,7 @@ import { NEGOTIATION_POOL } from '../data/events/negotiations';
 import type { NegotiationDefinition } from '../data/events/negotiations';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 import { NEGOTIATION_TEXT } from '../data/text/negotiations';
-import { NEIGHBOR_LABELS } from '../data/text/labels';
+import { getNeighborDisplayName } from './nameResolver';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import type { NegotiationCard, NegotiationTerm } from '../ui/types';
 
@@ -28,7 +28,7 @@ function pickExternalNeighbor(state: GameState): { id: string; name: string } {
   if (!chosen) return { id: 'unknown', name: 'a foreign kingdom' };
   return {
     id: chosen.id,
-    name: NEIGHBOR_LABELS[chosen.id] ?? chosen.id,
+    name: getNeighborDisplayName(chosen.id, state),
   };
 }
 

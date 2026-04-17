@@ -35,7 +35,7 @@ export function getIntelLevel(networkStrength: number): RivalDossier['intelLevel
 // Personality mapping
 // ============================================================
 
-const DISPOSITION_TO_PERSONALITY: Record<NeighborDisposition, RivalPersonality> = {
+export const DISPOSITION_TO_PERSONALITY: Record<NeighborDisposition, RivalPersonality> = {
   [NeighborDisposition.Aggressive]: RivalPersonality.AmbitiousMilitaristic,
   [NeighborDisposition.Opportunistic]: RivalPersonality.ExpansionistDiplomatic,
   [NeighborDisposition.Cautious]: RivalPersonality.DefensiveCautious,
@@ -138,8 +138,8 @@ export function compileDossier(
 ): RivalDossier {
   const intelLevel = getIntelLevel(espionage.networkStrength);
   const personality = DISPOSITION_TO_PERSONALITY[neighbor.disposition];
-  const kingdomName = NEIGHBOR_LABELS[neighbor.id] ?? `Kingdom of ${neighbor.id}`;
-  const rulerName = NEIGHBOR_RULER_NAMES[neighbor.id] ?? `The ruler of ${kingdomName}`;
+  const kingdomName = neighbor.displayName ?? NEIGHBOR_LABELS[neighbor.id] ?? `Kingdom of ${neighbor.id}`;
+  const rulerName = neighbor.rulerName ?? NEIGHBOR_RULER_NAMES[neighbor.id] ?? `The ruler of ${kingdomName}`;
 
   // Base fields — always visible
   const dossier: RivalDossier = {
