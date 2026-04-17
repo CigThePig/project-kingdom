@@ -16,6 +16,7 @@ import {
 import type { GameState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
 import { createInitialRivalState } from '../../engine/systems/rival-simulation';
+import { edge, finalizeGeography } from '../../engine/systems/geography';
 import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
@@ -134,7 +135,7 @@ export function createMerchantsGambitScenario(): GameState {
     },
   ];
 
-  return {
+  const baseState: GameState = {
     // --- Time ---
     turn: {
       turnNumber: 1,
@@ -444,5 +445,49 @@ export function createMerchantsGambitScenario(): GameState {
       SATISFACTION_STARTING[PopulationClass.Merchants],
     ),
     causalLedger: createEmptyLedger(),
+
+    // --- Geography (Phase 2.5) ---
+    // Merchant's Gambit: sea edges dominate; dense rival↔rival adjacency sets
+    // up Phase 11 coalition dynamics. Minimal claims — the neighbors want
+    // trade concessions more than territory.
+    geography: {
+      schemaVersion: 1,
+      edges: [
+        edge('region_heartlands', 'region_ironvale',   'land',  'open'),
+        edge('region_heartlands', 'region_timbermark', 'river', 'open'),
+        edge('region_ironvale',   'region_timbermark', 'river', 'open'),
+        edge('region_timbermark', 'neighbor_arenthal', 'sea',   'open'),
+        edge('region_heartlands', 'neighbor_valdris',  'sea',   'open'),
+        edge('region_ironvale',   'neighbor_krath',    'land',  'contested'),
+        edge('neighbor_arenthal', 'neighbor_valdris',  'sea',   'open'),
+        edge('neighbor_arenthal', 'neighbor_krath',    'sea',   'contested'),
+        edge('neighbor_valdris',  'neighbor_krath',    'land',  'open'),
+      ],
+      historicClaims: [
+        {
+          neighborId: 'neighbor_krath',
+          regionId: 'region_ironvale',
+          claimStrength: 'recent',
+          lostOnTurn: null,
+          internalReasonCode: 'krathi_trade_revanchism',
+        },
+      ],
+      settlements: [
+        {
+          id: 'settlement_goldhaven',
+          regionId: 'region_heartlands',
+          role: 'capital',
+          populationShare: 0.4,
+        },
+        {
+          id: 'settlement_silvermarket',
+          regionId: 'region_timbermark',
+          role: 'market',
+          populationShare: 0.3,
+        },
+      ],
+    },
   };
+
+  return finalizeGeography(baseState);
 }

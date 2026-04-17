@@ -13,6 +13,7 @@ import {
 import type { GameState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
 import { createInitialRivalState } from '../../engine/systems/rival-simulation';
+import { edge, finalizeGeography } from '../../engine/systems/geography';
 import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
@@ -132,7 +133,7 @@ export function createFaithfulKingdomScenario(): GameState {
     },
   ];
 
-  return {
+  const baseState: GameState = {
     // --- Time ---
     turn: {
       turnNumber: 1,
@@ -418,5 +419,53 @@ export function createFaithfulKingdomScenario(): GameState {
       SATISFACTION_STARTING[PopulationClass.Merchants],
     ),
     causalLedger: createEmptyLedger(),
+
+    // --- Geography (Phase 2.5) ---
+    // Faith flavor: Valdris (the heretical neighbor) has an 'ancestral' claim
+    // on Ironvale rooted in an old schism; Arenthal contests Timbermark over a
+    // disputed monastery. Two claims express the religious fault lines.
+    geography: {
+      schemaVersion: 1,
+      edges: [
+        edge('region_heartlands', 'region_ironvale',   'land',          'open'),
+        edge('region_heartlands', 'region_timbermark', 'river',         'open'),
+        edge('region_ironvale',   'region_timbermark', 'mountain_pass', 'difficult'),
+        edge('region_timbermark', 'neighbor_arenthal', 'land',          'contested'),
+        edge('region_ironvale',   'neighbor_valdris',  'mountain_pass', 'contested'),
+        edge('neighbor_arenthal', 'neighbor_valdris',  'land',          'open'),
+      ],
+      historicClaims: [
+        {
+          neighborId: 'neighbor_valdris',
+          regionId: 'region_ironvale',
+          claimStrength: 'ancestral',
+          lostOnTurn: null,
+          internalReasonCode: 'schism_of_the_old_faith',
+        },
+        {
+          neighborId: 'neighbor_arenthal',
+          regionId: 'region_timbermark',
+          claimStrength: 'disputed',
+          lostOnTurn: null,
+          internalReasonCode: 'disputed_monastery',
+        },
+      ],
+      settlements: [
+        {
+          id: 'settlement_sanctumhold',
+          regionId: 'region_heartlands',
+          role: 'capital',
+          populationShare: 0.4,
+        },
+        {
+          id: 'settlement_vigilglade',
+          regionId: 'region_timbermark',
+          role: 'shrine',
+          populationShare: 0.15,
+        },
+      ],
+    },
   };
+
+  return finalizeGeography(baseState);
 }

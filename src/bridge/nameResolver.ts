@@ -119,3 +119,33 @@ export function getNeighborFullRulerDescriptor(neighborId: string, state: GameSt
   const epithet = getNeighborEpithet(neighborId, state);
   return epithet ? `${rulerName}, ${epithet}` : rulerName;
 }
+
+// ============================================================
+// Region & Settlement Resolvers (Phase 2.5)
+// ============================================================
+
+/**
+ * Returns the procedurally generated display name for a player region.
+ *
+ * Resolution order:
+ *   1. Live state field `region.displayName` (set by applyProceduralRegionNames)
+ *   2. The raw region id (last resort, should never happen after scenario setup)
+ *
+ * No hand-authored fallback — every region's name is generated from the run seed.
+ */
+export function getRegionDisplayName(regionId: string, state: GameState): string {
+  const region = state.regions.find((r) => r.id === regionId);
+  return region?.displayName ?? regionId;
+}
+
+/**
+ * Returns the procedurally generated display name for a named settlement.
+ *
+ * Resolution order:
+ *   1. Live state field `settlement.displayName`
+ *   2. The raw settlement id
+ */
+export function getSettlementDisplayName(settlementId: string, state: GameState): string {
+  const settlement = state.geography?.settlements.find((s) => s.id === settlementId);
+  return settlement?.displayName ?? settlementId;
+}

@@ -2,7 +2,7 @@
 // Seeded procedural generators for kingdom names, rulers, dynasties, regions, and agents.
 // All functions are pure and deterministic given the same seed.
 
-import { RivalPersonality, TerrainType } from '../../engine/types';
+import { RivalPersonality, SettlementRole, TerrainType } from '../../engine/types';
 import {
   AGENT_CODENAME_ARTICLES,
   AGENT_CODENAME_NOUNS,
@@ -29,6 +29,13 @@ import {
   REGION_SUFFIXES,
   REGNAL_NUMERALS,
   RULER_TITLES,
+  SETTLEMENT_PREFIXES_CAPITAL,
+  SETTLEMENT_PREFIXES_FORTRESS,
+  SETTLEMENT_PREFIXES_MARKET,
+  SETTLEMENT_PREFIXES_MINOR,
+  SETTLEMENT_PREFIXES_SHRINE,
+  SETTLEMENT_ROOTS_BY_TERRAIN,
+  SETTLEMENT_ROOTS_GENERIC,
   type CultureBias,
 } from './word-banks';
 
@@ -240,6 +247,37 @@ export function generateAgentCodename(seed: string): string {
   const article = pickWeighted(rng, AGENT_CODENAME_ARTICLES);
   const noun = pickWeighted(rng, AGENT_CODENAME_NOUNS);
   return `${article} ${noun}`;
+}
+
+/**
+ * Generates a settlement name for a named location inside a player region.
+ * Deterministic from (seed, role, terrain). Result mirrors region naming
+ * style: "Ironwatch", "Goldford", "Saintglade".
+ */
+export function generateSettlementName(
+  seed: string,
+  role: SettlementRole,
+  terrain?: TerrainType,
+): string {
+  const rng = seededRandom(`settlement:${seed}:${role}:${terrain ?? 'unknown'}`);
+
+  let prefixPool: readonly string[];
+  switch (role) {
+    case 'capital':  prefixPool = SETTLEMENT_PREFIXES_CAPITAL;  break;
+    case 'market':   prefixPool = SETTLEMENT_PREFIXES_MARKET;   break;
+    case 'fortress': prefixPool = SETTLEMENT_PREFIXES_FORTRESS; break;
+    case 'shrine':   prefixPool = SETTLEMENT_PREFIXES_SHRINE;   break;
+    case 'minor':
+    default:         prefixPool = SETTLEMENT_PREFIXES_MINOR;    break;
+  }
+
+  const rootPool = terrain
+    ? SETTLEMENT_ROOTS_BY_TERRAIN[terrain] ?? SETTLEMENT_ROOTS_GENERIC
+    : SETTLEMENT_ROOTS_GENERIC;
+
+  const prefix = pickWeighted(rng, prefixPool);
+  const root = pickWeighted(rng, rootPool);
+  return `${prefix}${root}`;
 }
 
 /**
