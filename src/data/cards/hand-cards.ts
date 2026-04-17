@@ -414,6 +414,33 @@ function classSatDeltaFor(cls: PopulationClass, amount: number) {
 // Card factory & play dispatch
 // ============================================================
 
+/** Phase 6 — combo key assignments per hand card. Keys are semantic tags
+ *  (not card IDs); the registered combos in `src/data/cards/combos.ts` match
+ *  against these strings. Unassigned cards contribute no keys and simply
+ *  never participate in combos. */
+const HAND_CARD_COMBO_KEYS: Readonly<Record<HandCardId, readonly string[]>> = {
+  hand_royal_pardon: ['royal_pardon'],
+  hand_reserve_forces: ['reserve_forces'],
+  hand_master_builder: ['wall_construction'],
+  hand_spymasters_whisper: ['espionage_sweep'],
+  hand_court_favor: ['court_favor'],
+  hand_quiet_word: [],
+  hand_old_debt_called_in: ['debt_called'],
+  hand_forced_levy: ['mass_conscription'],
+  hand_grain_reserve: ['famine_relief'],
+  hand_tithe_forgiven: ['religious_gesture'],
+  hand_festival_proclaimed: ['festival_decree'],
+  hand_disciplined_march: ['military_drill'],
+  hand_diplomatic_courier: ['diplomatic_overture'],
+  hand_merchant_guild_favor: ['merchant_favor'],
+  hand_bookkeepers_audit: ['scholarly_audit'],
+  hand_patient_sovereign: ['sovereign_restraint'],
+  hand_scholars_insight: ['scholarly_order'],
+  hand_border_patrol: ['border_garrison'],
+  hand_sanctioned_raid: [],
+  hand_royal_announcement: ['royal_proclamation'],
+};
+
 /** Build the runtime `Card` envelope from a hand-card definition. These live
  *  in `CourtHandSlot.card`. Uses the `initiative` family so combo keys and
  *  codex tags remain open for Phase 6+. */
@@ -432,7 +459,7 @@ export function buildHandCard(id: HandCardId): CardOfFamily<'initiative'> {
     prerequisites: [],
     effects: [],
     context: [],
-    comboKeys: [],
+    comboKeys: [...(HAND_CARD_COMBO_KEYS[id] ?? [])],
     hand: 'banked',
     expiresAfterTurns: def.expiresAfterTurns,
     payload,

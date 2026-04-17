@@ -425,6 +425,10 @@ export function createFaithfulKingdomScenario(): GameState {
     // --- Court Hand (Phase 5) ---
     courtHand: createInitialCourtHand(),
 
+    // --- Discovered Combos (Phase 6) ---
+    discoveredCombos: [],
+    pendingComboKeysThisTurn: [],
+
     // --- Geography (Phase 2.5) ---
     // Faith flavor: Valdris (the heretical neighbor) has an 'ancestral' claim
     // on Ironvale rooted in an old schism; Arenthal contests Timbermark over a

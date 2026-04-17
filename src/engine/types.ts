@@ -928,6 +928,9 @@ export interface TurnHistoryEntry {
   };
   actionsIssued: QueuedAction[];
   eventsResolved: string[]; // resolved event IDs
+  /** Phase 6 — combo keys from every card played this turn. Optional so
+   *  pre-expansion history entries deserialize cleanly. */
+  playedComboKeys?: string[];
 }
 
 export interface CrownBarData {
@@ -1396,6 +1399,17 @@ export interface GameState {
   // Phase 5 — Court Hand. Holds banked cards for later use.
   // LOAD_SAVE backfills pre-Phase-5 saves via createInitialCourtHand().
   courtHand: CourtHand;
+
+  // Phase 6 — IDs of combos that have fired at least once in this save.
+  // Drives the discovered-vs-silhouette state in the Codex.
+  // LOAD_SAVE backfills pre-Phase-6 saves with an empty array.
+  discoveredCombos: string[];
+
+  // Phase 6 — combo keys from cards played since the last turn resolution.
+  // Pushed by the reducer when a card is played (hand, decree, petition, etc.)
+  // and consumed + cleared by turn-resolution after detection runs.
+  // LOAD_SAVE backfills pre-Phase-6 saves with an empty array.
+  pendingComboKeysThisTurn: string[];
 }
 
 // Phase 5 — Court Hand
@@ -1414,7 +1428,8 @@ export interface CourtHand {
 // v1: original. v2: Phase 2.5 geography graph + procedural region/settlement names.
 // v3: Phase 3 rival agendas + memory.
 // v4: Phase 5 court hand.
-export const SAVE_VERSION = 4;
+// v5: Phase 6 discoveredCombos.
+export const SAVE_VERSION = 5;
 
 export interface SaveFile {
   version: number; // schema version integer, e.g. 1

@@ -55,6 +55,8 @@ import {
   addCardToHand,
   removeCardFromHand,
 } from '../engine/systems/court-hand';
+import { detectCombosForTurn } from '../engine/systems/combo-engine';
+import { COMBOS } from '../data/cards/combos';
 
 /**
  * Returns the MonthAllocation for the given SeasonMonth from a MonthCardAllocation.
@@ -308,8 +310,18 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
           if (!id) return s;
           const def = HAND_CARDS[id];
           if (!def) return s;
+          const card = buildHandCard(id);
           const applied = def.apply(s, choice);
-          return { ...applied, courtHand: removeCardFromHand(applied.courtHand, cardId) };
+          // Phase 6 — record combo keys for turn-resolution detection.
+          const nextCombos = [
+            ...applied.pendingComboKeysThisTurn,
+            ...(card.comboKeys ?? []),
+          ];
+          return {
+            ...applied,
+            courtHand: removeCardFromHand(applied.courtHand, cardId),
+            pendingComboKeysThisTurn: nextCombos,
+          };
         },
       });
     },
@@ -371,6 +383,16 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         }
       }
 
+      // Phase 6 — preview the combos that will fire on resolution, so the
+      // summary card can show them with prominent styling.
+      const triggeredCombos = detectCombosForTurn({
+        currentKeys: ctx.state.gameState.pendingComboKeysThisTurn ?? [],
+        history: ctx.state.turnHistory,
+        currentTurn: ctx.state.gameState.turn.turnNumber,
+        registry: COMBOS,
+        alreadyDiscovered: ctx.state.gameState.discoveredCombos ?? [],
+      });
+
       setSummaryData(
         generateMonthlySummaryData(
           allDecisions,
@@ -382,12 +404,13 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
           projectedStyle,
           notificationCards,
           ctx.state.gameState.causalLedger,
+          triggeredCombos,
         ),
       );
 
       setCurrentPhase('summary');
     },
-    [accumulatedDecisions, allCrisesData, petitionCards, notificationCards, negotiationId, ctx.state.gameState.rulingStyle, ctx.state.gameState.turn.turnNumber, ctx.state.gameState.causalLedger],
+    [accumulatedDecisions, allCrisesData, petitionCards, notificationCards, negotiationId, ctx.state.gameState.rulingStyle, ctx.state.gameState.turn.turnNumber, ctx.state.gameState.causalLedger, ctx.state.gameState.discoveredCombos, ctx.state.gameState.pendingComboKeysThisTurn, ctx.state.turnHistory],
   );
 
   const handleRoundComplete = useCallback(() => {
@@ -437,7 +460,12 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         },
       };
 
-      const result = resolveTurn(stateWithActions, applyActionEffects, ctx.state.eventHistory);
+      const result = resolveTurn(
+        stateWithActions,
+        applyActionEffects,
+        ctx.state.eventHistory,
+        ctx.state.turnHistory,
+      );
       ctx.dispatch({ type: 'TURN_RESOLVED', result, decisions: accumulatedDecisions });
 
       // If failure conditions triggered, signal game over instead of cycling.
@@ -561,6 +589,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         )}
         situations={compileActiveSituations(ctx.state.gameState)}
         chronicle={ctx.state.chronicle}
+        discoveredCombos={ctx.state.gameState.discoveredCombos ?? []}
       />
     </div>
   );

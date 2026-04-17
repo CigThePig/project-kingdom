@@ -153,6 +153,10 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         activeKingdomFeatures: save.gameState.activeKingdomFeatures ?? [],
         // Phase 5 — pre-v4 saves have no courtHand; back-fill an empty hand.
         courtHand: save.gameState.courtHand ?? createInitialCourtHand(),
+        // Phase 6 — pre-v5 saves have no discoveredCombos; start empty so the
+        // codex silhouettes every combo until it first fires.
+        discoveredCombos: save.gameState.discoveredCombos ?? [],
+        pendingComboKeysThisTurn: save.gameState.pendingComboKeysThisTurn ?? [],
         activeEvents: (save.gameState.activeEvents ?? []).map((e: ActiveEvent) => ({
           ...e,
           outcomeQuality: e.outcomeQuality ?? null,

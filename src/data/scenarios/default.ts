@@ -430,6 +430,10 @@ export function createDefaultScenario(): GameState {
     // --- Court Hand (Phase 5) ---
     courtHand: createInitialCourtHand(),
 
+    // --- Discovered Combos (Phase 6) ---
+    discoveredCombos: [],
+    pendingComboKeysThisTurn: [],
+
     // --- Geography (Phase 2.5) ---
     // Three-region heartland anchored by river and mountain connections;
     // Timbermark exposes the northern land border to Arenthal, while Ironvale's

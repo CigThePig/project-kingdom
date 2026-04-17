@@ -426,6 +426,10 @@ export function createFracturedInheritanceScenario(): GameState {
     // --- Court Hand (Phase 5) ---
     courtHand: createInitialCourtHand(),
 
+    // --- Discovered Combos (Phase 6) ---
+    discoveredCombos: [],
+    pendingComboKeysThisTurn: [],
+
     // --- Geography (Phase 2.5) ---
     // Fractured inheritance: three overlapping claims express the disputed
     // throne. Every region has at least one claimant. Internal edges are

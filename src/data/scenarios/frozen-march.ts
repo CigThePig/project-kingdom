@@ -423,6 +423,10 @@ export function createFrozenMarchScenario(): GameState {
     // --- Court Hand (Phase 5) ---
     courtHand: createInitialCourtHand(),
 
+    // --- Discovered Combos (Phase 6) ---
+    discoveredCombos: [],
+    pendingComboKeysThisTurn: [],
+
     // --- Geography (Phase 2.5) ---
     // Frozen march: mountain passes dominate. The hostile northern neighbor
     // (Arenthal) presses hard on Timbermark through brutal mountain terrain.

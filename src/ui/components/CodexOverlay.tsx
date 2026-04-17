@@ -9,6 +9,8 @@ import { KingdomStateCards } from './codex/KingdomStateCards';
 import { RivalDossierCards } from './codex/RivalDossierCards';
 import { ActiveSituationsCards } from './codex/ActiveSituationsCards';
 import { ReignChronicleCards } from './codex/ReignChronicleCards';
+import { CombosCards } from './codex/CombosCards';
+import { COMBOS } from '../../data/cards/combos';
 
 // ============================================================
 // Tab definitions
@@ -25,6 +27,7 @@ const TABS: TabDef[] = [
   { id: 'rivals', label: 'Rivals', color: 'var(--color-accent-advisor)' },
   { id: 'situations', label: 'Situations', color: 'var(--color-negative)' },
   { id: 'chronicle', label: 'Chronicle', color: 'var(--color-accent-response)' },
+  { id: 'combos', label: 'Combos', color: 'var(--color-accent-response)' },
 ];
 
 // ============================================================
@@ -38,6 +41,8 @@ interface CodexOverlayProps {
   rivals: RivalDossier[];
   situations: ActiveSituation[];
   chronicle: ChronicleEntry[];
+  /** Phase 6 — combo IDs the player has fired at least once. */
+  discoveredCombos: readonly string[];
   initialSection?: CodexSection;
 }
 
@@ -48,6 +53,7 @@ export function CodexOverlay({
   rivals,
   situations,
   chronicle,
+  discoveredCombos,
   initialSection,
 }: CodexOverlayProps) {
   const [activeTab, setActiveTab] = useState<CodexSection>(initialSection ?? 'kingdom');
@@ -264,6 +270,9 @@ export function CodexOverlay({
         {activeTab === 'rivals' && <RivalDossierCards rivals={rivals} />}
         {activeTab === 'situations' && <ActiveSituationsCards situations={situations} />}
         {activeTab === 'chronicle' && <ReignChronicleCards entries={chronicle} />}
+        {activeTab === 'combos' && (
+          <CombosCards combos={COMBOS} discoveredIds={discoveredCombos} />
+        )}
       </div>
 
       {/* CSS keyframe animations */}
