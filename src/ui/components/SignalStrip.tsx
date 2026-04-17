@@ -27,7 +27,7 @@ export function SignalStrip({ signals }: SignalStripProps) {
         const { color, borderColor } = TONE_CONFIG[signal.tone];
         return (
           <span
-            key={i}
+            key={`${signal.tone}-${signal.label}-${i}`}
             style={{
               fontFamily: 'var(--font-family-mono)',
               fontSize: 9.5,

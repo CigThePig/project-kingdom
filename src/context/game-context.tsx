@@ -10,6 +10,7 @@ import {
   type GameState,
   type IntelligenceReport,
   NeighborDisposition,
+  type NeighborState,
   type QueuedAction,
   type SaveFile,
   type TurnHistoryEntry,
@@ -18,6 +19,7 @@ import { createInitialRivalState } from '../engine/systems/rival-simulation';
 import { selectInitialAgenda } from '../engine/systems/rival-agendas';
 import { finalizeGeography } from '../engine/systems/geography';
 import { synthesizeGeographyFromScenario } from '../engine/systems/geography-migrations';
+import { createInitialEnvironmentState } from '../engine/systems/environment';
 import { seededRandom } from '../data/text/name-generation';
 import type { ChronicleEntry, MonthDecision } from '../ui/types';
 import {
@@ -144,6 +146,10 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
           dominantClassFavor: null,
           classChoiceHistory: { Nobility: 0, Clergy: 0, Merchants: 0, Commoners: 0, MilitaryCaste: 0 },
         },
+        // Pre-expansion saves may lack these fields; turn-resolution reads
+        // both unconditionally, so missing values crash the first turn.
+        environment: save.gameState.environment ?? createInitialEnvironmentState(),
+        activeKingdomFeatures: save.gameState.activeKingdomFeatures ?? [],
         activeEvents: (save.gameState.activeEvents ?? []).map((e: ActiveEvent) => ({
           ...e,
           outcomeQuality: e.outcomeQuality ?? null,
@@ -155,18 +161,19 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         // seeded from the (possibly newly-generated) runSeed + neighbor id.
         diplomacy: {
           ...save.gameState.diplomacy,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          neighbors: (save.gameState.diplomacy?.neighbors ?? []).map((n: any) => ({
-            ...n,
-            pendingProposals: n.pendingProposals ?? [],
-            recentActionHistory: n.recentActionHistory ?? [],
-            kingdomSimulation:
-              n.kingdomSimulation ??
-              createInitialRivalState(
-                `${migratedRunSeed}_${n.id}_sim`,
-                (n.disposition as NeighborDisposition) ?? NeighborDisposition.Cautious,
-              ),
-          })),
+          neighbors: (save.gameState.diplomacy?.neighbors ?? []).map(
+            (n: Partial<NeighborState> & { id: string }) => ({
+              ...(n as NeighborState),
+              pendingProposals: n.pendingProposals ?? [],
+              recentActionHistory: n.recentActionHistory ?? [],
+              kingdomSimulation:
+                n.kingdomSimulation ??
+                createInitialRivalState(
+                  `${migratedRunSeed}_${n.id}_sim`,
+                  n.disposition ?? NeighborDisposition.Cautious,
+                ),
+            }),
+          ),
         },
       };
 

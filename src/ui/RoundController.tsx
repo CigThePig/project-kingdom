@@ -1,4 +1,4 @@
-import { useState, useContext, useCallback, useEffect, lazy, Suspense } from 'react';
+import { useState, useContext, useCallback, useEffect, useRef, lazy, Suspense } from 'react';
 
 import { StatsBar } from './components/StatsBar';
 import { PhaseIndicator } from './components/PhaseIndicator';
@@ -93,14 +93,24 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
 
   // Prepare card pools when season starts (Month 1, monthDawn).
   // Also regenerates when authoritative gameState changes externally
-  // (e.g. load-save, new-game) so cards reflect the current state.
+  // (e.g. load-save, new-game) so cards reflect the current state. We only
+  // want this effect to fire on turn/phase boundaries, so reads of the live
+  // context go through a ref rather than a dep.
+  const ctxRef = useRef(ctx);
+  useEffect(() => {
+    ctxRef.current = ctx;
+  });
   const turnNumber = ctx.state.gameState.turn.turnNumber;
   useEffect(() => {
     if (currentMonth === SeasonMonth.Early && currentPhase === 'monthDawn') {
-      const offeredDecrees = prepareRound(ctx.state.gameState, ctx.state.eventHistory, ctx.state.recentlyOfferedDecreeIds);
-      ctx.dispatch({ type: 'DECREES_OFFERED', decreeIds: offeredDecrees });
+      const live = ctxRef.current;
+      const offeredDecrees = prepareRound(
+        live.state.gameState,
+        live.state.eventHistory,
+        live.state.recentlyOfferedDecreeIds,
+      );
+      live.dispatch({ type: 'DECREES_OFFERED', decreeIds: offeredDecrees });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMonth, currentPhase, turnNumber]);
 
   // Randomize dawn display and generate World Pulse each time we enter monthDawn
@@ -121,7 +131,11 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       }
 
       // Generate World Pulse lines for this month
-      const pulseLines = generateWorldPulse(ctx.state.gameState, currentMonth, prevCategories);
+      const pulseLines = generateWorldPulse(
+        ctxRef.current.state.gameState,
+        currentMonth,
+        prevCategories,
+      );
       setCurrentWorldPulseLines(pulseLines);
 
       // Track categories used this season
@@ -131,6 +145,9 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         return [...base, ...newCategories];
       });
     }
+    // previousPulseCategories is intentionally read-through-closure here:
+    // we only want this effect to fire on month/phase boundaries, not every
+    // time pulse categories change (which would infinite-loop).
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPhase, currentMonth]);
 

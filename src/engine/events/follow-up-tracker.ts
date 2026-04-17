@@ -5,6 +5,23 @@ import type { ActiveEvent, GameState, PendingFollowUp } from '../types';
 import type { EventDefinition } from './event-engine';
 import { evaluateCondition, resolveNeighborId } from './event-engine';
 import { DEFAULT_MAX_STATE_RETRIES } from '../constants';
+import { seededRandom } from '../../data/text/name-generation';
+
+function fuRng(
+  state: { runSeed?: string } | undefined,
+  turnNumber: number,
+  tag: string,
+): () => number {
+  // Fallback to a stable string for tests that don't wire a full GameState.
+  // Determinism is preserved across runs — the engine path always supplies state.
+  const seed = state?.runSeed ?? '__test-fallback__';
+  return seededRandom(`${seed}:t${turnNumber}:fu:${tag}`);
+}
+
+function fuSuffix(rng: () => number): string {
+  const n = Math.floor(rng() * Math.pow(36, 6));
+  return n.toString(36).padStart(6, '0');
+}
 
 /**
  * Schedules follow-up events based on a resolved event's choice.
@@ -16,6 +33,7 @@ export function scheduleFollowUps(
   resolvedEvent: ActiveEvent,
   eventPool: EventDefinition[],
   currentTurn: number,
+  state?: GameState,
 ): PendingFollowUp[] {
   if (!resolvedEvent.isResolved || resolvedEvent.choiceMade === null) return pendingFollowUps;
 
@@ -46,8 +64,13 @@ export function scheduleFollowUps(
     );
     if (alreadyInBatch) continue;
 
+    const idRng = fuRng(
+      state,
+      currentTurn,
+      `fu-id:${resolvedEvent.definitionId}:${resolvedEvent.choiceMade}:${followUp.followUpDefinitionId}`,
+    );
     newFollowUps.push({
-      id: `fu-${followUp.followUpDefinitionId}-t${currentTurn}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `fu-${followUp.followUpDefinitionId}-t${currentTurn}-${fuSuffix(idRng)}`,
       definitionId: followUp.followUpDefinitionId,
       sourceEventId: resolvedEvent.definitionId,
       triggerChoiceId: resolvedEvent.choiceMade,
@@ -127,8 +150,9 @@ export function processDueFollowUps(
       continue;
     }
 
-    // 4. Conditions passed. Roll probability.
-    if (Math.random() > followUp.probability) {
+    // 4. Conditions passed. Roll probability (seeded per follow-up id).
+    const probRng = fuRng(state, currentTurn, `prob:${followUp.id}`);
+    if (probRng() > followUp.probability) {
       // Failed probability — discard permanently.
       continue;
     }
@@ -149,8 +173,9 @@ export function processDueFollowUps(
     }
 
     // 7. Surface the follow-up.
+    const idRng = fuRng(state, currentTurn, `surface-id:${followUp.id}`);
     const activeEvent: ActiveEvent = {
-      id: `evt-${definition.id}-t${currentTurn}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `evt-${definition.id}-t${currentTurn}-${fuSuffix(idRng)}`,
       definitionId: definition.id,
       severity: definition.severity,
       category: definition.category,
@@ -159,9 +184,14 @@ export function processDueFollowUps(
       chainId: definition.chainId,
       chainStep: definition.chainStep,
       turnSurfaced: currentTurn,
-      affectedRegionId: definition.affectsRegion ? pickRegionId(state) : null,
+      affectedRegionId: definition.affectsRegion ? pickRegionId(state, currentTurn, definition.id) : null,
       affectedClassId: definition.affectsClass,
-      affectedNeighborId: resolveNeighborId(definition.affectsNeighbor, state),
+      affectedNeighborId: resolveNeighborId(
+        definition.affectsNeighbor,
+        state,
+        currentTurn,
+        `fu:${definition.id}`,
+      ),
       relatedStorylineId: definition.relatedStorylineId,
       outcomeQuality: null,
       isFollowUp: true,
@@ -187,8 +217,9 @@ export function processDueFollowUps(
   return { surfacedEvents: surfaced, remainingFollowUps: remaining };
 }
 
-function pickRegionId(state: GameState): string | null {
+function pickRegionId(state: GameState, turnNumber: number, tag: string): string | null {
   const eligible = state.regions.filter((r) => !r.isOccupied);
   if (eligible.length === 0) return null;
-  return eligible[Math.floor(Math.random() * eligible.length)].id;
+  const rng = fuRng(state, turnNumber, `pick-region:${tag}`);
+  return eligible[Math.floor(rng() * eligible.length)].id;
 }

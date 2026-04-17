@@ -55,14 +55,35 @@ export function CodexOverlay({
   const overlayRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number | null>(null);
 
-  // Reset tab when opening with a specific section
-  useEffect(() => {
+  // Reset tab when opening with a specific section. Use the prev-prop comparison
+  // pattern (React docs: "adjusting state while rendering") so the sync runs as
+  // part of the same render cycle instead of triggering a cascading effect.
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [prevInitialSection, setPrevInitialSection] = useState(initialSection);
+  if (prevIsOpen !== isOpen || prevInitialSection !== initialSection) {
+    setPrevIsOpen(isOpen);
+    setPrevInitialSection(initialSection);
     if (isOpen && initialSection) {
       setActiveTab(initialSection);
     }
-  }, [isOpen, initialSection]);
+  }
 
-  // Focus trap
+  const handleClose = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      setIsExiting(false);
+      onClose();
+    }, 300);
+  }, [onClose]);
+
+  // Focus trap. We install the key listeners once per open/close transition;
+  // keeping `handleClose` in a ref avoids re-binding the global listener (and
+  // re-running the focus-trap setup) every time the parent re-renders with a
+  // new `onClose` identity.
+  const handleCloseRef = useRef(handleClose);
+  useEffect(() => {
+    handleCloseRef.current = handleClose;
+  });
   useEffect(() => {
     if (!isOpen) return;
     const overlay = overlayRef.current;
@@ -95,7 +116,7 @@ export function CodexOverlay({
 
     function handleEscape(e: KeyboardEvent) {
       if (e.key === 'Escape') {
-        handleClose();
+        handleCloseRef.current();
       }
     }
 
@@ -107,16 +128,7 @@ export function CodexOverlay({
       document.removeEventListener('keydown', handleTab);
       document.removeEventListener('keydown', handleEscape);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
-
-  const handleClose = useCallback(() => {
-    setIsExiting(true);
-    setTimeout(() => {
-      setIsExiting(false);
-      onClose();
-    }, 300);
-  }, [onClose]);
 
   // Swipe down to dismiss
   const handleTouchStart = useCallback((e: React.TouchEvent) => {

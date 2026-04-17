@@ -67,6 +67,7 @@ import {
 import { applyMechanicalEffectDelta, applyStorylineResolutionEffects } from '../events/apply-event-effects';
 import { STORYLINE_RESOLUTION_EFFECTS } from '../../data/storylines/effects';
 import { resetActionBudgetForNextTurn } from './action-budget';
+import { turnRng } from './turn-rng';
 import { summarizeRegionalOutputs, checkTotalConquest, getOccupiedFraction, applyRegionDevelopmentChange, computeAdjustedRegionalSummary } from '../systems/regions';
 import {
   calculateTaxationIncome,
@@ -316,7 +317,7 @@ export function resolveTurn(
     stateWithAcceptedProposals.faithCulture,
     stateWithAcceptedProposals.activeConflicts.length,
     state.turn.turnNumber,
-    Math.random(),
+    turnRng(state, 'environment')(),
     stateWithAcceptedProposals.stability.value,
     stateWithAcceptedProposals.espionage,
   );
@@ -798,13 +799,10 @@ export function resolveTurn(
   };
 
   // Intelligence operation resolution.
-  // Each IntelligenceOp action in the queue is resolved with a random seed.
-  //
-  // NOTE: Math.random() is called per operation. resolveTurn is intentionally
-  // non-deterministic — the same state passed twice will produce different intel
-  // outcomes. This is by design: the save model persists the post-resolution
-  // GameState, not a seed, so determinism is not required and save-scumming
-  // at turn boundaries is not possible.
+  // Each IntelligenceOp action is resolved with a seeded RNG derived from the
+  // run seed, turn number, and operation id. Determinism here is deliberate:
+  // replays reproduce the same outcomes, save-scumming at turn boundaries
+  // still does nothing (the op id is part of the seed).
   const networkStrengthDeltas: number[] = [];
   const generatedReports: IntelligenceReport[] = [];
   const intelOps = stateAfterActions.actionBudget.queuedActions.filter(
@@ -828,7 +826,7 @@ export function resolveTurn(
       stateAfterActions.espionage.networkStrength,
       targetCapability,
       state.turn.turnNumber,
-      Math.random(),
+      turnRng(state, `intel-op:${op.id}`)(),
       targetNeighbor?.kingdomSimulation,
     );
 
@@ -917,7 +915,7 @@ export function resolveTurn(
       stateAfterActions.faithCulture.kingdomCultureIdentityId,
       state.turn.turnNumber,
       stateAfterActions.activeConflicts,
-      Math.random(),
+      turnRng(state, `neighbor-actions:${neighbor.id}`)(),
       pressure,
     );
     allNeighborActions.push(...actions);
@@ -1078,7 +1076,7 @@ export function resolveTurn(
     if (!targetNeighbor) continue;
 
     // Exposure probability: higher if target's espionage capability exceeds our counter-intel.
-    const exposureRoll = Math.random();
+    const exposureRoll = turnRng(state, `intel-exposure:${op.id}`)();
     const exposureChance = clamp(
       (targetNeighbor.espionageCapability - updatedEspionage.networkStrength) * 0.01,
       0.05,
@@ -1193,7 +1191,7 @@ export function resolveTurn(
       neighborPower,
       updatedMilitary.forceSize,
       neighbor.militaryStrength,
-      Math.random(),
+      turnRng(state, `conflict:${conflict.id}`)(),
     );
 
     // Apply casualties to player forces.
@@ -1274,7 +1272,7 @@ export function resolveTurn(
       stateForConsequences,
       resolved,
       playerWon,
-      Math.random(),
+      turnRng(state, `conflict-consequences:${resolved.id}`)(),
     );
 
     // Merge consequences back.
@@ -1508,12 +1506,19 @@ export function resolveTurn(
         stateAfterActions, effectDelta, event.affectedRegionId,
       );
       pacingWithChoiceFavor = updateClassFavorFromChoice(pacingWithChoiceFavor, effectDelta);
+    } else if (import.meta.env?.DEV) {
+      // Authored-data gap: the event/choice has no registered effect. Warn
+      // loudly in dev so it can't silently slip into a release.
+      console.warn(
+        `[turn-resolution] Missing EVENT_CHOICE_EFFECTS for ${event.definitionId}:${event.choiceMade}`,
+      );
     }
     pendingFollowUpsAfterChoices = scheduleFollowUps(
       pendingFollowUpsAfterChoices,
       event,
       EVENT_REGISTRY,
       state.turn.turnNumber,
+      state,
     );
   }
 
@@ -1622,6 +1627,7 @@ export function resolveTurn(
     nextTurnNumber,
     EVENT_REGISTRY,
     mergedEventHistory,
+    stateAfterActions,
   );
 
   // Process due follow-up events before standard surfacing.
@@ -1718,7 +1724,10 @@ export function resolveTurn(
       const lastDecision = storyline.decisionHistory[storyline.decisionHistory.length - 1];
       if (lastDecision.turnNumber === state.turn.turnNumber) {
         const resResult = applyStorylineResolutionEffects(
-          workingState, storyline, STORYLINE_RESOLUTION_EFFECTS,
+          workingState,
+          storyline,
+          STORYLINE_RESOLUTION_EFFECTS,
+          turnRng(state, `storyline-resolution:${storyline.id}`),
         );
         workingState = resResult.state;
         newlyResolvedStorylineIds.push(storyline.definitionId);
@@ -1803,7 +1812,7 @@ export function resolveTurn(
   if (candidate) {
     const def = STORYLINE_REGISTRY.find(s => s.id === candidate.storylineId);
     if (def) {
-      newStorylines.push(buildActiveStoryline(def, nextTurnNumber));
+      newStorylines.push(buildActiveStoryline(def, nextTurnNumber, state.runSeed));
     }
   }
 
@@ -1954,6 +1963,10 @@ export function resolveTurn(
         axisDeltas: styleTags,
       };
       updatedRulingStyle = accumulateStyleDecision(updatedRulingStyle, decision);
+    } else if (import.meta.env?.DEV) {
+      console.warn(
+        `[turn-resolution] Missing EVENT_CHOICE_STYLE_TAGS for ${event.definitionId}:${event.choiceMade}`,
+      );
     }
   }
 
@@ -1975,8 +1988,11 @@ export function resolveTurn(
   }
 
   // ---- Phase 11: State Snapshot and Bookkeeping ----
-  // Advance the calendar. (nextTurnNumber hoisted to Phase 9.)
-  const nextMonth = state.turn.month === 12 ? 1 : state.turn.month + 1;
+  // Advance the calendar. One turn represents one season (~3 calendar months),
+  // matching the design intent in constants.ts ("1 turn = 1 season ≈ 3 months").
+  // Seasons start on months 3/6/9/12; advancing by 3 rotates Spring→Summer→
+  // Autumn→Winter and wraps year on the Winter→Spring boundary.
+  const nextMonth = ((state.turn.month - 1 + 3) % 12) + 1;
   const nextYear = state.turn.month === 12 ? state.turn.year + 1 : state.turn.year;
   const nextSeason = getSeasonForMonth(nextMonth);
 

@@ -9,6 +9,7 @@ import {
   StorylineStatus,
   StorylineBranchDecision,
 } from '../types';
+import { seededRandom } from '../../data/text/name-generation';
 
 // ============================================================
 // Data Contract Interfaces (fulfilled by Phase 5 data layer)
@@ -68,8 +69,12 @@ export interface StorylineDefinition {
 export function buildActiveStoryline(
   definition: StorylineDefinition,
   turnNumber: number,
+  runSeed?: string,
 ): ActiveStoryline {
-  const id = `sl-${definition.id}-t${turnNumber}-${Math.random().toString(36).slice(2, 8)}`;
+  const seed = runSeed ?? '__test-fallback__';
+  const rng = seededRandom(`${seed}:t${turnNumber}:sl-id:${definition.id}`);
+  const suffixN = Math.floor(rng() * Math.pow(36, 6));
+  const id = `sl-${definition.id}-t${turnNumber}-${suffixN.toString(36).padStart(6, '0')}`;
   return {
     id,
     definitionId: definition.id,
