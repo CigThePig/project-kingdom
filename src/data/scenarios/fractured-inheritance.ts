@@ -17,6 +17,7 @@ import {
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
+import { createInitialRivalState } from '../../engine/systems/rival-simulation';
 import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
@@ -260,6 +261,10 @@ export function createFracturedInheritanceScenario(): GameState {
             'coastal',
             DISPOSITION_TO_PERSONALITY[NeighborDisposition.Cautious],
           ),
+          kingdomSimulation: createInitialRivalState(
+            `${runSeed}_neighbor_arenthal_sim`,
+            NeighborDisposition.Cautious,
+          ),
         },
         {
           id: 'neighbor_valdris',
@@ -282,6 +287,10 @@ export function createFracturedInheritanceScenario(): GameState {
             'neighbor_valdris',
             'highland',
             DISPOSITION_TO_PERSONALITY[NeighborDisposition.Opportunistic],
+          ),
+          kingdomSimulation: createInitialRivalState(
+            `${runSeed}_neighbor_valdris_sim`,
+            NeighborDisposition.Opportunistic,
           ),
         },
       ],

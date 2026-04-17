@@ -178,3 +178,34 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
     },
   },
 };
+
+// ============================================================
+// Phase 2 — Rival Simulation Finding Labels
+// ============================================================
+// Short, player-facing sentences surfaced in intelligence reports when the
+// target's RivalKingdomState reveals a condition worth noting. Keyed by the
+// finding codes emitted by buildRivalSimulationFindings in espionage.ts.
+// Template variable {neighbor} is resolved via bridge/nameResolver at render.
+
+export const RIVAL_SIM_FINDING_TEXT: Record<string, { label: string; detail: string }> = {
+  rival_treasury_strain: {
+    label: 'Treasury Strain',
+    detail: 'Your agents report that {neighbor}\'s coffers are running worryingly thin — tax collectors return half-empty, and the court\'s usual extravagances have quietly been curtailed.',
+  },
+  rival_food_shortage: {
+    label: 'Food Shortage',
+    detail: 'Whispers from {neighbor}\'s provinces speak of thin harvests and rising bread prices. Granaries your spies can see into stand notably low for the season.',
+  },
+  rival_internal_unrest: {
+    label: 'Internal Unrest',
+    detail: 'Your informants within {neighbor} describe a restive mood — unsanctioned gatherings, grumbling in the market squares, and nobles sending their families to safer estates.',
+  },
+  rival_expansionist_intent: {
+    label: 'Expansionist Intent',
+    detail: 'Maps are being drawn, levies are being quietly assessed, and {neighbor}\'s captains speak openly of lands not yet theirs. Your spymaster warns that patience may be running short.',
+  },
+  rival_succession_concern: {
+    label: 'Succession Concern',
+    detail: 'The question of who will rule {neighbor} after the present sovereign hangs in the air, and factions have already begun to form. Court is tense in a way no public pronouncement can hide.',
+  },
+};

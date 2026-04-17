@@ -13,6 +13,7 @@ import {
   NeighborActionType,
   NeighborDisposition,
   NeighborState,
+  RivalActionPressureScores,
 } from '../types';
 import {
   DIPLOMACY_AI_DELTA_BY_DISPOSITION,
@@ -279,8 +280,14 @@ export function generateNeighborActions(
   currentTurn: number,
   activeConflicts: ConflictState[],
   rng: number,
+  pressure?: RivalActionPressureScores,
 ): NeighborAction[] {
   const actions: NeighborAction[] = [];
+
+  // Phase 2: pressure scores bias action chances. When pressure is absent,
+  // each score defaults to 1 → gates behave exactly as before.
+  const score = (action: NeighborActionType): number =>
+    pressure ? pressure[action] : 1;
 
   // Respect action cooldown — no spam.
   if (currentTurn - neighbor.lastActionTurn < NEIGHBOR_AI_ACTION_COOLDOWN) {
@@ -300,7 +307,7 @@ export function generateNeighborActions(
     0,
     0.15,
   );
-  if (espionageExposureChance > 0 && rng < espionageExposureChance) {
+  if (espionageExposureChance > 0 && rng < espionageExposureChance * score(NeighborActionType.EspionageRetaliation)) {
     actions.push({
       neighborId: neighbor.id,
       actionType: NeighborActionType.EspionageRetaliation,
@@ -315,7 +322,7 @@ export function generateNeighborActions(
     faithMismatch &&
     (neighbor.disposition === NeighborDisposition.Aggressive ||
       neighbor.disposition === NeighborDisposition.Cautious) &&
-    rng < 0.1
+    rng < 0.1 * score(NeighborActionType.ReligiousPressure)
   ) {
     actions.push({
       neighborId: neighbor.id,
@@ -331,7 +338,7 @@ export function generateNeighborActions(
     cultureMismatch &&
     (neighbor.disposition === NeighborDisposition.Aggressive ||
       neighbor.disposition === NeighborDisposition.Opportunistic) &&
-    rng < 0.08
+    rng < 0.08 * score(NeighborActionType.BorderTension)
   ) {
     actions.push({
       neighborId: neighbor.id,
@@ -355,7 +362,10 @@ export function generateNeighborActions(
   }
 
   // --- War Declaration ---
-  if (shouldDeclareWar(neighbor, playerMilStr, playerStability, rng)) {
+  // shouldDeclareWar internally rolls against rng < warChance. Multiplying
+  // rng by the inverse pressure score has the same statistical effect.
+  const warPressure = score(NeighborActionType.WarDeclaration);
+  if (warPressure > 0 && shouldDeclareWar(neighbor, playerMilStr, playerStability, rng / Math.max(warPressure, 0.01))) {
     actions.push({
       neighborId: neighbor.id,
       actionType: NeighborActionType.WarDeclaration,
@@ -366,7 +376,10 @@ export function generateNeighborActions(
   }
 
   // --- Hostile/Tense behaviors ---
-  if (neighbor.relationshipScore <= NEIGHBOR_AI_MILITARY_BUILDUP_THRESHOLD) {
+  if (
+    neighbor.relationshipScore <= NEIGHBOR_AI_MILITARY_BUILDUP_THRESHOLD &&
+    rng < score(NeighborActionType.MilitaryBuildup)
+  ) {
     actions.push({
       neighborId: neighbor.id,
       actionType: NeighborActionType.MilitaryBuildup,
@@ -382,22 +395,25 @@ export function generateNeighborActions(
       neighbor.disposition === NeighborDisposition.Aggressive ||
       neighbor.disposition === NeighborDisposition.Opportunistic
     ) {
+      if (rng < score(NeighborActionType.Demand)) {
+        actions.push({
+          neighborId: neighbor.id,
+          actionType: NeighborActionType.Demand,
+          turnGenerated: currentTurn,
+          parameters: { treasuryDemand: Math.round(playerTreasury * 0.1) },
+        });
+        return actions;
+      }
+    } else if (rng < score(NeighborActionType.BorderTension)) {
+      // Other dispositions create border tensions.
       actions.push({
         neighborId: neighbor.id,
-        actionType: NeighborActionType.Demand,
+        actionType: NeighborActionType.BorderTension,
         turnGenerated: currentTurn,
-        parameters: { treasuryDemand: Math.round(playerTreasury * 0.1) },
+        parameters: {},
       });
       return actions;
     }
-    // Other dispositions create border tensions.
-    actions.push({
-      neighborId: neighbor.id,
-      actionType: NeighborActionType.BorderTension,
-      turnGenerated: currentTurn,
-      parameters: {},
-    });
-    return actions;
   }
 
   // --- Trade proposals / withdrawals ---
@@ -409,7 +425,7 @@ export function generateNeighborActions(
     // Mercantile neighbors are eager to trade.
     const tradeChance =
       neighbor.disposition === NeighborDisposition.Mercantile ? 0.5 : 0.2;
-    if (rng < tradeChance) {
+    if (rng < tradeChance * score(NeighborActionType.TradeProposal)) {
       actions.push({
         neighborId: neighbor.id,
         actionType: NeighborActionType.TradeProposal,
@@ -420,7 +436,11 @@ export function generateNeighborActions(
     }
   }
 
-  if (hasTradeAgreement && neighbor.relationshipScore < NEIGHBOR_AI_TRADE_WITHDRAWAL_THRESHOLD) {
+  if (
+    hasTradeAgreement &&
+    neighbor.relationshipScore < NEIGHBOR_AI_TRADE_WITHDRAWAL_THRESHOLD &&
+    rng < score(NeighborActionType.TradeWithdrawal)
+  ) {
     actions.push({
       neighborId: neighbor.id,
       actionType: NeighborActionType.TradeWithdrawal,
@@ -435,7 +455,7 @@ export function generateNeighborActions(
     const hasNonTradeAgreement = neighbor.activeAgreements.some(
       (a) => !a.agreementId.startsWith('trade_'),
     );
-    if (!hasNonTradeAgreement && rng < 0.15) {
+    if (!hasNonTradeAgreement && rng < 0.15 * score(NeighborActionType.TreatyProposal)) {
       actions.push({
         neighborId: neighbor.id,
         actionType: NeighborActionType.TreatyProposal,

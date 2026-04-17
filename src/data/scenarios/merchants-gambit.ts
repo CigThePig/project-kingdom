@@ -15,6 +15,7 @@ import {
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
+import { createInitialRivalState } from '../../engine/systems/rival-simulation';
 import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
@@ -258,6 +259,10 @@ export function createMerchantsGambitScenario(): GameState {
             'coastal',
             DISPOSITION_TO_PERSONALITY[NeighborDisposition.Mercantile],
           ),
+          kingdomSimulation: createInitialRivalState(
+            `${runSeed}_neighbor_arenthal_sim`,
+            NeighborDisposition.Mercantile,
+          ),
         },
         {
           id: 'neighbor_valdris',
@@ -281,6 +286,10 @@ export function createMerchantsGambitScenario(): GameState {
             'highland',
             DISPOSITION_TO_PERSONALITY[NeighborDisposition.Mercantile],
           ),
+          kingdomSimulation: createInitialRivalState(
+            `${runSeed}_neighbor_valdris_sim`,
+            NeighborDisposition.Mercantile,
+          ),
         },
         {
           id: 'neighbor_krath',
@@ -303,6 +312,10 @@ export function createMerchantsGambitScenario(): GameState {
             'neighbor_krath',
             'steppe',
             DISPOSITION_TO_PERSONALITY[NeighborDisposition.Aggressive],
+          ),
+          kingdomSimulation: createInitialRivalState(
+            `${runSeed}_neighbor_krath_sim`,
+            NeighborDisposition.Aggressive,
           ),
         },
       ],
