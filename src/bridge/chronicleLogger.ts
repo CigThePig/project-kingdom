@@ -70,7 +70,7 @@ export function generateChronicleEntries(
         turnNumber,
         season,
         year,
-        text: `${seasonYear} \u2014 ${warStartedText(conflict.neighborId)}`,
+        text: `${seasonYear} \u2014 ${warStartedText(conflict.neighborId, postState)}`,
         isProtected: true,
       });
     }
@@ -85,7 +85,7 @@ export function generateChronicleEntries(
         turnNumber,
         season,
         year,
-        text: `${seasonYear} \u2014 ${warEndedText(conflict.neighborId, playerWon)}`,
+        text: `${seasonYear} \u2014 ${warEndedText(conflict.neighborId, playerWon, preState)}`,
         isProtected: true,
       });
     }
@@ -102,7 +102,7 @@ export function generateChronicleEntries(
           turnNumber,
           season,
           year,
-          text: `${seasonYear} \u2014 ${treatySignedText(neighbor.id, agreement.agreementId)}`,
+          text: `${seasonYear} \u2014 ${treatySignedText(neighbor.id, agreement.agreementId, postState)}`,
           isProtected: false,
         });
       }

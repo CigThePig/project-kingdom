@@ -375,8 +375,8 @@ describe('any_of', () => {
   });
 
   it('short-circuits on first passing condition', () => {
-    const randomSpy = vi.spyOn(Math, 'random');
     const state = makeState();
+    const randomSpy = vi.spyOn(Math, 'random');
     const condition: EventTriggerCondition = {
       type: 'any_of',
       conditions: [

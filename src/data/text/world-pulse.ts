@@ -3,7 +3,7 @@
 
 import { WorldPulseCategory, Season } from '../../engine/types';
 import type { GameState } from '../../engine/types';
-import { NEIGHBOR_LABELS } from './labels';
+import { getNeighborDisplayName } from '../../bridge/nameResolver';
 
 // ============================================================
 // Template interface
@@ -29,7 +29,7 @@ export interface WorldPulseTemplate {
 function neighborName(state: GameState, index: number): string {
   const neighbor = state.diplomacy.neighbors[index];
   if (!neighbor) return 'a neighboring kingdom';
-  return NEIGHBOR_LABELS[neighbor.id] ?? 'a neighboring kingdom';
+  return getNeighborDisplayName(neighbor.id, state);
 }
 
 function hasNeighbor(state: GameState, index: number): boolean {

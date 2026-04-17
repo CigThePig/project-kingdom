@@ -11,6 +11,8 @@ import {
   SATISFACTION_STARTING,
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
+import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
+import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
 import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
@@ -40,6 +42,8 @@ import {
 export const FAITHFUL_KINGDOM_SCENARIO_ID = 'faithful_kingdom';
 
 export function createFaithfulKingdomScenario(): GameState {
+  const runSeed = generateRunSeed();
+
   const population: GameState['population'] = {
     [PopulationClass.Nobility]: {
       population: 500,
@@ -249,6 +253,12 @@ export function createFaithfulKingdomScenario(): GameState {
           warWeariness: 0,
           isAtWarWithPlayer: false,
           recentActionHistory: [],
+          ...generateNeighborNames(
+            runSeed,
+            'neighbor_arenthal',
+            'coastal',
+            DISPOSITION_TO_PERSONALITY[NeighborDisposition.Cautious],
+          ),
         },
         {
           id: 'neighbor_valdris',
@@ -266,6 +276,12 @@ export function createFaithfulKingdomScenario(): GameState {
           warWeariness: 0,
           isAtWarWithPlayer: false,
           recentActionHistory: [],
+          ...generateNeighborNames(
+            runSeed,
+            'neighbor_valdris',
+            'highland',
+            DISPOSITION_TO_PERSONALITY[NeighborDisposition.Cautious],
+          ),
         },
       ],
     },
@@ -387,6 +403,7 @@ export function createFaithfulKingdomScenario(): GameState {
 
     // --- Scenario ---
     scenarioId: FAITHFUL_KINGDOM_SCENARIO_ID,
+    runSeed,
     environment: createInitialEnvironmentState(),
     economy: createInitialEconomicState(
       SATISFACTION_STARTING[PopulationClass.Merchants],

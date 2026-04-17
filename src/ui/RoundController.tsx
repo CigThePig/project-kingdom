@@ -164,7 +164,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       .filter((d): d is CrisisPhaseData => d !== null);
 
     // Generate cards from neighbor AI actions
-    const neighborCards = generateNeighborActionCards(gameState.neighborActions ?? []);
+    const neighborCards = generateNeighborActionCards(gameState.neighborActions ?? [], gameState);
 
     // Merge all crisis sources
     const allCrises = [...crisisDataList, ...storylineCrises, ...neighborCards.crisisCards];
@@ -176,7 +176,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     const allPetitions = [...petitions, ...neighborCards.petitionCards];
     setPetitionCards(allPetitions);
 
-    const notifications = generateNotificationCards(notificationEvents);
+    const notifications = generateNotificationCards(notificationEvents, gameState);
     setNotificationCards(notifications);
 
     // Generate negotiation and assessment cards

@@ -438,6 +438,15 @@ export interface NeighborState {
   warWeariness: number; // 0–100, accumulates during conflicts
   isAtWarWithPlayer: boolean; // convenience flag derived from posture
   recentActionHistory: { turnNumber: number; actionType: NeighborActionType; summary: string }[];
+
+  // Phase 1 — procedurally generated display fields. All optional: nameResolver
+  // falls back to NEIGHBOR_LABELS when absent, which is how pre-Phase-1 saves load.
+  displayName?: string;
+  rulerName?: string;
+  rulerTitle?: string;
+  dynastyName?: string;
+  epithet?: string | null;
+  capitalName?: string;
 }
 
 export interface DiplomacyState {
@@ -1229,6 +1238,10 @@ export interface GameState {
 
   // Scenario
   scenarioId: string;
+
+  // Phase 1 — per-run seed used to derive procedural names deterministically.
+  // Optional so pre-Phase-1 saves load; LOAD_SAVE backfills via generateRunSeed().
+  runSeed?: string;
 }
 
 export interface SaveFile {

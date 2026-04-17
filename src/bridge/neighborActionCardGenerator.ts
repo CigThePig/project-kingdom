@@ -1,7 +1,7 @@
 // Bridge Layer — Neighbor Action Card Generator
 // Translates NeighborAction[] from the engine into crisis and petition card data.
 
-import type { NeighborAction, MechanicalEffectDelta } from '../engine/types';
+import type { GameState, NeighborAction, MechanicalEffectDelta } from '../engine/types';
 import { EventSeverity, NeighborActionType } from '../engine/types';
 import type { EffectHint } from '../ui/types';
 import type { CrisisPhaseData, CrisisCardData, ResponseCardData } from './crisisCardGenerator';
@@ -11,6 +11,7 @@ import { NEIGHBOR_ACTION_TEMPLATES } from '../data/events/neighbor-actions';
 import { NEIGHBOR_ACTION_EFFECTS } from '../data/events/neighbor-action-effects';
 import { NEIGHBOR_ACTION_TEXT } from '../data/text/neighbor-actions';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
+import { getNeighborDisplayName } from './nameResolver';
 
 // ============================================================
 // Public API
@@ -18,6 +19,7 @@ import { NEIGHBOR_LABELS } from '../data/text/labels';
 
 export function generateNeighborActionCards(
   actions: NeighborAction[],
+  gameState?: GameState,
 ): { crisisCards: CrisisPhaseData[]; petitionCards: PetitionCardData[] } {
   const crisisCards: CrisisPhaseData[] = [];
   const petitionCards: PetitionCardData[] = [];
@@ -31,10 +33,10 @@ export function generateNeighborActionCards(
       template.severity === EventSeverity.Serious;
 
     if (isCrisis) {
-      const data = generateCrisisFromAction(action, template);
+      const data = generateCrisisFromAction(action, template, gameState);
       if (data) crisisCards.push(data);
     } else {
-      const data = generatePetitionFromAction(action, template);
+      const data = generatePetitionFromAction(action, template, gameState);
       if (data) petitionCards.push(data);
     }
   }
@@ -46,12 +48,15 @@ export function generateNeighborActionCards(
 // Internal helpers
 // ============================================================
 
-function neighborLabel(neighborId: string): string {
+function neighborLabel(neighborId: string, gameState?: GameState): string {
+  if (gameState) {
+    return getNeighborDisplayName(neighborId, gameState);
+  }
   return NEIGHBOR_LABELS[neighborId] ?? neighborId;
 }
 
-function fillTemplate(text: string, neighborId: string): string {
-  return text.replace(/\{neighbor\}/g, neighborLabel(neighborId));
+function fillTemplate(text: string, neighborId: string, gameState?: GameState): string {
+  return text.replace(/\{neighbor\}/g, neighborLabel(neighborId, gameState));
 }
 
 /** Replace the __NEIGHBOR__ placeholder in diplomacyDeltas with the actual neighborId. */
@@ -83,6 +88,7 @@ function severityLabel(severity: EventSeverity): EffectHint {
 function generateCrisisFromAction(
   action: NeighborAction,
   template: (typeof NEIGHBOR_ACTION_TEMPLATES)[NeighborActionType],
+  gameState?: GameState,
 ): CrisisPhaseData | null {
   const textEntry = NEIGHBOR_ACTION_TEXT[action.actionType];
   if (!textEntry) return null;
@@ -93,8 +99,8 @@ function generateCrisisFromAction(
   const crisisCard: CrisisCardData = {
     eventId,
     definitionId: `neighbor_${action.actionType}`,
-    title: fillTemplate(textEntry.title, action.neighborId),
-    body: fillTemplate(textEntry.body, action.neighborId),
+    title: fillTemplate(textEntry.title, action.neighborId, gameState),
+    body: fillTemplate(textEntry.body, action.neighborId, gameState),
     effects: [severityLabel(template.severity)],
   };
 
@@ -118,6 +124,7 @@ function generateCrisisFromAction(
 function generatePetitionFromAction(
   action: NeighborAction,
   template: (typeof NEIGHBOR_ACTION_TEMPLATES)[NeighborActionType],
+  gameState?: GameState,
 ): PetitionCardData | null {
   const textEntry = NEIGHBOR_ACTION_TEXT[action.actionType];
   if (!textEntry || template.choices.length < 2) return null;
@@ -134,8 +141,8 @@ function generatePetitionFromAction(
   return {
     eventId,
     definitionId: `neighbor_${action.actionType}`,
-    title: fillTemplate(textEntry.title, action.neighborId),
-    body: fillTemplate(textEntry.body, action.neighborId),
+    title: fillTemplate(textEntry.title, action.neighborId, gameState),
+    body: fillTemplate(textEntry.body, action.neighborId, gameState),
     grantChoiceId: grantChoice.choiceId,
     denyChoiceId: denyChoice.choiceId,
     grantEffects: mechDeltaToEffectHints(grantDelta),

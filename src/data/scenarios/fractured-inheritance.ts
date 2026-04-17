@@ -16,6 +16,8 @@ import {
   SATISFACTION_STARTING,
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
+import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
+import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
 import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
@@ -44,6 +46,8 @@ import {
 export const FRACTURED_INHERITANCE_SCENARIO_ID = 'fractured_inheritance';
 
 export function createFracturedInheritanceScenario(): GameState {
+  const runSeed = generateRunSeed();
+
   const population: GameState['population'] = {
     [PopulationClass.Nobility]: {
       population: POPULATION_STARTING[PopulationClass.Nobility],
@@ -250,6 +254,12 @@ export function createFracturedInheritanceScenario(): GameState {
           warWeariness: 0,
           isAtWarWithPlayer: false,
           recentActionHistory: [],
+          ...generateNeighborNames(
+            runSeed,
+            'neighbor_arenthal',
+            'coastal',
+            DISPOSITION_TO_PERSONALITY[NeighborDisposition.Cautious],
+          ),
         },
         {
           id: 'neighbor_valdris',
@@ -267,6 +277,12 @@ export function createFracturedInheritanceScenario(): GameState {
           warWeariness: 0,
           isAtWarWithPlayer: false,
           recentActionHistory: [],
+          ...generateNeighborNames(
+            runSeed,
+            'neighbor_valdris',
+            'highland',
+            DISPOSITION_TO_PERSONALITY[NeighborDisposition.Opportunistic],
+          ),
         },
       ],
     },
@@ -388,6 +404,7 @@ export function createFracturedInheritanceScenario(): GameState {
 
     // --- Scenario ---
     scenarioId: FRACTURED_INHERITANCE_SCENARIO_ID,
+    runSeed,
     environment: createInitialEnvironmentState(),
     economy: createInitialEconomicState(
       SATISFACTION_STARTING[PopulationClass.Merchants],

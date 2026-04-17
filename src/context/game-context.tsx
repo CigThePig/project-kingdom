@@ -30,6 +30,7 @@ import { createFracturedInheritanceScenario } from '../data/scenarios/fractured-
 import { createMerchantsGambitScenario } from '../data/scenarios/merchants-gambit';
 import { createFrozenMarchScenario } from '../data/scenarios/frozen-march';
 import { createFaithfulKingdomScenario } from '../data/scenarios/faithful-kingdom';
+import { generateRunSeed } from '../data/text/name-generation';
 
 // ============================================================
 // Context State
@@ -124,6 +125,10 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
       // Migrate saves that predate the temporary modifiers system.
       const gameState = {
         ...save.gameState,
+        // Phase 1 — pre-Phase-1 saves have no runSeed. Per-neighbor name fields
+        // are optional; nameResolver falls back to NEIGHBOR_LABELS automatically
+        // so old saves render consistent hand-authored names.
+        runSeed: save.gameState.runSeed ?? generateRunSeed(),
         activeTemporaryModifiers: save.gameState.activeTemporaryModifiers ?? [],
         pendingFollowUps: save.gameState.pendingFollowUps ?? [],
         narrativePacing: save.gameState.narrativePacing ?? {

@@ -8,6 +8,7 @@ import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
+import { getNeighborDisplayName } from './nameResolver';
 import { extractEventContext } from './contextExtractor';
 import { extractChoiceSignals } from './signalExtractor';
 import { extractModifierTags } from './modifierTagExtractor';
@@ -130,7 +131,9 @@ export function generateCrisisPhaseData(event: ActiveEvent, gameState?: GameStat
   let body = textEntry?.body ?? 'The court faces an urgent matter requiring your decision.';
 
   if (event.affectedNeighborId) {
-    const neighborName = NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId;
+    const neighborName = gameState
+      ? getNeighborDisplayName(event.affectedNeighborId, gameState)
+      : (NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId);
     title = title.replace(/\{neighbor\}/g, neighborName);
     body = body.replace(/\{neighbor\}/g, neighborName);
   }

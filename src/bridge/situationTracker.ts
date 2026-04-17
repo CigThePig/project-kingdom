@@ -5,7 +5,8 @@
 import { StorylineStatus, FailureCondition } from '../engine/types';
 import type { GameState } from '../engine/types';
 import type { ActiveSituation } from '../ui/types';
-import { NEIGHBOR_LABELS, REGION_LABELS } from '../data/text/labels';
+import { REGION_LABELS } from '../data/text/labels';
+import { getNeighborDisplayName } from './nameResolver';
 import { KINGDOM_FEATURE_REGISTRY } from '../data/kingdom-features/index';
 import { CONFLICT_PHASE_LABELS, FAILURE_CONDITION_LABELS } from '../data/text/labels';
 import { CONSTRUCTION_CATEGORY_LABELS, STORYLINE_CATEGORY_LABELS } from '../data/text/labels';
@@ -31,7 +32,7 @@ export function compileActiveSituations(state: GameState): ActiveSituation[] {
 
   // 1. Active conflicts (wars)
   for (const conflict of state.activeConflicts) {
-    const neighborName = NEIGHBOR_LABELS[conflict.neighborId] ?? conflict.neighborId;
+    const neighborName = getNeighborDisplayName(conflict.neighborId, state);
     const phaseLabel = CONFLICT_PHASE_LABELS[conflict.phase] ?? conflict.phase;
     const statusLines: string[] = [
       phaseLabel,
@@ -72,7 +73,7 @@ export function compileActiveSituations(state: GameState): ActiveSituation[] {
 
   // 3. Diplomatic agreements (treaty and trade)
   for (const neighbor of state.diplomacy.neighbors) {
-    const neighborName = NEIGHBOR_LABELS[neighbor.id] ?? neighbor.id;
+    const neighborName = getNeighborDisplayName(neighbor.id, state);
     for (const agreement of neighbor.activeAgreements) {
       const isTrade = agreement.agreementId.toLowerCase().includes('trade');
       const type = isTrade ? 'trade' : 'treaty';

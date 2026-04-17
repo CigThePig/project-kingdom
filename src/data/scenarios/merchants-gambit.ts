@@ -14,6 +14,8 @@ import {
   SATISFACTION_STARTING,
 } from '../../engine/constants';
 import type { GameState } from '../../engine/types';
+import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
+import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
 import { createInitialRulingStyleState } from '../../engine/systems/ruling-style';
@@ -42,6 +44,8 @@ import {
 export const MERCHANTS_GAMBIT_SCENARIO_ID = 'merchants_gambit';
 
 export function createMerchantsGambitScenario(): GameState {
+  const runSeed = generateRunSeed();
+
   const population: GameState['population'] = {
     [PopulationClass.Nobility]: {
       population: POPULATION_STARTING[PopulationClass.Nobility],
@@ -248,6 +252,12 @@ export function createMerchantsGambitScenario(): GameState {
           warWeariness: 0,
           isAtWarWithPlayer: false,
           recentActionHistory: [],
+          ...generateNeighborNames(
+            runSeed,
+            'neighbor_arenthal',
+            'coastal',
+            DISPOSITION_TO_PERSONALITY[NeighborDisposition.Mercantile],
+          ),
         },
         {
           id: 'neighbor_valdris',
@@ -265,6 +275,12 @@ export function createMerchantsGambitScenario(): GameState {
           warWeariness: 0,
           isAtWarWithPlayer: false,
           recentActionHistory: [],
+          ...generateNeighborNames(
+            runSeed,
+            'neighbor_valdris',
+            'highland',
+            DISPOSITION_TO_PERSONALITY[NeighborDisposition.Mercantile],
+          ),
         },
         {
           id: 'neighbor_krath',
@@ -282,6 +298,12 @@ export function createMerchantsGambitScenario(): GameState {
           warWeariness: 0,
           isAtWarWithPlayer: false,
           recentActionHistory: [],
+          ...generateNeighborNames(
+            runSeed,
+            'neighbor_krath',
+            'steppe',
+            DISPOSITION_TO_PERSONALITY[NeighborDisposition.Aggressive],
+          ),
         },
       ],
     },
@@ -403,6 +425,7 @@ export function createMerchantsGambitScenario(): GameState {
 
     // --- Scenario ---
     scenarioId: MERCHANTS_GAMBIT_SCENARIO_ID,
+    runSeed,
     environment: createInitialEnvironmentState(),
     economy: createInitialEconomicState(
       SATISFACTION_STARTING[PopulationClass.Merchants],

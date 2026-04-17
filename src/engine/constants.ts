@@ -311,7 +311,7 @@ export const TRADE_INCOME_MULTIPLIER: Record<TradeOpenness, number> = {
 // Block 13 — Save & Failure Tracking (§13, §10.4)
 // ============================================================
 
-export const SAVE_SCHEMA_VERSION = 5;
+export const SAVE_SCHEMA_VERSION = 6;
 
 // Overthrow failure condition (§10.4): triggers when nobility intrigue risk is high
 // and any class is at or below the breaking point for consecutive turns.

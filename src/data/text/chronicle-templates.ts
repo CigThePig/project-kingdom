@@ -2,7 +2,9 @@
 // Maps event types to human-readable chronicle entry summaries.
 
 import { FailureCondition, Season } from '../../engine/types';
-import { SEASON_LABELS, FAILURE_CONDITION_LABELS, NEIGHBOR_LABELS } from './labels';
+import type { GameState } from '../../engine/types';
+import { SEASON_LABELS, FAILURE_CONDITION_LABELS } from './labels';
+import { getNeighborDisplayName } from '../../bridge/nameResolver';
 
 // ============================================================
 // Season + Year label
@@ -20,25 +22,25 @@ export function crisisResolvedText(eventId: string, choiceId: string): string {
   return `Crisis "${eventId}" was addressed. The crown chose: ${choiceId}.`;
 }
 
-export function warStartedText(neighborId: string): string {
-  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+export function warStartedText(neighborId: string, state: GameState): string {
+  const name = getNeighborDisplayName(neighborId, state);
   return `War declared by ${name}. The kingdom mobilized for conflict.`;
 }
 
-export function warEndedText(neighborId: string, playerVictory: boolean): string {
-  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+export function warEndedText(neighborId: string, playerVictory: boolean, state: GameState): string {
+  const name = getNeighborDisplayName(neighborId, state);
   return playerVictory
     ? `The war with ${name} ended in victory.`
     : `The war with ${name} concluded. Peace terms were accepted.`;
 }
 
-export function treatySignedText(neighborId: string, agreementId: string): string {
-  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+export function treatySignedText(neighborId: string, agreementId: string, state: GameState): string {
+  const name = getNeighborDisplayName(neighborId, state);
   return `A treaty (${agreementId}) was signed with ${name}.`;
 }
 
-export function treatyBrokenText(neighborId: string): string {
-  const name = NEIGHBOR_LABELS[neighborId] ?? neighborId;
+export function treatyBrokenText(neighborId: string, state: GameState): string {
+  const name = getNeighborDisplayName(neighborId, state);
   return `The treaty with ${name} was broken.`;
 }
 

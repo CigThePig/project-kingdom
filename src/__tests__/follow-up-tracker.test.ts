@@ -326,8 +326,6 @@ describe('processDueFollowUps', () => {
 
   describe('ordering guarantee', () => {
     it('does not roll probability when state conditions fail', () => {
-      const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.1);
-
       const fu = makeFollowUp({
         triggerTurn: 1,
         delayTurns: 2,
@@ -337,6 +335,8 @@ describe('processDueFollowUps', () => {
       });
       const pool = [makeDefinition()];
       const state = makeState();
+
+      const randomSpy = vi.spyOn(Math, 'random').mockReturnValue(0.1);
 
       processDueFollowUps([fu], pool, 3, state, new Set(), new Set());
 
