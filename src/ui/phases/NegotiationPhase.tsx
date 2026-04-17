@@ -9,11 +9,12 @@ import { CardTitle } from '../components/CardTitle';
 import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
-import type { NegotiationCard, MonthDecision } from '../types';
+import type { MonthDecision } from '../types';
+import type { CardOfFamily } from '../../engine/cards/types';
 import { SeasonMonth, InteractionType } from '../../engine/types';
 
 interface NegotiationPhaseProps {
-  negotiationCard: NegotiationCard;
+  negotiationCard: CardOfFamily<'negotiation'>;
   currentMonth: SeasonMonth;
   onComplete: (decisions: MonthDecision[]) => void;
 }
@@ -22,7 +23,8 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
   const [toggledTermIds, setToggledTermIds] = useState<Set<string>>(new Set());
   const [confirming, setConfirming] = useState<'accept' | 'reject' | null>(null);
 
-  const { eventCard, terms, rejectHints } = negotiationCard;
+  const payload = negotiationCard.payload;
+  const { eventCard, terms, rejectHints } = payload;
 
   const handleToggleTerm = useCallback((termId: string) => {
     // Reset confirmation state when toggling terms
@@ -38,7 +40,7 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
     });
   }, []);
 
-  const resolvedNeighborId = negotiationCard.resolvedNeighborId;
+  const resolvedNeighborId = payload.resolvedNeighborId;
 
   const handleReject = useCallback(() => {
     if (confirming === 'reject') {
@@ -104,7 +106,7 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
               marginBottom: 6,
             }}
           >
-            {negotiationCard.contextLabel}
+            {payload.contextLabel}
           </div>
           <CardTitle>{eventCard.title}</CardTitle>
           <CardBody>{eventCard.body}</CardBody>

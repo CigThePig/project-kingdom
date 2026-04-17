@@ -7,11 +7,11 @@ import { EffectStrip } from '../components/EffectStrip';
 import { ContextStrip } from '../components/ContextStrip';
 import { SignalStrip } from '../components/SignalStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
-import type { CrisisPhaseData } from '../../bridge/crisisCardGenerator';
+import type { CardOfFamily } from '../../engine/cards/types';
 
 interface CrisisPhaseProps {
   onComplete: (crisisResponse: string) => void;
-  crisisData?: CrisisPhaseData;
+  crisisData?: CardOfFamily<'crisis'> | null;
 }
 
 export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
@@ -57,7 +57,7 @@ export function CrisisPhase({ onComplete, crisisData }: CrisisPhaseProps) {
     );
   }
 
-  const { crisisCard, responses } = crisisData;
+  const { crisisCard, responses } = crisisData.payload;
 
   // Fallback: if event has no choices, show a single acknowledge button
   if (responses.length === 0) {

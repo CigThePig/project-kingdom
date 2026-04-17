@@ -16,6 +16,8 @@ import {
 } from '../engine/types';
 import type { PetitionCardData } from './petitionCardGenerator';
 import type { EffectHint, SignalTag } from '../ui/types';
+import type { CardOfFamily } from '../engine/cards/types';
+import { overtureToCard } from '../engine/cards/adapters';
 import { getNeighborDisplayName } from './nameResolver';
 
 const PROGRESS_THRESHOLD = 40;
@@ -208,4 +210,11 @@ export function parseOvertureEventId(
     agenda,
     grant,
   };
+}
+
+/** Phase 4 — lift each overture into a unified `Card<'overture'>`. */
+export function generateOvertureCardsAsCards(
+  state: GameState,
+): CardOfFamily<'overture'>[] {
+  return generateOvertureCards(state).map((o) => overtureToCard(o));
 }

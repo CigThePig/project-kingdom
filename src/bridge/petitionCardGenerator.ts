@@ -3,6 +3,8 @@
 
 import type { ActiveEvent, GameState } from '../engine/types';
 import type { EffectHint, ContextLine, SignalTag } from '../ui/types';
+import type { CardOfFamily } from '../engine/cards/types';
+import { petitionToCard, notificationToCard } from '../engine/cards/adapters';
 import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
@@ -133,6 +135,18 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
   return cards;
 }
 
+/** Phase 4 — lift each petition into a unified `Card<'petition'>`. */
+export function generatePetitionCardsAsCards(
+  events: ActiveEvent[],
+  gameState?: GameState,
+): CardOfFamily<'petition'>[] {
+  return generatePetitionCards(events, gameState).map((data) => {
+    const def = EVENT_POOL.find((e) => e.id === data.definitionId)
+      ?? FOLLOW_UP_POOL.find((e) => e.id === data.definitionId);
+    return petitionToCard(data, def);
+  });
+}
+
 // ============================================================
 // Notification Card Data
 // ============================================================
@@ -168,4 +182,16 @@ export function generateNotificationCards(
   }
 
   return cards;
+}
+
+/** Phase 4 — lift each notification into a unified `Card<'notification'>`. */
+export function generateNotificationCardsAsCards(
+  events: ActiveEvent[],
+  gameState?: GameState,
+): CardOfFamily<'notification'>[] {
+  return generateNotificationCards(events, gameState).map((data) => {
+    const def = EVENT_POOL.find((e) => e.id === data.definitionId)
+      ?? FOLLOW_UP_POOL.find((e) => e.id === data.definitionId);
+    return notificationToCard(data, def);
+  });
 }

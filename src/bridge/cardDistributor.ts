@@ -2,12 +2,24 @@
 // Distributes a season's generated card pool across 3 months.
 // Pure allocation logic: receives pre-generated card data, assigns each month
 // an interaction type and the relevant card data.
+//
+// Phase 4: adapts each legacy card shape into the unified `Card` envelope at
+// this boundary, so downstream month-allocation consumers see `Card` objects.
 
 import { InteractionType } from '../engine/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import type { AssessmentPhaseData } from './assessmentCardGenerator';
 import type { NegotiationCard, MonthCardAllocation, MonthAllocation } from '../ui/types';
+import type { CardOfFamily } from '../engine/cards/types';
+import {
+  crisisToCard,
+  petitionToCard,
+  notificationToCard,
+  negotiationToCard,
+  assessmentToCard,
+  overtureToCard,
+} from '../engine/cards/adapters';
 
 const EMPTY_ALLOCATION: MonthAllocation = {
   interactionType: null,
@@ -43,10 +55,22 @@ export function distributeCardsToMonths(
   notificationCards: NotificationCardData[] = [],
   overtureCards: PetitionCardData[] = [],
 ): MonthCardAllocation {
-  // Phase 3 overtures piggyback the petition pool for distribution. Putting
+  // Lift every legacy shape into a unified `Card` envelope at this boundary.
+  // Phase 3 overtures piggyback the petition pool for distribution; putting
   // them at the front ensures overtures always fit somewhere and are
   // resolved in the earliest available petition slot.
-  petitionCards = [...overtureCards, ...petitionCards];
+  const crisisCard = crisisData ? crisisToCard(crisisData) : null;
+  const additionalCrisisCards = additionalCrises.map((c) => crisisToCard(c));
+  const overtureCardEnvelopes: CardOfFamily<'overture'>[] = overtureCards.map((o) => overtureToCard(o));
+  const petitionCardEnvelopes: CardOfFamily<'petition'>[] = petitionCards.map((p) => petitionToCard(p));
+  const combinedPetitions: (CardOfFamily<'petition'> | CardOfFamily<'overture'>)[] = [
+    ...overtureCardEnvelopes,
+    ...petitionCardEnvelopes,
+  ];
+  const notificationEnvelopes = notificationCards.map((n) => notificationToCard(n));
+  const negotiationCardEnvelope = negotiationCard ? negotiationToCard(negotiationCard) : null;
+  const assessmentCardEnvelope = assessmentData ? assessmentToCard(assessmentData) : null;
+
   const month1: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };
   const month2: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };
   const month3: MonthAllocation = { ...EMPTY_ALLOCATION, petitionCards: [], notificationCards: [], additionalCrises: [] };
@@ -57,53 +81,53 @@ export function distributeCardsToMonths(
   let assessmentPlaced = false;
 
   // ---- Month 1: Crisis if available, else assessment, else petition ----
-  if (crisisData) {
+  if (crisisCard) {
     month1.interactionType = InteractionType.CrisisResponse;
-    month1.crisisData = crisisData;
+    month1.crisisData = crisisCard;
     crisisPlaced = true;
-  } else if (assessmentData) {
+  } else if (assessmentCardEnvelope) {
     month1.interactionType = InteractionType.Assessment;
-    month1.assessmentData = assessmentData;
+    month1.assessmentData = assessmentCardEnvelope;
     assessmentPlaced = true;
-  } else if (petitionCards.length > 0) {
+  } else if (combinedPetitions.length > 0) {
     month1.interactionType = InteractionType.Petition;
     // Petitions will be assigned below
   }
   // else: quiet month (null interaction)
 
   // ---- Month 2: Negotiation if available, else petition, else assessment ----
-  if (negotiationCard) {
+  if (negotiationCardEnvelope) {
     month2.interactionType = InteractionType.Negotiation;
-    month2.negotiationCard = negotiationCard;
+    month2.negotiationCard = negotiationCardEnvelope;
     negotiationPlaced = true;
-  } else if (!assessmentPlaced && assessmentData) {
+  } else if (!assessmentPlaced && assessmentCardEnvelope) {
     month2.interactionType = InteractionType.Assessment;
-    month2.assessmentData = assessmentData;
+    month2.assessmentData = assessmentCardEnvelope;
     assessmentPlaced = true;
-  } else if (petitionCards.length > 0) {
+  } else if (combinedPetitions.length > 0) {
     month2.interactionType = InteractionType.Petition;
     // Petitions will be assigned below
   }
   // else: quiet month
 
   // ---- Month 3: Whatever remains ----
-  if (!crisisPlaced && crisisData) {
+  if (!crisisPlaced && crisisCard) {
     // Crisis wasn't placed (shouldn't happen, but safety)
     month3.interactionType = InteractionType.CrisisResponse;
-    month3.crisisData = crisisData;
-  } else if (!assessmentPlaced && assessmentData) {
+    month3.crisisData = crisisCard;
+  } else if (!assessmentPlaced && assessmentCardEnvelope) {
     month3.interactionType = InteractionType.Assessment;
-    month3.assessmentData = assessmentData;
-  } else if (!negotiationPlaced && negotiationCard) {
+    month3.assessmentData = assessmentCardEnvelope;
+  } else if (!negotiationPlaced && negotiationCardEnvelope) {
     month3.interactionType = InteractionType.Negotiation;
-    month3.negotiationCard = negotiationCard;
-  } else if (petitionCards.length > 0 && month3.interactionType === null) {
+    month3.negotiationCard = negotiationCardEnvelope;
+  } else if (combinedPetitions.length > 0 && month3.interactionType === null) {
     month3.interactionType = InteractionType.Petition;
   }
   // else: quiet month
 
   // ---- Place additional crisis events in available months ----
-  for (const extraCrisis of additionalCrises) {
+  for (const extraCrisis of additionalCrisisCards) {
     const months = [month1, month2, month3];
     const freeMonth = months.find((m) => m.interactionType === null);
     if (freeMonth) {
@@ -121,7 +145,7 @@ export function distributeCardsToMonths(
   }
 
   // ---- Distribute petitions across months that have petition interaction ----
-  if (petitionCards.length > 0) {
+  if (combinedPetitions.length > 0) {
     const petitionMonths: MonthAllocation[] = [];
     if (month1.interactionType === InteractionType.Petition) petitionMonths.push(month1);
     if (month2.interactionType === InteractionType.Petition) petitionMonths.push(month2);
@@ -154,25 +178,25 @@ export function distributeCardsToMonths(
     for (const monthAlloc of petitionMonths) {
       const count = Math.min(
         maxPerMonth,
-        Math.ceil((petitionCards.length - petitionIdx) / (petitionMonths.length - petitionMonths.indexOf(monthAlloc))),
+        Math.ceil((combinedPetitions.length - petitionIdx) / (petitionMonths.length - petitionMonths.indexOf(monthAlloc))),
       );
-      monthAlloc.petitionCards = petitionCards.slice(petitionIdx, petitionIdx + count);
+      monthAlloc.petitionCards = combinedPetitions.slice(petitionIdx, petitionIdx + count);
       petitionIdx += count;
-      if (petitionIdx >= petitionCards.length) break;
+      if (petitionIdx >= combinedPetitions.length) break;
     }
 
     // Overflow: if still leftover petitions, add to last petition month
-    if (petitionIdx < petitionCards.length && petitionMonths.length > 0) {
+    if (petitionIdx < combinedPetitions.length && petitionMonths.length > 0) {
       const lastMonth = petitionMonths[petitionMonths.length - 1];
       lastMonth.petitionCards = [
         ...lastMonth.petitionCards,
-        ...petitionCards.slice(petitionIdx),
+        ...combinedPetitions.slice(petitionIdx),
       ];
     }
   }
 
   // ---- Distribute notification cards across months ----
-  if (notificationCards.length > 0) {
+  if (notificationEnvelopes.length > 0) {
     const months = [month1, month2, month3];
     // Prefer quieter months (no primary interaction), then spread evenly
     const quietMonths = months.filter((m) => m.interactionType === null);
@@ -181,19 +205,19 @@ export function distributeCardsToMonths(
     let notifIdx = 0;
     for (const target of targets) {
       const count = Math.ceil(
-        (notificationCards.length - notifIdx) / (targets.length - targets.indexOf(target)),
+        (notificationEnvelopes.length - notifIdx) / (targets.length - targets.indexOf(target)),
       );
-      target.notificationCards = notificationCards.slice(notifIdx, notifIdx + count);
+      target.notificationCards = notificationEnvelopes.slice(notifIdx, notifIdx + count);
       notifIdx += count;
-      if (notifIdx >= notificationCards.length) break;
+      if (notifIdx >= notificationEnvelopes.length) break;
     }
 
     // Overflow: attach remaining to last target
-    if (notifIdx < notificationCards.length) {
+    if (notifIdx < notificationEnvelopes.length) {
       const last = targets[targets.length - 1];
       last.notificationCards = [
         ...last.notificationCards,
-        ...notificationCards.slice(notifIdx),
+        ...notificationEnvelopes.slice(notifIdx),
       ];
     }
   }

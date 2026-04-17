@@ -10,16 +10,14 @@ import { CardBody } from '../components/CardBody';
 import { EffectStrip } from '../components/EffectStrip';
 import { SelectionBadge } from '../components/SelectionBadge';
 import { ConfidenceIndicator } from '../components/ConfidenceIndicator';
-import type { CrisisPhaseData } from '../../bridge/crisisCardGenerator';
-import type { ConfidenceLevel } from '../types';
+import type { CardOfFamily } from '../../engine/cards/types';
 
 interface AssessmentPhaseProps {
-  assessmentData: CrisisPhaseData;
-  confidenceLevel: ConfidenceLevel;
+  assessmentCard: CardOfFamily<'assessment'>;
   onComplete: (choiceId: string) => void;
 }
 
-export function AssessmentPhase({ assessmentData, confidenceLevel, onComplete }: AssessmentPhaseProps) {
+export function AssessmentPhase({ assessmentCard, onComplete }: AssessmentPhaseProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   function handleResponseClick(id: string) {
@@ -30,7 +28,8 @@ export function AssessmentPhase({ assessmentData, confidenceLevel, onComplete }:
     }
   }
 
-  const { crisisCard, responses } = assessmentData;
+  const { crisisData, confidenceLevel } = assessmentCard.payload;
+  const { crisisCard, responses } = crisisData;
 
   // No choices — acknowledge only
   if (responses.length === 0) {
