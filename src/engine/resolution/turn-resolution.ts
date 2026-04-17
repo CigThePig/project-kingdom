@@ -1304,29 +1304,26 @@ export function resolveTurn(
   activeConflicts = ongoingConflicts;
 
   // ---- Phase 5e: Update Neighbor Military Strength & War Weariness ----
+  // Re-derive posture from the latest relationshipScore FIRST, then set
+  // isAtWarWithPlayer from that fresh posture. Previously these ran in two
+  // passes with the war flag computed from a stale posture, letting the flag
+  // drift out of sync with attitudePosture.
   updatedDiplomacy = {
     ...updatedDiplomacy,
     neighbors: updatedDiplomacy.neighbors.map((n) => {
       const conflictForNeighbor = activeConflicts.find((c) => c.neighborId === n.id);
       const isInConflict = conflictForNeighbor !== undefined;
       const conflictAdvantage = conflictForNeighbor?.playerAdvantage ?? 0;
+      const freshPosture = deriveDiplomaticPosture(n.relationshipScore);
 
       return {
         ...n,
         militaryStrength: updateNeighborMilitaryStrength(n, isInConflict, conflictAdvantage),
         warWeariness: updateNeighborWarWeariness(n, isInConflict),
-        isAtWarWithPlayer: n.attitudePosture === 'War',
+        attitudePosture: freshPosture,
+        isAtWarWithPlayer: freshPosture === 'War',
       };
     }),
-  };
-
-  // Re-derive postures after all changes.
-  updatedDiplomacy = {
-    ...updatedDiplomacy,
-    neighbors: updatedDiplomacy.neighbors.map((n) => ({
-      ...n,
-      attitudePosture: deriveDiplomaticPosture(n.relationshipScore),
-    })),
   };
 
   // ---- Phase 6: Faith and Culture ----
