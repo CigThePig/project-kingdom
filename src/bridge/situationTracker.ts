@@ -5,8 +5,7 @@
 import { StorylineStatus, FailureCondition } from '../engine/types';
 import type { GameState } from '../engine/types';
 import type { ActiveSituation } from '../ui/types';
-import { REGION_LABELS } from '../data/text/labels';
-import { getNeighborDisplayName } from './nameResolver';
+import { getNeighborDisplayName, getRegionDisplayName } from './nameResolver';
 import { KINGDOM_FEATURE_REGISTRY } from '../data/kingdom-features/index';
 import { CONFLICT_PHASE_LABELS, FAILURE_CONDITION_LABELS } from '../data/text/labels';
 import { CONSTRUCTION_CATEGORY_LABELS, STORYLINE_CATEGORY_LABELS } from '../data/text/labels';
@@ -41,7 +40,7 @@ export function compileActiveSituations(state: GameState): ActiveSituation[] {
       `${conflict.turnsElapsed} season(s) elapsed`,
     ];
     if (conflict.targetRegionId) {
-      const regionName = REGION_LABELS[conflict.targetRegionId] ?? conflict.targetRegionId;
+      const regionName = getRegionDisplayName(conflict.targetRegionId, state);
       statusLines.splice(1, 0, `Threatened region: ${regionName}`);
     }
     situations.push({
@@ -56,7 +55,7 @@ export function compileActiveSituations(state: GameState): ActiveSituation[] {
   // 2. Construction projects
   for (const project of state.constructionProjects) {
     if (project.turnsRemaining <= 0) continue;
-    const regionName = REGION_LABELS[project.targetRegionId] ?? project.targetRegionId;
+    const regionName = getRegionDisplayName(project.targetRegionId, state);
     const categoryLabel = CONSTRUCTION_CATEGORY_LABELS[project.category] ?? project.category;
     situations.push({
       id: `construction_${project.id}`,

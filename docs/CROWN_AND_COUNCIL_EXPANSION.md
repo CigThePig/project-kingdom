@@ -260,7 +260,107 @@ These become actionable: a player who knows a rival is in food crisis can offer 
 
 ---
 
+## Phase 2.5 — Location & Geography Foundation
+
+### Goal
+
+Before agendas (Phase 3) can reference historic claims, and before world
+events (Phase 12) can spread along sea vs. mountain edges, the game needs a
+data-level geography: which regions border which neighbors, which neighbors
+border each other, which regions are historically claimed by whom, and what
+named settlements live inside each region. **Pure data, no map UI.**
+
+### What gets added
+
+**Graph geography.** A `WorldGeography` lives on `GameState`:
+
+- `edges: AdjacencyEdge[]` — undirected graph over `region_*`,
+  `neighbor_*`, and `settlement_*` ids. Each edge has a `kind` (`land` /
+  `river` / `sea` / `mountain_pass`) and a `frictionTier` (`open` /
+  `contested` / `difficult`).
+- `historicClaims: HistoricClaim[]` — "neighbor X historically claims region Y"
+  with a stable `internalReasonCode` and a `claimStrength` of `ancestral` /
+  `recent` / `disputed`. Powers `RestoreTheOldBorders` (Phase 3).
+- `settlements: Settlement[]` — named places inside a region with a `role`
+  (`capital` / `market` / `fortress` / `shrine` / `minor`). These are future
+  Phase 14 agent `coverLocation` targets.
+- Denormalized indexes (`_adjacencyIndex`, `_claimsByNeighbor`,
+  `_claimsByRegion`) rebuilt on load so all lookups are O(1).
+
+**Procedural names.** Every region and settlement display name is procgen,
+seeded by `runSeed + id + role`. No hand-authored `REGION_LABELS` fallback.
+Internal ids (`region_heartlands`, `settlement_heartcrown`) remain stable
+forever; display strings change every new run. This also activates Phase 1's
+`generateRegionName` helper, which until now was unused by scenarios.
+
+**Engine queries** (pure helpers in `src/engine/systems/geography.ts`):
+`getNeighborsBordering`, `getRegionsClaimedBy`, `getClaimantsOf`,
+`areAdjacent`, `getInterRivalAdjacency`, `getSettlementsIn`,
+`recomputeBorderFlags`, `applyProceduralRegionNames`,
+`applyProceduralSettlementNames`, `finalizeGeography`.
+
+**Save migration.** Saves from before Phase 2.5 (v1) get synthesized
+geography via `synthesizeGeographyFromScenario(scenarioId, state)` mirroring
+each scenario factory's graph. Unknown scenario ids fall back to "every
+region ↔ every neighbor" emergency geography so legacy saves from removed
+experimental scenarios still load. `SAVE_VERSION` bumps 1 → 2.
+
+### Player-visible effects
+
+Zero in this phase. No map, no new cards. Display names refresh per run —
+the only visible change. Subsequent phases (3, 9, 11, 12, 14) consume the
+geography and surface its effects through existing card families and dossier
+lines.
+
+### What doesn't change
+
+- `RegionState.borderRegion` remains on the type (marked `@deprecated`) but
+  is derived from `geography.edges` via `recomputeBorderFlags`. Hard-coded
+  literals in scenarios are left in place and overwritten at `finalizeGeography`.
+- No new UI components. No new card families. Scenario turn-count and pacing
+  unchanged.
+
+### Acceptance criteria
+
+- All 5 scenarios (`new_crown`, `faithful_kingdom`, `fractured_inheritance`,
+  `frozen_march`, `merchants_gambit`) ship inline geography and pass
+  `validateGeographyIntegrity`.
+- Every region in every scenario has a populated procgen `displayName`.
+- Every settlement has a populated procgen `displayName`.
+- `buildGeographyIndexes` produces a symmetric `_adjacencyIndex`.
+- `getInterRivalAdjacency` returns sorted, deduped rival-rival pairs.
+- Loading a v1 save (no `geography` field) synthesizes geography from the
+  scenarioId, builds indexes, populates region/settlement display names, and
+  derives `borderRegion` flags.
+- Phase gate: `npm test && npm run lint && npm run build` green.
+
+### Files touched
+
+- Modified: `src/engine/types.ts` (geography types, `geography?` on
+  `GameState`, `displayName?` on `RegionState`, `SAVE_VERSION` bump)
+- New: `src/engine/systems/geography.ts` — pure helpers
+- New: `src/engine/systems/geography-migrations.ts` — legacy save synthesis
+- Modified: `src/data/text/word-banks.ts` (settlement word banks)
+- Modified: `src/data/text/name-generation.ts` (`generateSettlementName`)
+- Modified: `src/data/text/labels.ts` (REGION_LABELS removed)
+- Modified: `src/bridge/nameResolver.ts` (`getRegionDisplayName`,
+  `getSettlementDisplayName`)
+- Modified: `src/bridge/contextExtractor.ts`, `src/bridge/situationTracker.ts`
+  (route through nameResolver)
+- Modified: all 5 scenarios in `src/data/scenarios/*.ts` (inline geography
+  block + `finalizeGeography(baseState)`)
+- Modified: `src/context/game-context.tsx` (geography migration in `LOAD_SAVE`)
+- New tests: `src/__tests__/geography.test.ts`
+- Extended tests: `src/__tests__/game-reducer.test.ts` (save migration)
+
+---
+
 ## Phase 3 — Rival Agendas & Memory
+
+> **Prerequisite: Phase 2.5 Geography Foundation.** Agendas reference
+> `geography.historicClaims` (via `getRegionsClaimedBy`) and inter-rival
+> adjacency. Dossier lines resolve `targetEntityId` through
+> `getRegionDisplayName` / `getSettlementDisplayName` — never raw ids.
 
 ### Goal
 
@@ -284,14 +384,16 @@ Each agenda has: target conditions (who/what), tactics (which actions it prefers
 ```typescript
 interface RivalMemoryEntry {
   turnRecorded: number;
-  type: 'slight' | 'favor' | 'breach' | 'demonstration';
+  type: 'slight' | 'favor' | 'breach' | 'demonstration' | 'territorial_loss';
   source: string;          // event/action ID that caused it
   weight: number;          // -100 to +100, decays slowly over many turns
   context: string;         // internal code, e.g. 'refused_aid_during_famine'
+  regionId?: string;       // Phase 2.5 anchor for territorial events
+  settlementId?: string;
 }
 ```
 
-Memory weights decay 5% per year. Some memories (`'breach'`) decay much slower — a treaty broken once is remembered for decades. Memory weights modify the rival's relationship score drift each turn (small per-turn impact, large cumulative impact).
+Memory weights decay 5% per year. Some memories (`'breach'`) decay much slower — a treaty broken once is remembered for decades. `'territorial_loss'` entries get a 2× drift weight when the lost region also appears in `getRegionsClaimedBy(neighborId)` — losing historically-claimed ground cuts deeper. Memory weights modify the rival's relationship score drift each turn (small per-turn impact, large cumulative impact).
 
 ### Player-visible effects
 
@@ -688,7 +790,7 @@ The player sets a single governance posture per region, infrequently. The postur
 - **Pacify** — focus on loyalty and order, banditry/unrest events suppressed, +loyalty drift, no resource bonus
 - **Autonomy** — hands-off, no costs but no benefits, region runs itself, occasional surprising events (good or bad)
 
-**Region-name procgen** — Phase 1's `generateRegionName` activates: Plains regions become "the X Lowlands", Hills become "the X Reach", etc. The hand-authored names ("Heartlands," "Ironvale," "Timbermark") become the fallback for the default scenario.
+**Region-name procgen** — *Activated in Phase 2.5, not Phase 9.* All region and settlement display names are generated per-run from `runSeed + id` via `generateRegionName` / `generateSettlementName`. There is no hand-authored `REGION_LABELS` map. Phase 9 consumes the already-populated `region.displayName` through `getRegionDisplayName(id, state)`.
 
 **Posture-changing UI** — A "Set Regional Posture" card appears as a Court Opportunity when a region's posture has been static for 8+ turns. It's an opt-in card, not a forced decision. Player can also change posture from a region's Codex card.
 
@@ -816,7 +918,7 @@ These actions use the rival simulation pipeline — they're not invisible flavor
 - Mediation cards become available when two rivals are at war
 - Joining a coalition becomes possible when alliances form
 
-**World pulse integration** — Existing world pulse system gains rival-to-rival news lines: "Velthorne and Caelnir have signed a trade pact," "Border skirmishes reported between Ostmark and the Free Cities."
+**World pulse integration** — Existing world pulse system gains rival-to-rival news lines: "Velthorne and Caelnir have signed a trade pact," "Border skirmishes reported between Ostmark and the Free Cities." Border-skirmish lines seed off Phase 2.5's `getInterRivalAdjacency` filtered to `frictionTier: 'contested'`; coalitions prefer adjacent rival pairs.
 
 ### What doesn't change
 
@@ -846,6 +948,11 @@ These actions use the rival simulation pipeline — they're not invisible flavor
 ### Goal
 
 Events that affect the entire region, not just one kingdom. Plagues spread across borders. Economic shocks ripple through trade networks. Religious movements transcend political boundaries. These create shared circumstances that all kingdoms must respond to differently.
+
+Spread iterates Phase 2.5's `geography._adjacencyIndex`; each event definition
+declares which `AdjacencyEdge.kind` values transmit (maritime plague: `sea` /
+`river`; land plague: `land`; economic shock: `land` / `river` / `sea`).
+`mountain_pass` edges block most land-borne spread.
 
 ### What gets added
 
@@ -963,7 +1070,9 @@ The current espionage system has aggregate `networkStrength` and `counterIntelli
 **Agent roster** — Up to 6 named agents, each with:
 
 - Specialization (`Diplomatic`, `Military`, `Economic`, `Counter`, `Court`)
-- Cover (which kingdom or domain they're embedded in)
+- Cover (which kingdom or domain they're embedded in). For player-side
+  agents, `coverLocation` is a Phase 2.5 `settlement_*` id; agents in border
+  region settlements receive a detection-risk modifier.
 - Reliability (0-100, affects intel confidence)
 - Burn risk (0-100, increases with each operation)
 - Status (`Active`, `Compromised`, `Dead`)
@@ -1056,12 +1165,21 @@ Per-turn resolution must stay under 100ms on mid-tier mobile hardware. Rival sim
 
 ### Phase ordering rationale
 
-Phases 1-3 establish the rival foundation. Phase 4 is a refactor that the rest depends on. Phases 5-7 expand the card system that everything else surfaces through. Phases 8-10 add player control surfaces. Phases 11-12 deepen the world. Phase 13 enriches diplomacy now that there's a rich world to be diplomatic in. Phase 14 deepens espionage now that there's something rich to spy on. Phase 15 closes out with victory and legacy.
+Phases 1-3 establish the rival foundation. Phase 2.5 inserts a pure-data
+geography layer (adjacency graph, historic claims, procgen names) between
+Phase 2 and Phase 3 because the agenda work in Phase 3 depends on it. Phase 4
+is a refactor that the rest depends on. Phases 5-7 expand the card system
+that everything else surfaces through. Phases 8-10 add player control
+surfaces. Phases 11-12 deepen the world. Phase 13 enriches diplomacy now
+that there's a rich world to be diplomatic in. Phase 14 deepens espionage
+now that there's something rich to spy on. Phase 15 closes out with victory
+and legacy.
 
 Each phase can be skipped or reordered with caveats:
 
 - Phase 4 must precede 5, 6, 7
 - Phase 2 must precede 3, 11
+- Phase 2.5 must precede 3, 9, 11, 12, 14 (all geography consumers)
 - Phase 8 can land any time after Phase 4
 - Phase 12 benefits from 11 but works without it
 - Phase 15 should land last

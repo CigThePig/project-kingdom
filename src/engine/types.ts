@@ -571,8 +571,63 @@ export interface RegionState {
   infrastructure?: RegionalInfrastructure;
   localConditions?: KingdomCondition[]; // regional conditions (drought, plague, banditry)
   localEconomy?: RegionalEconomy;
+  /** @deprecated — derived from geography.edges via recomputeBorderFlags(). */
   borderRegion?: boolean;               // true = adjacent to a neighbor
   terrainType?: TerrainType;
+
+  // Phase 2.5 — Procedural display name (seeded from runSeed + id).
+  // Populated by applyProceduralRegionNames() during scenario setup or save migration.
+  displayName?: string;
+}
+
+// --- Geography (Phase 2.5) ---
+// Graph-based location layer: regions, neighbors, and named settlements as
+// nodes connected by adjacency edges. No coordinates, no pathfinding. Surfaces
+// through cards and dossier text via the nameResolver.
+
+export type GeographicEntityId = string; // 'region_*' | 'neighbor_*' | 'settlement_*'
+
+export type AdjacencyKind = 'land' | 'river' | 'sea' | 'mountain_pass';
+export type FrictionTier = 'open' | 'contested' | 'difficult';
+
+export interface AdjacencyEdge {
+  a: GeographicEntityId;
+  b: GeographicEntityId;
+  kind: AdjacencyKind;
+  frictionTier: FrictionTier;
+}
+
+export type ClaimStrength = 'ancestral' | 'recent' | 'disputed';
+
+export interface HistoricClaim {
+  neighborId: string;
+  regionId: string;
+  claimStrength: ClaimStrength;
+  // null = claimed but never controlled; otherwise the turn control was lost.
+  lostOnTurn: number | null;
+  // Stable code, not display text — drives dossier templating indirectly.
+  internalReasonCode: string;
+}
+
+export type SettlementRole = 'capital' | 'market' | 'fortress' | 'shrine' | 'minor';
+
+export interface Settlement {
+  id: string;              // 'settlement_*'
+  regionId: string;
+  role: SettlementRole;
+  populationShare: number; // 0..1 share of the parent region's population
+  displayName?: string;    // procgen; populated during scenario setup / migration
+}
+
+export interface WorldGeography {
+  schemaVersion: 1;
+  edges: AdjacencyEdge[];
+  historicClaims: HistoricClaim[];
+  settlements: Settlement[];
+  // Denormalized indexes — rebuilt by buildGeographyIndexes(); never authored.
+  _adjacencyIndex?: Record<string, string[]>;
+  _claimsByNeighbor?: Record<string, string[]>;
+  _claimsByRegion?: Record<string, string[]>;
 }
 
 // --- Policy ---
@@ -1283,7 +1338,16 @@ export interface GameState {
   // Phase 1 — per-run seed used to derive procedural names deterministically.
   // Optional so pre-Phase-1 saves load; LOAD_SAVE backfills via generateRunSeed().
   runSeed?: string;
+
+  // Phase 2.5 — Geography graph. Optional for backward compatibility; legacy
+  // saves get synthesized geography in LOAD_SAVE via
+  // synthesizeGeographyFromScenario().
+  geography?: WorldGeography;
 }
+
+// Schema version for SaveFile. Bump when adding non-optional migration steps.
+// v1: original. v2: Phase 2.5 geography graph + procedural region/settlement names.
+export const SAVE_VERSION = 2;
 
 export interface SaveFile {
   version: number; // schema version integer, e.g. 1

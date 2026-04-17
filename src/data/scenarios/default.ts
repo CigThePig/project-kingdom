@@ -22,6 +22,7 @@ import {
 import type { GameState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
 import { createInitialRivalState } from '../../engine/systems/rival-simulation';
+import { edge, finalizeGeography } from '../../engine/systems/geography';
 import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
@@ -141,7 +142,7 @@ export function createDefaultScenario(): GameState {
     },
   ];
 
-  return {
+  const baseState: GameState = {
     // --- Time ---
     turn: {
       turnNumber: 1,
@@ -423,5 +424,46 @@ export function createDefaultScenario(): GameState {
       SATISFACTION_STARTING[PopulationClass.Merchants],
     ),
     causalLedger: createEmptyLedger(),
+
+    // --- Geography (Phase 2.5) ---
+    // Three-region heartland anchored by river and mountain connections;
+    // Timbermark exposes the northern land border to Arenthal, while Ironvale's
+    // mountain pass touches Valdris, anchoring the Valdrisi ancestral claim.
+    geography: {
+      schemaVersion: 1,
+      edges: [
+        edge('region_heartlands', 'region_ironvale',   'land',          'open'),
+        edge('region_heartlands', 'region_timbermark', 'river',         'open'),
+        edge('region_ironvale',   'region_timbermark', 'mountain_pass', 'difficult'),
+        edge('region_timbermark', 'neighbor_arenthal', 'land',          'contested'),
+        edge('region_ironvale',   'neighbor_valdris',  'mountain_pass', 'contested'),
+        edge('neighbor_arenthal', 'neighbor_valdris',  'sea',           'open'),
+      ],
+      historicClaims: [
+        {
+          neighborId: 'neighbor_valdris',
+          regionId: 'region_ironvale',
+          claimStrength: 'ancestral',
+          lostOnTurn: null,
+          internalReasonCode: 'valdrisi_iron_birthright',
+        },
+      ],
+      settlements: [
+        {
+          id: 'settlement_heartcrown',
+          regionId: 'region_heartlands',
+          role: 'capital',
+          populationShare: 0.4,
+        },
+        {
+          id: 'settlement_ironwatch',
+          regionId: 'region_ironvale',
+          role: 'fortress',
+          populationShare: 0.25,
+        },
+      ],
+    },
   };
+
+  return finalizeGeography(baseState);
 }

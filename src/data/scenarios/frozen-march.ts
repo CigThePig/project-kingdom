@@ -15,6 +15,7 @@ import {
 import type { GameState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
 import { createInitialRivalState } from '../../engine/systems/rival-simulation';
+import { edge, finalizeGeography } from '../../engine/systems/geography';
 import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
 import { createInitialNarrativePressure } from '../../engine/systems/narrative-pressure';
@@ -133,7 +134,7 @@ export function createFrozenMarchScenario(): GameState {
     },
   ];
 
-  return {
+  const baseState: GameState = {
     // --- Time ---
     turn: {
       turnNumber: 1,
@@ -416,5 +417,46 @@ export function createFrozenMarchScenario(): GameState {
       SATISFACTION_STARTING[PopulationClass.Merchants],
     ),
     causalLedger: createEmptyLedger(),
+
+    // --- Geography (Phase 2.5) ---
+    // Frozen march: mountain passes dominate. The hostile northern neighbor
+    // (Arenthal) presses hard on Timbermark through brutal mountain terrain.
+    // A single 'ancestral' claim expresses the old territorial grievance.
+    geography: {
+      schemaVersion: 1,
+      edges: [
+        edge('region_heartlands', 'region_ironvale',   'mountain_pass', 'difficult'),
+        edge('region_heartlands', 'region_timbermark', 'land',          'open'),
+        edge('region_ironvale',   'region_timbermark', 'mountain_pass', 'difficult'),
+        edge('region_timbermark', 'neighbor_arenthal', 'mountain_pass', 'contested'),
+        edge('region_ironvale',   'neighbor_valdris',  'mountain_pass', 'contested'),
+        edge('neighbor_arenthal', 'neighbor_valdris',  'mountain_pass', 'difficult'),
+      ],
+      historicClaims: [
+        {
+          neighborId: 'neighbor_arenthal',
+          regionId: 'region_timbermark',
+          claimStrength: 'ancestral',
+          lostOnTurn: null,
+          internalReasonCode: 'arenthali_winter_conquest',
+        },
+      ],
+      settlements: [
+        {
+          id: 'settlement_frosthold',
+          regionId: 'region_heartlands',
+          role: 'capital',
+          populationShare: 0.35,
+        },
+        {
+          id: 'settlement_ironpass',
+          regionId: 'region_ironvale',
+          role: 'fortress',
+          populationShare: 0.25,
+        },
+      ],
+    },
   };
+
+  return finalizeGeography(baseState);
 }

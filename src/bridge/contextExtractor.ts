@@ -14,8 +14,8 @@ import {
 } from '../engine/types';
 import type { ContextLine } from '../ui/types';
 import { CONDITION_TYPE_LABELS, CONDITION_SEVERITY_LABELS, ECONOMIC_PHASE_LABELS } from '../data/text/labels';
-import { CLASS_LABELS, REGION_LABELS, DIPLOMATIC_POSTURE_LABELS, KNOWLEDGE_BRANCH_LABELS } from '../data/text/labels';
-import { getNeighborDisplayName } from './nameResolver';
+import { CLASS_LABELS, DIPLOMATIC_POSTURE_LABELS, KNOWLEDGE_BRANCH_LABELS } from '../data/text/labels';
+import { getNeighborDisplayName, getRegionDisplayName } from './nameResolver';
 
 // ============================================================
 // Positive condition types (for tone classification)
@@ -298,7 +298,7 @@ function extractRegionContext(
   const region = state.regions?.find((r) => r.id === regionId);
   if (!region) return null;
 
-  const name = REGION_LABELS[regionId] ?? regionId;
+  const name = getRegionDisplayName(regionId, state);
   const loyalty = region.loyalty;
 
   if (loyalty !== undefined && loyalty < 40) {

@@ -15,6 +15,8 @@ import {
   type TurnHistoryEntry,
 } from '../engine/types';
 import { createInitialRivalState } from '../engine/systems/rival-simulation';
+import { finalizeGeography } from '../engine/systems/geography';
+import { synthesizeGeographyFromScenario } from '../engine/systems/geography-migrations';
 import type { ChronicleEntry, MonthDecision } from '../ui/types';
 import {
   generateChronicleEntries,
@@ -126,7 +128,7 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
       const { save } = action;
       // Migrate saves that predate the temporary modifiers system.
       const migratedRunSeed = save.gameState.runSeed ?? generateRunSeed();
-      const gameState = {
+      const migratedGameState: GameState = {
         ...save.gameState,
         // Phase 1 — pre-Phase-1 saves have no runSeed. Per-neighbor name fields
         // are optional; nameResolver falls back to NEIGHBOR_LABELS automatically
@@ -165,6 +167,13 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
           })),
         },
       };
+
+      // Phase 2.5 — back-fill `geography` for pre-Phase-2.5 saves by replaying
+      // the scenario factory's graph. Then run finalizeGeography to populate
+      // indexes, procgen region/settlement names, and borderRegion flags.
+      const geography = migratedGameState.geography
+        ?? synthesizeGeographyFromScenario(migratedGameState.scenarioId, migratedGameState);
+      const gameState = finalizeGeography({ ...migratedGameState, geography });
       return {
         gameState,
         turnHistory: save.turnHistory,

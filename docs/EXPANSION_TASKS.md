@@ -285,7 +285,174 @@ Same verification suite as Phase 1: tests, lint, build, manual playthrough confi
 
 ---
 
+## Phase 2.5 — Location & Geography Foundation
+
+**Motivation.** Phase 3 agendas (`RestoreTheOldBorders`, `BleedTheRivals`)
+reference historic claims and inter-rival adjacency. Phases 9, 11, 12, and 14
+also need a real adjacency layer. This phase ships the pure-data graph —
+no map UI, no coordinates — so subsequent phases have something real to read.
+
+### Task 2.5.1 — Geography types
+
+Add to `src/engine/types.ts`:
+
+```typescript
+export type GeographicEntityId = string; // region_* | neighbor_* | settlement_*
+
+export interface AdjacencyEdge {
+  a: GeographicEntityId;
+  b: GeographicEntityId;
+  kind: 'land' | 'river' | 'sea' | 'mountain_pass';
+  frictionTier: 'open' | 'contested' | 'difficult';
+}
+
+export interface HistoricClaim {
+  neighborId: string;
+  regionId: string;
+  claimStrength: 'ancestral' | 'recent' | 'disputed';
+  lostOnTurn: number | null;
+  internalReasonCode: string;
+}
+
+export interface Settlement {
+  id: string;                       // 'settlement_*'
+  regionId: string;
+  role: 'capital' | 'market' | 'fortress' | 'shrine' | 'minor';
+  displayName?: string;
+  populationShare: number;
+}
+
+export interface WorldGeography {
+  schemaVersion: 1;
+  edges: AdjacencyEdge[];
+  historicClaims: HistoricClaim[];
+  settlements: Settlement[];
+  _adjacencyIndex?: Record<string, string[]>;
+  _claimsByNeighbor?: Record<string, string[]>;
+  _claimsByRegion?: Record<string, string[]>;
+}
+```
+
+Add `geography?: WorldGeography` to `GameState`. Bump `SAVE_VERSION` 1 → 2.
+Mark `RegionState.borderRegion` `@deprecated — derived from geography.edges`;
+keep the field, but compute it from edges. Add `displayName?: string` to
+`RegionState` — procgen at scenario setup and save migration.
+
+### Task 2.5.2 — Geography engine system
+
+Create `src/engine/systems/geography.ts` (pure functions):
+
+- `buildGeographyIndexes(geo)` — populates `_adjacencyIndex`, `_claimsByX`.
+- `getNeighborsBordering(regionId, state)` → `string[]`
+- `getRegionAdjacencies(regionId, state)` → `string[]`
+- `getRegionsClaimedBy(neighborId, state)` → `string[]`
+- `getClaimantsOf(regionId, state)` → `HistoricClaim[]`
+- `areAdjacent(idA, idB, state)` → `boolean` (symmetric, false on unknown)
+- `getInterRivalAdjacency(state)` → `Array<[string, string]>` (sorted, deduped)
+- `getSettlementsIn(regionId, state)` → `Settlement[]`
+- `deriveBorderRegionFlag(regionId, geo)` / `recomputeBorderFlags(state)`
+- `validateGeographyIntegrity(state)` — throws on dangling edges/claims
+- `applyProceduralRegionNames(state)` / `applyProceduralSettlementNames(state)`
+- `finalizeGeography(state)` — build indexes, procgen names, border flags
+- `edge(a, b, kind?, frictionTier?)` — authoring helper
+
+Create `src/engine/systems/geography-migrations.ts`:
+
+- `synthesizeGeographyFromScenario(scenarioId, state)` — returns the same
+  edges/claims the scenario factory would have produced, for legacy saves.
+  Falls back to "every region ↔ every neighbor" emergency geography when the
+  scenarioId is unknown (preserves `borderRegion=true` semantics).
+
+### Task 2.5.3 — Procedural naming wiring
+
+**All** region and settlement display names are procgen. There is no
+hand-authored `REGION_LABELS` fallback. Internal IDs (`region_heartlands`,
+`settlement_heartcrown`, …) are stable forever per design rule — only display
+strings change, regenerated on every new run.
+
+Add to `src/data/text/word-banks.ts`:
+
+- Settlement name banks per `Settlement.role` (capital / market / fortress /
+  shrine / minor) plus per-terrain roots mirroring the existing region banks.
+
+Add to `src/data/text/name-generation.ts`:
+
+- `generateSettlementName(seed, role, terrain)` — deterministic from seed.
+
+Add to `src/bridge/nameResolver.ts`:
+
+- `getRegionDisplayName(regionId, state)` — live `region.displayName` → raw id
+  as a last-resort safety net; in practice `displayName` is always populated
+  after scenario setup or save migration.
+- `getSettlementDisplayName(settlementId, state)` — same shape.
+
+Delete `REGION_LABELS` from `src/data/text/labels.ts`. All call sites that
+previously read `REGION_LABELS[id]` (e.g. `contextExtractor`,
+`situationTracker`) route through `getRegionDisplayName(id, state)`.
+
+### Task 2.5.4 — Scenario integration
+
+Each of the 5 scenario factories (`src/data/scenarios/*.ts`) declares its
+geography inline and calls `finalizeGeography(baseState)` before returning.
+Scenario flavor:
+
+- **default (`new_crown`)** — single valdris↔ironvale ancestral claim.
+- **faithful-kingdom** — religious claim strengths (schism + disputed monastery).
+- **fractured-inheritance** — 3 overlapping claims; contested internal edges.
+- **frozen-march** — `mountain_pass` edges dominate; arenthal ancestral claim
+  on timbermark.
+- **merchants-gambit** — 3 neighbors (arenthal/valdris/krath); sea edges
+  dominate; dense rival↔rival adjacency.
+
+Hard-coded `borderRegion: true` literals remain in place this phase —
+`recomputeBorderFlags()` derives them from edges. Cleanup during Phase 3.
+
+### Task 2.5.5 — Save migration
+
+In `src/context/game-context.tsx` `LOAD_SAVE`, after the existing diplomacy
+migration block:
+
+```typescript
+const geography = migratedGameState.geography
+  ?? synthesizeGeographyFromScenario(migratedGameState.scenarioId, migratedGameState);
+const gameState = finalizeGeography({ ...migratedGameState, geography });
+```
+
+`finalizeGeography` rebuilds indexes, populates procgen region and settlement
+names (idempotent — same `runSeed` → same names), and refreshes `borderRegion`.
+
+### Task 2.5.6 — Verification
+
+`src/__tests__/geography.test.ts` covers:
+
+- `buildGeographyIndexes` produces a symmetric `_adjacencyIndex`.
+- `getNeighborsBordering('region_timbermark', defaultState)` →
+  `['neighbor_arenthal']`.
+- `getRegionsClaimedBy('neighbor_valdris', defaultState)` →
+  `['region_ironvale']`.
+- `areAdjacent` symmetric; unknown IDs → `false` (no throw).
+- `getInterRivalAdjacency` returns sorted, deduped pairs.
+- `recomputeBorderFlags` updates `borderRegion` to match edges.
+- All 5 scenarios pass `validateGeographyIntegrity`.
+- Procgen region and settlement names are deterministic per `runSeed`.
+
+Extended `src/__tests__/game-reducer.test.ts`:
+
+- v1 `SaveFile` with no geography → `LOAD_SAVE` synthesizes edges, populates
+  `displayName`, and derives `borderRegion`.
+- Round-trip: save then load preserves edges, claims, and generated names.
+- Unknown `scenarioId` falls back to emergency geography.
+
+Phase gate: `npm test && npm run lint && npm run build` all green.
+
+---
+
 ## Phase 3 — Rival Agendas & Memory
+
+> **Prerequisite: Phase 2.5 (Geography Foundation).** Agendas reference
+> `geography.historicClaims` and `getInterRivalAdjacency`. All region /
+> settlement display names come from `getRegionDisplayName` and
+> `getSettlementDisplayName` — never raw ids in dossier text.
 
 ### Task 3.1 — Agenda and memory types
 
@@ -304,15 +471,17 @@ export enum RivalAgenda {
 
 export interface RivalMemoryEntry {
   turnRecorded: number;
-  type: 'slight' | 'favor' | 'breach' | 'demonstration';
+  type: 'slight' | 'favor' | 'breach' | 'demonstration' | 'territorial_loss';
   source: string;
   weight: number;
   context: string;
+  regionId?: string;        // Phase 2.5 anchor
+  settlementId?: string;
 }
 
 export interface RivalAgendaState {
   current: RivalAgenda;
-  targetEntityId: string | null;
+  targetEntityId: string | null;     // region_* | neighbor_* | settlement_*
   progressValue: number;
   turnsActive: number;
 }
@@ -339,7 +508,22 @@ export function shouldAgendaShift(agenda: RivalAgendaState, neighbor: NeighborSt
 
 Each agenda has authored definitions in `src/data/rivals/agendas.ts` covering: target conditions, preferred action types (modifier on action pressure), satisfaction triggers (when does it complete or shift).
 
-**Verify:** Tests confirm agendas shift over time, target the right entities, and modify action pressure correctly.
+**Geography-anchored agenda behavior (Phase 2.5 consumer):**
+
+- `RestoreTheOldBorders.selectInitialAgenda` calls
+  `getRegionsClaimedBy(neighbor.id)`. Empty → fall back to
+  `DefensiveConsolidation`. Non-empty → `targetEntityId` is the first claim's
+  `regionId` (deterministic, not RNG).
+- `DominateTrade` prefers neighbors reachable via `sea`/`river` edges.
+- `BleedTheRivals` requires at least one inter-rival edge to the target
+  (consults `getInterRivalAdjacency`).
+- `tickAgenda` for `RestoreTheOldBorders` reads player control of
+  `targetEntityId` and bumps `progressValue` only while the player still
+  holds it.
+
+**Verify:** Tests confirm agendas shift over time, target the right entities,
+and modify action pressure correctly. Geography-anchored agendas resolve
+targets against `state.geography` not via RNG lookup.
 
 ### Task 3.3 — Memory system
 
@@ -353,7 +537,17 @@ export function computeMemoryDriftDelta(memory: RivalMemoryEntry[]): number
 
 Hook `recordMemory` calls into existing event resolution paths (when player makes a decision affecting a rival, write a memory entry).
 
-**Verify:** Memory entries are recorded; weights decay over multi-year sims; drift delta affects relationship score.
+**Geography hooks (Phase 2.5 consumer):**
+
+- `recordMemory` accepts optional `regionId` / `settlementId`. Resolution code
+  that flags region loss writes `type: 'territorial_loss', regionId`.
+- `computeMemoryDriftDelta` weights `territorial_loss` 2× when the region also
+  appears in `historicClaims` for the same neighbor (via
+  `getRegionsClaimedBy`).
+
+**Verify:** Memory entries are recorded; weights decay over multi-year sims;
+drift delta affects relationship score. Territorial losses on historically
+claimed regions double-weight.
 
 ### Task 3.4 — Spymaster assessments and dossier integration
 
@@ -361,7 +555,12 @@ Update `src/data/text/dossier-templates.ts` to add agenda-aware spymaster lines 
 
 Add a "Disposition Toward You" line to the dossier card derived from memory entries.
 
-**Verify:** Dossier shows agenda hints and disposition lines.
+Spymaster lines must resolve `targetEntityId` through
+`getRegionDisplayName` / `getSettlementDisplayName` / `getNeighborDisplayName`
+— never render a raw `region_*` or `settlement_*` id.
+
+**Verify:** Dossier shows agenda hints and disposition lines. Targets render
+as procgen names.
 
 ### Task 3.5 — Diplomatic Overture cards
 
@@ -618,9 +817,11 @@ Add `posture: RegionalPosture` to `RegionState`.
 
 Generate "Set Posture" cards as Court Opportunities for stale regions.
 
-### Task 9.4 — Region rename via procgen
+### Task 9.4 — Region rename via procgen *(removed — completed in Phase 2.5)*
 
-Wire `generateRegionName` from Phase 1 into scenario creation.
+Moved to Phase 2.5 (Task 2.5.3). `generateRegionName` is now called in
+`finalizeGeography` from every scenario factory and from `LOAD_SAVE`. Phase 9
+keeps regional postures; renaming is already wired.
 
 ### Task 9.5 — Phase 9 acceptance
 
@@ -654,6 +855,10 @@ Tests, lint, build, playthrough.
 
 ## Phase 11 — Inter-Kingdom Diplomacy
 
+> **Geography consumer (Phase 2.5).** Coalition formation prefers
+> `getInterRivalAdjacency` pairs. "Border skirmish" world-pulse lines seed
+> off edges with `frictionTier: 'contested'`.
+
 ### Task 11.1 — Relationship matrix
 
 Add `rivalRelationships: Record<string, Record<string, number>>` to `DiplomacyState`.
@@ -661,14 +866,19 @@ Add `rivalRelationships: Record<string, Record<string, number>>` to `DiplomacySt
 ### Task 11.2 — Inter-rival actions
 
 Extend `evaluateNeighborActions` to optionally generate actions targeting other rivals.
+Action probability bumped for rivals sharing an adjacency edge
+(`areAdjacent(aId, bId, state)`); multiplied further for `contested` edges.
 
 ### Task 11.3 — World pulse integration
 
-New world pulse line categories for inter-rival events.
+New world pulse line categories for inter-rival events. Border skirmish pulses
+iterate `getInterRivalAdjacency(state)` and filter by `frictionTier === 'contested'`.
 
 ### Task 11.4 — Mediation and coalition cards
 
 New card types and generators for player intervention in rival conflicts.
+Coalition candidacy ranks rival pairs by `getInterRivalAdjacency` intersection
+with shared grievance memories.
 
 ### Task 11.5 — Phase 11 acceptance
 
@@ -678,13 +888,20 @@ Tests, lint, build, playthrough.
 
 ## Phase 12 — Dynamic World Events
 
+> **Geography consumer (Phase 2.5).** Plague / economic-shock spread iterates
+> `state.geography._adjacencyIndex`. Sea edges spread maritime plague faster;
+> `mountain_pass` edges block land plague.
+
 ### Task 12.1 — World event types
 
 Per design doc.
 
 ### Task 12.2 — World event engine
 
-`src/engine/systems/world-events.ts` with spawning, spread, per-kingdom effect application.
+`src/engine/systems/world-events.ts` with spawning, spread, per-kingdom effect
+application. Spread iterates `_adjacencyIndex`; per-event definitions declare
+which `AdjacencyEdge.kind` values transmit (e.g. maritime plague: `sea`,
+`river`; land plague: `land`; economic shock: `land`, `river`, `sea`).
 
 ### Task 12.3 — Initial world event pool
 
@@ -722,9 +939,14 @@ Tests, lint, build, playthrough.
 
 ## Phase 14 — Intelligence Network Depth
 
+> **Geography consumer (Phase 2.5).** Agent `coverLocation` is a
+> `settlementId`. Agents stationed in settlements inside border regions
+> (`deriveBorderRegionFlag`) receive a detection-risk modifier.
+
 ### Task 14.1 — Agent types and roster
 
-Per design doc.
+Per design doc. `Agent.coverLocation?: string` holds a `settlement_*` id;
+resolved via `getSettlementDisplayName(id, state)` for display.
 
 ### Task 14.2 — Long-term operations
 

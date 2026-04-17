@@ -132,6 +132,47 @@ export const REGION_SUFFIXES: Record<string, readonly string[]> = {
 };
 
 // ============================================================
+// Settlement Name Components — by role and terrain (Phase 2.5)
+// ============================================================
+// Settlements are named locations inside a player region (capital, market,
+// fortress, shrine, minor). Word banks mix role flavor and terrain flavor so
+// a "fortress" on a mountain terrain reads different from one on a coast.
+
+export const SETTLEMENT_PREFIXES_CAPITAL: readonly string[] = [
+  'Crown', 'High', 'Royal', 'Old', 'Great', 'Kings', 'Queens', 'First', 'Throne', 'Court',
+];
+
+export const SETTLEMENT_PREFIXES_MARKET: readonly string[] = [
+  'Gold', 'Silver', 'Copper', 'Trader', 'Market', 'Coin', 'Fair', 'Caravan', 'Bridge', 'Scale',
+];
+
+export const SETTLEMENT_PREFIXES_FORTRESS: readonly string[] = [
+  'Iron', 'Black', 'Stone', 'Wall', 'Watch', 'Shield', 'Spear', 'Guard', 'Bulwark', 'Keep',
+];
+
+export const SETTLEMENT_PREFIXES_SHRINE: readonly string[] = [
+  'Saint', 'Holy', 'Quiet', 'White', 'Grey', 'Vigil', 'Cloister', 'Hymn', 'Pilgrim', 'Chapel',
+];
+
+export const SETTLEMENT_PREFIXES_MINOR: readonly string[] = [
+  'Old', 'Little', 'Lower', 'Upper', 'North', 'South', 'East', 'West', 'Long', 'Low',
+];
+
+export const SETTLEMENT_ROOTS_BY_TERRAIN: Record<string, readonly string[]> = {
+  Plains:   ['ford', 'cross', 'field', 'meadow', 'grange', 'hollow', 'stead', 'furrow'],
+  Hills:    ['mere', 'crest', 'ridge', 'barrow', 'knoll', 'downs', 'scar', 'cairn'],
+  Forest:   ['holt', 'wick', 'thorn', 'glade', 'hollow', 'copse', 'bough', 'briar'],
+  Coastal: ['port', 'cove', 'strand', 'harbor', 'reach', 'wharf', 'shoal', 'haven'],
+  Mountain: ['gate', 'pass', 'peak', 'spire', 'crag', 'watch', 'hollow', 'stone'],
+  River:    ['bridge', 'ford', 'mill', 'bank', 'bend', 'run', 'weir', 'reach'],
+};
+
+// Role-agnostic fallback roots, used when terrain is unknown.
+export const SETTLEMENT_ROOTS_GENERIC: readonly string[] = [
+  'hold', 'cross', 'stead', 'gate', 'watch', 'keep', 'reach', 'march', 'ford', 'row',
+];
+
+// ============================================================
 // Agent Codenames — for Phase 14
 // ============================================================
 

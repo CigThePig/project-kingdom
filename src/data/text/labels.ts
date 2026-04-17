@@ -495,12 +495,9 @@ export const RELIGIOUS_ORDER_TYPE_LABELS: Record<ReligiousOrderType, string> = {
 // ============================================================
 // Region Labels
 // ============================================================
-
-export const REGION_LABELS: Record<string, string> = {
-  region_heartlands: 'The Heartlands',
-  region_ironvale: 'Ironvale',
-  region_timbermark: 'Timbermark',
-};
+// REGION_LABELS was removed in Phase 2.5. Region display names are now
+// generated procedurally at scenario setup (seeded by runSeed) and resolved
+// via getRegionDisplayName() in src/bridge/nameResolver.ts.
 
 export const ECONOMIC_PHASE_LABELS: Record<EconomicPhase, string> = {
   [EconomicPhase.Depression]: 'Depression',

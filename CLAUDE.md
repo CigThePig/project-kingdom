@@ -116,6 +116,7 @@ All neighbor display lookups go through `src/bridge/nameResolver.ts`. Never read
 |---|---|---|
 | 1 | Procedural Naming System | `src/data/text/word-banks.ts`, `src/data/text/name-generation.ts`, `src/bridge/nameResolver.ts` |
 | 2 | Rival Kingdom Simulation Core | `src/engine/systems/rival-simulation.ts` |
+| 2.5 | Location & Geography Foundation | `src/engine/systems/geography.ts`, `geography-migrations.ts` |
 | 3 | Rival Agendas & Memory | `src/engine/systems/rival-agendas.ts`, `rival-memory.ts` |
 | 4 | Unified Card Schema | `src/engine/cards/types.ts`, `adapters.ts` |
 | 5 | Hand & Draft Mechanics | `src/engine/systems/court-hand.ts`, `src/ui/components/CourtHandPanel.tsx` |
@@ -130,7 +131,7 @@ All neighbor display lookups go through `src/bridge/nameResolver.ts`. Never read
 | 14 | Intelligence Network Depth | `src/engine/systems/agents.ts` |
 | 15 | Victory Conditions & Legacy | `src/engine/systems/victory.ts`, `src/engine/systems/legacy.ts` |
 
-**Phase dependencies:** 4 must precede 5, 6, 7. 2 must precede 3 and 11. 15 lands last.
+**Phase dependencies:** 4 must precede 5, 6, 7. 2 must precede 3 and 11. 2.5 must precede 3, 9, 11, 12, and 14. 15 lands last.
 
 ---
 
