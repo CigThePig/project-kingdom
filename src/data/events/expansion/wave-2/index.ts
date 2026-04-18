@@ -1,9 +1,9 @@
-// Phase 7 — Wave-2 Crisis Events.
+// Phase 7 — Wave-2 Crisis Events: aggregate barrel.
 //
-// Two new crises occupying themes from the design doc not previously
-// represented in the expansion pool: a celestial omen and a foreign-refugee
-// influx. These slot into the existing event-engine pipeline alongside the
-// rest of EXPANSION_*_EVENTS.
+// 25 total crises across five themed files plus the original two (comet +
+// refugees). The rest of the registry (`src/data/events/index.ts` and
+// `src/data/events/effects.ts`) imports `EXPANSION_WAVE_2_CRISES` and
+// `EXPANSION_WAVE_2_CRISES_EFFECTS` from this barrel and spreads them.
 
 import type { EventDefinition } from '../../../../engine/events/event-engine';
 import type { MechanicalEffectDelta } from '../../../../engine/types';
@@ -13,7 +13,29 @@ import {
   PopulationClass,
 } from '../../../../engine/types';
 
-export const EXPANSION_WAVE_2_CRISES: EventDefinition[] = [
+import {
+  EXPANSION_WAVE_2_DISASTER_CRISES,
+  EXPANSION_WAVE_2_DISASTER_CRISIS_EFFECTS,
+} from './crises-disasters';
+import {
+  EXPANSION_WAVE_2_RELIGIOUS_CRISES,
+  EXPANSION_WAVE_2_RELIGIOUS_CRISIS_EFFECTS,
+} from './crises-religious';
+import {
+  EXPANSION_WAVE_2_POLITICAL_CRISES,
+  EXPANSION_WAVE_2_POLITICAL_CRISIS_EFFECTS,
+} from './crises-political';
+import {
+  EXPANSION_WAVE_2_SOCIAL_CRISES,
+  EXPANSION_WAVE_2_SOCIAL_CRISIS_EFFECTS,
+} from './crises-social';
+import {
+  EXPANSION_WAVE_2_PHENOMENA_CRISES,
+  EXPANSION_WAVE_2_PHENOMENA_CRISIS_EFFECTS,
+} from './crises-phenomena';
+
+// The two originals shipped in the Phase 7 stub PR.
+const ORIGINAL_WAVE_2_CRISES: EventDefinition[] = [
   {
     id: 'evt_exp_w2_comet_sighting',
     severity: EventSeverity.Critical,
@@ -60,7 +82,7 @@ export const EXPANSION_WAVE_2_CRISES: EventDefinition[] = [
   },
 ];
 
-export const EXPANSION_WAVE_2_CRISES_EFFECTS: Record<
+const ORIGINAL_WAVE_2_CRISIS_EFFECTS: Record<
   string,
   Record<string, MechanicalEffectDelta>
 > = {
@@ -99,4 +121,25 @@ export const EXPANSION_WAVE_2_CRISES_EFFECTS: Record<
       heterodoxyDelta: 1,
     },
   },
+};
+
+export const EXPANSION_WAVE_2_CRISES: EventDefinition[] = [
+  ...ORIGINAL_WAVE_2_CRISES,
+  ...EXPANSION_WAVE_2_DISASTER_CRISES,
+  ...EXPANSION_WAVE_2_RELIGIOUS_CRISES,
+  ...EXPANSION_WAVE_2_POLITICAL_CRISES,
+  ...EXPANSION_WAVE_2_SOCIAL_CRISES,
+  ...EXPANSION_WAVE_2_PHENOMENA_CRISES,
+];
+
+export const EXPANSION_WAVE_2_CRISES_EFFECTS: Record<
+  string,
+  Record<string, MechanicalEffectDelta>
+> = {
+  ...ORIGINAL_WAVE_2_CRISIS_EFFECTS,
+  ...EXPANSION_WAVE_2_DISASTER_CRISIS_EFFECTS,
+  ...EXPANSION_WAVE_2_RELIGIOUS_CRISIS_EFFECTS,
+  ...EXPANSION_WAVE_2_POLITICAL_CRISIS_EFFECTS,
+  ...EXPANSION_WAVE_2_SOCIAL_CRISIS_EFFECTS,
+  ...EXPANSION_WAVE_2_PHENOMENA_CRISIS_EFFECTS,
 };

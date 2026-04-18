@@ -2,8 +2,10 @@
 // Pure engine logic for 3-slot budget rules, action validation, and cost deduction.
 // No React imports. No player-facing text.
 
-import { ActionBudget, ActionType, QueuedAction } from '../types';
+import { ActionBudget, ActionType, QueuedAction, type CouncilState } from '../types';
+import type { CardTag } from '../cards/types';
 import { ACTION_BUDGET_BASE, POLICY_CHANGES_PER_TURN } from '../constants';
+import { collectSlotDiscounts } from '../systems/advisors';
 
 // ============================================================
 // Public Types
@@ -97,6 +99,41 @@ export function deductActionCost(budget: ActionBudget, action: QueuedAction): Ac
  */
 export function checkActionBudgetExhausted(budget: ActionBudget): boolean {
   return budget.slotsRemaining <= 0;
+}
+
+/**
+ * Phase 8 — Applies any matching advisor `slot_cost_discount` modifiers to
+ * the action's cost. Returns a new QueuedAction with reduced `slotCost`
+ * (never below zero). Caller supplies the action's tags for scope matching;
+ * `target` is inferred from `ActionType`.
+ */
+export function applyAdvisorSlotDiscount(
+  action: QueuedAction,
+  council: CouncilState | undefined,
+  tags: CardTag[] = [],
+): QueuedAction {
+  if (!council) return action;
+  if (action.isFree || action.slotCost <= 0) return action;
+  const target = actionTypeToAdvisorTarget(action.type);
+  if (!target) return action;
+  const discount = collectSlotDiscounts(council, { target, tags });
+  if (discount <= 0) return action;
+  return { ...action, slotCost: Math.max(0, action.slotCost - discount) };
+}
+
+function actionTypeToAdvisorTarget(
+  type: ActionType,
+): 'crisis' | 'petition' | 'decree' | 'negotiation' | null {
+  switch (type) {
+    case ActionType.Decree:
+      return 'decree';
+    case ActionType.CrisisResponse:
+      return 'crisis';
+    case ActionType.DiplomaticAction:
+      return 'negotiation';
+    default:
+      return null;
+  }
 }
 
 /**

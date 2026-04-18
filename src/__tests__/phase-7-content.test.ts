@@ -18,6 +18,7 @@ import { EXPANSION_WAVE_2_CRISES } from '../data/events/expansion/wave-2';
 import { EXPANSION_WAVE_2_PETITIONS } from '../data/events/expansion/petitions-wave-2';
 import { WAVE_2_OVERTURES } from '../data/overtures/wave-2';
 import { generateOvertureCards } from '../bridge/diplomaticOvertureGenerator';
+import { EVENT_TEXT } from '../data/text/events';
 import {
   PopulationClass,
   RivalAgenda,
@@ -55,6 +56,14 @@ describe('Phase 7 — hand cards expanded', () => {
 });
 
 describe('Phase 7 — wave-2 events', () => {
+  it('expands the crisis roster to 25 entries', () => {
+    expect(EXPANSION_WAVE_2_CRISES).toHaveLength(25);
+  });
+
+  it('expands the petition roster to 20 entries', () => {
+    expect(EXPANSION_WAVE_2_PETITIONS).toHaveLength(20);
+  });
+
   it('registers wave-2 crisis events in EVENT_POOL', () => {
     for (const def of EXPANSION_WAVE_2_CRISES) {
       const found = EVENT_POOL.find((e) => e.id === def.id);
@@ -82,9 +91,30 @@ describe('Phase 7 — wave-2 events', () => {
       }
     }
   });
+
+  it('every wave-2 event has an EVENT_TEXT entry with labels for each choice', () => {
+    const allWave2 = [...EXPANSION_WAVE_2_CRISES, ...EXPANSION_WAVE_2_PETITIONS];
+    for (const def of allWave2) {
+      const text = EVENT_TEXT[def.id];
+      expect(text, `no EVENT_TEXT entry for ${def.id}`).toBeDefined();
+      expect(text.title.length, `empty title for ${def.id}`).toBeGreaterThan(0);
+      expect(text.body.length, `empty body for ${def.id}`).toBeGreaterThan(0);
+      for (const choice of def.choices) {
+        const label = text.choices[choice.choiceId];
+        expect(
+          label && label.length > 0,
+          `missing choice label for ${def.id}.${choice.choiceId}`,
+        ).toBe(true);
+      }
+    }
+  });
 });
 
 describe('Phase 7 — wave-2 decrees', () => {
+  it('expands the decree roster to 15 entries', () => {
+    expect(EXPANSION_WAVE_2_DECREES).toHaveLength(15);
+  });
+
   it('registers wave-2 decrees in DECREE_POOL', () => {
     for (const def of EXPANSION_WAVE_2_DECREES) {
       const found = DECREE_POOL.find((d) => d.id === def.id);

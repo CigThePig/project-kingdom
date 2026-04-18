@@ -14,6 +14,7 @@ import {
   type QueuedAction,
   type SaveFile,
   type TurnHistoryEntry,
+  type CouncilSeat,
 } from '../engine/types';
 import { createInitialRivalState } from '../engine/systems/rival-simulation';
 import { selectInitialAgenda } from '../engine/systems/rival-agendas';
@@ -21,6 +22,13 @@ import { finalizeGeography } from '../engine/systems/geography';
 import { synthesizeGeographyFromScenario } from '../engine/systems/geography-migrations';
 import { createInitialEnvironmentState } from '../engine/systems/environment';
 import { createInitialCourtHand } from '../engine/systems/court-hand';
+import {
+  createCouncilState,
+  instantiateCandidateById,
+  appointAdvisor,
+  dismissAdvisor,
+} from '../engine/systems/advisors';
+import { applyMechanicalEffectDelta } from '../engine/events/apply-event-effects';
 import { seededRandom } from '../data/text/name-generation';
 import type { ChronicleEntry, MonthDecision } from '../ui/types';
 import {
@@ -71,7 +79,9 @@ export type GameAction =
   | { type: 'TURN_RESOLVED'; result: TurnResolutionResult; decisions: MonthDecision[] }
   | { type: 'SAVE_COMPLETED'; savedAt: number }
   | { type: 'UPDATE_GAME_STATE'; updater: (state: GameState) => GameState }
-  | { type: 'DECREES_OFFERED'; decreeIds: string[] };
+  | { type: 'DECREES_OFFERED'; decreeIds: string[] }
+  | { type: 'APPOINT_CANDIDATE_FROM_OPPORTUNITY'; templateId: string }
+  | { type: 'DISMISS_ADVISOR'; seat: CouncilSeat };
 
 // ============================================================
 // Context Value
@@ -157,6 +167,8 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         // codex silhouettes every combo until it first fires.
         discoveredCombos: save.gameState.discoveredCombos ?? [],
         pendingComboKeysThisTurn: save.gameState.pendingComboKeysThisTurn ?? [],
+        // Phase 8 — pre-Phase-8 saves have no council; start with empty seats.
+        council: save.gameState.council ?? createCouncilState(),
         activeEvents: (save.gameState.activeEvents ?? []).map((e: ActiveEvent) => ({
           ...e,
           outcomeQuality: e.outcomeQuality ?? null,
@@ -345,6 +357,40 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         ...state,
         gameState: action.updater(state.gameState),
       };
+    }
+
+    case 'APPOINT_CANDIDATE_FROM_OPPORTUNITY': {
+      const { templateId } = action;
+      const runSeed = state.gameState.runSeed ?? 'default';
+      const turnNumber = state.gameState.turn.turnNumber;
+      const advisor = instantiateCandidateById(templateId, runSeed, turnNumber);
+      if (!advisor) return state;
+      const council = state.gameState.council ?? createCouncilState();
+      // Auto-appoint if the seat is vacant; otherwise hold as pending candidate.
+      const seatOccupied = council.appointments[advisor.seat] !== undefined;
+      const nextCouncil = seatOccupied
+        ? {
+            ...council,
+            pendingCandidates: [...council.pendingCandidates, advisor],
+          }
+        : appointAdvisor(council, advisor);
+      return {
+        ...state,
+        gameState: { ...state.gameState, council: nextCouncil },
+      };
+    }
+
+    case 'DISMISS_ADVISOR': {
+      const council = state.gameState.council;
+      if (!council) return state;
+      const { council: nextCouncil, penalty } = dismissAdvisor(council, action.seat);
+      if (!nextCouncil) return state;
+      const nextGameState = applyMechanicalEffectDelta(
+        { ...state.gameState, council: nextCouncil },
+        penalty,
+        null,
+      );
+      return { ...state, gameState: nextGameState };
     }
 
     default:

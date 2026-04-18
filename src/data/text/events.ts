@@ -25,6 +25,10 @@ import { CONDITION_EVENT_TEXT } from './expansion/condition-text';
 import { SOCIAL_CONDITION_EVENT_TEXT } from './expansion/social-condition-text';
 import { POPULATION_EVENT_TEXT } from './expansion/population-text';
 import { EXPANSION_STORYLINE_TEXT } from './expansion/storyline-text';
+import {
+  EXPANSION_WAVE_2_CRISIS_TEXT,
+  EXPANSION_WAVE_2_PETITION_TEXT,
+} from './expansion/wave-2-text';
 
 export interface EventTextEntry {
   title: string;
@@ -1927,6 +1931,10 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   ...CONDITION_EVENT_TEXT,
   ...SOCIAL_CONDITION_EVENT_TEXT,
   ...POPULATION_EVENT_TEXT,
+
+  // Phase 7 — Wave-2 Expansion Text
+  ...EXPANSION_WAVE_2_CRISIS_TEXT,
+  ...EXPANSION_WAVE_2_PETITION_TEXT,
 };
 
 // ============================================================

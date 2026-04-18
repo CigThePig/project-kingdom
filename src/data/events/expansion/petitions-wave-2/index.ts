@@ -1,8 +1,9 @@
-// Phase 7 — Wave-2 Petitions.
+// Phase 7 — Wave-2 Petitions: aggregate barrel.
 //
-// Two new faction-request style petitions filling under-served class niches:
-// a military-caste petition for veterans' pensions, and a clergy petition
-// for a reform synod. Same `EventDefinition` shape as `faction-requests.ts`.
+// 20 total petitions: 2 originals (military pensions + clergy reform synod)
+// plus 18 across four themed files. Registry imports
+// `EXPANSION_WAVE_2_PETITIONS` and `EXPANSION_WAVE_2_PETITION_EFFECTS` from
+// this barrel.
 
 import type { EventDefinition } from '../../../../engine/events/event-engine';
 import type { MechanicalEffectDelta } from '../../../../engine/types';
@@ -12,7 +13,24 @@ import {
   PopulationClass,
 } from '../../../../engine/types';
 
-export const EXPANSION_WAVE_2_PETITIONS: EventDefinition[] = [
+import {
+  EXPANSION_WAVE_2_GUILD_PETITIONS,
+  EXPANSION_WAVE_2_GUILD_PETITION_EFFECTS,
+} from './petitions-guilds';
+import {
+  EXPANSION_WAVE_2_CIVIC_PETITIONS,
+  EXPANSION_WAVE_2_CIVIC_PETITION_EFFECTS,
+} from './petitions-civic';
+import {
+  EXPANSION_WAVE_2_RELIGIOUS_PETITIONS,
+  EXPANSION_WAVE_2_RELIGIOUS_PETITION_EFFECTS,
+} from './petitions-religious';
+import {
+  EXPANSION_WAVE_2_MILITARY_PETITIONS,
+  EXPANSION_WAVE_2_MILITARY_PETITION_EFFECTS,
+} from './petitions-military';
+
+const ORIGINAL_WAVE_2_PETITIONS: EventDefinition[] = [
   {
     id: 'faction_req_w2_military_pensions',
     severity: EventSeverity.Notable,
@@ -65,7 +83,7 @@ export const EXPANSION_WAVE_2_PETITIONS: EventDefinition[] = [
   },
 ];
 
-export const EXPANSION_WAVE_2_PETITION_EFFECTS: Record<
+const ORIGINAL_WAVE_2_PETITION_EFFECTS: Record<
   string,
   Record<string, MechanicalEffectDelta>
 > = {
@@ -92,4 +110,23 @@ export const EXPANSION_WAVE_2_PETITION_EFFECTS: Record<
       faithDelta: -1,
     },
   },
+};
+
+export const EXPANSION_WAVE_2_PETITIONS: EventDefinition[] = [
+  ...ORIGINAL_WAVE_2_PETITIONS,
+  ...EXPANSION_WAVE_2_GUILD_PETITIONS,
+  ...EXPANSION_WAVE_2_CIVIC_PETITIONS,
+  ...EXPANSION_WAVE_2_RELIGIOUS_PETITIONS,
+  ...EXPANSION_WAVE_2_MILITARY_PETITIONS,
+];
+
+export const EXPANSION_WAVE_2_PETITION_EFFECTS: Record<
+  string,
+  Record<string, MechanicalEffectDelta>
+> = {
+  ...ORIGINAL_WAVE_2_PETITION_EFFECTS,
+  ...EXPANSION_WAVE_2_GUILD_PETITION_EFFECTS,
+  ...EXPANSION_WAVE_2_CIVIC_PETITION_EFFECTS,
+  ...EXPANSION_WAVE_2_RELIGIOUS_PETITION_EFFECTS,
+  ...EXPANSION_WAVE_2_MILITARY_PETITION_EFFECTS,
 };

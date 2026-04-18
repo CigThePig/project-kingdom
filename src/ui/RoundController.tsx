@@ -44,7 +44,7 @@ import { compileActiveSituations } from '../bridge/situationTracker';
 import { CodexOverlay } from './components/CodexOverlay';
 import { generateStorylineCrisisData } from '../bridge/storylineCardGenerator';
 import { generateNeighborActionCards } from '../bridge/neighborActionCardGenerator';
-import type { WorldPulseLine } from './types';
+import type { WorldPulseLine, CourtOpportunityOffer } from './types';
 import { seededRandom } from '../data/text/name-generation';
 import {
   HAND_CARDS,
@@ -241,6 +241,10 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       notifications,
       overtures,
       opportunityRng,
+      {
+        runSeed: gameState.runSeed ?? 'default',
+        turnNumber: gameState.turn.turnNumber,
+      },
     );
     setMonthAllocations(allocations);
 
@@ -296,7 +300,15 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
 
   // ---- Phase 5: Court Hand handlers ----
   const handleAcceptOpportunity = useCallback(
-    (handCardId: string) => {
+    (offer: CourtOpportunityOffer) => {
+      if (offer.kind === 'advisor_candidate') {
+        ctx.dispatch({
+          type: 'APPOINT_CANDIDATE_FROM_OPPORTUNITY',
+          templateId: offer.candidateTemplateId,
+        });
+        return;
+      }
+      const handCardId = offer.handCardId;
       ctx.dispatch({
         type: 'UPDATE_GAME_STATE',
         updater: (s) => {
@@ -602,6 +614,8 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         situations={compileActiveSituations(ctx.state.gameState)}
         chronicle={ctx.state.chronicle}
         discoveredCombos={ctx.state.gameState.discoveredCombos ?? []}
+        council={ctx.state.gameState.council}
+        onDismissAdvisor={(seat) => ctx.dispatch({ type: 'DISMISS_ADVISOR', seat })}
       />
     </div>
   );

@@ -5,11 +5,13 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 
 import type { CodexDomain, RivalDossier, ActiveSituation, ChronicleEntry, CodexSection } from '../types';
+import type { CouncilState, CouncilSeat } from '../../engine/types';
 import { KingdomStateCards } from './codex/KingdomStateCards';
 import { RivalDossierCards } from './codex/RivalDossierCards';
 import { ActiveSituationsCards } from './codex/ActiveSituationsCards';
 import { ReignChronicleCards } from './codex/ReignChronicleCards';
 import { CombosCards } from './codex/CombosCards';
+import { CouncilCards } from './codex/CouncilCards';
 import { COMBOS } from '../../data/cards/combos';
 
 // ============================================================
@@ -26,6 +28,7 @@ const TABS: TabDef[] = [
   { id: 'kingdom', label: 'Kingdom', color: 'var(--color-warning)' },
   { id: 'rivals', label: 'Rivals', color: 'var(--color-accent-advisor)' },
   { id: 'situations', label: 'Situations', color: 'var(--color-negative)' },
+  { id: 'council', label: 'Council', color: 'var(--color-accent-advisor)' },
   { id: 'chronicle', label: 'Chronicle', color: 'var(--color-accent-response)' },
   { id: 'combos', label: 'Combos', color: 'var(--color-accent-response)' },
 ];
@@ -43,6 +46,10 @@ interface CodexOverlayProps {
   chronicle: ChronicleEntry[];
   /** Phase 6 — combo IDs the player has fired at least once. */
   discoveredCombos: readonly string[];
+  /** Phase 8 — council state; undefined on pre-Phase-8 saves. */
+  council?: CouncilState;
+  /** Phase 8 — dismiss an appointed advisor (with patron-class penalty). */
+  onDismissAdvisor?: (seat: CouncilSeat) => void;
   initialSection?: CodexSection;
 }
 
@@ -54,6 +61,8 @@ export function CodexOverlay({
   situations,
   chronicle,
   discoveredCombos,
+  council,
+  onDismissAdvisor,
   initialSection,
 }: CodexOverlayProps) {
   const [activeTab, setActiveTab] = useState<CodexSection>(initialSection ?? 'kingdom');
@@ -284,6 +293,9 @@ export function CodexOverlay({
         {activeTab === 'kingdom' && <KingdomStateCards domains={kingdomState} />}
         {activeTab === 'rivals' && <RivalDossierCards rivals={rivals} />}
         {activeTab === 'situations' && <ActiveSituationsCards situations={situations} />}
+        {activeTab === 'council' && (
+          <CouncilCards council={council} onDismiss={onDismissAdvisor} />
+        )}
         {activeTab === 'chronicle' && <ReignChronicleCards entries={chronicle} />}
         {activeTab === 'combos' && (
           <CombosCards combos={COMBOS} discoveredIds={discoveredCombos} />

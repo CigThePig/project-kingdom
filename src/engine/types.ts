@@ -1,5 +1,5 @@
 import type { EventTriggerCondition } from './events/event-engine';
-import type { Card } from './cards/types';
+import type { Card, CardTag } from './cards/types';
 
 // ============================================================
 // Section 1 — Time Enums & Interfaces
@@ -1415,6 +1415,10 @@ export interface GameState {
   // and consumed + cleared by turn-resolution after detection runs.
   // LOAD_SAVE backfills pre-Phase-6 saves with an empty array.
   pendingComboKeysThisTurn: string[];
+
+  // Phase 8 — Council & Advisor appointments. Optional for save compatibility;
+  // LOAD_SAVE backfills pre-Phase-8 saves via createCouncilState().
+  council?: CouncilState;
 }
 
 // Phase 5 — Court Hand
@@ -1427,6 +1431,102 @@ export interface CourtHandSlot {
 export interface CourtHand {
   slots: CourtHandSlot[];
   capacity: number;
+}
+
+// ============================================================
+// Phase 8 — Council & Advisors
+// ============================================================
+// Four seats: Chancellor (civic/economy), Marshal (military), Chamberlain
+// (diplomacy/court), Spymaster (espionage/knowledge). Each seat holds at most
+// one CouncilAdvisor. Advisors carry personality-driven modifiers that layer
+// into card resolution, plus flaws (often hidden at appointment) that can
+// surface over time.
+
+export enum CouncilSeat {
+  Chancellor = 'Chancellor',
+  Marshal = 'Marshal',
+  Chamberlain = 'Chamberlain',
+  Spymaster = 'Spymaster',
+}
+
+export enum AdvisorPersonality {
+  Prudent = 'Prudent',
+  Zealous = 'Zealous',
+  Cunning = 'Cunning',
+  BattleHardened = 'BattleHardened',
+  SilverTongue = 'SilverTongue',
+  Scholar = 'Scholar',
+  Ironfist = 'Ironfist',
+  Reformist = 'Reformist',
+}
+
+export type AdvisorEffectKind =
+  | 'income_multiplier'
+  | 'slot_cost_discount'
+  | 'outcome_quality_boost'
+  | 'finding_confidence_boost'
+  | 'delta_bonus';
+
+/** A scoped modifier attached to a CouncilAdvisor. Each modifier describes a
+ *  target (what kind of card or system it affects), a scope (optional tag and
+ *  category filters), and an effect (what it does when it matches).
+ *
+ *  `delta_bonus` is the workhorse — a numeric value that adds into the
+ *  MechanicalEffectDelta for matching choices. `value` is interpreted as a
+ *  percentage when the effect is `income_multiplier` or `slot_cost_discount`,
+ *  and as a flat integer for `delta_bonus` / `outcome_quality_boost`. */
+export interface AdvisorModifier {
+  target: 'crisis' | 'petition' | 'decree' | 'negotiation' | 'overture' | 'system';
+  scope: {
+    tags?: CardTag[];
+    categories?: EventCategory[];
+    seats?: CouncilSeat[];
+  };
+  effect: {
+    kind: AdvisorEffectKind;
+    value: number;
+    /** For `delta_bonus` only: name of the MechanicalEffectDelta field the
+     *  bonus flows into (e.g. 'treasuryDelta', 'nobilitySatDelta'). */
+    deltaField?: string;
+  };
+}
+
+export interface AdvisorFlaw {
+  /** Stable id — `'greedy' | 'drunkard' | 'zealot' | 'vendetta' | 'reformist'`.
+   *  Definitions live in `src/data/advisors/flaws.ts`. */
+  id: string;
+  hidden: boolean;
+  /** 0-1 probability the flaw is revealed on any given turn. */
+  detectionChancePerTurn: number;
+  /** Turn the flaw was revealed, or null while hidden. */
+  revealedTurn: number | null;
+}
+
+export interface CouncilAdvisor {
+  /** `'advisor_<runSeed>_<n>'`. Stable across renames. */
+  id: string;
+  /** Display name. Derived at instantiation via `generateRulerName` and then
+   *  stored so loyalty ticks and chronicle lines can reference the same string. */
+  name: string;
+  seat: CouncilSeat;
+  personality: AdvisorPersonality;
+  modifiers: AdvisorModifier[];
+  flaws: AdvisorFlaw[];
+  /** 0-100. Drifts each turn based on whether recent pressures align with
+   *  the advisor's personality. Below 30 advisors may disobey; below 10 they
+   *  may defect. */
+  loyalty: number;
+  yearsServing: number;
+  turnAppointed: number;
+  background: string;
+  /** Class that takes the penalty when this advisor is dismissed. */
+  patronClass: PopulationClass;
+}
+
+export interface CouncilState {
+  appointments: Partial<Record<CouncilSeat, CouncilAdvisor>>;
+  /** Candidates surfaced by court opportunities but not yet appointed. */
+  pendingCandidates: CouncilAdvisor[];
 }
 
 export interface SaveFile {

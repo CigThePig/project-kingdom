@@ -7,16 +7,33 @@
 
 import type { HandCardId } from './hand-cards';
 
-export interface CourtOpportunityDefinition {
-  id: string;
-  title: string;
-  body: string;
-  handCardId: HandCardId;
-  weight: number;
-}
+/** Court opportunities now discriminate between hand-card gifts and advisor
+ *  candidate introductions. Phase 8 added the `advisor_candidate` variant;
+ *  pre-Phase-8 opportunities are all `hand_card`. */
+export type CourtOpportunityDefinition =
+  | {
+      kind: 'hand_card';
+      id: string;
+      title: string;
+      body: string;
+      handCardId: HandCardId;
+      weight: number;
+    }
+  | {
+      kind: 'advisor_candidate';
+      id: string;
+      title: string;
+      body: string;
+      /** References a template id from
+       *  `src/data/advisors/candidates-wave-2/index.ts`. Concrete advisors are
+       *  instantiated with a procgen name at accept time. */
+      candidateTemplateId: string;
+      weight: number;
+    };
 
 export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
   {
+    kind: 'hand_card',
     id: 'opp_visiting_knight',
     title: 'A Visiting Knight',
     body: 'A travelling retainer offers to drill the garrison for a week. Accept his aid?',
@@ -24,6 +41,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 3,
   },
   {
+    kind: 'hand_card',
     id: 'opp_stonemasons_guild',
     title: "Stonemasons' Offer",
     body: "The guild volunteers an older master to push the nearest project forward. Take him on?",
@@ -31,6 +49,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 2,
   },
   {
+    kind: 'hand_card',
     id: 'opp_trade_courier',
     title: 'A Foreign Courier',
     body: 'A discreet envoy asks for an audience. A diplomatic gesture is on offer.',
@@ -38,6 +57,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 3,
   },
   {
+    kind: 'hand_card',
     id: 'opp_merchant_gift',
     title: 'Merchant Gift',
     body: 'The guild masters press a velvet purse into the chamberlain\'s hands.',
@@ -45,6 +65,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 3,
   },
   {
+    kind: 'hand_card',
     id: 'opp_hermit_warning',
     title: 'A Hermit at the Gate',
     body: 'An old hermit warns of bandits in the passes. Post an extra patrol?',
@@ -52,6 +73,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 3,
   },
   {
+    kind: 'hand_card',
     id: 'opp_full_granary',
     title: 'Overflowing Granary',
     body: 'Last season\'s surplus still sits in sealed bins. Open them?',
@@ -59,6 +81,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 2,
   },
   {
+    kind: 'hand_card',
     id: 'opp_festival_proposal',
     title: 'Festival Proposal',
     body: 'A minor priest proposes a saint\'s day. Proclaim the feast?',
@@ -66,6 +89,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 2,
   },
   {
+    kind: 'hand_card',
     id: 'opp_young_scholar',
     title: 'A Young Scholar',
     body: 'A travelling scholar seeks royal patronage. Her notes are remarkable.',
@@ -73,6 +97,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 2,
   },
   {
+    kind: 'hand_card',
     id: 'opp_clerk_finds_ledger',
     title: 'A Missing Ledger',
     body: 'A chamber clerk quietly reports an audit opportunity.',
@@ -80,6 +105,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 3,
   },
   {
+    kind: 'hand_card',
     id: 'opp_quiet_word',
     title: 'A Quiet Word',
     body: 'The chancellor suggests a whispered instruction to the bureaucracy.',
@@ -87,6 +113,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 2,
   },
   {
+    kind: 'hand_card',
     id: 'opp_old_ally_returns',
     title: 'An Old Ally Writes',
     body: 'A distant friend offers an overdue repayment — at a political cost.',
@@ -94,6 +121,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 2,
   },
   {
+    kind: 'hand_card',
     id: 'opp_conscription_proposal',
     title: 'A General\'s Proposal',
     body: 'A general requests levy authority over the eastern villages.',
@@ -101,6 +129,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 1,
   },
   {
+    kind: 'hand_card',
     id: 'opp_clergy_petition',
     title: 'A Quiet Petition',
     body: "The bishop's assistant asks — gently — for this quarter's tithe to be forgiven.",
@@ -108,6 +137,7 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 2,
   },
   {
+    kind: 'hand_card',
     id: 'opp_captain_plans_raid',
     title: "A Captain's Plan",
     body: 'A border captain outlines a swift raid into contested land. Sanction it?',
@@ -115,11 +145,112 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     weight: 1,
   },
   {
+    kind: 'hand_card',
     id: 'opp_heralds_proclamation',
     title: "The Herald's Draft",
     body: 'The royal herald drafts a carefully neutral proclamation. Keep it in reserve?',
     handCardId: 'hand_royal_announcement',
     weight: 2,
+  },
+
+  // ============================================================
+  // Phase 8 — Advisor Candidate Introductions (12)
+  // ============================================================
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_chancellor_prudent',
+    title: 'A Candidate for Chancellor',
+    body: 'An exchequer graduate seeks a seat at the council table. Patient with ledgers and slow to spend.',
+    candidateTemplateId: 'cand_chancellor_prudent_exchequer',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_chancellor_reformist',
+    title: 'A Reformist Clerk',
+    body: 'A minor clerk has risen on the last reform commission. He offers his services.',
+    candidateTemplateId: 'cand_chancellor_cunning_reformer',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_chancellor_ironfist',
+    title: 'A Hard-Eyed Collector',
+    body: 'A tax commissioner with a reputation for making levies land offers his counsel.',
+    candidateTemplateId: 'cand_chancellor_iron_collector',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_marshal_veteran',
+    title: 'A Veteran Marshal',
+    body: 'A veteran of three campaigns asks for a place at the council. Moves stiffly; sees clearly.',
+    candidateTemplateId: 'cand_marshal_battle_hardened_veteran',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_marshal_silver_tongue',
+    title: 'A Courtly Captain',
+    body: 'A younger son of the great houses seeks the marshal\'s seat. Better at table than patrol.',
+    candidateTemplateId: 'cand_marshal_silver_tongue_captain',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_marshal_ironfist',
+    title: 'A Border Ranger',
+    body: 'A border ranger, promoted after the last bandit-sweep, offers steel for the council.',
+    candidateTemplateId: 'cand_marshal_ironfist_ranger',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_chamberlain_courtier',
+    title: 'A Practiced Courtier',
+    body: 'A courtier everyone recognises — and no one fully trusts — offers to run the household.',
+    candidateTemplateId: 'cand_chamberlain_silver_tongue_courtier',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_chamberlain_steward',
+    title: 'A Keeper of Keys',
+    body: 'A steward of the royal household, keeper of many small keys, seeks the chamberlain\'s seat.',
+    candidateTemplateId: 'cand_chamberlain_prudent_steward',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_chamberlain_secretary',
+    title: 'A Low-Born Secretary',
+    body: 'A secretary who won the court\'s ear by being right on small matters offers his services.',
+    candidateTemplateId: 'cand_chamberlain_reformist_secretary',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_spymaster_agent',
+    title: 'A Returning Agent',
+    body: 'An agent returned from three foreign capitals under three different names offers his network.',
+    candidateTemplateId: 'cand_spymaster_cunning_agent',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_spymaster_inquisitor',
+    title: 'A Former Inquisitor',
+    body: 'A former diocesan inquisitor with a long memory offers himself as spymaster.',
+    candidateTemplateId: 'cand_spymaster_zealous_inquisitor',
+    weight: 1,
+  },
+  {
+    kind: 'advisor_candidate',
+    id: 'opp_advisor_spymaster_cryptographer',
+    title: 'A Cathedral Cryptographer',
+    body: 'A cryptographer who reads three languages the court does not seeks the spymaster\'s seat.',
+    candidateTemplateId: 'cand_spymaster_scholar_cryptographer',
+    weight: 1,
   },
 ];
 

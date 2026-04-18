@@ -1,8 +1,8 @@
 // Phase 7 — Wave-2 Decrees.
 //
-// Two new decrees occupying themes the design doc lists for this phase:
-// formal codification of weights & measures, and the founding charter of a
-// university. Same `DecreeDefinition` shape as the rest of `DECREE_POOL`.
+// 15 decrees total: 2 originals (weights & measures, university) plus 13 more
+// spanning the Phase 7 design-doc themes. Registered into `DECREE_POOL` via
+// the spread in `src/data/decrees/index.ts`.
 
 import type { DecreeDefinition } from '../index';
 import {
@@ -12,6 +12,9 @@ import {
 } from '../../../engine/types';
 
 export const EXPANSION_WAVE_2_DECREES: DecreeDefinition[] = [
+  // ====================
+  // Originals (shipped in the Phase 7 stub PR)
+  // ====================
   {
     id: 'decree_w2_weights_and_measures',
     title: 'Standardize Weights and Measures',
@@ -51,5 +54,285 @@ export const EXPANSION_WAVE_2_DECREES: DecreeDefinition[] = [
     tier: 1,
     turnMinimum: 8,
     statePrerequisites: [{ type: 'stability_above', threshold: 40 }],
+  },
+
+  // ====================
+  // Civic & Law (5)
+  // ====================
+  {
+    id: 'decree_w2_codify_the_common_law',
+    title: 'Codify the Common Law',
+    category: DecreeCategory.Civic,
+    slotCost: 2,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Nobility, PopulationClass.Commoners],
+    effectPreview:
+      'Commission a royal compilation of rulings and customs. Justice circuits will ride out more predictably; local judges lose discretion.',
+    isHighImpact: true,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 6,
+    statePrerequisites: [{ type: 'stability_above', threshold: 45 }],
+  },
+  {
+    id: 'decree_w2_expand_the_bureaucracy',
+    title: 'Expand the Bureaucracy',
+    category: DecreeCategory.Civic,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Clergy, PopulationClass.Nobility],
+    effectPreview:
+      'Appoint more royal clerks to audit grants and collect revenue. Slow, quiet gains in order at the cost of standing treasury.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 4,
+    statePrerequisites: null,
+  },
+  {
+    id: 'decree_w2_free_cities_charter',
+    title: 'Charter the Free Cities',
+    category: DecreeCategory.Civic,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Stone]: 10 },
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
+    effectPreview:
+      'Grant self-government to a tier of market towns in exchange for annual levies. Merchants love it; lords bristle.',
+    isHighImpact: true,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 7,
+    statePrerequisites: null,
+  },
+  {
+    id: 'decree_w2_justice_circuits',
+    title: 'Establish Justice Circuits',
+    category: DecreeCategory.Civic,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Wood]: 8 },
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Commoners, PopulationClass.Nobility],
+    effectPreview:
+      'Dispatch royal judges on regular circuits through the regions. Bandits think twice; provincial lords resent the interference.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 4,
+    statePrerequisites: null,
+  },
+  {
+    id: 'decree_w2_sumptuary_laws',
+    title: 'Proclaim the Sumptuary Laws',
+    category: DecreeCategory.Social,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Merchants, PopulationClass.Nobility],
+    effectPreview:
+      'Restrict fine silks and furs to the peerage. Nobility pleased at the visible order; merchants chafe at the lost market.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 3,
+    statePrerequisites: null,
+  },
+
+  // ====================
+  // Economic (3)
+  // ====================
+  {
+    id: 'decree_w2_mint_standards',
+    title: 'Fix the Mint Standards',
+    category: DecreeCategory.Economic,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Iron]: 10 },
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
+    effectPreview:
+      'Declare a fixed silver content for every royal coin. Inflation eases; the mint-masters lose a quiet perquisite.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 4,
+    statePrerequisites: null,
+  },
+  {
+    id: 'decree_w2_road_construction',
+    title: 'Royal Road Construction',
+    category: DecreeCategory.Economic,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Stone]: 15, [ResourceType.Wood]: 10 },
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
+    effectPreview:
+      'Commission a network of paved roads between the major settlements. Trade flows faster; corvée labor is unpopular.',
+    isHighImpact: true,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 5,
+    statePrerequisites: null,
+  },
+  {
+    id: 'decree_w2_bridge_program',
+    title: 'Great Bridge Program',
+    category: DecreeCategory.Economic,
+    slotCost: 1,
+    resourceCosts: { [ResourceType.Stone]: 20 },
+    prerequisites: ['decree_w2_road_construction'],
+    affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
+    effectPreview:
+      'Span the great rivers with stone bridges. Builds on the royal roads; merchants and millers both share the benefit.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 8,
+    statePrerequisites: null,
+  },
+
+  // ====================
+  // Military (2)
+  // ====================
+  {
+    id: 'decree_w2_military_reforms',
+    title: 'Reform the Royal Host',
+    category: DecreeCategory.Military,
+    slotCost: 2,
+    resourceCosts: { [ResourceType.Iron]: 20 },
+    prerequisites: [],
+    affectedClasses: [PopulationClass.MilitaryCaste, PopulationClass.Nobility],
+    effectPreview:
+      'Replace the old banner-levy system with a professional standing cadre. Expensive but reliable; old warlords lose influence.',
+    isHighImpact: true,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 6,
+    statePrerequisites: [{ type: 'treasury_above', threshold: 150 }],
+  },
+  {
+    id: 'decree_w2_hunting_regulations',
+    title: 'Codify the Hunting Regulations',
+    category: DecreeCategory.Social,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Nobility, PopulationClass.Commoners],
+    effectPreview:
+      'Reserve the royal forests for the peerage. Ancient privilege restored at the cost of commoner pot and peace.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 3,
+    statePrerequisites: null,
+  },
+
+  // ====================
+  // Religious (2)
+  // ====================
+  {
+    id: 'decree_w2_religious_councils',
+    title: 'Convoke the Religious Councils',
+    category: DecreeCategory.Religious,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Clergy],
+    effectPreview:
+      'Summon the provincial bishops to sit in regular council. Heterodoxy flares are caught earlier; the primate gains leverage.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 4,
+    statePrerequisites: null,
+  },
+  {
+    id: 'decree_w2_calendar_reform',
+    title: 'Reform the Royal Calendar',
+    category: DecreeCategory.Religious,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Clergy, PopulationClass.Commoners],
+    effectPreview:
+      'Align the civil and liturgical calendars across the realm. Scholars approve; the old provincial saints lose pride of place.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 5,
+    statePrerequisites: null,
+  },
+
+  // ====================
+  // Social (1)
+  // ====================
+  {
+    id: 'decree_w2_language_standardization',
+    title: 'Standardize the Court Tongue',
+    category: DecreeCategory.Social,
+    slotCost: 1,
+    resourceCosts: {},
+    prerequisites: [],
+    affectedClasses: [PopulationClass.Clergy, PopulationClass.Nobility],
+    effectPreview:
+      'Decree the court dialect as the sole language of royal writ. Administrative efficiency up; regional cohesion down.',
+    isHighImpact: false,
+    knowledgePrerequisite: null,
+    isRepeatable: false,
+    cooldownTurns: 0,
+    previousTierDecreeId: null,
+    chainId: null,
+    tier: 1,
+    turnMinimum: 5,
+    statePrerequisites: null,
   },
 ];

@@ -135,7 +135,9 @@ export interface MonthAllocation {
   courtOpportunity?: CourtOpportunityOffer | null;
 }
 
-export interface CourtOpportunityOffer {
+/** Phase 5 hand-card opportunity (original). */
+export interface CourtOpportunityHandCardOffer {
+  kind: 'hand_card';
   id: string;            // opportunity definition id
   title: string;         // framing title ("A Visiting Knight")
   body: string;          // flavor body
@@ -144,6 +146,27 @@ export interface CourtOpportunityOffer {
   handCardBody: string;  // preview of the hand card body
   expiresAfterTurns: number;
 }
+
+/** Phase 8 advisor-candidate opportunity. Accepting instantiates a candidate
+ *  and moves it into `council.pendingCandidates`; if its seat is vacant, the
+ *  reducer auto-appoints. */
+export interface CourtOpportunityAdvisorOffer {
+  kind: 'advisor_candidate';
+  id: string;
+  title: string;
+  body: string;
+  /** Template id from `src/data/advisors/candidates-wave-2`. */
+  candidateTemplateId: string;
+  /** Pre-resolved display fields so the card renders without extra lookups. */
+  advisorName: string;
+  seat: string;          // CouncilSeat enum value
+  personality: string;   // AdvisorPersonality enum value
+  background: string;
+}
+
+export type CourtOpportunityOffer =
+  | CourtOpportunityHandCardOffer
+  | CourtOpportunityAdvisorOffer;
 
 export interface MonthCardAllocation {
   month1: MonthAllocation;
@@ -191,7 +214,7 @@ export interface ChronicleEntry {
   isProtected: boolean; // legacy/milestone events can't be pruned
 }
 
-export type CodexSection = 'kingdom' | 'rivals' | 'situations' | 'chronicle' | 'combos';
+export type CodexSection = 'kingdom' | 'rivals' | 'situations' | 'chronicle' | 'combos' | 'council';
 
 /** Maps a CardFamily to its CSS custom-property accent color. */
 export function getAccentColor(family: CardFamily): string {
