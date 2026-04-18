@@ -14,6 +14,8 @@ import { getNeighborDisplayName } from './nameResolver';
 import { extractEventContext } from './contextExtractor';
 import { extractChoiceSignals } from './signalExtractor';
 import { extractModifierTags } from './modifierTagExtractor';
+import { WORLD_EVENT_DEFINITIONS, WORLD_EVENT_CHOICE_EFFECTS } from '../data/world-events';
+import { WORLD_EVENT_TEXT } from '../data/text/world-events';
 
 // ============================================================
 // Shared utility — MechanicalEffectDelta → EffectHint[]
@@ -125,6 +127,12 @@ function severityLabel(severity: EventSeverity): EffectHint {
 }
 
 export function generateCrisisPhaseData(event: ActiveEvent, gameState?: GameState): CrisisPhaseData {
+  // Phase 12 — World events use a parallel data shape. Route them through a
+  // dedicated builder so we don't hybridize lookups.
+  if (event.definitionId.startsWith('we_')) {
+    return generateWorldEventCrisisPhaseData(event, gameState);
+  }
+
   const textEntry = EVENT_TEXT[event.definitionId];
   const def = EVENT_POOL.find((e) => e.id === event.definitionId)
     ?? FOLLOW_UP_POOL.find((e) => e.id === event.definitionId);
@@ -167,6 +175,48 @@ export function generateCrisisPhaseData(event: ActiveEvent, gameState?: GameStat
       signals: extractChoiceSignals(event.definitionId, choice.choiceId),
       slotCost: choice.slotCost,
       isFree: choice.isFree,
+    };
+  });
+
+  return { crisisCard, responses };
+}
+
+/** Phase 12 — Builds a CrisisPhaseData from a world-event ActiveEvent. Looks
+ *  up WorldEventDefinition and WORLD_EVENT_TEXT; falls back to a generic
+ *  label pair when either is absent. */
+function generateWorldEventCrisisPhaseData(
+  event: ActiveEvent,
+  gameState?: GameState,
+): CrisisPhaseData {
+  const def = WORLD_EVENT_DEFINITIONS.find((d) => d.id === event.definitionId);
+  const textEntry = WORLD_EVENT_TEXT[event.definitionId];
+
+  const title = textEntry?.title ?? 'WORLD EVENT';
+  const body = textEntry?.body
+    ?? 'A matter spanning the region reaches the court.';
+
+  const crisisCard: CrisisCardData = {
+    eventId: event.id,
+    definitionId: event.definitionId,
+    title,
+    body,
+    effects: [severityLabel(event.severity)],
+  };
+
+  if (!def || !textEntry) {
+    return { crisisCard, responses: [] };
+  }
+
+  const responses: ResponseCardData[] = def.choices.map((choice) => {
+    const delta = WORLD_EVENT_CHOICE_EFFECTS[choice.effectsKey] ?? {};
+    return {
+      id: `${event.id}:${choice.id}`,
+      choiceId: choice.id,
+      title: textEntry.choices[choice.id] ?? choice.id,
+      effects: mechDeltaToEffectHints(delta, gameState),
+      signals: [],
+      slotCost: 0,
+      isFree: true,
     };
   });
 

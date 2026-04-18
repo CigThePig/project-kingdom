@@ -165,6 +165,14 @@ import {
   expireInterRivalAgreements,
   type InterRivalAction,
 } from '../systems/inter-rival';
+import {
+  spawnWorldEvent,
+  tickWorldEvent,
+  spreadWorldEvent,
+  applyWorldEventEffects,
+  surfaceWorldEventsToActiveEvents,
+} from '../systems/world-events';
+import { WORLD_EVENT_DEFINITIONS } from '../../data/world-events';
 import { seededRandom } from '../../data/text/name-generation';
 import {
   aggregatePerTurnFlawDelta,
@@ -1092,6 +1100,56 @@ export function resolveTurn(
   };
   updatedDiplomacy = diplomacyAfterInter;
 
+  // ---- Phase 5a-world: Dynamic World Events (Phase 12) ----
+  // Region-wide events (plague, economic shock, religious movement, climatic,
+  // celestial, agricultural, cooperative, mercenary) tick their spread across
+  // Phase 2.5 adjacency edges, apply per-turn effects to every affected
+  // kingdom, and prepare a crisis card for the player when the event reaches
+  // the player's realm. Positioned after the rival / inter-rival ticks so
+  // events see settled rival state, and before the neighbor AI loop so AI
+  // can react to new world events the same turn. The synthesized player
+  // cards are held in `worldEventActiveEvents` and merged into the final
+  // `activeEvents` list alongside followups / conditions below.
+  const worldRng = seededRandom(`${simRunSeed}_world_t${state.turn.turnNumber}`);
+  const stateForWorldEvents: GameState = {
+    ...stateAfterActions,
+    diplomacy: updatedDiplomacy,
+  };
+  let worldEventsList = (stateAfterActions.activeWorldEvents ?? []).map((we) => {
+    const def = WORLD_EVENT_DEFINITIONS.find((d) => d.id === we.definitionId);
+    if (!def) return we;
+    const ticked = tickWorldEvent(we, def, stateForWorldEvents, worldRng);
+    return spreadWorldEvent(ticked, def, stateForWorldEvents, worldRng);
+  });
+  worldEventsList = worldEventsList.filter((we) => we.phase !== 'resolved');
+
+  const spawnedWorldEvent = spawnWorldEvent(
+    { ...stateForWorldEvents, activeWorldEvents: worldEventsList },
+    WORLD_EVENT_DEFINITIONS,
+    state.turn.turnNumber,
+    worldRng,
+  );
+  if (spawnedWorldEvent) worldEventsList = [...worldEventsList, spawnedWorldEvent];
+
+  stateAfterActions = applyWorldEventEffects(
+    stateAfterActions,
+    worldEventsList,
+    WORLD_EVENT_DEFINITIONS,
+  );
+
+  const surfaced = surfaceWorldEventsToActiveEvents(
+    worldEventsList,
+    WORLD_EVENT_DEFINITIONS,
+    [],
+    state.turn.turnNumber,
+  );
+  const worldEventActiveEvents: ActiveEvent[] = surfaced.activeEvents;
+  worldEventsList = surfaced.worldEvents;
+  stateAfterActions = {
+    ...stateAfterActions,
+    activeWorldEvents: worldEventsList,
+  };
+
   // ---- Phase 5b: AI Neighbor Autonomous Actions ----
   const allNeighborActions: NeighborAction[] = [];
   const knowledgeMilBonus = getMilitaryBonus(stateAfterActions.knowledge) * 100;
@@ -1808,7 +1866,13 @@ export function resolveTurn(
       };
     });
 
-  const activeEvents = [...eventsWithFollowUps, ...newEvents, ...conditionActiveEvents, ...loyaltyWarningEvents];
+  const activeEvents = [
+    ...eventsWithFollowUps,
+    ...newEvents,
+    ...conditionActiveEvents,
+    ...loyaltyWarningEvents,
+    ...worldEventActiveEvents,
+  ];
 
   // Update narrative pacing state for surfaced events.
   const allNewlyBornEvents = [...followUpResult.surfacedEvents, ...newEvents];
@@ -2299,6 +2363,8 @@ export function resolveTurn(
     // Pending keys are consumed each turn; `[]` here keeps the field present.
     discoveredCombos: state.discoveredCombos ?? [],
     pendingComboKeysThisTurn: [],
+    // Phase 12 — world events ticked and surfaced above.
+    activeWorldEvents: stateAfterActions.activeWorldEvents ?? [],
   };
 
   // Phase 6 — apply bonus effects for every combo that fired and fold their
