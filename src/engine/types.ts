@@ -1434,6 +1434,42 @@ export interface GameState {
   // Phase 8 — Council & Advisor appointments. Optional for save compatibility;
   // LOAD_SAVE backfills pre-Phase-8 saves via createCouncilState().
   council?: CouncilState;
+
+  // Phase 10 — Long-Term Initiative slot. At most one active initiative.
+  // Optional for save compatibility; LOAD_SAVE backfills pre-Phase-10 saves
+  // with null.
+  activeInitiative?: ActiveInitiative | null;
+}
+
+// ============================================================
+// Phase 10 — Long-Term Initiatives
+// ============================================================
+
+export type InitiativeCategory =
+  | 'military'
+  | 'cultural'
+  | 'economic'
+  | 'religious'
+  | 'political';
+
+/** Condition that, if persistently true, auto-abandons an initiative.
+ *  `field` is a dotted path into GameState (e.g. 'treasury.gold',
+ *  'stability.value'). Evaluated numerically; non-numeric targets skip. */
+export interface InitiativeFailureCondition {
+  type: 'state_below';
+  field: string;
+  threshold: number;
+}
+
+export interface ActiveInitiative {
+  definitionId: string;
+  /** 0..100 — completes at 100. */
+  progressValue: number;
+  turnsActive: number;
+  turnsRequired: number;
+  turnCommitted: number;
+  /** Auto-abandon triggers after 2 consecutive failing turns. */
+  consecutiveFailingTurns: number;
 }
 
 // Phase 5 — Court Hand

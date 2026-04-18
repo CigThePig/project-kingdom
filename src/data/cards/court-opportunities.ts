@@ -39,6 +39,28 @@ export type CourtOpportunityDefinition =
       title: string;
       body: string;
       weight: number;
+    }
+  | {
+      /** Phase 10 — "Commit to Initiative" opportunity. Only surfaces when
+       *  the player has no active initiative. Accept commits; decline is a
+       *  no-op. */
+      kind: 'initiative_commit';
+      id: string;
+      title: string;
+      body: string;
+      /** References a definition id from `src/data/initiatives/index.ts`. */
+      definitionId: string;
+      weight: number;
+    }
+  | {
+      /** Phase 10 — "Abandon Initiative" opportunity. Only surfaces when an
+       *  initiative is active. Accept applies the penalty and clears the
+       *  slot; decline keeps the initiative. */
+      kind: 'initiative_abandon';
+      id: string;
+      title: string;
+      body: string;
+      weight: number;
     };
 
 export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
@@ -268,6 +290,101 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     id: 'opp_set_posture',
     title: 'A Quiet Question of Governance',
     body: '{region} has been left to its own devices. Your stewards propose a firmer hand.',
+    weight: 2,
+  },
+
+  // ============================================================
+  // Phase 10 — Long-Term Initiative Opportunities
+  // Each commit offer references an INITIATIVE_DEFINITIONS entry.
+  // The distributor filters out commits when an initiative is already
+  // active, and filters abandon when none is active, so these can sit
+  // in the pool unconditionally.
+  // ============================================================
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_subjugate_eastern_marches',
+    title: 'The Eastern Question',
+    body: 'Your marshals argue that the eastern marches can be brought fully under the crown if you commit — campaigns, levies, the slow work of years.',
+    definitionId: 'init_subjugate_eastern_marches',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_found_university',
+    title: 'A Proposal for a University',
+    body: 'A delegation of scholars and clerics proposes a royal university. Halls, patronage, and a long endowment.',
+    definitionId: 'init_found_university',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_royal_bank',
+    title: 'A Royal Bank',
+    body: 'The merchant guilds press for a chartered bank — royal deposits, standard bills, a unified coin.',
+    definitionId: 'init_royal_bank',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_holy_synod',
+    title: 'Call a Synod?',
+    body: 'The senior prelates ask whether the crown will summon a synod to settle matters of doctrine under royal auspice.',
+    definitionId: 'init_holy_synod',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_grand_alliance',
+    title: 'A Grander Alliance',
+    body: 'Your chancellor outlines a sweeping alliance — treaties, marriages, and shared cause across the known thrones.',
+    definitionId: 'init_grand_alliance',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_reform_coinage',
+    title: 'The State of the Coin',
+    body: 'The mint-master lays out a plan to recall the debased coin and strike a true royal currency.',
+    definitionId: 'init_reform_coinage',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_standing_navy',
+    title: 'A Standing Fleet',
+    body: 'The coastal lords urge a permanent navy — yards, keels, and captains in crown\'s pay year-round.',
+    definitionId: 'init_standing_navy',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_common_law',
+    title: 'A Codified Law',
+    body: 'Your jurists offer to codify the common law — royal courts above baronial, written in one book.',
+    definitionId: 'init_common_law',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_great_cathedral',
+    title: 'The Great Cathedral',
+    body: 'The archbishop lays plans for a cathedral to eclipse all others, consecrated in your name. Decades of labour.',
+    definitionId: 'init_great_cathedral',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_commit',
+    id: 'opp_commit_scour_frontier',
+    title: 'A Frontier Sweep',
+    body: 'A border captain proposes a sustained campaign against the bandits of the roadless country.',
+    definitionId: 'init_scour_frontier',
+    weight: 1,
+  },
+  {
+    kind: 'initiative_abandon',
+    id: 'opp_initiative_abandon',
+    title: 'Withdraw the Great Directive',
+    body: 'Your counsellors gently suggest the time has come to set aside the current initiative. It will cost.',
     weight: 2,
   },
 ];

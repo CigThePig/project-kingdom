@@ -13,6 +13,7 @@ import {
 } from '../data/text/codex-narratives';
 import { getDominantAxis, getSecondHighestAxis } from '../engine/systems/narrative-pressure';
 import { NARRATIVE_AXIS_DEFINITIONS } from '../data/narrative-pressure/axis-definitions';
+import { INITIATIVE_DEFINITIONS } from '../data/initiatives';
 import {
   POSTURE_LABEL,
   POSTURE_SHORT_EFFECT,
@@ -32,6 +33,8 @@ const DOMAIN_TITLES: Record<string, string> = {
   armies: 'The Armies',
   faith: 'Faith & Culture',
   pressures: 'Kingdom Pressures',
+  // Phase 10 — present only when an initiative is committed.
+  initiative: 'Long-Term Initiative',
 };
 
 // ============================================================
@@ -146,14 +149,42 @@ export function compileKingdomState(state: GameState): CodexDomain[] {
     domains.push({ id: 'pressures', tier: pressureTier });
   }
 
+  // Phase 10 — initiative domain surfaces only when one is active.
+  const initiativeNarrative = buildInitiativeNarrative(state);
+  if (initiativeNarrative) {
+    const active = state.activeInitiative!;
+    const progress = active.progressValue;
+    const initiativeTier =
+      progress >= 80 ? QualitativeTier.Flourishing
+        : progress >= 50 ? QualitativeTier.Prosperous
+        : progress >= 25 ? QualitativeTier.Stable
+        : QualitativeTier.Troubled;
+    domains.push({ id: 'initiative', tier: initiativeTier });
+  }
+
   return domains.map(({ id, tier }) => ({
     id,
     title: DOMAIN_TITLES[id],
     tier,
     narrative: id === 'pressures' && pressuresNarrative
       ? pressuresNarrative
+      : id === 'initiative' && initiativeNarrative
+      ? initiativeNarrative
       : lookupNarrative(id, tier, turn.turnNumber),
   }));
+}
+
+/** Phase 10 — one-line initiative summary for the Kingdom codex. Returns
+ *  null when no initiative is active. */
+function buildInitiativeNarrative(state: GameState): string | null {
+  const active = state.activeInitiative;
+  if (!active) return null;
+  const def = INITIATIVE_DEFINITIONS[active.definitionId];
+  const title = def?.title ?? active.definitionId;
+  const progress = Math.round(active.progressValue);
+  const turnsLine = `Turn ${active.turnsActive} of ~${active.turnsRequired}`;
+  const description = def ? ` ${def.description}` : '';
+  return `${title} — ${progress}% complete (${turnsLine}).${description}`;
 }
 
 function buildPressuresNarrative(state: GameState): string | null {

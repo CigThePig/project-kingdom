@@ -434,6 +434,7 @@ export function createFracturedInheritanceScenario(): GameState {
     // --- Discovered Combos (Phase 6) ---
     discoveredCombos: [],
     pendingComboKeysThisTurn: [],
+    activeInitiative: null,
 
     // --- Geography (Phase 2.5) ---
     // Fractured inheritance: three overlapping claims express the disputed

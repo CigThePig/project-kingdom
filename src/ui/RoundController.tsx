@@ -26,6 +26,7 @@ import type { PetitionCardData, NotificationCardData } from '../bridge/petitionC
 import { generateDecreeCards } from '../bridge/decreeCardGenerator';
 import type { DecreeCardData } from '../bridge/decreeCardGenerator';
 import { decreeToCard } from '../engine/cards/adapters';
+import type { CardTag } from '../engine/cards/types';
 import { generateAdvisorBriefing } from '../bridge/advisorGenerator';
 import type { AdvisorBriefing } from '../bridge/advisorGenerator';
 import { generateMonthlySummaryData } from '../bridge/summaryGenerator';
@@ -250,6 +251,8 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         regions: gameState.regions,
         currentTurn: gameState.turn.turnNumber,
       },
+      // Phase 10 — initiative context gates commit vs. abandon opportunities.
+      { active: gameState.activeInitiative ?? null },
     );
     setMonthAllocations(allocations);
 
@@ -319,6 +322,17 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
           regionId: offer.regionId,
           posture: offer.suggestedPosture as RegionalPosture,
         });
+        return;
+      }
+      if (offer.kind === 'initiative_commit') {
+        ctx.dispatch({
+          type: 'COMMIT_INITIATIVE',
+          definitionId: offer.definitionId,
+        });
+        return;
+      }
+      if (offer.kind === 'initiative_abandon') {
+        ctx.dispatch({ type: 'ABANDON_INITIATIVE' });
         return;
       }
       const handCardId = offer.handCardId;
@@ -490,11 +504,45 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         actionBudget: mergedBudget,
       };
 
+      // Phase 10 — collect tags from every card the player resolved this
+      // season. Looks up each decision's cardId in the month allocations and
+      // in decree cards; matched card tags feed initiative progress.
+      const tagIndex = new Map<string, readonly CardTag[]>();
+      if (monthAllocations) {
+        const allMonths = [
+          monthAllocations.month1,
+          monthAllocations.month2,
+          monthAllocations.month3,
+        ];
+        for (const m of allMonths) {
+          if (m.crisisData) tagIndex.set(m.crisisData.id, m.crisisData.tags);
+          for (const c of m.additionalCrises) tagIndex.set(c.id, c.tags);
+          for (const p of m.petitionCards) tagIndex.set(p.id, p.tags);
+          for (const n of m.notificationCards) tagIndex.set(n.id, n.tags);
+          if (m.negotiationCard) tagIndex.set(m.negotiationCard.id, m.negotiationCard.tags);
+          if (m.assessmentData) tagIndex.set(m.assessmentData.id, m.assessmentData.tags);
+        }
+      }
+      for (const d of decreeCards) {
+        const card = decreeToCard(d);
+        tagIndex.set(card.id, card.tags);
+      }
+      const playedCardTags: CardTag[] = [];
+      for (const dec of accumulatedDecisions) {
+        const tags = tagIndex.get(dec.cardId);
+        if (tags) playedCardTags.push(...tags);
+      }
+      for (const decreeId of selectedDecrees) {
+        const tags = tagIndex.get(decreeId);
+        if (tags) playedCardTags.push(...tags);
+      }
+
       const result = resolveTurn(
         stateWithActions,
         applyActionEffects,
         ctx.state.eventHistory,
         ctx.state.turnHistory,
+        playedCardTags,
       );
       const decreeDecisions: MonthDecision[] = selectedDecrees.map((decreeId) => ({
         interactionType: InteractionType.Decree,
@@ -533,6 +581,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     surfacedEvents,
     summaryData,
     onGameOver,
+    monthAllocations,
   ]);
 
   // Get current month's allocation for rendering

@@ -180,10 +180,46 @@ export interface CourtOpportunitySetPostureOffer {
   suggestedPostureEffect: string; // one-line summary of what the new posture does
 }
 
+/** Phase 10 "Commit to Initiative" opportunity. Accepting dispatches
+ *  COMMIT_INITIATIVE; declining is a no-op. Only surfaces when no
+ *  initiative is currently active. */
+export interface CourtOpportunityInitiativeCommitOffer {
+  kind: 'initiative_commit';
+  id: string;
+  title: string;
+  body: string;
+  /** Definition id from `src/data/initiatives/`. */
+  definitionId: string;
+  /** Pre-resolved display fields. */
+  initiativeTitle: string;
+  initiativeDescription: string;
+  categoryLabel: string;           // "Military", "Cultural", etc.
+  turnsRequired: number;
+  rewardSummary: string;
+  penaltySummary: string;
+}
+
+/** Phase 10 "Abandon Initiative" opportunity. Accepting dispatches
+ *  ABANDON_INITIATIVE (applies penalty, clears slot); declining keeps the
+ *  initiative. Only surfaces while an initiative is active. */
+export interface CourtOpportunityInitiativeAbandonOffer {
+  kind: 'initiative_abandon';
+  id: string;
+  title: string;
+  body: string;
+  currentInitiativeTitle: string;
+  currentProgress: number;         // 0..100
+  turnsActive: number;
+  turnsRequired: number;
+  penaltySummary: string;
+}
+
 export type CourtOpportunityOffer =
   | CourtOpportunityHandCardOffer
   | CourtOpportunityAdvisorOffer
-  | CourtOpportunitySetPostureOffer;
+  | CourtOpportunitySetPostureOffer
+  | CourtOpportunityInitiativeCommitOffer
+  | CourtOpportunityInitiativeAbandonOffer;
 
 export interface MonthCardAllocation {
   month1: MonthAllocation;
