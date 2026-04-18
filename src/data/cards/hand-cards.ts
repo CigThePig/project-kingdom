@@ -20,12 +20,17 @@ import {
   type TemporaryModifier,
 } from '../../engine/types';
 import { applyMechanicalEffectDelta } from '../../engine/events/apply-event-effects';
+import {
+  HAND_CARDS_EXPANDED,
+  HAND_CARD_COMBO_KEYS_EXPANDED,
+  type HandCardIdExpanded,
+} from './hand-cards-expanded';
 
 // ============================================================
 // Public types
 // ============================================================
 
-export type HandCardId =
+export type HandCardIdBase =
   | 'hand_royal_pardon'
   | 'hand_reserve_forces'
   | 'hand_master_builder'
@@ -46,6 +51,8 @@ export type HandCardId =
   | 'hand_border_patrol'
   | 'hand_sanctioned_raid'
   | 'hand_royal_announcement';
+
+export type HandCardId = HandCardIdBase | HandCardIdExpanded;
 
 export type HandCardChoiceKind = 'none' | 'class' | 'rival';
 
@@ -104,7 +111,7 @@ function queueTemporaryModifier(
 // Registry
 // ============================================================
 
-export const HAND_CARDS: Record<HandCardId, HandCardDefinition> = {
+const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_royal_pardon: {
     id: 'hand_royal_pardon',
     title: 'Royal Pardon',
@@ -395,6 +402,11 @@ export const HAND_CARDS: Record<HandCardId, HandCardDefinition> = {
   },
 };
 
+export const HAND_CARDS: Record<HandCardId, HandCardDefinition> = {
+  ...BASE_HAND_CARDS,
+  ...HAND_CARDS_EXPANDED,
+};
+
 function classSatDeltaFor(cls: PopulationClass, amount: number) {
   switch (cls) {
     case PopulationClass.Nobility:
@@ -419,6 +431,7 @@ function classSatDeltaFor(cls: PopulationClass, amount: number) {
  *  against these strings. Unassigned cards contribute no keys and simply
  *  never participate in combos. */
 const HAND_CARD_COMBO_KEYS: Readonly<Record<HandCardId, readonly string[]>> = {
+  ...HAND_CARD_COMBO_KEYS_EXPANDED,
   hand_royal_pardon: ['royal_pardon'],
   hand_reserve_forces: ['reserve_forces'],
   hand_master_builder: ['wall_construction'],
