@@ -317,7 +317,8 @@ export const TRADE_INCOME_MULTIPLIER: Record<TradeOpenness, number> = {
 // v4: Phase 5 court hand.
 // v5: Phase 6 discoveredCombos.
 // v6: Phase 1 runSeed / Phase 2.5 geography carry-through in turn resolution.
-export const SAVE_SCHEMA_VERSION = 6;
+// v7: Phase 13 diplomacy bonds (DiplomacyState.bonds).
+export const SAVE_SCHEMA_VERSION = 7;
 
 // Overthrow failure condition (§10.4): triggers when nobility intrigue risk is high
 // and any class is at or below the breaking point for consecutive turns.

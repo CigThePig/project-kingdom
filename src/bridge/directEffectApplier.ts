@@ -5,11 +5,21 @@
 // the standard turn resolution pipeline runs.
 
 import { InteractionType } from '../engine/types';
-import type { GameState, MechanicalEffectDelta } from '../engine/types';
+import type { Bond, BondKind, GameState, MechanicalEffectDelta } from '../engine/types';
 import { applyMechanicalEffectDelta } from '../engine/events/apply-event-effects';
 import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 import type { MonthDecision } from '../ui/types';
+import {
+  createCulturalExchangeBond,
+  createHostageBond,
+  createMarriageBond,
+  createMutualDefenseBond,
+  createReligiousAccordBond,
+  createTradeLeagueBond,
+  createVassalageBond,
+} from '../engine/systems/bonds';
+import { TERM_ID_TO_BOND_KIND } from './negotiationBondMap';
 
 /**
  * Resolves __NEIGHBOR__ placeholders in diplomacyDeltas.
@@ -82,9 +92,89 @@ export function applyDirectEffects(
           const delta = resolveNeighborPlaceholders(rawDelta, current, d.targetNeighborId);
           current = applyMechanicalEffectDelta(current, delta, null);
         }
+        // Phase 13 — if this term maps to a bond kind, materialize it.
+        const bondKind = TERM_ID_TO_BOND_KIND[d.choiceId];
+        if (bondKind) {
+          current = appendBondForTerm(current, bondKind, d.choiceId, d.targetNeighborId);
+        }
       }
     }
   }
 
   return current;
+}
+
+/** Creates the appropriate Bond for an accepted negotiation term and appends
+ *  it to state.diplomacy.bonds. No-op if no viable neighbor can be resolved. */
+function appendBondForTerm(
+  state: GameState,
+  kind: BondKind,
+  termId: string,
+  preResolvedNeighborId?: string,
+): GameState {
+  const neighborId = preResolvedNeighborId ?? pickFallbackNeighbor(state);
+  if (!neighborId) return state;
+
+  const turn = state.turn.turnNumber;
+  const bond = buildBondForKind(kind, termId, [neighborId], turn);
+  if (!bond) return state;
+
+  return {
+    ...state,
+    diplomacy: {
+      ...state.diplomacy,
+      bonds: [...(state.diplomacy.bonds ?? []), bond],
+    },
+  };
+}
+
+function pickFallbackNeighbor(state: GameState): string | undefined {
+  const peaceful = state.diplomacy.neighbors
+    .filter((n) => !n.isAtWarWithPlayer)
+    .sort((a, b) => b.relationshipScore - a.relationshipScore);
+  return peaceful[0]?.id ?? state.diplomacy.neighbors[0]?.id;
+}
+
+function buildBondForKind(
+  kind: BondKind,
+  termId: string,
+  participants: string[],
+  turn: number,
+): Bond | null {
+  switch (kind) {
+    case 'royal_marriage':
+      return createMarriageBond({
+        participants,
+        turn,
+        spouseName: 'consort', // display names come from procgen at dossier time
+        dynastyId: `dyn_${participants[0]}`,
+      });
+    case 'hostage_exchange':
+      return createHostageBond({
+        participants,
+        turn,
+        hostageName: 'ward',
+        mutual: termId === 'hostage_exchange' || termId === 'prisoner_exchange',
+      });
+    case 'vassalage':
+      return createVassalageBond({
+        participants,
+        turn,
+        overlord: participants[0],
+        tributePerTurn: 25,
+      });
+    case 'mutual_defense':
+      return createMutualDefenseBond(participants, turn);
+    case 'trade_league':
+      return createTradeLeagueBond(participants, turn, 8);
+    case 'religious_accord':
+      return createReligiousAccordBond(participants, turn, 'shared_rite');
+    case 'cultural_exchange':
+      return createCulturalExchangeBond(participants, turn);
+    case 'coalition':
+      // Coalitions are formed via dedicated coalition cards (P11), not
+      // individual negotiation terms — a single-term opt-in would need a
+      // common-enemy target we don't have here.
+      return null;
+  }
 }

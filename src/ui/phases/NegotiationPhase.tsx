@@ -19,9 +19,22 @@ interface NegotiationPhaseProps {
   onComplete: (decisions: MonthDecision[]) => void;
 }
 
+const BOND_KIND_LABEL: Record<string, string> = {
+  royal_marriage: 'MARRIAGE',
+  hostage_exchange: 'HOSTAGE',
+  vassalage: 'VASSAL',
+  mutual_defense: 'DEFENSE',
+  coalition: 'COALITION',
+  trade_league: 'TRADE LEAGUE',
+  religious_accord: 'ACCORD',
+  cultural_exchange: 'EXCHANGE',
+};
+
 export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: NegotiationPhaseProps) {
   const [toggledTermIds, setToggledTermIds] = useState<Set<string>>(new Set());
   const [confirming, setConfirming] = useState<'accept' | 'reject' | null>(null);
+  // Phase 13 — counter-proposal stepper values per term (adjusted from baseline).
+  const [counterValues, setCounterValues] = useState<Record<string, number>>({});
 
   const payload = negotiationCard.payload;
   const { eventCard, terms, rejectHints } = payload;
@@ -133,6 +146,16 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
       {/* Term cards */}
       {terms.map((term, i) => {
         const isOn = toggledTermIds.has(term.id);
+        const bondLabel = term.bondKind ? BOND_KIND_LABEL[term.bondKind] : null;
+        const counter = term.counterableValue;
+        const counterCurrent = counter
+          ? counterValues[term.id] ?? counter.baseline
+          : null;
+        const adjustCounter = (delta: number) => {
+          if (!counter) return;
+          const next = Math.max(counter.min, Math.min(counter.max, (counterValues[term.id] ?? counter.baseline) + delta));
+          setCounterValues((prev) => ({ ...prev, [term.id]: next }));
+        };
         return (
           <div
             key={term.id}
@@ -146,9 +169,79 @@ export function NegotiationPhase({ negotiationCard, currentMonth, onComplete }: 
                 boxShadow: '0 0 8px rgba(201, 168, 76, 0.25)',
               } : undefined}
             >
+              {bondLabel && (
+                <div
+                  style={{
+                    display: 'inline-block',
+                    fontFamily: 'var(--font-family-mono)',
+                    fontSize: 9,
+                    fontWeight: 700,
+                    letterSpacing: 2,
+                    textTransform: 'uppercase',
+                    color: 'var(--color-accent-response)',
+                    border: '1px solid var(--color-accent-response)',
+                    borderRadius: 4,
+                    padding: '2px 6px',
+                    marginBottom: 6,
+                  }}
+                >
+                  BOND · {bondLabel}
+                </div>
+              )}
               <CardTitle>{term.title}</CardTitle>
               <CardBody>{term.description}</CardBody>
               <EffectStrip effects={term.effectHints} />
+              {counter && counterCurrent !== null && (
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    marginTop: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 8,
+                    fontFamily: 'var(--font-family-mono)',
+                    fontSize: 11,
+                    color: 'var(--color-text-secondary)',
+                  }}
+                >
+                  <span style={{ textTransform: 'uppercase', letterSpacing: 1 }}>
+                    {counter.field}: {counterCurrent}
+                  </span>
+                  <div style={{ display: 'flex', gap: 4 }}>
+                    <button
+                      type="button"
+                      onClick={() => adjustCounter(-counter.step)}
+                      style={{
+                        padding: '2px 10px',
+                        fontFamily: 'var(--font-family-mono)',
+                        border: '1px solid var(--color-border-default)',
+                        borderRadius: 4,
+                        background: 'transparent',
+                        color: 'var(--color-text-secondary)',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      −
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => adjustCounter(counter.step)}
+                      style={{
+                        padding: '2px 10px',
+                        fontFamily: 'var(--font-family-mono)',
+                        border: '1px solid var(--color-border-default)',
+                        borderRadius: 4,
+                        background: 'transparent',
+                        color: 'var(--color-text-secondary)',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )}
               {isOn && <SelectionBadge />}
             </Card>
           </div>

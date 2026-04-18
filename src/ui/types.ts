@@ -53,6 +53,7 @@ import type {
   WorldPulseCategory,
   RivalPersonality,
   MechanicalEffectDelta,
+  BondKind,
 } from '../engine/types';
 import type { CardOfFamily } from '../engine/cards/types';
 
@@ -105,6 +106,22 @@ export interface NegotiationTerm {
   effects: MechanicalEffectDelta;
   effectHints: EffectHint[];
   isToggled: boolean;
+  /** Phase 13 — if set, toggling this term produces a Bond of this kind on accept. */
+  bondKind?: BondKind;
+  /** Phase 13 — numeric field the player may counter-propose. */
+  counterableValue?: NegotiationCounterableValue;
+}
+
+/** Phase 13 — spec for a term whose value the player can haggle on. */
+export interface NegotiationCounterableValue {
+  field: 'tribute' | 'duration' | 'dowry';
+  /** Baseline the card opens with (also the value used in `effects`). */
+  baseline: number;
+  min: number;
+  max: number;
+  step: number;
+  /** Direction that favors the player when greater. */
+  playerFavors: 'higher' | 'lower';
 }
 
 export interface NegotiationCard {
@@ -115,6 +132,8 @@ export interface NegotiationCard {
   contextLabel: string;
   /** Neighbor resolved at generation time; prevents retargeting at resolution. */
   resolvedNeighborId?: string;
+  /** Phase 13 — single counter-proposal (one numeric term adjusted) the player has staged. */
+  counterProposal?: { termId: string; adjustedValue: number };
 }
 
 // Monthly card allocation — output of the card distributor.

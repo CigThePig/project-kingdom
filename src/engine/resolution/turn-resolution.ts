@@ -10,6 +10,7 @@ import {
   ConflictState,
   ConstructionProject,
   CrownBarData,
+  DiplomacyState,
   EventCategory,
   EventSeverity,
   FailureCondition,
@@ -147,6 +148,7 @@ import {
   applyWarDeclaration,
   applyPeaceResolution,
 } from '../systems/diplomacy';
+import { applyBondTickEffects, tickBondExpiry } from '../systems/bonds';
 import {
   computeRivalActionPressure,
   tickRivalKingdom,
@@ -969,9 +971,14 @@ export function resolveTurn(
     stateAfterActions.diplomacy,
     aiRelationshipDeltas,
   );
-  let updatedDiplomacy = {
+  // Phase 13 — bond expiry ticks alongside legacy-agreement ticks. Per-bond
+  // effect application happens via applyBondTickEffects below, after the
+  // diplomacy substate is wired back into stateAfterActions.
+  const { bonds: tickedBonds } = tickBondExpiry(diplomacyAfterDrift.bonds);
+  let updatedDiplomacy: DiplomacyState = {
     ...diplomacyAfterDrift,
     neighbors: tickDiplomaticAgreements(diplomacyAfterDrift.neighbors, justAcceptedAgreementIds),
+    bonds: tickedBonds,
   };
 
   // Intelligence operation resolution.
@@ -2388,8 +2395,13 @@ export function resolveTurn(
     };
   }
 
+  // Phase 13 — apply each active diplomatic bond's per-turn effect. Runs on
+  // the fully assembled state (after combos) so later stages do not overwrite
+  // bond-driven treasury/relationship/faith deltas.
+  const stateWithBonds = applyBondTickEffects(stateWithCombos);
+
   return {
-    nextState: stateWithCombos,
+    nextState: stateWithBonds,
     historyEntry,
     newlyUnlockedMilestones,
     triggeredFailureConditions,
