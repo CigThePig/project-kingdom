@@ -9,6 +9,7 @@ import { WORLD_PULSE_TEMPLATES } from '../data/text/world-pulse';
 import type { WorldPulseTemplate } from '../data/text/world-pulse';
 import { WORLD_PULSE_RECLASSIFIED } from '../data/text/world-pulse-reclassified';
 import { evaluateCondition } from '../engine/events/event-engine';
+import { turnRng } from '../engine/resolution/turn-rng';
 
 // ============================================================
 // Category preferences by month
@@ -47,11 +48,14 @@ function getReclassifiedLines(state: GameState): WorldPulseLine[] {
 // Weighted random selection
 // ============================================================
 
-function weightedPick<T extends { weight: number }>(items: T[]): T | null {
+function weightedPick<T extends { weight: number }>(
+  items: T[],
+  rng: () => number = Math.random,
+): T | null {
   if (items.length === 0) return null;
   const totalWeight = items.reduce((sum, item) => sum + item.weight, 0);
   if (totalWeight <= 0) return items[0] ?? null;
-  let roll = Math.random() * totalWeight;
+  let roll = rng() * totalWeight;
   for (const item of items) {
     roll -= item.weight;
     if (roll <= 0) return item;
@@ -96,14 +100,22 @@ export function generateWorldPulse(
   const results: WorldPulseLine[] = [];
   const usedIds = new Set<string>();
 
+  const countRng = turnRng(state, 'bridge:world-pulse-count');
+  const pickRng = turnRng(state, 'bridge:world-pulse-select');
+  const reclassifiedRng = turnRng(state, 'bridge:world-pulse-reclass');
+  const conditionRng = turnRng(state, 'bridge:world-pulse-cond');
+
   // Pick 1-2 lines
-  const targetCount = Math.random() < 0.4 ? 1 : 2;
+  const targetCount = countRng() < 0.4 ? 1 : 2;
 
   for (let i = 0; i < targetCount; i++) {
     const remaining = pool.filter((t) => !usedIds.has(t.id));
     if (remaining.length === 0) break;
 
-    const picked = weightedPick(remaining.map((t) => ({ ...t, weight: t.effectiveWeight })));
+    const picked = weightedPick(
+      remaining.map((t) => ({ ...t, weight: t.effectiveWeight })),
+      pickRng,
+    );
     if (!picked) break;
 
     usedIds.add(picked.id);
@@ -121,7 +133,7 @@ export function generateWorldPulse(
       (l) => !usedCategories.has(l.category) && !results.some((r) => r.sourceId === l.sourceId),
     );
     if (freshReclassified.length > 0) {
-      const idx = Math.floor(Math.random() * freshReclassified.length);
+      const idx = Math.floor(reclassifiedRng() * freshReclassified.length);
       results.push(freshReclassified[idx]);
     }
   }
@@ -133,7 +145,7 @@ export function generateWorldPulse(
       (l) => !results.some((r) => r.sourceId === l.sourceId),
     );
     if (freshConditionLines.length > 0) {
-      const idx = Math.floor(Math.random() * freshConditionLines.length);
+      const idx = Math.floor(conditionRng() * freshConditionLines.length);
       results.push(freshConditionLines[idx]);
     }
   }

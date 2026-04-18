@@ -59,7 +59,9 @@ export function CodexOverlay({
   const [activeTab, setActiveTab] = useState<CodexSection>(initialSection ?? 'kingdom');
   const [isExiting, setIsExiting] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number | null>(null);
+  const touchStartAtTop = useRef<boolean>(false);
 
   // Reset tab when opening with a specific section. Use the prev-prop comparison
   // pattern (React docs: "adjusting state while rendering") so the sync runs as
@@ -76,11 +78,18 @@ export function CodexOverlay({
 
   const handleClose = useCallback(() => {
     setIsExiting(true);
-    setTimeout(() => {
+  }, []);
+
+  // Drive the exit-animation tail. Keyed on isExiting so the timer is
+  // cancelled if the overlay is unmounted or re-opened mid-animation.
+  useEffect(() => {
+    if (!isExiting) return;
+    const timer = window.setTimeout(() => {
       setIsExiting(false);
       onClose();
     }, 300);
-  }, [onClose]);
+    return () => window.clearTimeout(timer);
+  }, [isExiting, onClose]);
 
   // Focus trap. We install the key listeners once per open/close transition;
   // keeping `handleClose` in a ref avoids re-binding the global listener (and
@@ -136,17 +145,22 @@ export function CodexOverlay({
     };
   }, [isOpen]);
 
-  // Swipe down to dismiss
+  // Swipe down to dismiss — only engages when the content area is already
+  // scrolled to the top, so downward scrolling through codex content doesn't
+  // accidentally close the overlay.
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
+    touchStartAtTop.current = (contentRef.current?.scrollTop ?? 0) === 0;
   }, []);
 
   const handleTouchEnd = useCallback(
     (e: React.TouchEvent) => {
       if (touchStartY.current === null) return;
       const delta = e.changedTouches[0].clientY - touchStartY.current;
+      const startedAtTop = touchStartAtTop.current;
       touchStartY.current = null;
-      if (delta > 80) {
+      touchStartAtTop.current = false;
+      if (startedAtTop && delta > 80) {
         handleClose();
       }
     },
@@ -259,6 +273,7 @@ export function CodexOverlay({
 
       {/* Content area */}
       <div
+        ref={contentRef}
         style={{
           flex: 1,
           overflowY: 'auto',

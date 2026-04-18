@@ -119,8 +119,8 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
     cards.push({
       eventId: event.id,
       definitionId: event.definitionId,
-      title: substituteNeighbor(textEntry.title, event),
-      body: substituteNeighbor(textEntry.body, event),
+      title: substituteNeighbor(textEntry.title, event, gameState),
+      body: substituteNeighbor(textEntry.body, event, gameState),
       grantChoiceId: grantChoice.choiceId,
       denyChoiceId: denyChoice.choiceId,
       grantEffects: mechDeltaToEffectHints(choiceEffects[grantChoice.choiceId] ?? {}, gameState),

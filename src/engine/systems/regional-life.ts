@@ -262,6 +262,9 @@ export function resolveRegionalTick(
     // Skip regions without expansion fields
     if (!hasRegionalExpansionFields(region)) return region;
 
+    // Occupied regions don't tick: a foreign power runs them.
+    if (region.isOccupied) return region;
+
     // 1. Infrastructure decay
     const newInfra = tickRegionalInfrastructure(region.infrastructure!);
 
@@ -289,11 +292,15 @@ export function resolveRegionalTick(
       turnsActive: c.turnsActive + 1,
       turnsRemaining: c.turnsRemaining !== null ? c.turnsRemaining - 1 : null,
     }));
+    // Banditry resolves organically when order is restored (loyalty recovered
+    // and walls garrisoned). Without this, null-duration banditry stuck forever.
+    const banditryResolves = (c: KingdomCondition): boolean =>
+      c.type === ConditionType.Banditry && newLoyalty >= 50 && newInfra.walls >= 25;
     const stillActive = tickedConditions.filter(
-      (c) => c.turnsRemaining === null || c.turnsRemaining > 0,
+      (c) => (c.turnsRemaining === null || c.turnsRemaining > 0) && !banditryResolves(c),
     );
     const resolved = tickedConditions.filter(
-      (c) => c.turnsRemaining !== null && c.turnsRemaining <= 0,
+      (c) => (c.turnsRemaining !== null && c.turnsRemaining <= 0) || banditryResolves(c),
     );
 
     for (const cond of resolved) {
@@ -321,7 +328,7 @@ export function resolveRegionalTick(
         turnsRemaining: null,
         systemEffects: [
           { target: 'trade.income', operator: 'multiply', value: 0.9 },
-          { target: 'food.productionModifier', operator: 'multiply', value: 0.95 },
+          { target: 'food.production', operator: 'multiply', value: 0.95 },
         ],
         regionId: region.id,
         canEscalate: true,

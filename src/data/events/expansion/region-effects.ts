@@ -71,6 +71,20 @@ export const EXPANSION_REGION_EFFECTS: Record<string, Record<string, MechanicalE
     encourage_competition:      { regionDevelopmentDelta: +2, merchantSatDelta: +2, stabilityDelta: -2, commonerSatDelta: -1 },
   },
 
+  // --- Loyalty Warning (surfaced by regional-life loyalty threshold) ---
+  evt_exp_reg_loyalty_warning: {
+    send_envoy:          { treasuryDelta: -20, regionConditionDelta: +3, stabilityDelta: +1, nobilitySatDelta: +1 },
+    increase_investment: { treasuryDelta: -45, regionDevelopmentDelta: +3, regionConditionDelta: +4, commonerSatDelta: +2 },
+    ignore_complaints:   { stabilityDelta: -3, regionConditionDelta: -3, commonerSatDelta: -2, nobilitySatDelta: -1 },
+  },
+
+  // --- Separatist Threat (surfaced at separatist loyalty threshold) ---
+  evt_exp_reg_separatist_threat: {
+    negotiate_concessions: { treasuryDelta: -40, stabilityDelta: +2, regionConditionDelta: +4, nobilitySatDelta: -3 },
+    military_presence:     { treasuryDelta: -70, militaryReadinessDelta: -4, stabilityDelta: +3, regionConditionDelta: -2, commonerSatDelta: -3 },
+    grant_autonomy:        { stabilityDelta: -1, nobilitySatDelta: -4, regionConditionDelta: +6, commonerSatDelta: +3 },
+  },
+
   // --- 11. Royal Tour (Informational: -15/+30, +1/+3 sat) ---
   evt_exp_reg_royal_tour: {
     invest_in_local_projects:  { treasuryDelta: -25, regionDevelopmentDelta: +3, commonerSatDelta: +2, nobilitySatDelta: +1 },

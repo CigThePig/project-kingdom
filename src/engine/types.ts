@@ -1256,6 +1256,11 @@ export interface EconomicState {
   // Trend tracking (previous turn values for delta calculation)
   previousTradeIncome: number;
   previousMerchantSatisfaction: number;
+
+  // Count of consecutive turns tradeVolume has stayed below the disruption
+  // threshold. Resets to 0 when volume recovers. Drives TradeDisruption
+  // emergence independent of cycle-phase duration.
+  consecutiveLowTradeTurns?: number;
 }
 
 // Modifiers returned by the economic cycle tick, applied downstream in turn resolution.

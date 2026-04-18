@@ -65,6 +65,7 @@ import {
   evaluateStorylineActivation,
 } from '../systems/narrative-pressure';
 import { applyMechanicalEffectDelta, applyStorylineResolutionEffects } from '../events/apply-event-effects';
+import { conditionEventDefinitionId } from './condition-event-ids';
 import { tickHandExpiry } from '../systems/court-hand';
 import { applyComboBonus, detectCombosForTurn } from '../systems/combo-engine';
 import { COMBOS, COMBO_BY_ID } from '../../data/cards/combos';
@@ -1570,7 +1571,7 @@ export function resolveTurn(
   // Convert condition card triggers from Phase 0b into ActiveEvent entries.
   const conditionActiveEvents: ActiveEvent[] = conditionCardTriggers.map((trigger) => ({
     id: `cond_${trigger.conditionType}_t${nextTurnNumber}_${trigger.conditionId}`,
-    definitionId: `evt_cond_${trigger.conditionType.toLowerCase()}_${trigger.severity.toLowerCase()}`,
+    definitionId: conditionEventDefinitionId(trigger.conditionType, trigger.severity),
     title: '',
     description: '',
     category: EventCategory.Environment,
@@ -1592,7 +1593,40 @@ export function resolveTurn(
     followUpSourceId: null,
   }));
 
-  const activeEvents = [...eventsWithFollowUps, ...newEvents, ...conditionActiveEvents];
+  // Surface regional loyalty-threshold warnings as ActiveEvents so players
+  // actually see the authored "Discontent in the Provinces" / "Separatist
+  // Rumblings" cards the warning pipeline generates. The warning pipeline in
+  // regional-life emits one entry per region that dips below a threshold.
+  const loyaltyWarningEvents: ActiveEvent[] = regionalTickResult.loyaltyWarnings
+    .filter((w) => w.type === 'loyalty_warning' || w.type === 'separatist_event')
+    .map((w) => {
+      const isSeparatist = w.type === 'separatist_event';
+      return {
+        id: `reg_${w.type}_t${nextTurnNumber}_${w.regionId}`,
+        definitionId: isSeparatist
+          ? 'evt_exp_reg_separatist_threat'
+          : 'evt_exp_reg_loyalty_warning',
+        title: '',
+        description: '',
+        category: EventCategory.Region,
+        severity: isSeparatist ? EventSeverity.Serious : EventSeverity.Notable,
+        choices: [],
+        isResolved: false,
+        choiceMade: null,
+        turnSurfaced: nextTurnNumber,
+        chainId: null,
+        chainStep: null,
+        affectedRegionId: w.regionId,
+        affectedClassId: null,
+        affectedNeighborId: null,
+        relatedStorylineId: null,
+        outcomeQuality: null,
+        isFollowUp: false,
+        followUpSourceId: null,
+      };
+    });
+
+  const activeEvents = [...eventsWithFollowUps, ...newEvents, ...conditionActiveEvents, ...loyaltyWarningEvents];
 
   // Update narrative pacing state for surfaced events.
   const allNewlyBornEvents = [...followUpResult.surfacedEvents, ...newEvents];

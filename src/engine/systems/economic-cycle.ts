@@ -306,9 +306,8 @@ function checkTradeDisruption(
   // Check if already active
   if (activeConditions.some((c) => c.type === ConditionType.TradeDisruption)) return null;
 
-  // We use turnsInCurrentPhase as a proxy for how long volume has been low
-  // (simplification — in a real scenario we'd track consecutive low-volume turns)
-  if (economy.turnsInCurrentPhase < ECON_TRADE_DISRUPTION_TURNS) return null;
+  // Emerge only after tradeVolume has been low for N consecutive turns.
+  if ((economy.consecutiveLowTradeTurns ?? 0) < ECON_TRADE_DISRUPTION_TURNS) return null;
 
   const severity = economy.tradeVolume < 5 ? ConditionSeverity.Severe
     : economy.tradeVolume < 10 ? ConditionSeverity.Moderate
@@ -431,6 +430,12 @@ export function resolveEconomicCycle(
     economy.tradeVolume, tradeOpenness, newConfidence, neighborRelScores,
   );
 
+  // 5a. Track consecutive low-trade turns independently of cycle phase.
+  const prevLowStreak = economy.consecutiveLowTradeTurns ?? 0;
+  const newLowStreak = newVolume < ECON_TRADE_DISRUPTION_VOLUME_THRESHOLD
+    ? prevLowStreak + 1
+    : 0;
+
   // 6. Build updated state
   const updatedEconomy: EconomicState = {
     economicMomentum: newMomentum,
@@ -444,6 +449,7 @@ export function resolveEconomicCycle(
     tradeVolume: newVolume,
     previousTradeIncome: currentTradeIncome,
     previousMerchantSatisfaction: currentMerchantSatisfaction,
+    consecutiveLowTradeTurns: newLowStreak,
   };
 
   // 7. Build modifiers for downstream consumption

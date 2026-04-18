@@ -13,6 +13,7 @@ import { getDecreeAvailability } from '../engine/systems/decree-progression';
 import { getDominantAxes } from '../engine/systems/ruling-style';
 import { StyleAxis } from '../engine/types';
 import { extractDecreeContext } from './contextExtractor';
+import { turnRng } from '../engine/resolution/turn-rng';
 
 // ============================================================
 // Card data type
@@ -67,12 +68,18 @@ export function generateDecreeCards(
   const dominantAxes = getDominantAxes(gameState.rulingStyle.axes);
   const recentlyOfferedSet = new Set(recentlyOfferedDecreeIds);
 
-  const selected = weightedSample(available, 6, (decree) => {
-    const tierWeight = 1 / decree.tier; // tier 1 = 1.0, tier 2 = 0.5, tier 3 = 0.33
-    const alignment = getDecreeStyleAlignment(decree.id, dominantAxes);
-    const recentPenalty = recentlyOfferedSet.has(decree.id) ? 0.3 : 1.0;
-    return (1.0 + tierWeight + alignment * 0.5) * recentPenalty;
-  });
+  const rng = turnRng(gameState, 'bridge:decree-select');
+  const selected = weightedSample(
+    available,
+    6,
+    (decree) => {
+      const tierWeight = 1 / decree.tier; // tier 1 = 1.0, tier 2 = 0.5, tier 3 = 0.33
+      const alignment = getDecreeStyleAlignment(decree.id, dominantAxes);
+      const recentPenalty = recentlyOfferedSet.has(decree.id) ? 0.3 : 1.0;
+      return (1.0 + tierWeight + alignment * 0.5) * recentPenalty;
+    },
+    rng,
+  );
 
   return selected.map((decree) => {
     const context = extractDecreeContext(gameState, decree.category);
@@ -102,6 +109,7 @@ function weightedSample<T>(
   pool: T[],
   count: number,
   weightFn: (item: T) => number,
+  rng: () => number = Math.random,
 ): T[] {
   if (pool.length <= count) return pool;
 
@@ -111,7 +119,7 @@ function weightedSample<T>(
   for (let i = 0; i < count && indices.length > 0; i++) {
     const weights = indices.map((idx) => Math.max(0.1, weightFn(pool[idx])));
     const totalWeight = weights.reduce((sum, w) => sum + w, 0);
-    let r = Math.random() * totalWeight;
+    let r = rng() * totalWeight;
 
     let picked = indices.length - 1;
     for (let j = 0; j < weights.length; j++) {

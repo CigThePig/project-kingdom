@@ -151,22 +151,27 @@ export function calculateDeathRateModifier(
     modifier += POP_DEATH_FAMINE_BONUS;
   }
 
-  // Disease conditions (plague/pox) — use worst severity
+  // Disease conditions (plague/pox) — apply the modifier for the WORST
+  // active severity, not the first match found.
+  const severityRank: Record<ConditionSeverity, number> = {
+    [ConditionSeverity.Mild]: 1,
+    [ConditionSeverity.Moderate]: 2,
+    [ConditionSeverity.Severe]: 3,
+  };
+  let worstDiseaseSeverity: ConditionSeverity | null = null;
   for (const cond of activeConditions) {
-    if (cond.type === ConditionType.Plague || cond.type === ConditionType.Pox) {
-      switch (cond.severity) {
-        case ConditionSeverity.Severe:
-          modifier += POP_DEATH_DISEASE_BONUS_SEVERE;
-          break;
-        case ConditionSeverity.Moderate:
-          modifier += POP_DEATH_DISEASE_BONUS_MODERATE;
-          break;
-        case ConditionSeverity.Mild:
-          modifier += POP_DEATH_DISEASE_BONUS_MILD;
-          break;
-      }
-      break; // only apply worst active disease
+    if (cond.type !== ConditionType.Plague && cond.type !== ConditionType.Pox) continue;
+    if (worstDiseaseSeverity === null
+      || severityRank[cond.severity] > severityRank[worstDiseaseSeverity]) {
+      worstDiseaseSeverity = cond.severity;
     }
+  }
+  if (worstDiseaseSeverity === ConditionSeverity.Severe) {
+    modifier += POP_DEATH_DISEASE_BONUS_SEVERE;
+  } else if (worstDiseaseSeverity === ConditionSeverity.Moderate) {
+    modifier += POP_DEATH_DISEASE_BONUS_MODERATE;
+  } else if (worstDiseaseSeverity === ConditionSeverity.Mild) {
+    modifier += POP_DEATH_DISEASE_BONUS_MILD;
   }
 
   // War casualties increase death rate

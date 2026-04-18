@@ -20,7 +20,7 @@ import { EXPANSION_CULTURE_EVENTS } from './expansion/culture-events';
 import { EXPANSION_ESPIONAGE_EVENTS } from './expansion/espionage-events';
 import { EXPANSION_KNOWLEDGE_EVENTS } from './expansion/knowledge-events';
 import { EXPANSION_CLASS_CONFLICT_EVENTS } from './expansion/class-conflict-events';
-import { EXPANSION_REGION_EVENTS } from './expansion/region-events';
+import { EXPANSION_REGION_EVENTS, EXPANSION_REGION_WARNING_EVENTS } from './expansion/region-events';
 import { EXPANSION_KINGDOM_EVENTS } from './expansion/kingdom-events';
 import { EXPANSION_CHAIN_EVENTS } from './expansion/chain-events';
 import { EXPANSION_FOLLOWUP_EVENTS } from './expansion/followup-events';
@@ -4396,6 +4396,9 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
   // Expansion Follow-up Content
   // ============================================================
   ...EXPANSION_FOLLOWUP_EVENTS,
+  // Regional loyalty-warning cards — surfaced by regional-life, never matched
+  // via trigger conditions. Placed here so FOLLOW_UP_REGISTRY can resolve them.
+  ...EXPANSION_REGION_WARNING_EVENTS,
 
   // ============================================================
   // Condition Events (Phase 0b environment system)

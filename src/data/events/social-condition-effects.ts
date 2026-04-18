@@ -82,6 +82,11 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     recruit_informants: { treasuryDelta: -30, espionageNetworkDelta: +10, merchantSatDelta: -1 },
     tolerate_black_market: { merchantSatDelta: +3, stabilityDelta: -3, commonerSatDelta: -2 },
   },
+  evt_social_criminal_severe: {
+    martial_purge: { treasuryDelta: -90, militaryReadinessDelta: -6, espionageNetworkDelta: +12, stabilityDelta: +5, commonerSatDelta: -3 },
+    bribe_the_bosses: { treasuryDelta: -60, stabilityDelta: +2, nobilitySatDelta: -4, merchantSatDelta: +2 },
+    cede_the_ports: { merchantSatDelta: +4, treasuryDelta: -40, stabilityDelta: -6, commonerSatDelta: -4 },
+  },
   evt_social_criminal_resolved: {
     acknowledge: { espionageNetworkDelta: +3, stabilityDelta: +1 },
   },

@@ -120,6 +120,12 @@ export function buildCriminalUnderworldEffects(severity: ConditionSeverity): Con
   ];
   if (severity === ConditionSeverity.Moderate) {
     effects.push({ target: 'treasury.income', operator: 'multiply', value: 0.97 });
+  } else if (severity === ConditionSeverity.Severe) {
+    // Syndicates dominate: tax base erodes further, stability buckles,
+    // and even the merchants stop benefiting (protection rackets squeeze them).
+    effects.push({ target: 'treasury.income', operator: 'multiply', value: 0.92 });
+    effects.push({ target: 'stability.value', operator: 'add', value: -3 });
+    effects.push({ target: 'merchant.satisfaction', operator: 'add', value: -2 });
   }
   return effects;
 }

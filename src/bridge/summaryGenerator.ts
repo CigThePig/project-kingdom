@@ -5,7 +5,7 @@ import type { PhaseDecisions, EffectHint, MonthDecision } from '../ui/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import { InteractionType } from '../engine/types';
-import type { RulingStyleState, StyleAxis, CausalLedger } from '../engine/types';
+import type { GameState, RulingStyleState, StyleAxis, CausalLedger } from '../engine/types';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
@@ -14,6 +14,8 @@ import { DECREE_EFFECTS } from '../data/decrees/effects';
 import { checkThresholdCrossings, markThresholdsCrossed } from '../engine/systems/ruling-style';
 import { LEGACY_TEXT } from '../data/text/legacy-text';
 import type { ComboProc } from '../engine/cards/combos';
+import { isOvertureEventId } from './diplomaticOvertureGenerator';
+import { resolveNeighborInDelta } from './neighborSubstitution';
 
 export interface LegacyCardData {
   title: string;
@@ -149,6 +151,8 @@ export function generateMonthlySummaryData(
   notificationCards: NotificationCardData[] = [],
   causalLedger?: CausalLedger,
   triggeredCombos: ComboProc[] = [],
+  overtureCards: PetitionCardData[] = [],
+  gameState?: GameState,
 ): SummaryData {
   const parts: string[] = [];
   const allEffects: EffectHint[] = [];
@@ -190,8 +194,9 @@ export function generateMonthlySummaryData(
     // choiceId format: "assessment:<defId>:<bareChoiceId>" — extract bare part
     const choiceParts = d.choiceId.split(':');
     const bareChoiceId = choiceParts[choiceParts.length - 1];
-    const effects = ASSESSMENT_EFFECTS[assessId]?.[bareChoiceId];
-    if (effects) {
+    const rawEffects = ASSESSMENT_EFFECTS[assessId]?.[bareChoiceId];
+    if (rawEffects) {
+      const effects = gameState ? resolveNeighborInDelta(rawEffects, gameState) : rawEffects;
       allEffects.push(...mechDeltaToEffectHints(effects));
     }
     parts.push('An intelligence assessment was evaluated and a posture was chosen.');
@@ -209,7 +214,8 @@ export function generateMonthlySummaryData(
       (k) => k.startsWith('reject'),
     );
     if (rejectKey) {
-      const delta = NEGOTIATION_EFFECTS[negotiationId][rejectKey];
+      const raw = NEGOTIATION_EFFECTS[negotiationId][rejectKey];
+      const delta = gameState ? resolveNeighborInDelta(raw, gameState) : raw;
       allEffects.push(...mechDeltaToEffectHints(delta));
     }
   } else if (termDecisions.length > 0 && negotiationId) {
@@ -217,14 +223,19 @@ export function generateMonthlySummaryData(
       `A negotiation concluded with ${termDecisions.length} term${termDecisions.length !== 1 ? 's' : ''} accepted.`,
     );
     for (const td of termDecisions) {
-      const delta = NEGOTIATION_EFFECTS[negotiationId]?.[td.choiceId];
-      if (delta) allEffects.push(...mechDeltaToEffectHints(delta));
+      const raw = NEGOTIATION_EFFECTS[negotiationId]?.[td.choiceId];
+      if (raw) {
+        const delta = gameState ? resolveNeighborInDelta(raw, gameState) : raw;
+        allEffects.push(...mechDeltaToEffectHints(delta));
+      }
     }
   }
 
   // Petition narrative
   const grantedCount = petitionDecisions.filter((d) => {
-    const card = petitionCards.find((p) => p.eventId === d.cardId);
+    const card =
+      petitionCards.find((p) => p.eventId === d.cardId) ??
+      overtureCards.find((p) => p.eventId === d.cardId);
     return card && d.choiceId === card.grantChoiceId;
   }).length;
   const deniedCount = petitionDecisions.length - grantedCount;
@@ -234,8 +245,17 @@ export function generateMonthlySummaryData(
       `You heard ${petitionDecisions.length} petition${petitionDecisions.length !== 1 ? 's' : ''}, granting ${grantedCount} and denying ${deniedCount}.`,
     );
     for (const d of petitionDecisions) {
+      if (isOvertureEventId(d.cardId)) {
+        const overture = overtureCards.find((o) => o.eventId === d.cardId);
+        if (overture) {
+          const isGrant = d.choiceId === overture.grantChoiceId;
+          allEffects.push(...(isGrant ? overture.grantEffects : overture.denyEffects));
+        }
+        continue;
+      }
       const card = petitionCards.find((p) => p.eventId === d.cardId);
-      const delta = EVENT_CHOICE_EFFECTS[card?.definitionId ?? d.cardId]?.[d.choiceId] ?? {};
+      const raw = EVENT_CHOICE_EFFECTS[card?.definitionId ?? d.cardId]?.[d.choiceId] ?? {};
+      const delta = gameState ? resolveNeighborInDelta(raw, gameState) : raw;
       allEffects.push(...mechDeltaToEffectHints(delta));
     }
   }
@@ -247,7 +267,8 @@ export function generateMonthlySummaryData(
     );
     for (const d of notificationDecisions) {
       const card = notificationCards.find((n) => n.eventId === d.cardId);
-      const delta = EVENT_CHOICE_EFFECTS[card?.definitionId ?? d.cardId]?.[d.choiceId] ?? {};
+      const raw = EVENT_CHOICE_EFFECTS[card?.definitionId ?? d.cardId]?.[d.choiceId] ?? {};
+      const delta = gameState ? resolveNeighborInDelta(raw, gameState) : raw;
       allEffects.push(...mechDeltaToEffectHints(delta));
     }
   }

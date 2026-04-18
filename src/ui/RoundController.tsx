@@ -88,6 +88,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
   const [monthAllocations, setMonthAllocations] = useState<MonthCardAllocation | null>(null);
   const [allCrisesData, setAllCrisesData] = useState<CrisisPhaseData[]>([]);
   const [petitionCards, setPetitionCards] = useState<PetitionCardData[]>([]);
+  const [overtureCards, setOvertureCards] = useState<PetitionCardData[]>([]);
   const [notificationCards, setNotificationCards] = useState<NotificationCardData[]>([]);
   const [decreeCards, setDecreeCards] = useState<DecreeCardData[]>([]);
   const [advisorBriefing, setAdvisorBriefing] = useState<AdvisorBriefing | null>(null);
@@ -131,10 +132,14 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
   // Randomize dawn display and generate World Pulse each time we enter monthDawn
   useEffect(() => {
     if (currentPhase === 'monthDawn') {
-      setPhraseIndex(Math.floor(Math.random() * 3));
+      const gameState = ctxRef.current.state.gameState;
+      const dawnRng = seededRandom(
+        `${gameState.runSeed ?? 'dawn'}_t${gameState.turn.turnNumber}_m${currentMonth}_dawn`,
+      );
+      setPhraseIndex(Math.floor(dawnRng() * 3));
       const order = [0, 1, 2] as [number, number, number];
       for (let i = 2; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(dawnRng() * (i + 1));
         [order[i], order[j]] = [order[j], order[i]];
       }
       setEffectOrder(order);
@@ -223,6 +228,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     // Phase 3 — rival-agenda-driven diplomatic overtures. Merged into the
     // petition pool inside the distributor.
     const overtures = generateOvertureCards(gameState);
+    setOvertureCards(overtures);
     const opportunityRng = seededRandom(
       `${gameState.runSeed ?? 'opportunity'}_t${gameState.turn.turnNumber}_opportunity`,
     );
@@ -406,12 +412,14 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
           notificationCards,
           ctx.state.gameState.causalLedger,
           triggeredCombos,
+          overtureCards,
+          ctx.state.gameState,
         ),
       );
 
       setCurrentPhase('summary');
     },
-    [accumulatedDecisions, allCrisesData, petitionCards, notificationCards, negotiationId, ctx.state.gameState.rulingStyle, ctx.state.gameState.turn.turnNumber, ctx.state.gameState.causalLedger, ctx.state.gameState.discoveredCombos, ctx.state.gameState.pendingComboKeysThisTurn, ctx.state.turnHistory],
+    [accumulatedDecisions, allCrisesData, petitionCards, notificationCards, overtureCards, negotiationId, ctx.state.gameState, ctx.state.turnHistory],
   );
 
   const handleRoundComplete = useCallback(() => {
@@ -463,7 +471,14 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         ctx.state.eventHistory,
         ctx.state.turnHistory,
       );
-      ctx.dispatch({ type: 'TURN_RESOLVED', result, decisions: accumulatedDecisions });
+      const decreeDecisions: MonthDecision[] = selectedDecrees.map((decreeId) => ({
+        interactionType: InteractionType.Decree,
+        cardId: decreeId,
+        choiceId: decreeId,
+        month: SeasonMonth.Late,
+      }));
+      const decisionsForChronicle = [...accumulatedDecisions, ...decreeDecisions];
+      ctx.dispatch({ type: 'TURN_RESOLVED', result, decisions: decisionsForChronicle });
 
       // If failure conditions triggered, signal game over instead of cycling.
       if (result.triggeredFailureConditions.length > 0) {
