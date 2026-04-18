@@ -13,7 +13,7 @@ import { applyActionEffects } from '../engine/resolution/apply-action-effects';
 import { surfaceEvents } from '../engine/events/event-engine';
 import { calculateCategoryWeights } from '../engine/events/narrative-pacing';
 import { EVENT_POOL } from '../data/events/index';
-import { SeasonMonth, InteractionType, WorldPulseCategory } from '../engine/types';
+import { SeasonMonth, InteractionType, WorldPulseCategory, RegionalPosture } from '../engine/types';
 import type { ActiveEvent, GameState } from '../engine/types';
 import { accumulateStyleDecision } from '../engine/systems/ruling-style';
 import { EVENT_CHOICE_STYLE_TAGS, DECREE_STYLE_TAGS } from '../data/ruling-style/flavor-tags';
@@ -37,7 +37,7 @@ import { distributeCardsToMonths } from '../bridge/cardDistributor';
 import { generateOvertureCards } from '../bridge/diplomaticOvertureGenerator';
 import { applyDirectEffects } from '../bridge/directEffectApplier';
 import { generateWorldPulse } from '../bridge/worldPulseGenerator';
-import { compileKingdomState } from '../bridge/codexCompiler';
+import { compileKingdomState, compileRegionSummaries } from '../bridge/codexCompiler';
 import { deductActionCost } from '../engine/resolution/action-budget';
 import { compileDossier } from '../bridge/dossierCompiler';
 import { compileActiveSituations } from '../bridge/situationTracker';
@@ -245,6 +245,11 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         runSeed: gameState.runSeed ?? 'default',
         turnNumber: gameState.turn.turnNumber,
       },
+      {
+        state: gameState,
+        regions: gameState.regions,
+        currentTurn: gameState.turn.turnNumber,
+      },
     );
     setMonthAllocations(allocations);
 
@@ -305,6 +310,14 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         ctx.dispatch({
           type: 'APPOINT_CANDIDATE_FROM_OPPORTUNITY',
           templateId: offer.candidateTemplateId,
+        });
+        return;
+      }
+      if (offer.kind === 'set_posture') {
+        ctx.dispatch({
+          type: 'SET_REGIONAL_POSTURE',
+          regionId: offer.regionId,
+          posture: offer.suggestedPosture as RegionalPosture,
         });
         return;
       }
@@ -616,6 +629,10 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         discoveredCombos={ctx.state.gameState.discoveredCombos ?? []}
         council={ctx.state.gameState.council}
         onDismissAdvisor={(seat) => ctx.dispatch({ type: 'DISMISS_ADVISOR', seat })}
+        regions={compileRegionSummaries(ctx.state.gameState)}
+        onSetRegionalPosture={(regionId, posture) =>
+          ctx.dispatch({ type: 'SET_REGIONAL_POSTURE', regionId, posture })
+        }
       />
     </div>
   );

@@ -1290,3 +1290,24 @@ export const REGION_TERRAIN_DEFENSE_MODIFIER: Record<TerrainType, number> = {
   [TerrainType.Mountain]: 1.5,
   [TerrainType.River]: 1.0,
 };
+
+// ============================================================
+// Block 24 — Regional Governance Posture (Phase 9)
+// ============================================================
+
+// Minimum turns a posture must have been unchanged before it qualifies as stale
+// and becomes eligible to surface a "Set Posture" Court Opportunity.
+export const POSTURE_STALE_TURNS = 8;
+
+// Posture-specific per-turn effect tuning (kept conservative — postures are set
+// rarely, so their modifiers are small but cumulative).
+export const POSTURE_DEVELOP_INFRA_GAIN = 0.5;     // +0.5 per season, each axis
+export const POSTURE_DEVELOP_TAX_MULTIPLIER = 0.9; // −10%
+export const POSTURE_EXTRACT_OUTPUT_MULTIPLIER = 1.2;
+export const POSTURE_EXTRACT_INFRA_DECAY_MULT = 1.5;
+export const POSTURE_EXTRACT_LOYALTY_DRIFT = -0.5;
+export const POSTURE_GARRISON_WALLS_GAIN = 1;
+export const POSTURE_GARRISON_WALLS_CAP = 80;
+export const POSTURE_GARRISON_TRADE_MULTIPLIER = 0.85;
+export const POSTURE_PACIFY_LOYALTY_DRIFT = 0.5;
+export const POSTURE_PACIFY_BANDITRY_EMERGENCE_MULT = 0.5;

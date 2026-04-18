@@ -9,6 +9,7 @@ import {
   REGION_LOYALTY_REDUCED_TAX_THRESHOLD,
   REGION_ROADS_TRADE_BONUS_PER_POINT,
 } from '../constants';
+import { getPostureOutputMultiplier } from './regional-posture';
 
 // ============================================================
 // Summary Interface
@@ -51,7 +52,8 @@ export function calculateRegionalResourceOutput(
   return regions
     .filter((r) => !r.isOccupied && r.primaryEconomicOutput === resourceType)
     .reduce((sum, r) => {
-      const output = r.localConditionModifier * developmentMultiplier(r.developmentLevel);
+      const postureMult = getPostureOutputMultiplier(r.posture, 'Resource');
+      const output = r.localConditionModifier * developmentMultiplier(r.developmentLevel) * postureMult;
       return sum + clampMin(output, 0);
     }, 0);
 }
@@ -64,7 +66,8 @@ export function calculateRegionalFoodOutput(regions: RegionState[]): number {
   return regions
     .filter((r) => !r.isOccupied && r.primaryEconomicOutput === 'Food')
     .reduce((sum, r) => {
-      const output = r.localConditionModifier * developmentMultiplier(r.developmentLevel);
+      const postureMult = getPostureOutputMultiplier(r.posture, 'Food');
+      const output = r.localConditionModifier * developmentMultiplier(r.developmentLevel) * postureMult;
       return sum + clampMin(output, 0);
     }, 0);
 }
@@ -80,7 +83,8 @@ export function calculateRegionalTradeModifier(regions: RegionState[]): number {
   );
   if (tradeRegions.length === 0) return 1.0;
   const total = tradeRegions.reduce((sum, r) => {
-    const output = r.localConditionModifier * developmentMultiplier(r.developmentLevel);
+    const postureMult = getPostureOutputMultiplier(r.posture, 'Trade');
+    const output = r.localConditionModifier * developmentMultiplier(r.developmentLevel) * postureMult;
     return sum + clampMin(output, 0);
   }, 0);
   // Normalise to a multiplier centered on 1.0: each trade region contributes 0.1 bonus per
@@ -116,20 +120,21 @@ export function summarizeRegionalOutputs(regions: RegionState[]): RegionalOutput
   for (const region of regions) {
     if (region.isOccupied) continue;
 
-    const output = clampMin(
-      region.localConditionModifier * developmentMultiplier(region.developmentLevel),
-      0,
-    );
+    const baseOutput = region.localConditionModifier * developmentMultiplier(region.developmentLevel);
+    let output: number;
 
     if (
       region.primaryEconomicOutput === ResourceType.Wood ||
       region.primaryEconomicOutput === ResourceType.Iron ||
       region.primaryEconomicOutput === ResourceType.Stone
     ) {
+      output = clampMin(baseOutput * getPostureOutputMultiplier(region.posture, 'Resource'), 0);
       resourceOutputs[region.primaryEconomicOutput] += output;
     } else if (region.primaryEconomicOutput === 'Food') {
+      output = clampMin(baseOutput * getPostureOutputMultiplier(region.posture, 'Food'), 0);
       foodOutput += output;
     } else if (region.primaryEconomicOutput === 'Trade') {
+      output = clampMin(baseOutput * getPostureOutputMultiplier(region.posture, 'Trade'), 0);
       tradeRawTotal += output;
       tradeRegionCount++;
     }

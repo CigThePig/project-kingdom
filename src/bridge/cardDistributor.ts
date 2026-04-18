@@ -6,7 +6,7 @@
 // Phase 4: adapts each legacy card shape into the unified `Card` envelope at
 // this boundary, so downstream month-allocation consumers see `Card` objects.
 
-import { InteractionType } from '../engine/types';
+import { InteractionType, type GameState, type RegionState } from '../engine/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import type { AssessmentPhaseData } from './assessmentCardGenerator';
@@ -31,6 +31,13 @@ import {
 } from '../data/cards/court-opportunities';
 import { HAND_CARDS } from '../data/cards/hand-cards';
 import { instantiateCandidateById } from '../engine/systems/advisors';
+import {
+  findFirstStaleRegion,
+  POSTURE_LABEL,
+  POSTURE_SHORT_EFFECT,
+  selectSuggestedPosture,
+} from '../engine/systems/regional-posture';
+import { getRegionDisplayName } from './nameResolver';
 
 const EMPTY_ALLOCATION: MonthAllocation = {
   interactionType: null,
@@ -73,6 +80,10 @@ export function distributeCardsToMonths(
    *  when an `advisor_candidate` court opportunity is rolled. Omit to skip
    *  advisor-candidate opportunities. */
   advisorContext?: { runSeed: string; turnNumber: number },
+  /** Phase 9 — regions + current turn, used to resolve a `set_posture`
+   *  opportunity against a stale region. Omit to skip set-posture
+   *  opportunities (e.g. in unit tests). */
+  postureContext?: { state: GameState; regions: RegionState[]; currentTurn: number },
 ): MonthCardAllocation {
   // Lift every legacy shape into a unified `Card` envelope at this boundary.
   // Phase 3 overtures piggyback the petition pool for distribution; putting
@@ -246,7 +257,7 @@ export function distributeCardsToMonths(
     const months = [month1, month2, month3];
     for (const m of months) {
       if (isFullyQuiet(m)) {
-        const offer = buildCourtOpportunityOffer(opportunityRng, advisorContext);
+        const offer = buildCourtOpportunityOffer(opportunityRng, advisorContext, postureContext);
         if (offer) m.courtOpportunity = offer;
       }
     }
@@ -267,6 +278,7 @@ function isFullyQuiet(m: MonthAllocation): boolean {
 function buildCourtOpportunityOffer(
   rng: () => number,
   advisorContext?: { runSeed: string; turnNumber: number },
+  postureContext?: { state: GameState; regions: RegionState[]; currentTurn: number },
 ): CourtOpportunityOffer | null {
   const opp = pickCourtOpportunity(rng);
   if (opp.kind === 'hand_card') {
@@ -281,6 +293,27 @@ function buildCourtOpportunityOffer(
       handCardTitle: handCard.title,
       handCardBody: handCard.body,
       expiresAfterTurns: handCard.expiresAfterTurns,
+    };
+  }
+  if (opp.kind === 'set_posture') {
+    if (!postureContext) return null;
+    const stale = findFirstStaleRegion(postureContext.regions, postureContext.currentTurn);
+    if (!stale) return null;
+    const suggested = selectSuggestedPosture(stale, postureContext.state);
+    const currentPosture = stale.posture ?? 'Autonomy';
+    const regionName = getRegionDisplayName(stale.id, postureContext.state);
+    return {
+      kind: 'set_posture',
+      id: opp.id,
+      title: opp.title,
+      body: opp.body.replace('{region}', regionName),
+      regionId: stale.id,
+      regionDisplayName: regionName,
+      currentPosture: String(currentPosture),
+      currentPostureLabel: POSTURE_LABEL[currentPosture as keyof typeof POSTURE_LABEL] ?? String(currentPosture),
+      suggestedPosture: String(suggested),
+      suggestedPostureLabel: POSTURE_LABEL[suggested],
+      suggestedPostureEffect: POSTURE_SHORT_EFFECT[suggested],
     };
   }
   // kind === 'advisor_candidate' — requires runSeed/turn to instantiate

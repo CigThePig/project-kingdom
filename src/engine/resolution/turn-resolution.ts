@@ -48,6 +48,7 @@ import {
 import {
   resolveRegionalTick,
 } from '../systems/regional-life';
+import { applyPostureTick } from '../systems/regional-posture';
 import {
   SEASON_MONTHS,
   OVERTHROW_CONSECUTIVE_TURNS,
@@ -431,8 +432,12 @@ export function resolveTurn(
 
   // ---- Phase 1c: Regional Tick (Expansion 5) ----
   // Updates loyalty, infrastructure decay, local economy, regional conditions.
+  // Phase 9: apply posture-driven adjustments first so infrastructure bumps
+  // (Develop, Garrison) and loyalty drift (Extract, Pacify) precede decay
+  // and condition checks.
+  const postureAdjustedRegions = stateWithAcceptedProposals.regions.map(applyPostureTick);
   const regionalTickResult = resolveRegionalTick(
-    stateWithAcceptedProposals.regions,
+    postureAdjustedRegions,
     stateWithAcceptedProposals.stability.value,
     stateWithAcceptedProposals.constructionProjects,
     stateWithAcceptedProposals.policies.taxationLevel,

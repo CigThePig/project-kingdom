@@ -164,9 +164,26 @@ export interface CourtOpportunityAdvisorOffer {
   background: string;
 }
 
+/** Phase 9 "Set Posture" opportunity. Accepting dispatches
+ *  SET_REGIONAL_POSTURE; declining is a no-op. */
+export interface CourtOpportunitySetPostureOffer {
+  kind: 'set_posture';
+  id: string;
+  title: string;
+  body: string;
+  regionId: string;
+  regionDisplayName: string;
+  currentPosture: string;      // RegionalPosture enum value
+  currentPostureLabel: string;
+  suggestedPosture: string;    // RegionalPosture enum value
+  suggestedPostureLabel: string;
+  suggestedPostureEffect: string; // one-line summary of what the new posture does
+}
+
 export type CourtOpportunityOffer =
   | CourtOpportunityHandCardOffer
-  | CourtOpportunityAdvisorOffer;
+  | CourtOpportunityAdvisorOffer
+  | CourtOpportunitySetPostureOffer;
 
 export interface MonthCardAllocation {
   month1: MonthAllocation;
@@ -214,7 +231,31 @@ export interface ChronicleEntry {
   isProtected: boolean; // legacy/milestone events can't be pruned
 }
 
-export type CodexSection = 'kingdom' | 'rivals' | 'situations' | 'chronicle' | 'combos' | 'council';
+export type CodexSection = 'kingdom' | 'regions' | 'rivals' | 'situations' | 'chronicle' | 'combos' | 'council';
+
+/** Phase 9 — per-region Codex entry. Compiled from RegionState + posture
+ *  narrative fragments by `compileRegionSummaries(state)`. */
+export interface RegionSummary {
+  id: string;
+  displayName: string;
+  terrain: string;           // TerrainType enum value or empty for legacy regions
+  posture: string;           // RegionalPosture enum value
+  postureLabel: string;
+  postureEffect: string;     // 1-line effect summary
+  postureNarrative: string;  // 1-sentence flavor keyed to posture
+  loyaltyTier: QualitativeTier;
+  loyaltyValue: number;
+  loyaltyNarrative: string;
+  developmentTier: QualitativeTier;
+  developmentValue: number;
+  developmentNarrative: string;
+  activityLine: string;      // leading condition or "Quiet season"
+  isOccupied: boolean;
+  turnsSincePostureChange: number;
+  isStale: boolean;
+  primaryOutput: string;     // 'Food' | 'Trade' | 'Wood' | 'Iron' | 'Stone'
+  isBorder: boolean;
+}
 
 /** Maps a CardFamily to its CSS custom-property accent color. */
 export function getAccentColor(family: CardFamily): string {
