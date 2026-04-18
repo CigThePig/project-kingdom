@@ -19,10 +19,11 @@ import type { EffectHint, SignalTag } from '../ui/types';
 import type { CardOfFamily } from '../engine/cards/types';
 import { overtureToCard } from '../engine/cards/adapters';
 import { getNeighborDisplayName } from './nameResolver';
+import { WAVE_2_OVERTURES } from '../data/overtures/wave-2';
 
 const PROGRESS_THRESHOLD = 40;
 
-interface OvertureSpec {
+export interface OvertureSpec {
   title: string;
   body: string;
   grantTitle: string;
@@ -33,7 +34,7 @@ interface OvertureSpec {
   denySignals: SignalTag[];
 }
 
-function buildSpec(
+function buildInlineSpec(
   agenda: RivalAgenda,
   neighborName: string,
 ): OvertureSpec | null {
@@ -105,6 +106,33 @@ function buildSpec(
   }
 }
 
+/** Phase 7 — selects an overture spec from the union of inline + wave-2
+ *  candidates for the given agenda. Selection is deterministic on
+ *  (turnNumber, neighborId) so the same state always produces the same card. */
+function buildSpec(
+  agenda: RivalAgenda,
+  neighborName: string,
+  neighborId: string,
+  turnNumber: number,
+): OvertureSpec | null {
+  const inline = buildInlineSpec(agenda, neighborName);
+  const wave2 = WAVE_2_OVERTURES.filter((o) => o.agenda === agenda).map((o) =>
+    o.build(neighborName),
+  );
+  const candidates: OvertureSpec[] = inline ? [inline, ...wave2] : wave2;
+  if (candidates.length === 0) return null;
+  const seed = turnNumber + hashNeighborId(neighborId);
+  return candidates[Math.abs(seed) % candidates.length];
+}
+
+function hashNeighborId(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) {
+    h = (h * 31 + id.charCodeAt(i)) | 0;
+  }
+  return h;
+}
+
 /**
  * Generates diplomatic overture cards for rivals whose agenda has ripened
  * past the progress threshold. One overture per eligible neighbor per turn
@@ -117,7 +145,12 @@ export function generateOvertureCards(state: GameState): PetitionCardData[] {
     if (!neighbor.agenda) continue;
     if (neighbor.agenda.progressValue < PROGRESS_THRESHOLD) continue;
 
-    const spec = buildSpec(neighbor.agenda.current, getNeighborDisplayName(neighbor.id, state));
+    const spec = buildSpec(
+      neighbor.agenda.current,
+      getNeighborDisplayName(neighbor.id, state),
+      neighbor.id,
+      state.turn.turnNumber,
+    );
     if (!spec) continue;
 
     const eventId = `overture_${neighbor.id}_${neighbor.agenda.current}_t${state.turn.turnNumber}`;

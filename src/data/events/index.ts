@@ -24,6 +24,8 @@ import { EXPANSION_REGION_EVENTS, EXPANSION_REGION_WARNING_EVENTS } from './expa
 import { EXPANSION_KINGDOM_EVENTS } from './expansion/kingdom-events';
 import { EXPANSION_CHAIN_EVENTS } from './expansion/chain-events';
 import { EXPANSION_FOLLOWUP_EVENTS } from './expansion/followup-events';
+import { EXPANSION_WAVE_2_CRISES } from './expansion/wave-2';
+import { EXPANSION_WAVE_2_PETITIONS } from './expansion/petitions-wave-2';
 import { CONDITION_EVENT_POOL } from './condition-events';
 import { SOCIAL_CONDITION_EVENT_POOL } from './social-condition-events';
 import { POPULATION_EVENT_POOL } from './population-events';
@@ -2864,6 +2866,10 @@ export const EVENT_POOL: EventDefinition[] = [
   ...EXPANSION_REGION_EVENTS,
   ...EXPANSION_KINGDOM_EVENTS,
   ...EXPANSION_CHAIN_EVENTS,
+
+  // Phase 7 — Wave-2 content
+  ...EXPANSION_WAVE_2_CRISES,
+  ...EXPANSION_WAVE_2_PETITIONS,
 ];
 
 // ============================================================

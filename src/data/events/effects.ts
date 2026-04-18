@@ -22,6 +22,8 @@ import { EXPANSION_FOLLOWUP_EFFECTS } from './expansion/followup-effects';
 import { CONDITION_EVENT_EFFECTS } from './condition-effects';
 import { SOCIAL_CONDITION_EVENT_EFFECTS } from './social-condition-effects';
 import { POPULATION_EVENT_EFFECTS } from './population-effects';
+import { EXPANSION_WAVE_2_CRISES_EFFECTS } from './expansion/wave-2';
+import { EXPANSION_WAVE_2_PETITION_EFFECTS } from './expansion/petitions-wave-2';
 
 export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffectDelta>> = {
   // ============================================================
@@ -1187,6 +1189,10 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   ...CONDITION_EVENT_EFFECTS,
   ...SOCIAL_CONDITION_EVENT_EFFECTS,
   ...POPULATION_EVENT_EFFECTS,
+
+  // Phase 7 — Wave-2 content
+  ...EXPANSION_WAVE_2_CRISES_EFFECTS,
+  ...EXPANSION_WAVE_2_PETITION_EFFECTS,
 };
 
 // ============================================================

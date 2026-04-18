@@ -743,6 +743,11 @@ Create `src/data/decrees/expansion-wave-2/`.
 
 Create `src/data/advisors/candidates-wave-2/` (depends on Phase 8 type definitions).
 
+> **Deferred to Phase 8.** Phase 8 has not yet introduced the `CouncilSeat` /
+> `AdvisorCandidate` type definitions in `src/engine/types.ts`. Authoring 12
+> candidates here would either invent throwaway types or block on Phase 8;
+> roll this work into Phase 8.2 so candidates land on the real schema.
+
 ### Task 7.5 — 10 new diplomatic overtures
 
 Create `src/data/overtures/wave-2/`.

@@ -9,6 +9,7 @@ import {
   ResourceType,
 } from '../../engine/types';
 import { EXPANSION_DECREE_POOL } from './expansion-decrees';
+import { EXPANSION_WAVE_2_DECREES } from './expansion-wave-2';
 
 // ============================================================
 // Decree State Condition — world-state prerequisites for decree availability
@@ -1395,4 +1396,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
 
   // Expansion Decrees
   ...EXPANSION_DECREE_POOL,
+
+  // Phase 7 — Wave-2 Decrees
+  ...EXPANSION_WAVE_2_DECREES,
 ];
