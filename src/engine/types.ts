@@ -443,6 +443,8 @@ export interface FaithCultureState {
 // --- Diplomacy ---
 
 export interface DiplomaticAgreement {
+  /** @deprecated Phase 13 — Bond.bondId is the richer replacement. Kept for legacy
+   *  trade agreements already running on pre-v7 saves; new creations use bonds. */
   agreementId: string;
   neighborId: string;
   turnsRemaining: number | null; // null = indefinite agreement
@@ -547,6 +549,9 @@ export interface DiplomacyState {
   rivalRelationships?: Record<string, Record<string, number>>;
   /** Active inter-rival agreements (alliances, trade pacts, wars). */
   interRivalAgreements?: InterRivalAgreement[];
+  // Phase 13 — rich diplomatic bonds (marriages, hostages, vassalage, coalitions, etc.).
+  // Optional for save migration; pre-v7 saves backfill to [] in LOAD_SAVE.
+  bonds?: Bond[];
 }
 
 // Phase 11 — Inter-Kingdom Diplomacy
@@ -563,6 +568,90 @@ export interface InterRivalAgreement {
   /** For alliances: shared target (neighbor_* or 'player'). */
   sharedTargetId?: string | null;
 }
+
+// --- Phase 13 — Diplomacy Overhaul: Bonds ---
+
+/** Richer diplomatic ties that supersede the flat `DiplomaticAgreement`. */
+export type BondKind =
+  | 'royal_marriage'
+  | 'hostage_exchange'
+  | 'vassalage'
+  | 'mutual_defense'
+  | 'coalition'
+  | 'trade_league'
+  | 'religious_accord'
+  | 'cultural_exchange';
+
+export interface BondBase {
+  /** Stable id: `${kind}_t${turnStarted}_${shortHash}`. */
+  bondId: string;
+  kind: BondKind;
+  turnStarted: number;
+  /** null = indefinite. Decremented each turn by tickBondExpiry. */
+  turnsRemaining: number | null;
+  /** neighbor_* ids. Multiple participants for coalition / trade_league / religious_accord. */
+  participants: string[];
+  /** Relationship delta applied to each participant on breach (negative). */
+  breachPenalty: number;
+}
+
+export interface MarriageBond extends BondBase {
+  kind: 'royal_marriage';
+  spouseName: string;
+  dynastyId: string;
+  heirProduced: boolean;
+}
+
+export interface HostageBond extends BondBase {
+  kind: 'hostage_exchange';
+  hostageName: string;
+  /** If true, both sides hold hostages (symmetric); else player holds only. */
+  mutual: boolean;
+}
+
+export interface VassalageBond extends BondBase {
+  kind: 'vassalage';
+  /** neighbor_* id of the overlord. If player is overlord, value is 'player'. */
+  overlord: string;
+  /** Treasury delta to overlord per turn. */
+  tributePerTurn: number;
+}
+
+export interface MutualDefenseBond extends BondBase {
+  kind: 'mutual_defense';
+}
+
+export interface CoalitionBond extends BondBase {
+  kind: 'coalition';
+  /** neighbor_* id of the target the coalition opposes. */
+  commonEnemyId: string;
+}
+
+export interface TradeLeagueBond extends BondBase {
+  kind: 'trade_league';
+  /** Treasury delta per turn per participant edge. */
+  incomePerTurn: number;
+}
+
+export interface ReligiousAccordBond extends BondBase {
+  kind: 'religious_accord';
+  /** Internal faith-tradition id shared across signatories. */
+  sharedFaithId: string;
+}
+
+export interface CulturalExchangeBond extends BondBase {
+  kind: 'cultural_exchange';
+}
+
+export type Bond =
+  | MarriageBond
+  | HostageBond
+  | VassalageBond
+  | MutualDefenseBond
+  | CoalitionBond
+  | TradeLeagueBond
+  | ReligiousAccordBond
+  | CulturalExchangeBond;
 
 // --- AI Neighbor Actions ---
 

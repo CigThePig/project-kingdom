@@ -254,6 +254,10 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         );
       const interRivalAgreements =
         stateWithGeography.diplomacy.interRivalAgreements ?? [];
+      // Phase 13 — v7 adds DiplomacyState.bonds. Pre-Phase-13 saves get an
+      // empty array; their legacy activeAgreements keep running until they
+      // expire on their own timer.
+      const bonds = stateWithGeography.diplomacy.bonds ?? [];
       const gameState: GameState = {
         ...stateWithGeography,
         diplomacy: {
@@ -261,6 +265,7 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
           neighbors: finalNeighbors,
           rivalRelationships,
           interRivalAgreements,
+          bonds,
         },
       };
       return {

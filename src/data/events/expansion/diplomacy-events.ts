@@ -139,57 +139,13 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
       { triggerChoiceId: 'welcome_refugees', followUpDefinitionId: 'evt_exp_fu_dip_refugee_integration', delayTurns: 3, probability: 0.6 },
     ],
   },
-  {
-    id: 'evt_exp_dip_alliance_overture',
-    severity: EventSeverity.Notable,
-    category: EventCategory.Diplomacy,
-    triggerConditions: [
-      { type: 'turn_range', minTurn: 5 },
-      { type: 'neighbor_relationship_above', neighborId: 'neighbor_valdris', threshold: 55 },
-      { type: 'random_chance', probability: 0.3 },
-    ],
-    weight: 1.0,
-    chainId: null,
-    chainStep: null,
-    chainNextDefinitionId: null,
-    choices: [
-      { choiceId: 'accept_alliance', slotCost: 1, isFree: false },
-      { choiceId: 'propose_limited_pact', slotCost: 1, isFree: false },
-      { choiceId: 'maintain_independence', slotCost: 0, isFree: true },
-    ],
-    affectsClass: PopulationClass.Nobility,
-    affectsRegion: false,
-    affectsNeighbor: 'neighbor_valdris',
-    relatedStorylineId: null,
-    phase: 'developing',
-    followUpEvents: [
-      { triggerChoiceId: 'accept_alliance', followUpDefinitionId: 'evt_exp_fu_dip_alliance_first_test', delayTurns: 4, probability: 0.7 },
-    ],
-  },
-  {
-    id: 'evt_exp_dip_hostage_exchange',
-    severity: EventSeverity.Serious,
-    category: EventCategory.Diplomacy,
-    triggerConditions: [
-      { type: 'turn_range', minTurn: 6 },
-      { type: 'stability_below', threshold: 45 },
-      { type: 'random_chance', probability: 0.2 },
-    ],
-    weight: 1.2,
-    chainId: null,
-    chainStep: null,
-    chainNextDefinitionId: null,
-    choices: [
-      { choiceId: 'negotiate_exchange', slotCost: 1, isFree: false },
-      { choiceId: 'refuse_and_retaliate', slotCost: 1, isFree: false },
-      { choiceId: 'stall_for_time', slotCost: 0, isFree: true },
-    ],
-    affectsClass: PopulationClass.Nobility,
-    affectsRegion: false,
-    affectsNeighbor: '__HOSTILE__',
-    relatedStorylineId: null,
-    phase: 'developing',
-  },
+  // Phase 13 — evt_exp_dip_alliance_overture retired; replaced by neg_alliance_pact
+  // which bundles mutual_defense_clause + shared_intelligence + trade_exclusivity
+  // terms and produces MutualDefenseBond / CulturalExchangeBond / TradeLeagueBond
+  // on accept.
+  // Phase 13 — evt_exp_dip_hostage_exchange retired; subsumed by neg_resource_blockade's
+  // hostage_exchange term and neg_peace_terms' prisoner_exchange term, both of which
+  // produce a HostageBond on accept.
   {
     id: 'evt_exp_dip_cultural_envoy',
     severity: EventSeverity.Informational,
@@ -243,30 +199,9 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
       { triggerChoiceId: 'demand_reparations', followUpDefinitionId: 'evt_exp_fu_dip_reparation_partial', delayTurns: 3, probability: 0.6 },
     ],
   },
-  {
-    id: 'evt_exp_dip_marriage_proposal',
-    severity: EventSeverity.Notable,
-    category: EventCategory.Diplomacy,
-    triggerConditions: [
-      { type: 'turn_range', minTurn: 9 },
-      { type: 'neighbor_relationship_above', neighborId: 'neighbor_valdris', threshold: 50 },
-      { type: 'random_chance', probability: 0.2 },
-    ],
-    weight: 1.0,
-    chainId: null,
-    chainStep: null,
-    chainNextDefinitionId: null,
-    choices: [
-      { choiceId: 'accept_the_match', slotCost: 1, isFree: false },
-      { choiceId: 'negotiate_terms', slotCost: 1, isFree: false },
-      { choiceId: 'politely_decline', slotCost: 0, isFree: true },
-    ],
-    affectsClass: PopulationClass.Nobility,
-    affectsRegion: false,
-    affectsNeighbor: 'neighbor_valdris',
-    relatedStorylineId: null,
-    phase: 'established',
-  },
+  // Phase 13 — evt_exp_dip_marriage_proposal retired; replaced by
+  // neg_marriage_alliance whose royal_dowry + faith_concessions terms produce
+  // MarriageBond + ReligiousAccordBond on accept.
   {
     id: 'evt_exp_dip_spy_scandal',
     severity: EventSeverity.Serious,
@@ -514,28 +449,8 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'established',
   },
-  {
-    id: 'evt_exp_dip_diplomatic_marriage_offer',
-    severity: EventSeverity.Notable,
-    category: EventCategory.Diplomacy,
-    triggerConditions: [
-      { type: 'neighbor_relationship_above', neighborId: 'neighbor_arenthal', threshold: 50 },
-      { type: 'random_chance', probability: 0.15 },
-    ],
-    weight: 0.9,
-    chainId: null,
-    chainStep: null,
-    chainNextDefinitionId: null,
-    choices: [
-      { choiceId: 'arrange_the_marriage', slotCost: 1, isFree: false },
-      { choiceId: 'delay_decision', slotCost: 0, isFree: true },
-    ],
-    affectsClass: PopulationClass.Nobility,
-    affectsRegion: false,
-    affectsNeighbor: 'neighbor_arenthal',
-    relatedStorylineId: null,
-    phase: 'established',
-  },
+  // Phase 13 — evt_exp_dip_diplomatic_marriage_offer retired; duplicate of
+  // evt_exp_dip_marriage_proposal — superseded by neg_marriage_alliance.
   {
     id: 'evt_exp_dip_joint_military_exercise',
     severity: EventSeverity.Notable,

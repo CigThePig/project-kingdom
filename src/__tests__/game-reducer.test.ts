@@ -336,3 +336,65 @@ describe('LOAD_SAVE regional-posture migration (Phase 9)', () => {
     expect(first.postureSetOnTurn).toBe(4);
   });
 });
+
+describe('LOAD_SAVE bonds migration (Phase 13)', () => {
+  it('back-fills empty diplomacy.bonds on a v6 save', () => {
+    const base = createScenarioState('new_crown');
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { bonds: _bonds, ...diplomacyWithoutBonds } = base.diplomacy;
+    const legacy: GameState = {
+      ...base,
+      diplomacy: diplomacyWithoutBonds as typeof base.diplomacy,
+    };
+    const save: SaveFile = {
+      version: 6,
+      scenarioId: 'new_crown',
+      savedAt: Date.now(),
+      isMidTurn: false,
+      gameState: legacy,
+      turnHistory: [],
+      eventHistory: [],
+      intelligenceReports: [],
+    };
+    const loaded = gameReducer(createInitialState(), { type: 'LOAD_SAVE', save });
+    expect(loaded.gameState.diplomacy.bonds).toEqual([]);
+  });
+
+  it('preserves existing bonds on a round-trip', () => {
+    const base = createScenarioState('new_crown');
+    const neighborId = base.diplomacy.neighbors[0]!.id;
+    const withBonds: GameState = {
+      ...base,
+      diplomacy: {
+        ...base.diplomacy,
+        bonds: [
+          {
+            bondId: 'royal_marriage_t1_abc123',
+            kind: 'royal_marriage',
+            turnStarted: 1,
+            turnsRemaining: null,
+            participants: [neighborId],
+            breachPenalty: -20,
+            spouseName: 'consort',
+            dynastyId: 'dyn_test',
+            heirProduced: false,
+          },
+        ],
+      },
+    };
+    const save: SaveFile = {
+      version: 7,
+      scenarioId: 'new_crown',
+      savedAt: Date.now(),
+      isMidTurn: false,
+      gameState: withBonds,
+      turnHistory: [],
+      eventHistory: [],
+      intelligenceReports: [],
+    };
+    const loaded = gameReducer(createInitialState(), { type: 'LOAD_SAVE', save });
+    const bonds = loaded.gameState.diplomacy.bonds ?? [];
+    expect(bonds).toHaveLength(1);
+    expect(bonds[0].kind).toBe('royal_marriage');
+  });
+});

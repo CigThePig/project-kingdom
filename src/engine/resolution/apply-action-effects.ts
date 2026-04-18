@@ -53,6 +53,13 @@ import { recordMemory } from '../systems/rival-memory';
 import { STORYLINE_CHOICE_EFFECTS } from '../../data/storylines/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
 import { applyDiplomaticActionEffect as applyNeighborRelDelta } from '../systems/diplomacy';
+import type { Bond } from '../types';
+import {
+  createMarriageBond,
+  createTradeLeagueBond,
+  createCulturalExchangeBond,
+  createCoalitionBond,
+} from '../systems/bonds';
 import { applyEventChoiceEffects, applyStorylineBranchEffects } from '../events/apply-event-effects';
 import { recordBranchDecision } from '../events/storyline-engine';
 import { turnRng, rngSuffix } from './turn-rng';
@@ -244,6 +251,32 @@ function applyFullDecreeDeltas(state: GameState, action: QueuedAction, eff: type
   return s;
 }
 
+// Phase 13 — helpers for decrees that materialise diplomacy bonds.
+function appendBondToState(state: GameState, bond: Bond): GameState {
+  return {
+    ...state,
+    diplomacy: {
+      ...state.diplomacy,
+      bonds: [...(state.diplomacy.bonds ?? []), bond],
+    },
+  };
+}
+
+function pickDecreeTargetNeighbor(state: GameState, action: QueuedAction): string | undefined {
+  if (action.targetNeighborId) return action.targetNeighborId;
+  const peaceful = state.diplomacy.neighbors
+    .filter((n) => !n.isAtWarWithPlayer)
+    .sort((a, b) => b.relationshipScore - a.relationshipScore);
+  return peaceful[0]?.id ?? state.diplomacy.neighbors[0]?.id;
+}
+
+function pickSecondMarriageNeighbor(state: GameState, excludeId: string | undefined): string | undefined {
+  const peaceful = state.diplomacy.neighbors
+    .filter((n) => !n.isAtWarWithPlayer && n.id !== excludeId)
+    .sort((a, b) => b.relationshipScore - a.relationshipScore);
+  return peaceful[0]?.id;
+}
+
 const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   // --- Market Chain ---
   ['market_charter', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.market_charter)],
@@ -287,14 +320,68 @@ const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   ['religious_unification', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.religious_unification)],
   // --- Envoy Chain ---
   ['diplomatic_envoy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.diplomatic_envoy)],
-  ['permanent_embassy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.permanent_embassy)],
-  ['diplomatic_supremacy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.diplomatic_supremacy)],
+  // Phase 13 — embassy creates a CulturalExchangeBond with the target neighbor.
+  ['permanent_embassy', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.permanent_embassy);
+    const targetId = pickDecreeTargetNeighbor(s, action);
+    if (!targetId) return s;
+    return appendBondToState(s, createCulturalExchangeBond([targetId], s.turn.turnNumber));
+  }],
+  // Phase 13 — supremacy adds a second CulturalExchangeBond on a second neighbor,
+  // representing the wider mediation network promised by the tier-3 decree.
+  ['diplomatic_supremacy', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.diplomatic_supremacy);
+    const firstId = pickDecreeTargetNeighbor(s, action);
+    const secondId = pickSecondMarriageNeighbor(s, firstId);
+    if (!secondId) return s;
+    return appendBondToState(s, createCulturalExchangeBond([secondId], s.turn.turnNumber));
+  }],
   // --- Trade Agreement ---
-  ['trade_agreement', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_agreement)],
+  // Phase 13 — creates a TradeLeagueBond with the target neighbor.
+  ['trade_agreement', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_agreement);
+    const targetId = pickDecreeTargetNeighbor(s, action);
+    if (!targetId) return s;
+    return appendBondToState(s, createTradeLeagueBond([targetId], s.turn.turnNumber, 8));
+  }],
   // --- Marriage Chain ---
-  ['royal_marriage', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.royal_marriage)],
-  ['dynasty_alliance', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.dynasty_alliance)],
-  ['imperial_confederation', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.imperial_confederation)],
+  // Phase 13 — each tier adds a MarriageBond. Confederation converts the network
+  // into a CoalitionBond spanning every marriage partner.
+  ['royal_marriage', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.royal_marriage);
+    const targetId = pickDecreeTargetNeighbor(s, action);
+    if (!targetId) return s;
+    return appendBondToState(s, createMarriageBond({
+      participants: [targetId],
+      turn: s.turn.turnNumber,
+      spouseName: 'consort',
+      dynastyId: `dyn_${targetId}`,
+    }));
+  }],
+  ['dynasty_alliance', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.dynasty_alliance);
+    const existingMarriage = (s.diplomacy.bonds ?? []).find((b) => b.kind === 'royal_marriage');
+    const firstPartner = existingMarriage?.participants[0];
+    const secondId = pickSecondMarriageNeighbor(s, firstPartner);
+    if (!secondId) return s;
+    return appendBondToState(s, createMarriageBond({
+      participants: [secondId],
+      turn: s.turn.turnNumber,
+      spouseName: 'consort',
+      dynastyId: `dyn_${secondId}`,
+    }));
+  }],
+  ['imperial_confederation', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.imperial_confederation);
+    const marriagePartners = (s.diplomacy.bonds ?? [])
+      .filter((b) => b.kind === 'royal_marriage')
+      .flatMap((b) => b.participants);
+    if (marriagePartners.length === 0) return s;
+    const hostileEnemy = s.diplomacy.neighbors.find((n) => n.isAtWarWithPlayer)?.id
+      ?? s.diplomacy.neighbors[0]?.id
+      ?? 'unknown';
+    return appendBondToState(s, createCoalitionBond(marriagePartners, s.turn.turnNumber, hostileEnemy));
+  }],
   // --- Granary Chain ---
   ['public_granary', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.public_granary)],
   ['regional_food_distribution', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.regional_food_distribution)],

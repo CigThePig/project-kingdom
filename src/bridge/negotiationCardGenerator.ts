@@ -15,6 +15,7 @@ import { mechDeltaToEffectHints } from './crisisCardGenerator';
 import type { NegotiationCard, NegotiationTerm } from '../ui/types';
 import type { CardOfFamily } from '../engine/cards/types';
 import { negotiationToCard } from '../engine/cards/adapters';
+import { TERM_ID_TO_BOND_KIND, TERM_ID_TO_COUNTERABLE } from './negotiationBondMap';
 
 /**
  * Picks the best neighbor for external negotiations:
@@ -110,6 +111,8 @@ export function generateNegotiationCard(
       ? resolveNeighborInEffects(termEffects, neighbor.id)
       : termEffects;
     const termText = text.terms[termDef.termId];
+    const bondKind = TERM_ID_TO_BOND_KIND[termDef.termId];
+    const counterableValue = TERM_ID_TO_COUNTERABLE[termDef.termId];
     return {
       id: termDef.termId,
       title: termText?.title ?? termDef.termId,
@@ -117,6 +120,8 @@ export function generateNegotiationCard(
       effects: resolved,
       effectHints: mechDeltaToEffectHints(resolved),
       isToggled: false,
+      ...(bondKind ? { bondKind } : {}),
+      ...(counterableValue ? { counterableValue } : {}),
     };
   });
 
