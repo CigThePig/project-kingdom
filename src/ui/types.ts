@@ -251,6 +251,8 @@ export interface RivalDossier {
   dispositionTowardPlayer: string | null; // Phase 3: derived from memory drift
   confidenceRating: string | null;    // "Low" | "Moderate" | "High" | "Very High"
   intelLevel: 'none' | 'minimal' | 'moderate' | 'strong' | 'exceptional';
+  // Phase 11 — foreign entanglements surfaced at moderate+ intel.
+  foreignEntanglements?: string[];
 }
 
 export interface ActiveSituation {

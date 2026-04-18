@@ -14,6 +14,7 @@ import type { GameState, RegionState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
 import { createInitialRivalState } from '../../engine/systems/rival-simulation';
 import { seedRivalAgendas } from '../../engine/systems/rival-agendas';
+import { seedInterRivalRelationships } from '../../engine/systems/inter-rival';
 import { edge, finalizeGeography } from '../../engine/systems/geography';
 import { DISPOSITION_TO_PERSONALITY } from '../../bridge/dossierCompiler';
 import { createInitialPacingState } from '../../engine/events/narrative-pacing';
@@ -482,5 +483,5 @@ export function createFaithfulKingdomScenario(): GameState {
     },
   };
 
-  return seedRivalAgendas(finalizeGeography(baseState));
+  return seedInterRivalRelationships(seedRivalAgendas(finalizeGeography(baseState)));
 }

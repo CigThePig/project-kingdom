@@ -43,6 +43,12 @@ import {
   isOvertureEventId,
   parseOvertureEventId,
 } from '../../bridge/diplomaticOvertureGenerator';
+import {
+  isMediationEventId,
+  isCoalitionEventId,
+  parseMediationChoice,
+  parseCoalitionChoice,
+} from '../../bridge/interRivalCardGenerator';
 import { recordMemory } from '../systems/rival-memory';
 import { STORYLINE_CHOICE_EFFECTS } from '../../data/storylines/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
@@ -699,6 +705,118 @@ function applyOvertureDecision(
   };
 }
 
+/**
+ * Phase 11 — Applies a player decision on a mediation card. Resolves the
+ * underlying inter-rival war (sponsor or back-one-side) and nudges player
+ * relationships with both rivals.
+ */
+function applyMediationDecision(
+  state: GameState,
+  _eventId: string,
+  choiceId: string,
+): GameState {
+  const parsed = parseMediationChoice(choiceId);
+  if (!parsed) return state;
+  const { warId, action } = parsed;
+  const agreements = state.diplomacy.interRivalAgreements ?? [];
+  const war = agreements.find((ag) => ag.id === warId && ag.kind === 'war');
+  if (!war) return state;
+
+  const rivalA = war.a;
+  const rivalB = war.b;
+
+  if (action === 'stay') {
+    return state;
+  }
+
+  // Adjust player-vs-rival relationship scores.
+  const deltaA =
+    action === 'sponsor' ? 8 : action === 'backA' ? 12 : -12;
+  const deltaB =
+    action === 'sponsor' ? 8 : action === 'backB' ? 12 : -12;
+
+  const nextNeighbors = state.diplomacy.neighbors.map((n) => {
+    if (n.id === rivalA) {
+      return {
+        ...n,
+        relationshipScore: clamp(n.relationshipScore + deltaA, 0, 100),
+      };
+    }
+    if (n.id === rivalB) {
+      return {
+        ...n,
+        relationshipScore: clamp(n.relationshipScore + deltaB, 0, 100),
+      };
+    }
+    return n;
+  });
+
+  // If sponsoring peace, drop the war agreement and pay gold from treasury.
+  let nextAgreements = agreements;
+  let nextTreasury = state.treasury;
+  if (action === 'sponsor') {
+    nextAgreements = agreements.filter((ag) => ag.id !== warId);
+    nextTreasury = {
+      ...state.treasury,
+      balance: state.treasury.balance - 30,
+    };
+  }
+
+  return {
+    ...state,
+    treasury: nextTreasury,
+    diplomacy: {
+      ...state.diplomacy,
+      neighbors: nextNeighbors,
+      interRivalAgreements: nextAgreements,
+    },
+  };
+}
+
+/**
+ * Phase 11 — Applies a player decision on a coalition card. Joining a side
+ * bumps the chosen ally's relationship and dings the other rival.
+ */
+function applyCoalitionDecision(
+  state: GameState,
+  _eventId: string,
+  choiceId: string,
+): GameState {
+  const parsed = parseCoalitionChoice(choiceId);
+  if (!parsed) return state;
+  const { pairKey, action } = parsed;
+  const [a, b] = pairKey.split('__');
+  if (!a || !b) return state;
+  if (action === 'decline') return state;
+
+  const ally = action === 'joinA' ? a : b;
+  const other = action === 'joinA' ? b : a;
+
+  const nextNeighbors = state.diplomacy.neighbors.map((n) => {
+    if (n.id === ally) {
+      return {
+        ...n,
+        relationshipScore: clamp(n.relationshipScore + 15, 0, 100),
+      };
+    }
+    if (n.id === other) {
+      return {
+        ...n,
+        relationshipScore: clamp(n.relationshipScore - 8, 0, 100),
+      };
+    }
+    return n;
+  });
+
+  return {
+    ...state,
+    diplomacy: {
+      ...state.diplomacy,
+      neighbors: nextNeighbors,
+    },
+  };
+}
+
 function applyCrisisResponseEffect(state: GameState, action: QueuedAction): GameState {
   // Handle storyline branch decisions (parameters contain storylineId + branchPointId).
   const storylineId = action.parameters['storylineId'];
@@ -715,6 +833,14 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
   // effects are applied inline (relationship delta + memory entry).
   if (isOvertureEventId(eventId)) {
     return applyOvertureDecision(state, eventId, choiceId);
+  }
+
+  // Phase 11 — Mediation / coalition decisions follow the same inline path.
+  if (isMediationEventId(eventId)) {
+    return applyMediationDecision(state, eventId, choiceId);
+  }
+  if (isCoalitionEventId(eventId)) {
+    return applyCoalitionDecision(state, eventId, choiceId);
   }
 
   const event = state.activeEvents.find((e) => e.id === eventId);

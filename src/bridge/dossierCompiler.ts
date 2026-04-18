@@ -219,6 +219,28 @@ export function compileDossier(
     dossier.dispositionTowardPlayer = DISPOSITION_TOWARD_PLAYER[bucket];
   }
 
+  // Phase 11 — Foreign entanglements (alliances / wars / trade pacts with
+  // other rivals). Gated by moderate+ intel — the spymaster must be paying
+  // attention to know who's courting whom.
+  if (
+    gameState &&
+    (intelLevel === 'moderate' || intelLevel === 'strong' || intelLevel === 'exceptional')
+  ) {
+    const entanglements: string[] = [];
+    const agreements = gameState.diplomacy.interRivalAgreements ?? [];
+    for (const ag of agreements) {
+      if (ag.a !== neighbor.id && ag.b !== neighbor.id) continue;
+      const otherId = ag.a === neighbor.id ? ag.b : ag.a;
+      const otherName = getNeighborDisplayName(otherId, gameState);
+      if (ag.kind === 'alliance') entanglements.push(`Allied with ${otherName}`);
+      else if (ag.kind === 'war') entanglements.push(`At war with ${otherName}`);
+      else if (ag.kind === 'trade_pact') entanglements.push(`Trade pact with ${otherName}`);
+    }
+    if (entanglements.length > 0) {
+      dossier.foreignEntanglements = entanglements;
+    }
+  }
+
   // Strong: + spymaster assessment + confidence rating
   if (intelLevel === 'strong' || intelLevel === 'exceptional') {
     const situation = getSituationKey(neighbor.attitudePosture);

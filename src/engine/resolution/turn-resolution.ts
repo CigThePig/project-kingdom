@@ -158,6 +158,13 @@ import {
   tickAgenda,
 } from '../systems/rival-agendas';
 import { decayMemoryWeights, recordMemory } from '../systems/rival-memory';
+import {
+  tickInterRivalRelationships,
+  generateInterRivalActions,
+  applyInterRivalAction,
+  expireInterRivalAgreements,
+  type InterRivalAction,
+} from '../systems/inter-rival';
 import { seededRandom } from '../../data/text/name-generation';
 import {
   aggregatePerTurnFlawDelta,
@@ -240,6 +247,9 @@ export interface TurnResolutionResult {
     snapshot: ActiveInitiative;
     definitionId: string;
   } | null;
+  // Phase 11 — inter-rival actions generated this turn (alliance, war,
+  // trade_pact). Bridge layer consumes these for world-pulse + card gen.
+  interRivalEvents: InterRivalAction[];
 }
 
 // ============================================================
@@ -1050,6 +1060,37 @@ export function resolveTurn(
       return next;
     }),
   };
+
+  // ---- Phase 5a-inter: Inter-Rival Relationship Tick (Phase 11) ----
+  // Rivals drift toward / away from each other based on shared agenda
+  // targets, memory, adjacency, and cultural overlap. Alliances, wars, and
+  // trade pacts between rivals are generated here and consumed by the
+  // bridge layer for world-pulse lines and mediation / coalition cards.
+  const interRng = seededRandom(`${simRunSeed}_inter_t${state.turn.turnNumber}`);
+  const interTick = tickInterRivalRelationships(updatedDiplomacy, state);
+  let diplomacyAfterInter = interTick.diplomacy;
+  const interRivalEvents = generateInterRivalActions(
+    diplomacyAfterInter,
+    state,
+    state.turn.turnNumber,
+    interRng,
+  );
+  for (const a of interRivalEvents) {
+    diplomacyAfterInter = applyInterRivalAction(
+      diplomacyAfterInter,
+      a,
+      state.turn.turnNumber,
+    );
+  }
+  diplomacyAfterInter = {
+    ...diplomacyAfterInter,
+    interRivalAgreements: expireInterRivalAgreements(
+      diplomacyAfterInter.interRivalAgreements ?? [],
+      state.turn.turnNumber,
+      interRng,
+    ),
+  };
+  updatedDiplomacy = diplomacyAfterInter;
 
   // ---- Phase 5b: AI Neighbor Autonomous Actions ----
   const allNeighborActions: NeighborAction[] = [];
@@ -2294,5 +2335,6 @@ export function resolveTurn(
     triggeredCombos,
     completedInitiative,
     autoAbandonedInitiative,
+    interRivalEvents,
   };
 }
