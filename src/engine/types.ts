@@ -1460,6 +1460,11 @@ export interface GameState {
   // Optional for save compatibility; LOAD_SAVE backfills pre-Phase-10 saves
   // with null.
   activeInitiative?: ActiveInitiative | null;
+
+  // Phase 12 — Dynamic World Events. Region-wide events (plagues, shocks,
+  // movements) that span kingdoms. Optional for save compatibility;
+  // LOAD_SAVE backfills pre-Phase-12 saves with an empty array.
+  activeWorldEvents?: ActiveWorldEvent[];
 }
 
 // ============================================================
@@ -1618,4 +1623,108 @@ export interface SaveFile {
   chronicle?: Array<{ season: string; text: string; isProtected: boolean }>;
   /** Decree IDs offered last season, used to penalize repeat offers. */
   recentlyOfferedDecreeIds?: string[];
+}
+
+// ============================================================
+// Phase 12 — Dynamic World Events
+// ============================================================
+//
+// Region-wide events that cross kingdom borders: plagues, economic shocks,
+// religious movements, climatic disasters, celestial omens. Spread iterates
+// Phase 2.5 geography (`_adjacencyIndex`) and each definition declares which
+// AdjacencyKind values transmit it.
+
+export type WorldEventCategory =
+  | 'plague'
+  | 'economic_shock'
+  | 'religious_movement'
+  | 'climatic'
+  | 'celestial'
+  | 'mercenary'
+  | 'agricultural'
+  | 'cooperative';
+
+/** 'player' or a neighbor id ('neighbor_*'). */
+export type WorldEventKingdomId = string;
+
+export type WorldEventPhaseName = 'emerging' | 'active' | 'waning' | 'resolved';
+
+/** Stat-delta kinds applied per turn to each affected kingdom. The engine maps
+ *  these to the real stat surfaces at apply time — kept as a small stable
+ *  enum so data authors don't touch field names. */
+export type WorldEventEffectKind =
+  | 'treasury'
+  | 'food'
+  | 'stability'
+  | 'military_readiness'
+  | 'faith'
+  | 'heterodoxy'
+  | 'population'
+  | 'diplomacy_to_player'
+  | 'rival_mood';
+
+export interface WorldEventEffect {
+  kind: WorldEventEffectKind;
+  /** Per-turn delta while the kingdom is affected. Small integers (~-5..+5). */
+  value: number;
+}
+
+export interface WorldEventSpreadRule {
+  /** Only edges of these kinds transmit the event. */
+  transmittedBy: AdjacencyKind[];
+  /** Base probability per turn per candidate edge (0..1). */
+  baseProbabilityPerTurn: number;
+  /** Edges of these kinds hard-block spread even if present. */
+  blockedBy?: AdjacencyKind[];
+}
+
+export interface WorldEventChoiceDef {
+  id: string;
+  /** Key into WORLD_EVENT_CHOICE_EFFECTS (data/world-events/effects). */
+  effectsKey: string;
+}
+
+export type WorldEventSeedSelector =
+  | 'any'
+  | 'coastal'
+  | 'border'
+  | 'player_and_adjacent'
+  | 'all_kingdoms';
+
+export interface WorldEventDefinition {
+  id: string;                          // 'we_*'
+  category: WorldEventCategory;
+  severity: EventSeverity;
+  /** Earliest turn on which this event may spawn. */
+  minTurn: number;
+  /** Relative weight when selecting among eligible definitions. */
+  spawnWeight: number;
+  /** null = stays until all kingdoms recover; number = auto-resolve countdown. */
+  durationTurns: number | null;
+  spread: WorldEventSpreadRule;
+  /** How initial seed kingdoms are picked. */
+  seedSelector: WorldEventSeedSelector;
+  /** Effects applied each turn to each affected kingdom. */
+  perTurnEffects: WorldEventEffect[];
+  /** Player-facing choices surfaced via crisis card. */
+  choices: WorldEventChoiceDef[];
+}
+
+export interface ActiveWorldEvent {
+  id: string;                          // instance id, e.g. 'we_black_pox_t12'
+  definitionId: string;                // refers to a WorldEventDefinition
+  category: WorldEventCategory;
+  severity: EventSeverity;
+  turnSpawned: number;
+  /** null = indefinite; otherwise counts down each turn. */
+  turnsRemaining: number | null;
+  phase: WorldEventPhaseName;
+  /** 'player' or neighbor_* ids currently affected. */
+  affectedKingdoms: WorldEventKingdomId[];
+  /** Kingdoms that have been affected but since recovered. Prevents
+   *  re-infection during the same instance. */
+  recoveredKingdoms: WorldEventKingdomId[];
+  /** Turn on which the player was first surfaced a crisis card; null if
+   *  never surfaced yet (e.g. event hasn't reached player). */
+  playerCardSurfacedOnTurn: number | null;
 }

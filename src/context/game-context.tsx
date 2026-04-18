@@ -181,6 +181,8 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         council: save.gameState.council ?? createCouncilState(),
         // Phase 10 — pre-Phase-10 saves have no initiative slot; default null.
         activeInitiative: save.gameState.activeInitiative ?? null,
+        // Phase 12 — pre-Phase-12 saves have no world events; default empty.
+        activeWorldEvents: save.gameState.activeWorldEvents ?? [],
         // Phase 9 — pre-Phase-9 saves have no regional posture; default every
         // region to Autonomy with postureSetOnTurn = 0 so stale detection fires
         // on the very first quiet month after load.
