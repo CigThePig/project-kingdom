@@ -6,7 +6,7 @@
 // Phase 4: adapts each legacy card shape into the unified `Card` envelope at
 // this boundary, so downstream month-allocation consumers see `Card` objects.
 
-import { InteractionType, type GameState, type RegionState } from '../engine/types';
+import { InteractionType, type GameState, type RegionState, AgentSpecialization } from '../engine/types';
 import type { CrisisPhaseData } from './crisisCardGenerator';
 import type { PetitionCardData, NotificationCardData } from './petitionCardGenerator';
 import type { AssessmentPhaseData } from './assessmentCardGenerator';
@@ -37,7 +37,8 @@ import {
   POSTURE_SHORT_EFFECT,
   selectSuggestedPosture,
 } from '../engine/systems/regional-posture';
-import { getRegionDisplayName } from './nameResolver';
+import { getRegionDisplayName, getSettlementDisplayName } from './nameResolver';
+import { canRecruitAgent, pickCoverSettlement } from '../engine/systems/agents';
 import { INITIATIVE_DEFINITIONS } from '../data/initiatives';
 import type { ActiveInitiative } from '../engine/types';
 
@@ -90,6 +91,9 @@ export function distributeCardsToMonths(
    *  commit vs. abandon opportunity variants are eligible. Omit to skip
    *  initiative opportunities entirely. */
   initiativeContext?: { active: ActiveInitiative | null },
+  /** Phase 14 — current game state (for espionage roster + geography).
+   *  Omit to skip recruit-agent opportunities (e.g. in unit tests). */
+  agentContext?: { state: GameState },
 ): MonthCardAllocation {
   // Lift every legacy shape into a unified `Card` envelope at this boundary.
   // Phase 3 overtures piggyback the petition pool for distribution; putting
@@ -268,6 +272,7 @@ export function distributeCardsToMonths(
           advisorContext,
           postureContext,
           initiativeContext,
+          agentContext,
         );
         if (offer) m.courtOpportunity = offer;
       }
@@ -312,6 +317,7 @@ function isOpportunityEligible(
   advisorContext: { runSeed: string; turnNumber: number } | undefined,
   postureContext: { state: GameState; regions: RegionState[]; currentTurn: number } | undefined,
   initiativeContext: { active: ActiveInitiative | null } | undefined,
+  agentContext: { state: GameState } | undefined,
 ): boolean {
   if (opp.kind === 'advisor_candidate') return !!advisorContext;
   if (opp.kind === 'set_posture') {
@@ -327,6 +333,15 @@ function isOpportunityEligible(
     if (!initiativeContext) return false;
     return !!initiativeContext.active;
   }
+  if (opp.kind === 'recruit_agent') {
+    if (!agentContext) return false;
+    const esp = agentContext.state.espionage;
+    if (!esp) return false;
+    if (!canRecruitAgent(esp)) return false;
+    // Need at least one settlement to host the cover identity.
+    const settlements = agentContext.state.geography?.settlements ?? [];
+    return settlements.length > 0;
+  }
   return true; // hand_card is always eligible
 }
 
@@ -338,14 +353,23 @@ const INITIATIVE_CATEGORY_LABELS: Record<string, string> = {
   political: 'Political',
 };
 
+const AGENT_SPECIALIZATION_LABEL: Record<AgentSpecialization, string> = {
+  [AgentSpecialization.Diplomatic]: 'Diplomatic',
+  [AgentSpecialization.Military]: 'Military',
+  [AgentSpecialization.Economic]: 'Economic',
+  [AgentSpecialization.Counter]: 'Counter-Intelligence',
+  [AgentSpecialization.Court]: 'Court',
+};
+
 function buildCourtOpportunityOffer(
   rng: () => number,
   advisorContext?: { runSeed: string; turnNumber: number },
   postureContext?: { state: GameState; regions: RegionState[]; currentTurn: number },
   initiativeContext?: { active: ActiveInitiative | null },
+  agentContext?: { state: GameState },
 ): CourtOpportunityOffer | null {
   const pool = COURT_OPPORTUNITIES.filter((o) =>
-    isOpportunityEligible(o, advisorContext, postureContext, initiativeContext),
+    isOpportunityEligible(o, advisorContext, postureContext, initiativeContext, agentContext),
   );
   const opp = pickFromPool(pool, rng);
   if (!opp) return null;
@@ -415,6 +439,21 @@ function buildCourtOpportunityOffer(
       turnsActive: active.turnsActive,
       turnsRequired: active.turnsRequired,
       penaltySummary: def?.penaltySummary ?? '',
+    };
+  }
+  if (opp.kind === 'recruit_agent') {
+    if (!agentContext) return null;
+    const coverId = pickCoverSettlement(agentContext.state, rng);
+    if (!coverId) return null;
+    return {
+      kind: 'recruit_agent',
+      id: opp.id,
+      title: opp.title,
+      body: opp.body,
+      specialization: opp.specialization,
+      specializationLabel: AGENT_SPECIALIZATION_LABEL[opp.specialization] ?? String(opp.specialization),
+      proposedCoverSettlementId: coverId,
+      proposedCoverLabel: getSettlementDisplayName(coverId, agentContext.state),
     };
   }
   // kind === 'advisor_candidate' — requires runSeed/turn to instantiate

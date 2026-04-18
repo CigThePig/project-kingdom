@@ -54,6 +54,7 @@ import type {
   RivalPersonality,
   MechanicalEffectDelta,
   BondKind,
+  AgentSpecialization,
 } from '../engine/types';
 import type { CardOfFamily } from '../engine/cards/types';
 
@@ -233,12 +234,28 @@ export interface CourtOpportunityInitiativeAbandonOffer {
   penaltySummary: string;
 }
 
+/** Phase 14 "Recruit Agent" opportunity. Accepting dispatches
+ *  RECRUIT_AGENT_FROM_OPPORTUNITY, adding a named agent to the roster. Only
+ *  surfaces while the roster has room. */
+export interface CourtOpportunityRecruitAgentOffer {
+  kind: 'recruit_agent';
+  id: string;
+  title: string;
+  body: string;
+  specialization: AgentSpecialization;
+  specializationLabel: string;
+  /** Settlement the new agent will cover. Pre-resolved display name. */
+  proposedCoverSettlementId: string;
+  proposedCoverLabel: string;
+}
+
 export type CourtOpportunityOffer =
   | CourtOpportunityHandCardOffer
   | CourtOpportunityAdvisorOffer
   | CourtOpportunitySetPostureOffer
   | CourtOpportunityInitiativeCommitOffer
-  | CourtOpportunityInitiativeAbandonOffer;
+  | CourtOpportunityInitiativeAbandonOffer
+  | CourtOpportunityRecruitAgentOffer;
 
 export interface MonthCardAllocation {
   month1: MonthAllocation;

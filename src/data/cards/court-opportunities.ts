@@ -6,6 +6,7 @@
 // is a no-op.
 
 import type { HandCardId } from './hand-cards';
+import { AgentSpecialization } from '../../engine/types';
 
 /** Court opportunities now discriminate between hand-card gifts and advisor
  *  candidate introductions. Phase 8 added the `advisor_candidate` variant;
@@ -60,6 +61,17 @@ export type CourtOpportunityDefinition =
       id: string;
       title: string;
       body: string;
+      weight: number;
+    }
+  | {
+      /** Phase 14 — "Recruit Agent" opportunity. Adds a named agent of the
+       *  given specialization to the roster. Only surfaces while the roster
+       *  has room. Cover settlement is resolved at build time. */
+      kind: 'recruit_agent';
+      id: string;
+      title: string;
+      body: string;
+      specialization: AgentSpecialization;
       weight: number;
     };
 
@@ -385,6 +397,50 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     id: 'opp_initiative_abandon',
     title: 'Withdraw the Great Directive',
     body: 'Your counsellors gently suggest the time has come to set aside the current initiative. It will cost.',
+    weight: 2,
+  },
+
+  // ============================================================
+  // Phase 14 — Recruit Agent Opportunities (one per specialization)
+  // ============================================================
+  {
+    kind: 'recruit_agent',
+    id: 'opp_recruit_agent_diplomatic',
+    title: 'A Letter From Abroad',
+    body: 'An out-of-work chancery clerk, once embedded at a foreign court, offers to carry your interests quietly through his old contacts.',
+    specialization: AgentSpecialization.Diplomatic,
+    weight: 2,
+  },
+  {
+    kind: 'recruit_agent',
+    id: 'opp_recruit_agent_military',
+    title: 'A Quiet Captain',
+    body: 'A scarred captain who has walked rival muster-fields offers to sell you the names and numbers of their standing levies.',
+    specialization: AgentSpecialization.Military,
+    weight: 2,
+  },
+  {
+    kind: 'recruit_agent',
+    id: 'opp_recruit_agent_economic',
+    title: 'A Merchant With Ledgers',
+    body: 'A travelling factor proposes his services — he has seen what foreign granaries hold, and at what price.',
+    specialization: AgentSpecialization.Economic,
+    weight: 2,
+  },
+  {
+    kind: 'recruit_agent',
+    id: 'opp_recruit_agent_counter',
+    title: 'A Thief-Catcher',
+    body: 'A former city reeve with a nose for foreign whisperers asks to work the shadows of your own capital.',
+    specialization: AgentSpecialization.Counter,
+    weight: 2,
+  },
+  {
+    kind: 'recruit_agent',
+    id: 'opp_recruit_agent_court',
+    title: 'A Practised Courtier',
+    body: 'A minor noble with an ear for rumour at every great hall offers her services — discreetly, and for a price.',
+    specialization: AgentSpecialization.Court,
     weight: 2,
   },
 ];

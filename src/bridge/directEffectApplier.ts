@@ -11,6 +11,14 @@ import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 import type { MonthDecision } from '../ui/types';
 import {
+  extractAgent as extractAgentFn,
+  applyMoleExposure,
+} from '../engine/systems/agents';
+import {
+  PHASE14_EXTRACT_PREFIX,
+  PHASE14_MOLE_PREFIX,
+} from './petitionCardGenerator';
+import {
   createCulturalExchangeBond,
   createHostageBond,
   createMarriageBond,
@@ -61,6 +69,51 @@ export function applyDirectEffects(
   let current = state;
 
   for (const d of decisions) {
+    // Phase 14 — synthesized extraction / mole petitions resolve here.
+    if (d.interactionType === InteractionType.Petition) {
+      if (d.cardId.startsWith(PHASE14_EXTRACT_PREFIX)) {
+        const agentId = d.cardId.slice(PHASE14_EXTRACT_PREFIX.length);
+        const esp = current.espionage;
+        if (esp) {
+          if (d.choiceId === 'extract') {
+            current = {
+              ...current,
+              espionage: {
+                ...extractAgentFn(esp, agentId),
+                networkStrength: Math.max(0, esp.networkStrength - 4),
+              },
+            };
+          }
+          // 'hold' — no immediate effect; tick system handles the next turn.
+        }
+        continue;
+      }
+      if (d.cardId.startsWith(PHASE14_MOLE_PREFIX)) {
+        const moleId = d.cardId.slice(PHASE14_MOLE_PREFIX.length);
+        const esp = current.espionage;
+        if (esp && (d.choiceId === 'expose' || d.choiceId === 'feed_false_intel')) {
+          const res = applyMoleExposure(esp, moleId, d.choiceId);
+          let next: GameState = { ...current, espionage: res.espionage };
+          if (res.relationshipTarget && res.relationshipDelta !== 0) {
+            const neighbors = next.diplomacy.neighbors.map((n) =>
+              n.id === res.relationshipTarget
+                ? {
+                    ...n,
+                    relationshipScore: Math.max(
+                      0,
+                      Math.min(100, n.relationshipScore + res.relationshipDelta),
+                    ),
+                  }
+                : n,
+            );
+            next = { ...next, diplomacy: { ...next.diplomacy, neighbors } };
+          }
+          current = next;
+        }
+        continue;
+      }
+    }
+
     if (d.interactionType === InteractionType.Assessment) {
       // cardId format: "assessment:<definitionId>"
       // choiceId format: "assessment:<defId>:<bareChoiceId>"

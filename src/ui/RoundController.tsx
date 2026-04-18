@@ -21,7 +21,11 @@ import type { MonthPhase, MonthDecision, MonthCardAllocation } from './types';
 import { partitionEvents } from '../bridge/eventClassifier';
 import { generateCrisisPhaseData } from '../bridge/crisisCardGenerator';
 import type { CrisisPhaseData } from '../bridge/crisisCardGenerator';
-import { generatePetitionCards, generateNotificationCards } from '../bridge/petitionCardGenerator';
+import {
+  generatePetitionCards,
+  generateNotificationCards,
+  synthesizePhase14Petitions,
+} from '../bridge/petitionCardGenerator';
 import type { PetitionCardData, NotificationCardData } from '../bridge/petitionCardGenerator';
 import { generateDecreeCards } from '../bridge/decreeCardGenerator';
 import type { DecreeCardData } from '../bridge/decreeCardGenerator';
@@ -213,7 +217,14 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
 
     // Generate petition and notification cards separately
     const petitions = generatePetitionCards(petitionEvents, gameState);
-    const allPetitions = [...petitions, ...neighborCards.petitionCards];
+    // Phase 14 — synthesize agent-extraction + mole-exposure petitions when
+    // roster/mole state crosses the relevant thresholds.
+    const phase14Petitions = synthesizePhase14Petitions(gameState);
+    const allPetitions = [
+      ...petitions,
+      ...neighborCards.petitionCards,
+      ...phase14Petitions,
+    ];
     setPetitionCards(allPetitions);
 
     const notifications = generateNotificationCards(notificationEvents, gameState);
@@ -258,6 +269,8 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       },
       // Phase 10 — initiative context gates commit vs. abandon opportunities.
       { active: gameState.activeInitiative ?? null },
+      // Phase 14 — agent context gates recruit-agent opportunities.
+      { state: gameState },
     );
     setMonthAllocations(allocations);
 
@@ -338,6 +351,14 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       }
       if (offer.kind === 'initiative_abandon') {
         ctx.dispatch({ type: 'ABANDON_INITIATIVE' });
+        return;
+      }
+      if (offer.kind === 'recruit_agent') {
+        ctx.dispatch({
+          type: 'RECRUIT_AGENT_FROM_OPPORTUNITY',
+          specialization: offer.specialization,
+          coverSettlementId: offer.proposedCoverSettlementId,
+        });
         return;
       }
       const handCardId = offer.handCardId;

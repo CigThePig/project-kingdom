@@ -398,3 +398,67 @@ describe('LOAD_SAVE bonds migration (Phase 13)', () => {
     expect(bonds[0].kind).toBe('royal_marriage');
   });
 });
+
+describe('LOAD_SAVE espionage migration (Phase 14)', () => {
+  it('back-fills agents/ongoingOperations/moles arrays + rosterCap on a v7 save', () => {
+    const base = createScenarioState('new_crown');
+    const legacyEspionage = {
+      networkStrength: base.espionage.networkStrength,
+      counterIntelligenceLevel: base.espionage.counterIntelligenceLevel,
+    } as typeof base.espionage;
+    const legacy: GameState = { ...base, espionage: legacyEspionage };
+    const save: SaveFile = {
+      version: 7,
+      scenarioId: 'new_crown',
+      savedAt: Date.now(),
+      isMidTurn: false,
+      gameState: legacy,
+      turnHistory: [],
+      eventHistory: [],
+      intelligenceReports: [],
+    };
+    const loaded = gameReducer(createInitialState(), { type: 'LOAD_SAVE', save });
+    expect(loaded.gameState.espionage.agents).toEqual([]);
+    expect(loaded.gameState.espionage.ongoingOperations).toEqual([]);
+    expect(loaded.gameState.espionage.moles).toEqual([]);
+    expect(loaded.gameState.espionage.agentRosterCap).toBe(6);
+  });
+
+  it('preserves a populated roster on round-trip', () => {
+    const base = createScenarioState('new_crown');
+    const populated: GameState = {
+      ...base,
+      espionage: {
+        ...base.espionage,
+        agents: [
+          {
+            id: 'agent_rt_1',
+            codename: 'Blackthorn',
+            specialization: 'Diplomatic',
+            coverSettlementId: 'settlement_test',
+            reliability: 60,
+            burnRisk: 20,
+            status: 'Active',
+            recruitedTurn: 3,
+          },
+        ] as never,
+        ongoingOperations: [],
+        moles: [],
+        agentRosterCap: 6,
+      },
+    };
+    const save: SaveFile = {
+      version: 8,
+      scenarioId: 'new_crown',
+      savedAt: Date.now(),
+      isMidTurn: false,
+      gameState: populated,
+      turnHistory: [],
+      eventHistory: [],
+      intelligenceReports: [],
+    };
+    const loaded = gameReducer(createInitialState(), { type: 'LOAD_SAVE', save });
+    expect(loaded.gameState.espionage.agents?.length).toBe(1);
+    expect(loaded.gameState.espionage.agents?.[0].codename).toBe('Blackthorn');
+  });
+});

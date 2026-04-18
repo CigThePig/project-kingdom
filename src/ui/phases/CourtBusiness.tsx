@@ -571,6 +571,10 @@ export function CourtBusiness({
         badgeLabel = `Abandon Initiative — ${courtOpportunity.currentProgress}% complete`;
         previewTitle = `Withdraw: ${courtOpportunity.currentInitiativeTitle}`;
         previewBody = `After ${courtOpportunity.turnsActive} of ~${courtOpportunity.turnsRequired} turns. Cost: ${courtOpportunity.penaltySummary}`;
+      } else if (courtOpportunity.kind === 'recruit_agent') {
+        badgeLabel = `Recruit Agent — ${courtOpportunity.specializationLabel}`;
+        previewTitle = `Cover: ${courtOpportunity.proposedCoverLabel}`;
+        previewBody = `A new ${courtOpportunity.specializationLabel} agent will join your roster, based out of ${courtOpportunity.proposedCoverLabel}.`;
       } else {
         badgeLabel = `Hand Card — Expires in ${courtOpportunity.expiresAfterTurns} turns`;
         previewTitle = courtOpportunity.handCardTitle;
