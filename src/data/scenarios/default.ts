@@ -439,6 +439,11 @@ export function createDefaultScenario(): GameState {
     discoveredCombos: [],
     pendingComboKeysThisTurn: [],
 
+    // --- Long-Term Initiative (Phase 10) ---
+    // No initiative is committed at start; one is chosen via a Court
+    // Opportunity on a quiet month.
+    activeInitiative: null,
+
     // --- Geography (Phase 2.5) ---
     // Three-region heartland anchored by river and mountain connections;
     // Timbermark exposes the northern land border to Arenthal, while Ironvale's

@@ -459,6 +459,7 @@ export function createMerchantsGambitScenario(): GameState {
     // --- Discovered Combos (Phase 6) ---
     discoveredCombos: [],
     pendingComboKeysThisTurn: [],
+    activeInitiative: null,
 
     // --- Geography (Phase 2.5) ---
     // Merchant's Gambit: sea edges dominate; dense rival↔rival adjacency sets

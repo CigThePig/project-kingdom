@@ -27,7 +27,7 @@ import {
 } from '../engine/cards/adapters';
 import {
   COURT_OPPORTUNITIES,
-  pickCourtOpportunity,
+  type CourtOpportunityDefinition,
 } from '../data/cards/court-opportunities';
 import { HAND_CARDS } from '../data/cards/hand-cards';
 import { instantiateCandidateById } from '../engine/systems/advisors';
@@ -38,6 +38,8 @@ import {
   selectSuggestedPosture,
 } from '../engine/systems/regional-posture';
 import { getRegionDisplayName } from './nameResolver';
+import { INITIATIVE_DEFINITIONS } from '../data/initiatives';
+import type { ActiveInitiative } from '../engine/types';
 
 const EMPTY_ALLOCATION: MonthAllocation = {
   interactionType: null,
@@ -84,6 +86,10 @@ export function distributeCardsToMonths(
    *  opportunity against a stale region. Omit to skip set-posture
    *  opportunities (e.g. in unit tests). */
   postureContext?: { state: GameState; regions: RegionState[]; currentTurn: number },
+  /** Phase 10 — the currently committed initiative, if any. Drives whether
+   *  commit vs. abandon opportunity variants are eligible. Omit to skip
+   *  initiative opportunities entirely. */
+  initiativeContext?: { active: ActiveInitiative | null },
 ): MonthCardAllocation {
   // Lift every legacy shape into a unified `Card` envelope at this boundary.
   // Phase 3 overtures piggyback the petition pool for distribution; putting
@@ -257,7 +263,12 @@ export function distributeCardsToMonths(
     const months = [month1, month2, month3];
     for (const m of months) {
       if (isFullyQuiet(m)) {
-        const offer = buildCourtOpportunityOffer(opportunityRng, advisorContext, postureContext);
+        const offer = buildCourtOpportunityOffer(
+          opportunityRng,
+          advisorContext,
+          postureContext,
+          initiativeContext,
+        );
         if (offer) m.courtOpportunity = offer;
       }
     }
@@ -275,12 +286,69 @@ function isFullyQuiet(m: MonthAllocation): boolean {
   );
 }
 
+/** Weighted pick over an arbitrary eligible-subset pool. Falls back to the
+ *  first entry when the pool is empty (should not happen in practice because
+ *  the hand-card pool is always eligible). */
+function pickFromPool(
+  pool: CourtOpportunityDefinition[],
+  rng: () => number,
+): CourtOpportunityDefinition | null {
+  if (pool.length === 0) return null;
+  const total = pool.reduce((sum, o) => sum + o.weight, 0);
+  if (total <= 0) return pool[0];
+  let pick = rng() * total;
+  for (const opp of pool) {
+    pick -= opp.weight;
+    if (pick <= 0) return opp;
+  }
+  return pool[pool.length - 1];
+}
+
+/** Determine whether an opportunity definition is eligible given the current
+ *  contextual state (initiative active/inactive, advisor context presence,
+ *  etc.). Keeps all eligibility gates in one place. */
+function isOpportunityEligible(
+  opp: CourtOpportunityDefinition,
+  advisorContext: { runSeed: string; turnNumber: number } | undefined,
+  postureContext: { state: GameState; regions: RegionState[]; currentTurn: number } | undefined,
+  initiativeContext: { active: ActiveInitiative | null } | undefined,
+): boolean {
+  if (opp.kind === 'advisor_candidate') return !!advisorContext;
+  if (opp.kind === 'set_posture') {
+    if (!postureContext) return false;
+    return !!findFirstStaleRegion(postureContext.regions, postureContext.currentTurn);
+  }
+  if (opp.kind === 'initiative_commit') {
+    if (!initiativeContext) return false;
+    if (initiativeContext.active) return false;
+    return !!INITIATIVE_DEFINITIONS[opp.definitionId];
+  }
+  if (opp.kind === 'initiative_abandon') {
+    if (!initiativeContext) return false;
+    return !!initiativeContext.active;
+  }
+  return true; // hand_card is always eligible
+}
+
+const INITIATIVE_CATEGORY_LABELS: Record<string, string> = {
+  military: 'Military',
+  cultural: 'Cultural',
+  economic: 'Economic',
+  religious: 'Religious',
+  political: 'Political',
+};
+
 function buildCourtOpportunityOffer(
   rng: () => number,
   advisorContext?: { runSeed: string; turnNumber: number },
   postureContext?: { state: GameState; regions: RegionState[]; currentTurn: number },
+  initiativeContext?: { active: ActiveInitiative | null },
 ): CourtOpportunityOffer | null {
-  const opp = pickCourtOpportunity(rng);
+  const pool = COURT_OPPORTUNITIES.filter((o) =>
+    isOpportunityEligible(o, advisorContext, postureContext, initiativeContext),
+  );
+  const opp = pickFromPool(pool, rng);
+  if (!opp) return null;
   if (opp.kind === 'hand_card') {
     const handCard = HAND_CARDS[opp.handCardId];
     if (!handCard) return null;
@@ -314,6 +382,39 @@ function buildCourtOpportunityOffer(
       suggestedPosture: String(suggested),
       suggestedPostureLabel: POSTURE_LABEL[suggested],
       suggestedPostureEffect: POSTURE_SHORT_EFFECT[suggested],
+    };
+  }
+  if (opp.kind === 'initiative_commit') {
+    const def = INITIATIVE_DEFINITIONS[opp.definitionId];
+    if (!def) return null;
+    return {
+      kind: 'initiative_commit',
+      id: opp.id,
+      title: opp.title,
+      body: opp.body,
+      definitionId: def.id,
+      initiativeTitle: def.title,
+      initiativeDescription: def.description,
+      categoryLabel: INITIATIVE_CATEGORY_LABELS[def.category] ?? def.category,
+      turnsRequired: def.turnsRequired,
+      rewardSummary: def.rewardSummary,
+      penaltySummary: def.penaltySummary,
+    };
+  }
+  if (opp.kind === 'initiative_abandon') {
+    if (!initiativeContext?.active) return null;
+    const active = initiativeContext.active;
+    const def = INITIATIVE_DEFINITIONS[active.definitionId];
+    return {
+      kind: 'initiative_abandon',
+      id: opp.id,
+      title: opp.title,
+      body: opp.body,
+      currentInitiativeTitle: def?.title ?? active.definitionId,
+      currentProgress: active.progressValue,
+      turnsActive: active.turnsActive,
+      turnsRequired: active.turnsRequired,
+      penaltySummary: def?.penaltySummary ?? '',
     };
   }
   // kind === 'advisor_candidate' — requires runSeed/turn to instantiate

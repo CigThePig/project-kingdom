@@ -563,6 +563,14 @@ export function CourtBusiness({
         badgeLabel = `${courtOpportunity.regionDisplayName} — ${courtOpportunity.currentPostureLabel} → ${courtOpportunity.suggestedPostureLabel}`;
         previewTitle = `Set Posture: ${courtOpportunity.suggestedPostureLabel}`;
         previewBody = courtOpportunity.suggestedPostureEffect;
+      } else if (courtOpportunity.kind === 'initiative_commit') {
+        badgeLabel = `Initiative — ${courtOpportunity.categoryLabel} · ~${courtOpportunity.turnsRequired} turns`;
+        previewTitle = courtOpportunity.initiativeTitle;
+        previewBody = `${courtOpportunity.initiativeDescription} Reward: ${courtOpportunity.rewardSummary}`;
+      } else if (courtOpportunity.kind === 'initiative_abandon') {
+        badgeLabel = `Abandon Initiative — ${courtOpportunity.currentProgress}% complete`;
+        previewTitle = `Withdraw: ${courtOpportunity.currentInitiativeTitle}`;
+        previewBody = `After ${courtOpportunity.turnsActive} of ~${courtOpportunity.turnsRequired} turns. Cost: ${courtOpportunity.penaltySummary}`;
       } else {
         badgeLabel = `Hand Card — Expires in ${courtOpportunity.expiresAfterTurns} turns`;
         previewTitle = courtOpportunity.handCardTitle;

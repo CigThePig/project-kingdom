@@ -29,6 +29,11 @@ import {
   appointAdvisor,
   dismissAdvisor,
 } from '../engine/systems/advisors';
+import {
+  commitInitiative,
+  abandonInitiative,
+  getInitiativeDefinition,
+} from '../engine/systems/initiatives';
 import { applyMechanicalEffectDelta } from '../engine/events/apply-event-effects';
 import { seededRandom } from '../data/text/name-generation';
 import type { ChronicleEntry, MonthDecision } from '../ui/types';
@@ -83,7 +88,9 @@ export type GameAction =
   | { type: 'DECREES_OFFERED'; decreeIds: string[] }
   | { type: 'APPOINT_CANDIDATE_FROM_OPPORTUNITY'; templateId: string }
   | { type: 'DISMISS_ADVISOR'; seat: CouncilSeat }
-  | { type: 'SET_REGIONAL_POSTURE'; regionId: string; posture: RegionalPosture };
+  | { type: 'SET_REGIONAL_POSTURE'; regionId: string; posture: RegionalPosture }
+  | { type: 'COMMIT_INITIATIVE'; definitionId: string }
+  | { type: 'ABANDON_INITIATIVE' };
 
 // ============================================================
 // Context Value
@@ -171,6 +178,8 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         pendingComboKeysThisTurn: save.gameState.pendingComboKeysThisTurn ?? [],
         // Phase 8 — pre-Phase-8 saves have no council; start with empty seats.
         council: save.gameState.council ?? createCouncilState(),
+        // Phase 10 — pre-Phase-10 saves have no initiative slot; default null.
+        activeInitiative: save.gameState.activeInitiative ?? null,
         // Phase 9 — pre-Phase-9 saves have no regional posture; default every
         // region to Autonomy with postureSetOnTurn = 0 so stale detection fires
         // on the very first quiet month after load.
@@ -415,6 +424,31 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         ...state,
         gameState: { ...state.gameState, regions },
       };
+    }
+
+    case 'COMMIT_INITIATIVE': {
+      // No-op when an initiative is already active — the distributor should
+      // have filtered the opportunity, but guard here too.
+      if (state.gameState.activeInitiative) return state;
+      const def = getInitiativeDefinition(action.definitionId);
+      if (!def) return state;
+      const nextInitiative = commitInitiative(def, state.gameState.turn.turnNumber);
+      return {
+        ...state,
+        gameState: { ...state.gameState, activeInitiative: nextInitiative },
+      };
+    }
+
+    case 'ABANDON_INITIATIVE': {
+      const current = state.gameState.activeInitiative;
+      if (!current) return state;
+      const { penalty } = abandonInitiative(current);
+      const stateWithPenalty = applyMechanicalEffectDelta(
+        { ...state.gameState, activeInitiative: null },
+        penalty,
+        null,
+      );
+      return { ...state, gameState: stateWithPenalty };
     }
 
     default:

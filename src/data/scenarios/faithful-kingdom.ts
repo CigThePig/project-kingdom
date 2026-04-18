@@ -433,6 +433,7 @@ export function createFaithfulKingdomScenario(): GameState {
     // --- Discovered Combos (Phase 6) ---
     discoveredCombos: [],
     pendingComboKeysThisTurn: [],
+    activeInitiative: null,
 
     // --- Geography (Phase 2.5) ---
     // Faith flavor: Valdris (the heretical neighbor) has an 'ancestral' claim

@@ -164,7 +164,16 @@ import {
   tickAdvisorLoyalty,
   tickFlawDetection,
 } from '../systems/advisors';
-import type { CouncilSeat } from '../types';
+import {
+  tickInitiativeProgress,
+  evaluateFailureConditions,
+  advanceFailureCounter,
+  abandonInitiative,
+  getInitiativeDefinition,
+  getPerTurnPressureDelta as getInitiativePerTurnPressureDelta,
+} from '../systems/initiatives';
+import type { CouncilSeat, ActiveInitiative } from '../types';
+import type { CardTag } from '../cards/types';
 import {
   calculatePlayerCombatPower,
   calculateNeighborCombatPower,
@@ -216,6 +225,21 @@ export interface TurnResolutionResult {
   conditionCardTriggers: ConditionCardTrigger[];
   // Phase 6 — combos that fired this turn. Surfaced on the summary screen.
   triggeredCombos: ComboProc[];
+  // Phase 10 — the initiative that completed this turn, if any. The
+  // completion reward is already applied to `nextState`; this field exists so
+  // the chronicle / UI can announce the defining-rarity payoff.
+  completedInitiative: {
+    snapshot: ActiveInitiative;
+    definitionId: string;
+    payoffTitle: string;
+    payoffBody: string;
+  } | null;
+  // Phase 10 — set when the initiative auto-abandoned this turn due to
+  // sustained failure conditions. Penalty is applied to `nextState`.
+  autoAbandonedInitiative: {
+    snapshot: ActiveInitiative;
+    definitionId: string;
+  } | null;
 }
 
 // ============================================================
@@ -267,6 +291,12 @@ export function resolveTurn(
   applyActionEffects: ApplyActionEffectsFn,
   eventHistory: ActiveEvent[] = [],
   turnHistory: TurnHistoryEntry[] = [],
+  /** Phase 10 — tags collected from cards resolved this turn. The initiative
+   *  tick adds progress for each tag overlapping the active initiative's
+   *  cardWeightingBoost list. Omit when no card-play history is available
+   *  (e.g. legacy test harnesses); a default of [] means only the baseline
+   *  per-turn progress applies. */
+  playedCardTags: CardTag[] = [],
 ): TurnResolutionResult {
   // ---- Phase 0: Accept pending diplomatic proposals ----
   // Proposals from the previous turn auto-accept if the player did not reject them.
@@ -551,6 +581,80 @@ export function resolveTurn(
         pendingCandidates: councilAtPhase2b.pendingCandidates,
       },
     };
+  }
+
+  // ---- Phase 2c (Long-Term Initiative tick): progress, completion, failure ----
+  // Runs after advisor passives so initiative progress is scored against the
+  // post-advisor-delta state. The per-turn pressure delta is merged into the
+  // narrative-pressure accumulator below (Phase 1755+) alongside existing
+  // pressure sources.
+  let completedInitiative: TurnResolutionResult['completedInitiative'] = null;
+  let autoAbandonedInitiative: TurnResolutionResult['autoAbandonedInitiative'] = null;
+  const activeInitiativeAtStart = stateAfterActions.activeInitiative ?? null;
+  if (activeInitiativeAtStart) {
+    // Apply the initiative's small per-turn narrative-pressure delta.
+    const pressureDelta = getInitiativePerTurnPressureDelta(activeInitiativeAtStart);
+    if (Object.keys(pressureDelta).length > 0) {
+      const basePressure = stateAfterActions.narrativePressure;
+      stateAfterActions = {
+        ...stateAfterActions,
+        narrativePressure: {
+          ...basePressure,
+          authority: basePressure.authority + (pressureDelta.authority ?? 0),
+          piety: basePressure.piety + (pressureDelta.piety ?? 0),
+          commerce: basePressure.commerce + (pressureDelta.commerce ?? 0),
+          militarism: basePressure.militarism + (pressureDelta.militarism ?? 0),
+          reform: basePressure.reform + (pressureDelta.reform ?? 0),
+          intrigue: basePressure.intrigue + (pressureDelta.intrigue ?? 0),
+          openness: basePressure.openness + (pressureDelta.openness ?? 0),
+          isolation: basePressure.isolation + (pressureDelta.isolation ?? 0),
+        },
+      };
+    }
+
+    const { next: afterProgress, completed } = tickInitiativeProgress(
+      activeInitiativeAtStart,
+      playedCardTags,
+    );
+    if (completed) {
+      const def = getInitiativeDefinition(completed.definitionId);
+      if (def) {
+        stateAfterActions = applyMechanicalEffectDelta(
+          stateAfterActions,
+          def.completionReward,
+          null,
+        );
+        completedInitiative = {
+          snapshot: completed,
+          definitionId: def.id,
+          payoffTitle: def.payoffTitle,
+          payoffBody: def.payoffBody,
+        };
+      }
+      stateAfterActions = { ...stateAfterActions, activeInitiative: null };
+    } else if (afterProgress) {
+      // Evaluate failure against post-progress state, then advance counter.
+      const failing = evaluateFailureConditions(afterProgress, stateAfterActions);
+      const { next: afterCounter, shouldAutoAbandon } = advanceFailureCounter(
+        afterProgress,
+        failing,
+      );
+      if (shouldAutoAbandon) {
+        const { penalty } = abandonInitiative(afterCounter);
+        stateAfterActions = applyMechanicalEffectDelta(
+          stateAfterActions,
+          penalty,
+          null,
+        );
+        autoAbandonedInitiative = {
+          snapshot: afterCounter,
+          definitionId: afterCounter.definitionId,
+        };
+        stateAfterActions = { ...stateAfterActions, activeInitiative: null };
+      } else {
+        stateAfterActions = { ...stateAfterActions, activeInitiative: afterCounter };
+      }
+    }
   }
 
   // ---- Phase 2b: Temporary Modifier Tick ----
@@ -2188,5 +2292,7 @@ export function resolveTurn(
     generatedReports,
     conditionCardTriggers,
     triggeredCombos,
+    completedInitiative,
+    autoAbandonedInitiative,
   };
 }

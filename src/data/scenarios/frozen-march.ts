@@ -431,6 +431,7 @@ export function createFrozenMarchScenario(): GameState {
     // --- Discovered Combos (Phase 6) ---
     discoveredCombos: [],
     pendingComboKeysThisTurn: [],
+    activeInitiative: null,
 
     // --- Geography (Phase 2.5) ---
     // Frozen march: mountain passes dominate. The hostile northern neighbor

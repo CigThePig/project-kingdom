@@ -834,25 +834,25 @@ Tests, lint, build, playthrough.
 
 ---
 
-## Phase 10 — Long-Term Initiatives
+## Phase 10 — Long-Term Initiatives ✅
 
-### Task 10.1 — Initiative types
+### Task 10.1 — Initiative types ✅
 
 Per design doc.
 
-### Task 10.2 — Initiative pool data
+### Task 10.2 — Initiative pool data ✅
 
 `src/data/initiatives/` with 10 initial initiatives.
 
-### Task 10.3 — Engine system
+### Task 10.3 — Engine system ✅
 
 `src/engine/systems/initiatives.ts` with progress tracking, completion detection, abandonment, card weighting boost.
 
-### Task 10.4 — Initiative UI
+### Task 10.4 — Initiative UI ✅
 
 Surface initiative state on the Codex Kingdom card. Initiative selection happens via a Court Opportunity card.
 
-### Task 10.5 — Phase 10 acceptance
+### Task 10.5 — Phase 10 acceptance ✅
 
 Tests, lint, build, playthrough.
 
