@@ -127,6 +127,15 @@ import {
   calculateCounterIntelligenceGrowth,
 } from '../systems/espionage';
 import {
+  applyAgentOpOutcome,
+  DEFAULT_ONGOING_OP_TURNS,
+  planMoleFromRival,
+  startOngoingOperation,
+  tickAgentRoster,
+  tickMoleDetection,
+  tickOngoingOperations,
+} from '../systems/agents';
+import {
   calculateResearchProgressThisTurn,
   applyKnowledgeProgress,
   checkMilestoneUnlock,
@@ -992,6 +1001,11 @@ export function resolveTurn(
     (a) => a.type === ActionType.IntelligenceOp,
   );
 
+  // Phase 14 — agent-aware resolution. Every op consults the roster for an
+  // assigned agent; ops without an agent fall back to a synthetic auto-agent
+  // so pre-Phase-14 queued actions keep resolving deterministically.
+  let espionageAfterOps = stateAfterActions.espionage;
+
   for (const op of intelOps) {
     const opType = op.parameters['operationType'];
     if (!isIntelligenceOperationType(opType)) continue;
@@ -1003,21 +1017,75 @@ export function resolveTurn(
     const targetNeighbor = updatedDiplomacy.neighbors.find((n) => n.id === targetId);
     const targetCapability = targetNeighbor?.espionageCapability ?? 0;
 
+    const requestedAgentId =
+      typeof op.parameters['agentId'] === 'string' ? op.parameters['agentId'] : null;
+    const assignedAgent = requestedAgentId
+      ? (espionageAfterOps.agents ?? []).find(
+          (a) => a.id === requestedAgentId && a.status === 'Active',
+        ) ?? null
+      : null;
+
+    const turnsTotalRaw = op.parameters['turnsTotal'];
+    const turnsTotal =
+      typeof turnsTotalRaw === 'number' && turnsTotalRaw > 0
+        ? turnsTotalRaw
+        : op.parameters['ongoing'] === true
+          ? DEFAULT_ONGOING_OP_TURNS
+          : 1;
+
+    if (turnsTotal > 1) {
+      // Multi-turn op: enqueue, no immediate report. Apply a small startup
+      // burn-risk bump on the agent.
+      espionageAfterOps = startOngoingOperation(espionageAfterOps, {
+        opType,
+        targetId,
+        agentId: assignedAgent?.id ?? null,
+        turn: state.turn.turnNumber,
+        opId: op.id,
+        turnsTotal,
+      });
+      if (assignedAgent) {
+        espionageAfterOps = applyAgentOpOutcome(espionageAfterOps, assignedAgent.id, {
+          burnRiskDelta: 5,
+        });
+      }
+      continue;
+    }
+
     const result = resolveOperation(
       opType,
       targetId,
-      stateAfterActions.espionage.networkStrength,
+      espionageAfterOps.networkStrength,
       targetCapability,
       state.turn.turnNumber,
       turnRng(state, `intel-op:${op.id}`)(),
       targetNeighbor?.kingdomSimulation,
+      assignedAgent,
     );
 
     networkStrengthDeltas.push(result.networkStrengthDelta);
     if (result.report !== null) {
       generatedReports.push(result.report);
     }
+    if (assignedAgent) {
+      espionageAfterOps = applyAgentOpOutcome(espionageAfterOps, assignedAgent.id, {
+        burnRiskDelta: result.burnRiskDelta,
+        statusTransition: result.agentStatusTransition?.newStatus,
+      });
+    }
   }
+
+  // Phase 14 — advance any running multi-turn operations. Completed ops emit
+  // one IntelligenceReport carrying the accreted stage codes.
+  const ongoingTick = tickOngoingOperations(
+    espionageAfterOps,
+    stateAfterActions,
+    (key) => turnRng(state, key),
+    state.turn.turnNumber,
+    updatedDiplomacy.neighbors,
+  );
+  espionageAfterOps = ongoingTick.espionage;
+  generatedReports.push(...ongoingTick.newReports);
 
   // Counter-intelligence grows from funding, stability, and military caste loyalty.
   const counterIntelDelta = calculateCounterIntelligenceGrowth(
@@ -1028,17 +1096,30 @@ export function resolveTurn(
 
   let updatedEspionage = {
     ...applyEspionageUpdate(
-      stateAfterActions.espionage,
+      espionageAfterOps,
       stateAfterActions.policies.intelligenceFundingLevel,
       networkStrengthDeltas,
     ),
     counterIntelligenceLevel: clamp(
-      stateAfterActions.espionage.counterIntelligenceLevel + counterIntelDelta
+      espionageAfterOps.counterIntelligenceLevel + counterIntelDelta
         + conditionModifiers.counterIntelligenceDelta,
       0,
       100,
     ),
   };
+
+  // Phase 14 — tick agent roster (burn decay, status rolls) and mole
+  // detection progress. Both are pure and do not read one another's output.
+  updatedEspionage = tickAgentRoster(
+    updatedEspionage,
+    stateAfterActions,
+    turnRng(state, 'agents:tick'),
+  );
+  updatedEspionage = tickMoleDetection(
+    updatedEspionage,
+    stateAfterActions,
+    turnRng(state, 'moles:tick'),
+  );
 
   // Propagate espionage network strength to military intelligence advantage.
   let updatedMilitary = {
@@ -1075,6 +1156,30 @@ export function resolveTurn(
       return next;
     }),
   };
+
+  // ---- Phase 14: Rival-side mole planting ----
+  // Each capable rival rolls for a rare attempt to place a mole in an empty
+  // player council seat. Keeps agents.ts pure by having rival-sim invoke it.
+  if (state.council) {
+    for (const neighbor of updatedDiplomacy.neighbors) {
+      const moleRng = seededRandom(
+        `${simRunSeed}_mole_${neighbor.id}_t${state.turn.turnNumber}`,
+      );
+      const mole = planMoleFromRival(
+        neighbor.id,
+        neighbor,
+        state.council,
+        state.turn.turnNumber,
+        moleRng,
+      );
+      if (mole) {
+        updatedEspionage = {
+          ...updatedEspionage,
+          moles: [...(updatedEspionage.moles ?? []), mole],
+        };
+      }
+    }
+  }
 
   // ---- Phase 5a-inter: Inter-Rival Relationship Tick (Phase 11) ----
   // Rivals drift toward / away from each other based on shared agenda

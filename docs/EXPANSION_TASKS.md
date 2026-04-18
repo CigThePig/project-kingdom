@@ -942,26 +942,26 @@ Tests, lint, build, playthrough.
 
 ---
 
-## Phase 14 — Intelligence Network Depth
+## Phase 14 — Intelligence Network Depth ✅
 
 > **Geography consumer (Phase 2.5).** Agent `coverLocation` is a
 > `settlementId`. Agents stationed in settlements inside border regions
 > (`deriveBorderRegionFlag`) receive a detection-risk modifier.
 
-### Task 14.1 — Agent types and roster
+### Task 14.1 — Agent types and roster ✅
 
 Per design doc. `Agent.coverLocation?: string` holds a `settlement_*` id;
 resolved via `getSettlementDisplayName(id, state)` for display.
 
-### Task 14.2 — Long-term operations
+### Task 14.2 — Long-term operations ✅
 
 Multi-turn operation state machine.
 
-### Task 14.3 — Mole detection
+### Task 14.3 — Mole detection ✅
 
 Counter-espionage operations that detect rival moles in the player's court.
 
-### Task 14.4 — Phase 14 acceptance
+### Task 14.4 — Phase 14 acceptance ✅
 
 Tests, lint, build, playthrough.
 

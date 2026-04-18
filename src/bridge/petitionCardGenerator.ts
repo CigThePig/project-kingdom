@@ -2,6 +2,7 @@
 // Translates petition-severity ActiveEvents into PetitionCardData[] for the UI.
 
 import type { ActiveEvent, GameState } from '../engine/types';
+import { AgentStatus } from '../engine/types';
 import type { EffectHint, ContextLine, SignalTag } from '../ui/types';
 import type { CardOfFamily } from '../engine/cards/types';
 import { petitionToCard, notificationToCard } from '../engine/cards/adapters';
@@ -13,6 +14,10 @@ import { getNeighborDisplayName } from './nameResolver';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
 import { extractEventContext } from './contextExtractor';
 import { extractChoiceSignals } from './signalExtractor';
+import {
+  BURN_RISK_EXTRACTION_THRESHOLD,
+  MOLE_DETECTION_EXPOSE_THRESHOLD,
+} from '../engine/systems/agents';
 
 // ============================================================
 // Card data type
@@ -194,4 +199,85 @@ export function generateNotificationCardsAsCards(
       ?? FOLLOW_UP_POOL.find((e) => e.id === data.definitionId);
     return notificationToCard(data, def);
   });
+}
+
+// ============================================================
+// Phase 14 — Synthetic petitions (agent extraction + mole exposure)
+// ============================================================
+
+/** Prefix for synthesized agent-extraction petition cardIds. Used by
+ *  applyDirectEffects to identify and route these decisions. */
+export const PHASE14_EXTRACT_PREFIX = 'phase14_extract:';
+/** Prefix for synthesized mole-exposure petition cardIds. */
+export const PHASE14_MOLE_PREFIX = 'phase14_mole:';
+
+/**
+ * Synthesizes petition cards from the current espionage state:
+ *  - One extraction petition per Active agent at or above the burn-risk
+ *    extraction threshold.
+ *  - One exposure petition per unexposed mole at or above the detection
+ *    threshold.
+ *
+ * These live alongside regular event-backed petitions in the allocation
+ * pool and resolve through `applyDirectEffects` (their eventIds carry
+ * dedicated prefixes the pipeline recognises).
+ */
+export function synthesizePhase14Petitions(state: GameState): PetitionCardData[] {
+  const out: PetitionCardData[] = [];
+  const esp = state.espionage;
+  if (!esp) return out;
+
+  // Extraction petitions ------------------------------------------------
+  for (const agent of esp.agents ?? []) {
+    if (agent.status !== AgentStatus.Active) continue;
+    if (agent.burnRisk < BURN_RISK_EXTRACTION_THRESHOLD) continue;
+    const eventId = `${PHASE14_EXTRACT_PREFIX}${agent.id}`;
+    out.push({
+      eventId,
+      definitionId: 'phase14_extract',
+      title: `Agent ${agent.codename} Burnt`,
+      body: `${agent.codename}'s cover is fraying. Pull them home now — or hold, and hope they weather the next month.`,
+      grantChoiceId: 'extract',
+      denyChoiceId: 'hold',
+      grantEffects: [],
+      denyEffects: [],
+      grantSignals: [],
+      denySignals: [],
+      allChoices: [
+        { choiceId: 'extract', title: 'Extract now', effects: [], signals: [] },
+        { choiceId: 'hold', title: 'Hold position', effects: [], signals: [] },
+      ],
+    });
+  }
+
+  // Mole-exposure petitions --------------------------------------------
+  for (const mole of esp.moles ?? []) {
+    if (mole.isExposed) continue;
+    if (mole.detectionProgress < MOLE_DETECTION_EXPOSE_THRESHOLD) continue;
+    const planterName = getNeighborDisplayName(mole.plantedByNeighborId, state);
+    const eventId = `${PHASE14_MOLE_PREFIX}${mole.id}`;
+    out.push({
+      eventId,
+      definitionId: 'phase14_mole',
+      title: 'A Mole in the Council',
+      body: `Counter-intelligence has identified an agent in the council chamber, working for ${planterName}. Expose them — or feed them false intel?`,
+      grantChoiceId: 'expose',
+      denyChoiceId: 'feed_false_intel',
+      grantEffects: [],
+      denyEffects: [],
+      grantSignals: [],
+      denySignals: [],
+      allChoices: [
+        { choiceId: 'expose', title: 'Expose the mole', effects: [], signals: [] },
+        {
+          choiceId: 'feed_false_intel',
+          title: 'Feed false intelligence',
+          effects: [],
+          signals: [],
+        },
+      ],
+    });
+  }
+
+  return out;
 }

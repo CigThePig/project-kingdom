@@ -3,6 +3,8 @@
 // No React imports. No player-facing text.
 
 import {
+  Agent,
+  AgentStatus,
   EspionageState,
   IntelligenceFundingLevel,
   IntelligenceOperationType,
@@ -10,6 +12,11 @@ import {
   RivalCrisisType,
   RivalKingdomState,
 } from '../types';
+import {
+  BURN_RISK_ON_EXPOSED_FAILURE,
+  BURN_RISK_ON_FAILURE,
+  BURN_RISK_ON_SUCCESS,
+} from './agents';
 import {
   ESPIONAGE_BASE_SUCCESS_BY_OP_TYPE,
   ESPIONAGE_NETWORK_GROWTH_BY_FUNDING,
@@ -32,6 +39,12 @@ export interface OperationResult {
   networkStrengthDelta: number;      // negative when agents are exposed
   diplomaticIncidentTriggered: boolean; // true only on Sabotage failures
   falseIntelligenceInjected: boolean;   // true when a planted false report is returned
+  /** Phase 14 — burn-risk delta to apply to the assigned agent. Zero when
+   *  no named agent was supplied (synthetic auto-agent fallback). */
+  burnRiskDelta: number;
+  /** Phase 14 — agent-id + transition when the resolver forces the agent
+   *  into a new lifecycle state (e.g. exposure → Compromised). */
+  agentStatusTransition: { agentId: string; newStatus: AgentStatus } | null;
 }
 
 // ============================================================
@@ -123,11 +136,19 @@ export function resolveOperation(
   turnNumber: number,
   randomSeed: number,
   targetRivalSimulation?: RivalKingdomState,
+  agent?: Agent | null,
 ): OperationResult {
-  const successProbability = calculateOperationSuccessProbability(
+  const baseProbability = calculateOperationSuccessProbability(
     networkStrength,
     operationType,
     targetEspionageCapability,
+  );
+  // Phase 14 — reliability biases success probability. Clamped to the same
+  // [0.1, 0.9] envelope so no agent can guarantee outcomes.
+  const reliabilityBonus = agent ? (agent.reliability - 50) / 250 : 0;
+  const successProbability = Math.min(
+    0.9,
+    Math.max(0.1, baseProbability + reliabilityBonus),
   );
 
   const success = randomSeed < successProbability;
@@ -142,12 +163,24 @@ export function resolveOperation(
     const diplomaticIncident =
       operationType === IntelligenceOperationType.Sabotage && agentsExposed;
 
+    const burnRiskDelta = agent
+      ? agentsExposed
+        ? BURN_RISK_ON_EXPOSED_FAILURE
+        : BURN_RISK_ON_FAILURE
+      : 0;
+    const agentStatusTransition =
+      agent && agentsExposed
+        ? { agentId: agent.id, newStatus: AgentStatus.Compromised }
+        : null;
+
     return {
       success: false,
       report: null,
       networkStrengthDelta: networkDelta,
       diplomaticIncidentTriggered: diplomaticIncident,
       falseIntelligenceInjected: false,
+      burnRiskDelta,
+      agentStatusTransition,
     };
   }
 
@@ -187,6 +220,8 @@ export function resolveOperation(
     networkStrengthDelta: 0,
     diplomaticIncidentTriggered: false,
     falseIntelligenceInjected: isFalseIntelligence,
+    burnRiskDelta: agent ? BURN_RISK_ON_SUCCESS : 0,
+    agentStatusTransition: null,
   };
 }
 

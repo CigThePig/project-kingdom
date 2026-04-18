@@ -691,6 +691,86 @@ export interface ConflictResolutionOutcome {
 export interface EspionageState {
   networkStrength: number; // 0–100
   counterIntelligenceLevel: number; // 0–100
+  // Phase 14 — Intelligence Network Depth. All fields optional for save
+  // compatibility (v7 → v8). Back-filled as empty arrays / cap=6 in LOAD_SAVE.
+  agents?: Agent[];
+  ongoingOperations?: OngoingOperation[];
+  moles?: Mole[];
+  agentRosterCap?: number;
+  // Phase 14 — accumulated policy-drift nudge from undetected moles. Consumed
+  // by the policy-drift path each turn so the mole tick stays a pure writer
+  // of intent, not a mutator of PolicyState.
+  pendingMolePolicyDrift?: number;
+}
+
+// ============================================================
+// Phase 14 — Intelligence Network Depth
+// ============================================================
+//
+// Named agents, multi-turn ongoing operations, and rival moles. See
+// docs/CROWN_AND_COUNCIL_EXPANSION.md §Phase 14.
+
+export enum AgentSpecialization {
+  Diplomatic = 'Diplomatic',
+  Military = 'Military',
+  Economic = 'Economic',
+  Counter = 'Counter',
+  Court = 'Court',
+}
+
+export enum AgentStatus {
+  Active = 'Active',
+  Compromised = 'Compromised',
+  Dead = 'Dead',
+}
+
+export interface Agent {
+  /** Stable internal id (design rule 1). Never changes post-creation. */
+  id: string;
+  /** Procgen codename via generateAgentCodename(seed). Display-only. */
+  codename: string;
+  specialization: AgentSpecialization;
+  /** Phase 2.5 settlement_* id. Agents covered in border-region settlements
+   *  take an extra detection risk (BORDER_DETECTION_MULTIPLIER). */
+  coverSettlementId: string;
+  /** 0–100. Biases operation success probability. */
+  reliability: number;
+  /** 0–100. Rises on ops, decays when idle. Above
+   *  BURN_RISK_EXTRACTION_THRESHOLD triggers an extraction petition. */
+  burnRisk: number;
+  status: AgentStatus;
+  recruitedTurn: number;
+}
+
+export type OngoingOperationStatus = 'running' | 'completed' | 'aborted';
+
+export interface OngoingOperation {
+  id: string;
+  operationType: IntelligenceOperationType;
+  targetId: string; // neighbor_* or 'domestic'
+  agentId: string | null;
+  /** 0 on start. Increments every turn; emits a report when turnsElapsed
+   *  reaches turnsTotal. */
+  turnsElapsed: number;
+  turnsTotal: number;
+  /** Finding codes accreted one-per-stage (leak → rumor → named_actor →
+   *  decision) plus any rival-simulation codes on the final stage. */
+  findings: string[];
+  status: OngoingOperationStatus;
+  startedTurn: number;
+}
+
+export interface Mole {
+  id: string;
+  plantedByNeighborId: string;
+  seat: CouncilSeat;
+  /** 0–100. Grows each turn by counter-intel level minus planter capability.
+   *  Crosses MOLE_DETECTION_EXPOSE_THRESHOLD → triggers detection petition. */
+  detectionProgress: number;
+  turnsActive: number;
+  policyDriftIntensity: number;
+  isExposed: boolean;
+  plantedTurn: number;
 }
 
 // --- Knowledge ---

@@ -16,6 +16,8 @@ import {
   type SaveFile,
   type TurnHistoryEntry,
   type CouncilSeat,
+  AgentSpecialization,
+  AgentStatus,
 } from '../engine/types';
 import { createInitialRivalState } from '../engine/systems/rival-simulation';
 import { selectInitialAgenda } from '../engine/systems/rival-agendas';
@@ -35,6 +37,11 @@ import {
   abandonInitiative,
   getInitiativeDefinition,
 } from '../engine/systems/initiatives';
+import {
+  createAgent,
+  addAgentToRoster,
+  DEFAULT_AGENT_ROSTER_CAP,
+} from '../engine/systems/agents';
 import { applyMechanicalEffectDelta } from '../engine/events/apply-event-effects';
 import { seededRandom } from '../data/text/name-generation';
 import type { ChronicleEntry, MonthDecision } from '../ui/types';
@@ -91,7 +98,12 @@ export type GameAction =
   | { type: 'DISMISS_ADVISOR'; seat: CouncilSeat }
   | { type: 'SET_REGIONAL_POSTURE'; regionId: string; posture: RegionalPosture }
   | { type: 'COMMIT_INITIATIVE'; definitionId: string }
-  | { type: 'ABANDON_INITIATIVE' };
+  | { type: 'ABANDON_INITIATIVE' }
+  | {
+      type: 'RECRUIT_AGENT_FROM_OPPORTUNITY';
+      specialization: AgentSpecialization;
+      coverSettlementId: string;
+    };
 
 // ============================================================
 // Context Value
@@ -221,6 +233,17 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
                 ),
             }),
           ),
+        },
+        // Phase 14 — v7→v8. Back-fill agent roster, ongoing ops, moles, and
+        // roster cap so turn resolution can assume these fields exist.
+        espionage: {
+          ...save.gameState.espionage,
+          agents: save.gameState.espionage?.agents ?? [],
+          ongoingOperations: save.gameState.espionage?.ongoingOperations ?? [],
+          moles: save.gameState.espionage?.moles ?? [],
+          agentRosterCap:
+            save.gameState.espionage?.agentRosterCap ?? DEFAULT_AGENT_ROSTER_CAP,
+          pendingMolePolicyDrift: save.gameState.espionage?.pendingMolePolicyDrift ?? 0,
         },
       };
 
@@ -474,6 +497,30 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         null,
       );
       return { ...state, gameState: stateWithPenalty };
+    }
+
+    case 'RECRUIT_AGENT_FROM_OPPORTUNITY': {
+      const esp = state.gameState.espionage;
+      if (!esp) return state;
+      const cap = esp.agentRosterCap ?? DEFAULT_AGENT_ROSTER_CAP;
+      const active = (esp.agents ?? []).filter((a) => a.status === AgentStatus.Active).length;
+      if (active >= cap) return state;
+      const agents = esp.agents ?? [];
+      const agent = createAgent({
+        runSeed: state.gameState.runSeed ?? 'default',
+        turn: state.gameState.turn.turnNumber,
+        index: agents.length,
+        specialization: action.specialization,
+        coverSettlementId: action.coverSettlementId,
+      });
+      const nextEsp = addAgentToRoster(
+        { ...esp, agents, agentRosterCap: cap },
+        agent,
+      );
+      return {
+        ...state,
+        gameState: { ...state.gameState, espionage: nextEsp },
+      };
     }
 
     default:
