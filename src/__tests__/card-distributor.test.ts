@@ -1,10 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { distributeCardsToMonths } from '../bridge/cardDistributor';
-import { InteractionType } from '../engine/types';
+import { InteractionType, RegionalPosture } from '../engine/types';
+import type { GameState, RegionState } from '../engine/types';
 import type { CrisisPhaseData } from '../bridge/crisisCardGenerator';
 import type { PetitionCardData, NotificationCardData } from '../bridge/petitionCardGenerator';
 import type { AssessmentPhaseData } from '../bridge/assessmentCardGenerator';
 import type { NegotiationCard } from '../ui/types';
+import { createDefaultScenario } from '../data/scenarios/default';
 
 function makeCrisis(id: string): CrisisPhaseData {
   return {
@@ -197,5 +199,86 @@ describe('distributeCardsToMonths', () => {
     const totalNotifs = [result.month1, result.month2, result.month3]
       .reduce((sum, m) => sum + m.notificationCards.length, 0);
     expect(totalNotifs).toBe(1);
+  });
+});
+
+// ============================================================
+// Phase 9 — Court Opportunity: set_posture
+// ============================================================
+
+// Deterministic RNG that always selects the last entry in the
+// court-opportunity pool (the `set_posture` entry lives at the end).
+function makeTailRng(): () => number {
+  return () => 0.999;
+}
+
+function setStaleOnAllRegions(state: GameState, currentTurn: number): GameState {
+  const regions: RegionState[] = state.regions.map((r) => ({
+    ...r,
+    posture: RegionalPosture.Autonomy,
+    postureSetOnTurn: 0,
+  }));
+  return { ...state, regions, turn: { ...state.turn, turnNumber: currentTurn } };
+}
+
+describe('distributeCardsToMonths — set_posture opportunity (Phase 9)', () => {
+  it('surfaces a set_posture offer when a stale region is available', () => {
+    const state = setStaleOnAllRegions(createDefaultScenario(), 12);
+    const result = distributeCardsToMonths(
+      null, [], null, null, [], [], [],
+      makeTailRng(),
+      { runSeed: state.runSeed ?? 'seed', turnNumber: state.turn.turnNumber },
+      { state, regions: state.regions, currentTurn: state.turn.turnNumber },
+    );
+
+    const opp =
+      result.month1.courtOpportunity ??
+      result.month2.courtOpportunity ??
+      result.month3.courtOpportunity;
+    expect(opp).not.toBeNull();
+    expect(opp?.kind).toBe('set_posture');
+    if (opp?.kind === 'set_posture') {
+      expect(opp.regionId.length).toBeGreaterThan(0);
+      expect(opp.regionDisplayName.length).toBeGreaterThan(0);
+      expect(opp.body).toContain(opp.regionDisplayName);
+      expect(opp.body).not.toContain('{region}');
+      expect(opp.suggestedPostureLabel.length).toBeGreaterThan(0);
+      expect(opp.suggestedPostureEffect.length).toBeGreaterThan(5);
+    }
+  });
+
+  it('returns no offer when no regions are stale', () => {
+    const state = createDefaultScenario();
+    // Mark all regions fresh (posture set *this* turn).
+    const fresh: GameState = {
+      ...state,
+      regions: state.regions.map((r) => ({
+        ...r,
+        posture: RegionalPosture.Autonomy,
+        postureSetOnTurn: state.turn.turnNumber,
+      })),
+    };
+    const result = distributeCardsToMonths(
+      null, [], null, null, [], [], [],
+      makeTailRng(),
+      { runSeed: fresh.runSeed ?? 'seed', turnNumber: fresh.turn.turnNumber },
+      { state: fresh, regions: fresh.regions, currentTurn: fresh.turn.turnNumber },
+    );
+
+    for (const m of [result.month1, result.month2, result.month3]) {
+      expect(m.courtOpportunity?.kind === 'set_posture').toBe(false);
+    }
+  });
+
+  it('does not emit set_posture when postureContext is omitted', () => {
+    const result = distributeCardsToMonths(
+      null, [], null, null, [], [], [],
+      makeTailRng(),
+      { runSeed: 'seed', turnNumber: 1 },
+      // no postureContext — the handler must early-return null
+    );
+    for (const m of [result.month1, result.month2, result.month3]) {
+      expect(m.courtOpportunity?.kind === 'set_posture').toBe(false);
+    }
   });
 });

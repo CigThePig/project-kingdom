@@ -2,7 +2,41 @@
 // 6 domains × 5 tiers × 3 variants each.
 // Tone: steward's report written for a monarch.
 
-import { QualitativeTier } from '../../engine/types';
+import { QualitativeTier, RegionalPosture } from '../../engine/types';
+
+/** Phase 9 — one-sentence posture-flavor fragments rendered on each Codex
+ *  region card. Not randomized: keyed solely by posture so the Codex reads
+ *  stably across re-openings. */
+export const POSTURE_NARRATIVE: Record<RegionalPosture, string> = {
+  [RegionalPosture.Develop]:
+    'Stewards push roads, walls, and granaries forward. Tax coin is thin, but the region grows beneath their care.',
+  [RegionalPosture.Extract]:
+    'The crown\u2019s collectors work the region hard. Yields are up; patience is down.',
+  [RegionalPosture.Garrison]:
+    'Wardens and masons hold the walls in strict repair. Merchants find the gates less welcoming than before.',
+  [RegionalPosture.Pacify]:
+    'Local magistrates walk the roads with patient hands. Grievances are heard, and the bandit fires grow fewer.',
+  [RegionalPosture.Autonomy]:
+    'The region runs itself. Its councils ask little of the crown and give little back.',
+};
+
+/** Loyalty-tier micro-narrative, spoken as a one-line field report. */
+export const REGION_LOYALTY_NARRATIVE: Record<QualitativeTier, string> = {
+  [QualitativeTier.Dire]: 'The commons openly curse the crown\u2019s name.',
+  [QualitativeTier.Troubled]: 'Resentment runs thick through the village wells.',
+  [QualitativeTier.Stable]: 'The people pay their dues without complaint — or celebration.',
+  [QualitativeTier.Prosperous]: 'The region speaks well of its sovereign.',
+  [QualitativeTier.Flourishing]: 'The region greets the crown\u2019s banners with open doors and shared tables.',
+};
+
+/** Development-tier micro-narrative for the Codex region card. */
+export const REGION_DEVELOPMENT_NARRATIVE: Record<QualitativeTier, string> = {
+  [QualitativeTier.Dire]: 'Roads are mud, walls are rubble, granaries stand empty.',
+  [QualitativeTier.Troubled]: 'The works are patchy; travel is slow and storage thin.',
+  [QualitativeTier.Stable]: 'Basic works stand — serviceable if not impressive.',
+  [QualitativeTier.Prosperous]: 'Roads, walls, and stores are well-kept and growing.',
+  [QualitativeTier.Flourishing]: 'The region\u2019s works are the envy of its neighbors.',
+};
 
 export const CODEX_NARRATIVES: Record<string, Record<QualitativeTier, [string, string, string]>> = {
   // ============================================================

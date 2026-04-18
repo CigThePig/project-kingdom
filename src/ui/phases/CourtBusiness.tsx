@@ -552,14 +552,22 @@ export function CourtBusiness({
 
     // Opportunity stage — Accept/Decline a Court Opportunity on quiet months
     if (renderStage === 'opportunity' && courtOpportunity) {
-      const isAdvisor = courtOpportunity.kind === 'advisor_candidate';
-      const badgeLabel = isAdvisor
-        ? `Advisor Candidate — ${courtOpportunity.seat}`
-        : `Hand Card — Expires in ${courtOpportunity.expiresAfterTurns} turns`;
-      const previewTitle = isAdvisor
-        ? `${courtOpportunity.advisorName} — ${courtOpportunity.personality}`
-        : courtOpportunity.handCardTitle;
-      const previewBody = isAdvisor ? courtOpportunity.background : courtOpportunity.handCardBody;
+      let badgeLabel: string;
+      let previewTitle: string;
+      let previewBody: string;
+      if (courtOpportunity.kind === 'advisor_candidate') {
+        badgeLabel = `Advisor Candidate — ${courtOpportunity.seat}`;
+        previewTitle = `${courtOpportunity.advisorName} — ${courtOpportunity.personality}`;
+        previewBody = courtOpportunity.background;
+      } else if (courtOpportunity.kind === 'set_posture') {
+        badgeLabel = `${courtOpportunity.regionDisplayName} — ${courtOpportunity.currentPostureLabel} → ${courtOpportunity.suggestedPostureLabel}`;
+        previewTitle = `Set Posture: ${courtOpportunity.suggestedPostureLabel}`;
+        previewBody = courtOpportunity.suggestedPostureEffect;
+      } else {
+        badgeLabel = `Hand Card — Expires in ${courtOpportunity.expiresAfterTurns} turns`;
+        previewTitle = courtOpportunity.handCardTitle;
+        previewBody = courtOpportunity.handCardBody;
+      }
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ animation: 'slideUp 400ms ease both' }}>

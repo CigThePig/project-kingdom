@@ -12,7 +12,7 @@ import {
   RESOURCE_STARTING_STOCKPILES,
   SATISFACTION_STARTING,
 } from '../../engine/constants';
-import type { GameState } from '../../engine/types';
+import type { GameState, RegionState } from '../../engine/types';
 import { generateNeighborNames, generateRunSeed } from '../text/name-generation';
 import { createInitialRivalState } from '../../engine/systems/rival-simulation';
 import { seedRivalAgendas } from '../../engine/systems/rival-agendas';
@@ -36,6 +36,7 @@ import {
   NeighborDisposition,
   PopulationClass,
   RationingLevel,
+  RegionalPosture,
   ReligiousTolerance,
   ResourceType,
   Season,
@@ -78,7 +79,7 @@ export function createFrozenMarchScenario(): GameState {
     },
   };
 
-  const regions: GameState['regions'] = [
+  const regions: GameState['regions'] = ([
     {
       id: 'region_heartlands',
       primaryEconomicOutput: 'Food',
@@ -134,7 +135,11 @@ export function createFrozenMarchScenario(): GameState {
       borderRegion: true,
       terrainType: TerrainType.Forest,
     },
-  ];
+  ] as RegionState[]).map((r): RegionState => ({
+    ...r,
+    posture: RegionalPosture.Autonomy,
+    postureSetOnTurn: 0,
+  }));
 
   const baseState: GameState = {
     // --- Time ---

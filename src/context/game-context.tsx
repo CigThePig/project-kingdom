@@ -12,6 +12,7 @@ import {
   NeighborDisposition,
   type NeighborState,
   type QueuedAction,
+  RegionalPosture,
   type SaveFile,
   type TurnHistoryEntry,
   type CouncilSeat,
@@ -81,7 +82,8 @@ export type GameAction =
   | { type: 'UPDATE_GAME_STATE'; updater: (state: GameState) => GameState }
   | { type: 'DECREES_OFFERED'; decreeIds: string[] }
   | { type: 'APPOINT_CANDIDATE_FROM_OPPORTUNITY'; templateId: string }
-  | { type: 'DISMISS_ADVISOR'; seat: CouncilSeat };
+  | { type: 'DISMISS_ADVISOR'; seat: CouncilSeat }
+  | { type: 'SET_REGIONAL_POSTURE'; regionId: string; posture: RegionalPosture };
 
 // ============================================================
 // Context Value
@@ -169,6 +171,14 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         pendingComboKeysThisTurn: save.gameState.pendingComboKeysThisTurn ?? [],
         // Phase 8 — pre-Phase-8 saves have no council; start with empty seats.
         council: save.gameState.council ?? createCouncilState(),
+        // Phase 9 — pre-Phase-9 saves have no regional posture; default every
+        // region to Autonomy with postureSetOnTurn = 0 so stale detection fires
+        // on the very first quiet month after load.
+        regions: (save.gameState.regions ?? []).map((r) => ({
+          ...r,
+          posture: r.posture ?? RegionalPosture.Autonomy,
+          postureSetOnTurn: r.postureSetOnTurn ?? 0,
+        })),
         activeEvents: (save.gameState.activeEvents ?? []).map((e: ActiveEvent) => ({
           ...e,
           outcomeQuality: e.outcomeQuality ?? null,
@@ -391,6 +401,20 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
         null,
       );
       return { ...state, gameState: nextGameState };
+    }
+
+    case 'SET_REGIONAL_POSTURE': {
+      const { regionId, posture } = action;
+      const currentTurn = state.gameState.turn.turnNumber;
+      const regions = state.gameState.regions.map((r) =>
+        r.id === regionId
+          ? { ...r, posture, postureSetOnTurn: currentTurn }
+          : r,
+      );
+      return {
+        ...state,
+        gameState: { ...state.gameState, regions },
+      };
     }
 
     default:

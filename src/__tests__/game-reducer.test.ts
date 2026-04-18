@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { gameReducer, createInitialState, createScenarioState } from '../context/game-context';
-import { FailureCondition, type GameState, type SaveFile } from '../engine/types';
+import { FailureCondition, RegionalPosture, type GameState, type SaveFile } from '../engine/types';
 import type { TurnResolutionResult } from '../engine/resolution/turn-resolution';
 
 describe('gameReducer', () => {
@@ -234,5 +234,105 @@ describe('LOAD_SAVE agenda + memory migration (Phase 3)', () => {
         initial.diplomacy.neighbors[i].agenda,
       );
     }
+  });
+});
+
+// ============================================================
+// Phase 9 — Regional posture: reducer action + save migration
+// ============================================================
+
+describe('SET_REGIONAL_POSTURE (Phase 9)', () => {
+  it('sets posture and stamps postureSetOnTurn with the current turn', () => {
+    const initial = createInitialState('new_crown');
+    const target = initial.gameState.regions[0];
+    const withTurn: typeof initial = {
+      ...initial,
+      gameState: { ...initial.gameState, turn: { ...initial.gameState.turn, turnNumber: 7 } },
+    };
+    const result = gameReducer(withTurn, {
+      type: 'SET_REGIONAL_POSTURE',
+      regionId: target.id,
+      posture: RegionalPosture.Garrison,
+    });
+    const next = result.gameState.regions.find((r) => r.id === target.id)!;
+    expect(next.posture).toBe(RegionalPosture.Garrison);
+    expect(next.postureSetOnTurn).toBe(7);
+  });
+
+  it('leaves other regions untouched', () => {
+    const initial = createInitialState('new_crown');
+    const target = initial.gameState.regions[0];
+    const result = gameReducer(initial, {
+      type: 'SET_REGIONAL_POSTURE',
+      regionId: target.id,
+      posture: RegionalPosture.Extract,
+    });
+    for (const r of result.gameState.regions) {
+      if (r.id === target.id) continue;
+      const before = initial.gameState.regions.find((rr) => rr.id === r.id)!;
+      expect(r.posture).toBe(before.posture);
+      expect(r.postureSetOnTurn).toBe(before.postureSetOnTurn);
+    }
+  });
+});
+
+describe('LOAD_SAVE regional-posture migration (Phase 9)', () => {
+  function makePrePhase9Save(scenarioId: string): SaveFile {
+    const fresh = createScenarioState(scenarioId);
+    // Strip posture fields from every region to emulate a pre-Phase-9 save.
+    const legacy: GameState = {
+      ...fresh,
+      regions: fresh.regions.map((r) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { posture: _p, postureSetOnTurn: _pt, ...rest } = r;
+        return rest;
+      }),
+    };
+    return {
+      version: 3,
+      scenarioId,
+      savedAt: Date.now(),
+      isMidTurn: false,
+      gameState: legacy,
+      turnHistory: [],
+      eventHistory: [],
+      intelligenceReports: [],
+    };
+  }
+
+  it('back-fills Autonomy on every region from a pre-Phase-9 save', () => {
+    const save = makePrePhase9Save('new_crown');
+    const initial = createInitialState();
+    const result = gameReducer(initial, { type: 'LOAD_SAVE', save });
+    for (const r of result.gameState.regions) {
+      expect(r.posture).toBe(RegionalPosture.Autonomy);
+      expect(r.postureSetOnTurn).toBe(0);
+    }
+  });
+
+  it('preserves non-Autonomy postures on a post-Phase-9 save round-trip', () => {
+    const initial = createScenarioState('new_crown');
+    const mutated: GameState = {
+      ...initial,
+      regions: initial.regions.map((r, i) =>
+        i === 0
+          ? { ...r, posture: RegionalPosture.Pacify, postureSetOnTurn: 4 }
+          : r,
+      ),
+    };
+    const save: SaveFile = {
+      version: 3,
+      scenarioId: 'new_crown',
+      savedAt: Date.now(),
+      isMidTurn: false,
+      gameState: mutated,
+      turnHistory: [],
+      eventHistory: [],
+      intelligenceReports: [],
+    };
+    const loaded = gameReducer(createInitialState(), { type: 'LOAD_SAVE', save });
+    const first = loaded.gameState.regions.find((r) => r.id === mutated.regions[0].id)!;
+    expect(first.posture).toBe(RegionalPosture.Pacify);
+    expect(first.postureSetOnTurn).toBe(4);
   });
 });

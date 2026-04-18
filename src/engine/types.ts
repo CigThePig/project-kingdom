@@ -627,6 +627,21 @@ export interface RegionState {
   // Phase 2.5 — Procedural display name (seeded from runSeed + id).
   // Populated by applyProceduralRegionNames() during scenario setup or save migration.
   displayName?: string;
+
+  // Phase 9 — Regional governance posture.
+  // Optional for save-file backward compatibility; LOAD_SAVE migration defaults
+  // missing values to RegionalPosture.Autonomy.
+  posture?: RegionalPosture;
+  postureSetOnTurn?: number;
+}
+
+// --- Regional posture (Phase 9) ---
+export enum RegionalPosture {
+  Develop = 'Develop',
+  Extract = 'Extract',
+  Garrison = 'Garrison',
+  Pacify = 'Pacify',
+  Autonomy = 'Autonomy',
 }
 
 // --- Geography (Phase 2.5) ---

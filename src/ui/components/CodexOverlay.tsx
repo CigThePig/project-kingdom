@@ -4,9 +4,17 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 
-import type { CodexDomain, RivalDossier, ActiveSituation, ChronicleEntry, CodexSection } from '../types';
-import type { CouncilState, CouncilSeat } from '../../engine/types';
+import type {
+  CodexDomain,
+  RivalDossier,
+  ActiveSituation,
+  ChronicleEntry,
+  CodexSection,
+  RegionSummary,
+} from '../types';
+import type { CouncilState, CouncilSeat, RegionalPosture } from '../../engine/types';
 import { KingdomStateCards } from './codex/KingdomStateCards';
+import { RegionCards } from './codex/RegionCards';
 import { RivalDossierCards } from './codex/RivalDossierCards';
 import { ActiveSituationsCards } from './codex/ActiveSituationsCards';
 import { ReignChronicleCards } from './codex/ReignChronicleCards';
@@ -26,6 +34,7 @@ interface TabDef {
 
 const TABS: TabDef[] = [
   { id: 'kingdom', label: 'Kingdom', color: 'var(--color-warning)' },
+  { id: 'regions', label: 'Regions', color: 'var(--color-warning)' },
   { id: 'rivals', label: 'Rivals', color: 'var(--color-accent-advisor)' },
   { id: 'situations', label: 'Situations', color: 'var(--color-negative)' },
   { id: 'council', label: 'Council', color: 'var(--color-accent-advisor)' },
@@ -50,6 +59,10 @@ interface CodexOverlayProps {
   council?: CouncilState;
   /** Phase 8 — dismiss an appointed advisor (with patron-class penalty). */
   onDismissAdvisor?: (seat: CouncilSeat) => void;
+  /** Phase 9 — compiled region summaries for the Regions tab. */
+  regions?: RegionSummary[];
+  /** Phase 9 — apply a posture change from the inline Codex picker. */
+  onSetRegionalPosture?: (regionId: string, posture: RegionalPosture) => void;
   initialSection?: CodexSection;
 }
 
@@ -63,6 +76,8 @@ export function CodexOverlay({
   discoveredCombos,
   council,
   onDismissAdvisor,
+  regions,
+  onSetRegionalPosture,
   initialSection,
 }: CodexOverlayProps) {
   const [activeTab, setActiveTab] = useState<CodexSection>(initialSection ?? 'kingdom');
@@ -291,6 +306,9 @@ export function CodexOverlay({
         }}
       >
         {activeTab === 'kingdom' && <KingdomStateCards domains={kingdomState} />}
+        {activeTab === 'regions' && (
+          <RegionCards regions={regions ?? []} onSetPosture={onSetRegionalPosture} />
+        )}
         {activeTab === 'rivals' && <RivalDossierCards rivals={rivals} />}
         {activeTab === 'situations' && <ActiveSituationsCards situations={situations} />}
         {activeTab === 'council' && (

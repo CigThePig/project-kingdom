@@ -44,6 +44,12 @@ import {
   REGION_TERRAIN_FOOD_MODIFIER,
   REGION_TERRAIN_TRADE_MODIFIER,
 } from '../constants';
+import {
+  getPostureBanditryEmergenceMultiplier,
+  getPostureInfraDecayMultiplier,
+  getPostureOutputMultiplier,
+  getPostureTaxMultiplier,
+} from './regional-posture';
 
 // ============================================================
 // Helpers
@@ -109,11 +115,12 @@ export function createInitialRegionalState(
  */
 export function tickRegionalInfrastructure(
   infra: RegionalInfrastructure,
+  decayMultiplier = 1.0,
 ): RegionalInfrastructure {
   const decay = (current: number): number => {
     // Lower infrastructure decays slightly faster (neglect compounds)
-    const rate = current < 30 ? REGION_INFRA_DECAY_MAX : REGION_INFRA_DECAY_BASE;
-    return clamp(current - rate, REGION_INFRA_MIN, REGION_INFRA_MAX);
+    const baseRate = current < 30 ? REGION_INFRA_DECAY_MAX : REGION_INFRA_DECAY_BASE;
+    return clamp(current - baseRate * decayMultiplier, REGION_INFRA_MIN, REGION_INFRA_MAX);
   };
 
   return {
@@ -179,8 +186,12 @@ export function calculateRegionalEconomy(
   // Terrain modifiers
   if (region.primaryEconomicOutput === 'Food') {
     productionOutput *= REGION_TERRAIN_FOOD_MODIFIER[terrain];
+    productionOutput *= getPostureOutputMultiplier(region.posture, 'Food');
   } else if (region.primaryEconomicOutput === 'Trade') {
     productionOutput *= REGION_TERRAIN_TRADE_MODIFIER[terrain];
+    productionOutput *= getPostureOutputMultiplier(region.posture, 'Trade');
+  } else {
+    productionOutput *= getPostureOutputMultiplier(region.posture, 'Resource');
   }
 
   // Local trade activity: influenced by roads, economic phase, terrain
@@ -198,6 +209,8 @@ export function calculateRegionalEconomy(
   if (loyalty < REGION_LOYALTY_REDUCED_TAX_THRESHOLD) {
     taxContribution *= REGION_LOYALTY_REDUCED_TAX_MULTIPLIER;
   }
+  // Posture tax modifier (Develop reinvests at the crown's expense).
+  taxContribution *= getPostureTaxMultiplier(region.posture);
 
   return {
     productionOutput,
@@ -265,8 +278,11 @@ export function resolveRegionalTick(
     // Occupied regions don't tick: a foreign power runs them.
     if (region.isOccupied) return region;
 
-    // 1. Infrastructure decay
-    const newInfra = tickRegionalInfrastructure(region.infrastructure!);
+    // 1. Infrastructure decay (posture may accelerate it)
+    const newInfra = tickRegionalInfrastructure(
+      region.infrastructure!,
+      getPostureInfraDecayMultiplier(region.posture),
+    );
 
     // 2. Loyalty drift
     const hasConstructionHere = constructionProjects.some(
@@ -318,7 +334,11 @@ export function resolveRegionalTick(
     const newEconomy = calculateRegionalEconomy(tempRegion, economicPhase);
 
     // 6. Check for banditry emergence from low loyalty + low infrastructure
-    if (newLoyalty < 30 && newInfra.walls < 15
+    // Posture can suppress the emergence threshold (Pacify halves it).
+    const banditryEmergenceMult = getPostureBanditryEmergenceMultiplier(region.posture);
+    const banditryLoyaltyThreshold = 30 * banditryEmergenceMult;
+    const banditryWallsThreshold = 15 * banditryEmergenceMult;
+    if (newLoyalty < banditryLoyaltyThreshold && newInfra.walls < banditryWallsThreshold
       && !stillActive.some((c) => c.type === ConditionType.Banditry)) {
       const banditryCondition: KingdomCondition = {
         id: `cond_regional_banditry_${region.id}_t${turnNumber}`,

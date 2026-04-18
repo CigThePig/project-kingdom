@@ -29,6 +29,16 @@ export type CourtOpportunityDefinition =
        *  instantiated with a procgen name at accept time. */
       candidateTemplateId: string;
       weight: number;
+    }
+  | {
+      /** Phase 9 — a "Set Posture" opportunity that resolves a stale region
+       *  at build time and suggests a specific new posture. */
+      kind: 'set_posture';
+      id: string;
+      /** Template title/body — `{region}` is substituted at build time. */
+      title: string;
+      body: string;
+      weight: number;
     };
 
 export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
@@ -251,6 +261,14 @@ export const COURT_OPPORTUNITIES: CourtOpportunityDefinition[] = [
     body: 'A cryptographer who reads three languages the court does not seeks the spymaster\'s seat.',
     candidateTemplateId: 'cand_spymaster_scholar_cryptographer',
     weight: 1,
+  },
+  // Phase 9 — weighted at 2 so postures surface on roughly 1 in N quiet months.
+  {
+    kind: 'set_posture',
+    id: 'opp_set_posture',
+    title: 'A Quiet Question of Governance',
+    body: '{region} has been left to its own devices. Your stewards propose a firmer hand.',
+    weight: 2,
   },
 ];
 

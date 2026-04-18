@@ -2,12 +2,23 @@
 // Reads GameState and produces qualitative tier assessments for each domain.
 // Pure function: state in, CodexDomain[] out.
 
-import { QualitativeTier } from '../engine/types';
-import type { GameState, NarrativePressure, TreasuryExpenseBreakdown } from '../engine/types';
-import type { CodexDomain } from '../ui/types';
-import { CODEX_NARRATIVES } from '../data/text/codex-narratives';
+import { QualitativeTier, RegionalPosture } from '../engine/types';
+import type { GameState, NarrativePressure, RegionState, TreasuryExpenseBreakdown } from '../engine/types';
+import type { CodexDomain, RegionSummary } from '../ui/types';
+import {
+  CODEX_NARRATIVES,
+  POSTURE_NARRATIVE,
+  REGION_DEVELOPMENT_NARRATIVE,
+  REGION_LOYALTY_NARRATIVE,
+} from '../data/text/codex-narratives';
 import { getDominantAxis, getSecondHighestAxis } from '../engine/systems/narrative-pressure';
 import { NARRATIVE_AXIS_DEFINITIONS } from '../data/narrative-pressure/axis-definitions';
+import {
+  POSTURE_LABEL,
+  POSTURE_SHORT_EFFECT,
+  isPostureStale,
+} from '../engine/systems/regional-posture';
+import { getRegionDisplayName } from './nameResolver';
 
 // ============================================================
 // Domain definitions
@@ -188,6 +199,57 @@ function generatePulseDescription(
     return `${dominantDef.codexDescription} Meanwhile, ${secondaryDef.theme.toLowerCase()} also shapes the realm's trajectory.`;
   }
   return dominantDef.codexDescription;
+}
+
+// ============================================================
+// Region summaries (Phase 9)
+// ============================================================
+
+function primaryOutputLabel(r: RegionState): string {
+  const out = r.primaryEconomicOutput;
+  if (out === 'Food') return 'Food';
+  if (out === 'Trade') return 'Trade';
+  return String(out);
+}
+
+function regionActivityLine(region: RegionState): string {
+  const conds = region.localConditions ?? [];
+  if (conds.length === 0) return 'Quiet season.';
+  const lead = conds[0];
+  return `${lead.type} (${lead.severity}).`;
+}
+
+export function compileRegionSummaries(state: GameState): RegionSummary[] {
+  const currentTurn = state.turn.turnNumber;
+  return state.regions.map((region) => {
+    const posture = region.posture ?? RegionalPosture.Autonomy;
+    const loyaltyValue = region.loyalty ?? 60;
+    const developmentValue = region.developmentLevel;
+    const loyaltyTier = assignStandardTier(loyaltyValue);
+    const developmentTier = assignStandardTier(developmentValue);
+    const turnsSincePostureChange = Math.max(0, currentTurn - (region.postureSetOnTurn ?? 0));
+    return {
+      id: region.id,
+      displayName: getRegionDisplayName(region.id, state),
+      terrain: region.terrainType ?? '',
+      posture,
+      postureLabel: POSTURE_LABEL[posture],
+      postureEffect: POSTURE_SHORT_EFFECT[posture],
+      postureNarrative: POSTURE_NARRATIVE[posture],
+      loyaltyTier,
+      loyaltyValue,
+      loyaltyNarrative: REGION_LOYALTY_NARRATIVE[loyaltyTier],
+      developmentTier,
+      developmentValue,
+      developmentNarrative: REGION_DEVELOPMENT_NARRATIVE[developmentTier],
+      activityLine: regionActivityLine(region),
+      isOccupied: region.isOccupied,
+      turnsSincePostureChange,
+      isStale: isPostureStale(region, currentTurn),
+      primaryOutput: primaryOutputLabel(region),
+      isBorder: region.borderRegion ?? false,
+    };
+  });
 }
 
 /**
