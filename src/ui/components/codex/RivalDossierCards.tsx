@@ -85,6 +85,13 @@ export function RivalDossierCards({ rivals }: RivalDossierCardsProps) {
                   ))}
                 </Section>
               )}
+              {rival.foreignEntanglements && rival.foreignEntanglements.length > 0 && (
+                <Section title="Foreign Entanglements">
+                  {rival.foreignEntanglements.map((e, i) => (
+                    <BulletLine key={i} text={e} />
+                  ))}
+                </Section>
+              )}
             </>
           )}
 

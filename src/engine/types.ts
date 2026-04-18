@@ -541,6 +541,27 @@ export interface RivalAgendaState {
 
 export interface DiplomacyState {
   neighbors: NeighborState[];
+  // Phase 11 — Inter-Kingdom Diplomacy. Both optional for save migration;
+  // pre-Phase-11 saves backfill via createInitialRivalRelationships in LOAD_SAVE.
+  /** Symmetric matrix of neighbor-to-neighbor relationship scores, −100..+100. */
+  rivalRelationships?: Record<string, Record<string, number>>;
+  /** Active inter-rival agreements (alliances, trade pacts, wars). */
+  interRivalAgreements?: InterRivalAgreement[];
+}
+
+// Phase 11 — Inter-Kingdom Diplomacy
+export type InterRivalAgreementKind = 'alliance' | 'trade_pact' | 'war';
+
+export interface InterRivalAgreement {
+  id: string; // `${a}_${b}_${kind}_t${turn}`
+  kind: InterRivalAgreementKind;
+  /** Canonical lower neighbor_* id (string-compare). */
+  a: string;
+  /** Canonical higher neighbor_* id. */
+  b: string;
+  turnStarted: number;
+  /** For alliances: shared target (neighbor_* or 'player'). */
+  sharedTargetId?: string | null;
 }
 
 // --- AI Neighbor Actions ---

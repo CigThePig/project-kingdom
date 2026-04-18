@@ -36,6 +36,7 @@ import { generateNegotiationCard } from '../bridge/negotiationCardGenerator';
 import { generateAssessmentPhaseData } from '../bridge/assessmentCardGenerator';
 import { distributeCardsToMonths } from '../bridge/cardDistributor';
 import { generateOvertureCards } from '../bridge/diplomaticOvertureGenerator';
+import { generateInterRivalCards } from '../bridge/interRivalCardGenerator';
 import { applyDirectEffects } from '../bridge/directEffectApplier';
 import { generateWorldPulse } from '../bridge/worldPulseGenerator';
 import { compileKingdomState, compileRegionSummaries } from '../bridge/codexCompiler';
@@ -229,7 +230,11 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
     // Phase 3 — rival-agenda-driven diplomatic overtures. Merged into the
     // petition pool inside the distributor.
     const overtures = generateOvertureCards(gameState);
-    setOvertureCards(overtures);
+    // Phase 11 — mediation + coalition cards route through the same petition
+    // slot as overtures. Merged here so the distributor sees a single list.
+    const interRivalCards = generateInterRivalCards(gameState);
+    const allOvertures = [...overtures, ...interRivalCards];
+    setOvertureCards(allOvertures);
     const opportunityRng = seededRandom(
       `${gameState.runSeed ?? 'opportunity'}_t${gameState.turn.turnNumber}_opportunity`,
     );
@@ -240,7 +245,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
       assessment,
       additionalCrises,
       notifications,
-      overtures,
+      allOvertures,
       opportunityRng,
       {
         runSeed: gameState.runSeed ?? 'default',

@@ -19,6 +19,7 @@ import {
 } from '../engine/types';
 import { createInitialRivalState } from '../engine/systems/rival-simulation';
 import { selectInitialAgenda } from '../engine/systems/rival-agendas';
+import { createInitialRivalRelationships } from '../engine/systems/inter-rival';
 import { finalizeGeography } from '../engine/systems/geography';
 import { synthesizeGeographyFromScenario } from '../engine/systems/geography-migrations';
 import { createInitialEnvironmentState } from '../engine/systems/environment';
@@ -239,9 +240,26 @@ export function gameReducer(state: GameContextState, action: GameAction): GameCo
           memory: n.memory ?? [],
         };
       });
+      // Phase 11 — inter-rival relationship matrix depends on neighbors +
+      // finalized geography, so it seeds here. Pre-Phase-11 saves get a fresh
+      // matrix derived from static neighbor data; already-populated saves pass
+      // through unchanged.
+      const rivalRelationships =
+        stateWithGeography.diplomacy.rivalRelationships ??
+        createInitialRivalRelationships(
+          finalNeighbors,
+          stateWithGeography.geography,
+        );
+      const interRivalAgreements =
+        stateWithGeography.diplomacy.interRivalAgreements ?? [];
       const gameState: GameState = {
         ...stateWithGeography,
-        diplomacy: { ...stateWithGeography.diplomacy, neighbors: finalNeighbors },
+        diplomacy: {
+          ...stateWithGeography.diplomacy,
+          neighbors: finalNeighbors,
+          rivalRelationships,
+          interRivalAgreements,
+        },
       };
       return {
         gameState,

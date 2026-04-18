@@ -8,8 +8,16 @@ import type { WorldPulseLine } from '../ui/types';
 import { WORLD_PULSE_TEMPLATES } from '../data/text/world-pulse';
 import type { WorldPulseTemplate } from '../data/text/world-pulse';
 import { WORLD_PULSE_RECLASSIFIED } from '../data/text/world-pulse-reclassified';
+import {
+  INTER_RIVAL_ALLIANCE_LINES,
+  INTER_RIVAL_WAR_LINES,
+  INTER_RIVAL_TRADE_LINES,
+  INTER_RIVAL_SKIRMISH_LINES,
+} from '../data/text/inter-rival-pulse';
 import { evaluateCondition } from '../engine/events/event-engine';
+import { getInterRivalAdjacency } from '../engine/systems/geography';
 import { turnRng } from '../engine/resolution/turn-rng';
+import { getNeighborDisplayName } from './nameResolver';
 
 // ============================================================
 // Category preferences by month
@@ -64,6 +72,74 @@ function weightedPick<T extends { weight: number }>(
 }
 
 // ============================================================
+// Inter-rival lines (Phase 11)
+// ============================================================
+
+function getInterRivalLines(state: GameState, rng: () => number): WorldPulseLine[] {
+  const lines: WorldPulseLine[] = [];
+  const diplomacy = state.diplomacy;
+  const agreements = diplomacy.interRivalAgreements ?? [];
+  const currentTurn = state.turn.turnNumber;
+
+  // Fresh news: agreements that started this turn.
+  for (const ag of agreements) {
+    if (ag.turnStarted !== currentTurn) continue;
+    const nameA = getNeighborDisplayName(ag.a, state);
+    const nameB = getNeighborDisplayName(ag.b, state);
+    let template;
+    if (ag.kind === 'alliance') {
+      template = INTER_RIVAL_ALLIANCE_LINES[Math.floor(rng() * INTER_RIVAL_ALLIANCE_LINES.length)];
+    } else if (ag.kind === 'war') {
+      template = INTER_RIVAL_WAR_LINES[Math.floor(rng() * INTER_RIVAL_WAR_LINES.length)];
+    } else {
+      template = INTER_RIVAL_TRADE_LINES[Math.floor(rng() * INTER_RIVAL_TRADE_LINES.length)];
+    }
+    if (!template) continue;
+    lines.push({
+      text: template.render(nameA, nameB),
+      category: WorldPulseCategory.NeighborActivity,
+      sourceId: `inter_rival:${ag.kind}:${ag.id}`,
+    });
+  }
+
+  // Border skirmishes: contested adjacency with hostile relationship.
+  const matrix = diplomacy.rivalRelationships ?? {};
+  const pairs = getInterRivalAdjacency(state);
+  const skirmishCandidates: Array<[string, string]> = [];
+  for (const [a, b] of pairs) {
+    const edge = state.geography?.edges?.find(
+      (e) => (e.a === a && e.b === b) || (e.a === b && e.b === a),
+    );
+    if (edge?.frictionTier !== 'contested') continue;
+    const score = matrix[a]?.[b] ?? 0;
+    if (score > -20) continue;
+    // Exclude pairs already at inter-rival war — their war line is louder.
+    const atWar = agreements.some(
+      (ag) => ag.kind === 'war' && ag.a === a && ag.b === b,
+    );
+    if (atWar) continue;
+    skirmishCandidates.push([a, b]);
+  }
+  if (skirmishCandidates.length > 0) {
+    const [a, b] = skirmishCandidates[Math.floor(rng() * skirmishCandidates.length)];
+    const template =
+      INTER_RIVAL_SKIRMISH_LINES[Math.floor(rng() * INTER_RIVAL_SKIRMISH_LINES.length)];
+    if (template) {
+      lines.push({
+        text: template.render(
+          getNeighborDisplayName(a, state),
+          getNeighborDisplayName(b, state),
+        ),
+        category: WorldPulseCategory.NeighborActivity,
+        sourceId: `inter_rival:skirmish:${a}|${b}:t${state.turn.turnNumber}`,
+      });
+    }
+  }
+
+  return lines;
+}
+
+// ============================================================
 // Main generator
 // ============================================================
 
@@ -100,6 +176,17 @@ export function generateWorldPulse(
   const results: WorldPulseLine[] = [];
   const usedIds = new Set<string>();
 
+  // Phase 11 — inject fresh inter-rival news first (takes priority over
+  // generic templated flavor when something actually happened this turn).
+  const interRivalLines = getInterRivalLines(state, turnRng(state, 'bridge:world-pulse-inter-rival-pick'));
+  for (const line of interRivalLines) {
+    if (results.length >= 2) break;
+    const id = line.sourceId;
+    if (id && usedIds.has(id)) continue;
+    if (id) usedIds.add(id);
+    results.push(line);
+  }
+
   const countRng = turnRng(state, 'bridge:world-pulse-count');
   const pickRng = turnRng(state, 'bridge:world-pulse-select');
   const reclassifiedRng = turnRng(state, 'bridge:world-pulse-reclass');
@@ -109,6 +196,7 @@ export function generateWorldPulse(
   const targetCount = countRng() < 0.4 ? 1 : 2;
 
   for (let i = 0; i < targetCount; i++) {
+    if (results.length >= 2) break;
     const remaining = pool.filter((t) => !usedIds.has(t.id));
     if (remaining.length === 0) break;
 
