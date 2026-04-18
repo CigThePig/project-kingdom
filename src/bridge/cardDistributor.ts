@@ -30,6 +30,7 @@ import {
   pickCourtOpportunity,
 } from '../data/cards/court-opportunities';
 import { HAND_CARDS } from '../data/cards/hand-cards';
+import { instantiateCandidateById } from '../engine/systems/advisors';
 
 const EMPTY_ALLOCATION: MonthAllocation = {
   interactionType: null,
@@ -68,6 +69,10 @@ export function distributeCardsToMonths(
    *  omitted (e.g. in unit tests that only exercise distribution), no
    *  opportunities are generated. */
   opportunityRng?: () => number,
+  /** Phase 8 — run seed + turn number used to instantiate advisor candidates
+   *  when an `advisor_candidate` court opportunity is rolled. Omit to skip
+   *  advisor-candidate opportunities. */
+  advisorContext?: { runSeed: string; turnNumber: number },
 ): MonthCardAllocation {
   // Lift every legacy shape into a unified `Card` envelope at this boundary.
   // Phase 3 overtures piggyback the petition pool for distribution; putting
@@ -241,7 +246,7 @@ export function distributeCardsToMonths(
     const months = [month1, month2, month3];
     for (const m of months) {
       if (isFullyQuiet(m)) {
-        const offer = buildCourtOpportunityOffer(opportunityRng);
+        const offer = buildCourtOpportunityOffer(opportunityRng, advisorContext);
         if (offer) m.courtOpportunity = offer;
       }
     }
@@ -259,17 +264,42 @@ function isFullyQuiet(m: MonthAllocation): boolean {
   );
 }
 
-function buildCourtOpportunityOffer(rng: () => number): CourtOpportunityOffer | null {
+function buildCourtOpportunityOffer(
+  rng: () => number,
+  advisorContext?: { runSeed: string; turnNumber: number },
+): CourtOpportunityOffer | null {
   const opp = pickCourtOpportunity(rng);
-  const handCard = HAND_CARDS[opp.handCardId];
-  if (!handCard) return null;
+  if (opp.kind === 'hand_card') {
+    const handCard = HAND_CARDS[opp.handCardId];
+    if (!handCard) return null;
+    return {
+      kind: 'hand_card',
+      id: opp.id,
+      title: opp.title,
+      body: opp.body,
+      handCardId: handCard.id,
+      handCardTitle: handCard.title,
+      handCardBody: handCard.body,
+      expiresAfterTurns: handCard.expiresAfterTurns,
+    };
+  }
+  // kind === 'advisor_candidate' — requires runSeed/turn to instantiate
+  if (!advisorContext) return null;
+  const advisor = instantiateCandidateById(
+    opp.candidateTemplateId,
+    advisorContext.runSeed,
+    advisorContext.turnNumber,
+  );
+  if (!advisor) return null;
   return {
+    kind: 'advisor_candidate',
     id: opp.id,
     title: opp.title,
     body: opp.body,
-    handCardId: handCard.id,
-    handCardTitle: handCard.title,
-    handCardBody: handCard.body,
-    expiresAfterTurns: handCard.expiresAfterTurns,
+    candidateTemplateId: opp.candidateTemplateId,
+    advisorName: advisor.name,
+    seat: advisor.seat,
+    personality: advisor.personality,
+    background: advisor.background,
   };
 }

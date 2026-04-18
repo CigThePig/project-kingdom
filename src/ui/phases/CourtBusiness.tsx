@@ -56,7 +56,7 @@ interface CourtBusinessProps {
   /** Phase 5 — Court Hand and side-effects for the overlay panel. */
   courtHand?: CourtHand;
   gameState?: GameState;
-  onAcceptOpportunity?: (handCardId: string) => void;
+  onAcceptOpportunity?: (offer: CourtOpportunityOffer) => void;
   onPlayHandCard?: (cardId: string, choice: HandCardChoice) => void;
   onDiscardHandCard?: (cardId: string) => void;
 }
@@ -329,7 +329,7 @@ export function CourtBusiness({
   // ---- Opportunity stage handler ----
   const handleAcceptOpportunity = useCallback(() => {
     if (courtOpportunity && onAcceptOpportunity) {
-      onAcceptOpportunity(courtOpportunity.handCardId);
+      onAcceptOpportunity(courtOpportunity);
     }
     advanceStage([]);
   }, [courtOpportunity, onAcceptOpportunity, advanceStage]);
@@ -552,6 +552,14 @@ export function CourtBusiness({
 
     // Opportunity stage — Accept/Decline a Court Opportunity on quiet months
     if (renderStage === 'opportunity' && courtOpportunity) {
+      const isAdvisor = courtOpportunity.kind === 'advisor_candidate';
+      const badgeLabel = isAdvisor
+        ? `Advisor Candidate — ${courtOpportunity.seat}`
+        : `Hand Card — Expires in ${courtOpportunity.expiresAfterTurns} turns`;
+      const previewTitle = isAdvisor
+        ? `${courtOpportunity.advisorName} — ${courtOpportunity.personality}`
+        : courtOpportunity.handCardTitle;
+      const previewBody = isAdvisor ? courtOpportunity.background : courtOpportunity.handCardBody;
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ animation: 'slideUp 400ms ease both' }}>
@@ -578,7 +586,7 @@ export function CourtBusiness({
                     marginBottom: 4,
                   }}
                 >
-                  Hand Card — Expires in {courtOpportunity.expiresAfterTurns} turns
+                  {badgeLabel}
                 </div>
                 <div
                   style={{
@@ -589,7 +597,7 @@ export function CourtBusiness({
                     marginBottom: 2,
                   }}
                 >
-                  {courtOpportunity.handCardTitle}
+                  {previewTitle}
                 </div>
                 <div
                   style={{
@@ -597,7 +605,7 @@ export function CourtBusiness({
                     color: 'var(--color-text-secondary)',
                   }}
                 >
-                  {courtOpportunity.handCardBody}
+                  {previewBody}
                 </div>
               </div>
             </Card>

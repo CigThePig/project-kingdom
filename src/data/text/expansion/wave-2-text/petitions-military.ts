@@ -1,0 +1,22 @@
+// Phase 7 — Wave-2 Petition Text: Military & Frontier.
+
+import type { EventTextEntry } from '../../events';
+
+export const EXPANSION_WAVE_2_PETITIONS_MILITARY_TEXT: Record<string, EventTextEntry> = {
+  faction_req_w2_border_captains_garrison: {
+    title: 'The Border Captains Beg Reinforcement',
+    body: 'The captains of the frontier march report their garrison has been thinned by two seasons of levy, and raiders press the passes each week. They ask for coin, men, and fresh equipment, or they will withdraw to the fallback line.',
+    choices: {
+      reinforce_the_border_garrison: 'Reinforce the Garrison',
+      leave_the_garrison_thin: 'Leave the Garrison Thin',
+    },
+  },
+  faction_req_w2_knightly_order_grant: {
+    title: 'A Knightly Order Seeks a Grant',
+    body: 'A knightly order wishes to establish a new chapter house in the realm, in exchange for binding service to the Crown. They want land and silver; in return they pledge steel at every summons. The old marshals are jealous.',
+    choices: {
+      grant_the_knightly_order: 'Grant the Chapter House',
+      deny_the_grant: 'Deny the Grant',
+    },
+  },
+};

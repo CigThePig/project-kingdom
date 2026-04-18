@@ -28,16 +28,30 @@ const VARIANCE_MULTIPLIERS: Record<OutcomeQuality, { positive: number; negative:
  * Caller must pass a seeded RNG (see engine/resolution/turn-rng.ts) so
  * replay/determinism hold.
  */
-export function rollOutcomeQuality(rng: () => number): OutcomeQuality {
+export function rollOutcomeQuality(rng: () => number, tierBoost = 0): OutcomeQuality {
   const roll = rng();
   let cumulative = 0;
+  let base: OutcomeQuality = OutcomeQuality.Expected;
   for (const entry of OUTCOME_WEIGHTS) {
     cumulative += entry.weight;
     if (roll < cumulative) {
-      return entry.quality;
+      base = entry.quality;
+      break;
     }
   }
-  return OutcomeQuality.Expected;
+  if (tierBoost <= 0) return base;
+  // Phase 8 advisor `outcome_quality_boost`: bump the tier up by `tierBoost`
+  // ranks, clamped at Excellent.
+  const ORDER: OutcomeQuality[] = [
+    OutcomeQuality.Disastrous,
+    OutcomeQuality.Poor,
+    OutcomeQuality.Expected,
+    OutcomeQuality.Good,
+    OutcomeQuality.Excellent,
+  ];
+  const idx = ORDER.indexOf(base);
+  const boostedIdx = Math.min(ORDER.length - 1, idx + Math.round(tierBoost));
+  return ORDER[boostedIdx];
 }
 
 /**

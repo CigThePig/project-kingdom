@@ -159,6 +159,12 @@ import {
 import { decayMemoryWeights, recordMemory } from '../systems/rival-memory';
 import { seededRandom } from '../../data/text/name-generation';
 import {
+  aggregatePerTurnFlawDelta,
+  tickAdvisorLoyalty,
+  tickFlawDetection,
+} from '../systems/advisors';
+import type { CouncilSeat } from '../types';
+import {
   calculatePlayerCombatPower,
   calculateNeighborCombatPower,
   resolveConflictTurn,
@@ -515,6 +521,32 @@ export function resolveTurn(
   // Record food production loss from conditions to causal ledger.
   const foodLossFromConditions = baseFoodProduction - foodProductionPostAction;
   maybeRecord(ledger, 'environment', 'condition_food_penalty', 'food', 'production_decreased', -foodLossFromConditions);
+
+  // ---- Phase 2b (Advisor Passives): Per-turn flaw effects + loyalty/detection ticks ----
+  // Runs before temporary-modifier tick so advisor passives interact with the
+  // same downstream systems (Bug 11 stability snapshot remains correct).
+  const councilAtPhase2b = stateAfterActions.council;
+  if (councilAtPhase2b) {
+    const flawDelta = aggregatePerTurnFlawDelta(councilAtPhase2b, stateAfterActions);
+    stateAfterActions = applyMechanicalEffectDelta(stateAfterActions, flawDelta, null);
+
+    const rng = seededRandom(`advisor_tick_${stateAfterActions.turn.turnNumber}`);
+    const nextAppointments: typeof councilAtPhase2b.appointments = {};
+    for (const seat of Object.keys(councilAtPhase2b.appointments) as CouncilSeat[]) {
+      const advisor = councilAtPhase2b.appointments[seat];
+      if (!advisor) continue;
+      const loyalTicked = tickAdvisorLoyalty(advisor, stateAfterActions);
+      const { advisor: flawTicked } = tickFlawDetection(loyalTicked, stateAfterActions.turn.turnNumber, rng);
+      nextAppointments[seat] = flawTicked;
+    }
+    stateAfterActions = {
+      ...stateAfterActions,
+      council: {
+        appointments: nextAppointments,
+        pendingCandidates: councilAtPhase2b.pendingCandidates,
+      },
+    };
+  }
 
   // ---- Phase 2b: Temporary Modifier Tick ----
   // Apply ongoing effects from temporary modifiers, then decrement and expire.

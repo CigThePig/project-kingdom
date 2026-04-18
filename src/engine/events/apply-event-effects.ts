@@ -16,6 +16,12 @@ import {
 } from '../systems/regions';
 import { deriveDiplomaticPosture } from '../systems/diplomacy';
 import { applyVariance, rollOutcomeQuality } from './outcome-variance';
+import {
+  collectAdvisorDeltaBonuses,
+  collectOutcomeQualityBoost,
+} from '../systems/advisors';
+import { EventCategory } from '../types';
+import { EVENT_POOL } from '../../data/events/index';
 
 // ============================================================
 // Internal Helpers
@@ -245,13 +251,48 @@ export function applyEventChoiceEffects(
   const choiceEffect = eventEffects[event.choiceMade];
   if (!choiceEffect) return { state, outcomeQuality: null };
 
-  const quality = rollOutcomeQuality(rng);
-  const variedEffect = applyVariance(choiceEffect, quality);
+  // Phase 8 — merge advisor delta bonuses into the raw choice delta before
+  // applying outcome variance. Categories come from the EVENT_POOL lookup;
+  // petitions use target='petition', everything else defaults to 'crisis'.
+  const def = EVENT_POOL.find((e) => e.id === event.definitionId);
+  const isPetition = event.definitionId.startsWith('faction_req_');
+  const advisorBonus = collectAdvisorDeltaBonuses(state.council, {
+    target: isPetition ? 'petition' : 'crisis',
+    category: def?.category as EventCategory | undefined,
+  });
+  const boostedEffect = mergeDeltas(choiceEffect, advisorBonus);
+
+  const qualityBoost = collectOutcomeQualityBoost(state.council, {
+    target: isPetition ? 'petition' : 'crisis',
+    category: def?.category as EventCategory | undefined,
+  });
+  const quality = rollOutcomeQuality(rng, qualityBoost);
+  const variedEffect = applyVariance(boostedEffect, quality);
 
   return {
     state: applyMechanicalEffectDelta(state, variedEffect, event.affectedRegionId),
     outcomeQuality: quality,
   };
+}
+
+function mergeDeltas(a: MechanicalEffectDelta, b: MechanicalEffectDelta): MechanicalEffectDelta {
+  const out: MechanicalEffectDelta = { ...a };
+  for (const key of Object.keys(b) as (keyof MechanicalEffectDelta)[]) {
+    if (key === 'diplomacyDeltas') {
+      const existing = out.diplomacyDeltas ?? {};
+      const incoming = b.diplomacyDeltas ?? {};
+      const merged = { ...existing };
+      for (const nid of Object.keys(incoming)) {
+        merged[nid] = (merged[nid] ?? 0) + incoming[nid];
+      }
+      out.diplomacyDeltas = merged;
+      continue;
+    }
+    const av = (a as unknown as Record<string, number | undefined>)[key] ?? 0;
+    const bv = (b as unknown as Record<string, number | undefined>)[key] ?? 0;
+    (out as unknown as Record<string, number>)[key] = av + bv;
+  }
+  return out;
 }
 
 // ============================================================
