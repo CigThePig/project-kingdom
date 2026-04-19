@@ -55,6 +55,8 @@ import type {
   MechanicalEffectDelta,
   BondKind,
   AgentSpecialization,
+  AgentStatus,
+  InterRivalAgreementKind,
 } from '../engine/types';
 import type { CardOfFamily } from '../engine/cards/types';
 
@@ -305,7 +307,71 @@ export interface ChronicleEntry {
   isProtected: boolean; // legacy/milestone events can't be pruned
 }
 
-export type CodexSection = 'kingdom' | 'regions' | 'rivals' | 'situations' | 'chronicle' | 'combos' | 'council';
+export type CodexSection =
+  | 'kingdom'
+  | 'regions'
+  | 'rivals'
+  | 'situations'
+  | 'chronicle'
+  | 'combos'
+  | 'council'
+  | 'intelligence'
+  | 'bonds'
+  | 'interrival';
+
+/** Phase F — compiled Intelligence Roster entry. One per agent. */
+export interface AgentRosterEntry {
+  id: string;
+  codename: string;
+  specialization: AgentSpecialization;
+  specializationLabel: string;
+  coverSettlementLabel: string;
+  status: AgentStatus;
+  reliabilityTier: QualitativeTier;
+  reliabilityValue: number;
+  /** High burnRisk maps to worse tiers (Dire = imminent burn). */
+  burnRiskTier: QualitativeTier;
+  burnRiskValue: number;
+  turnsActive: number;
+  ongoingOperations: { label: string; stageLabel: string }[];
+}
+
+/** Phase F — compiled Bond entry for the Codex "Bonds" tab. */
+export interface BondCodexEntry {
+  bondId: string;
+  kind: BondKind;
+  kindLabel: string;
+  descriptor: string;
+  participantNames: string[];
+  ageInTurns: number;
+  turnsRemainingLabel: string;
+  breachPenalty: number;
+  heirProduced?: boolean;
+  tributePerTurn?: number;
+  incomePerTurn?: number;
+  hostageName?: string;
+  commonEnemyName?: string;
+}
+
+/** Phase F — inter-rival agreement digest entry. */
+export interface InterRivalDigestEntry {
+  id: string;
+  kind: InterRivalAgreementKind;
+  kindLabel: string;
+  participantAName: string;
+  participantBName: string;
+  sharedTargetName?: string;
+  turnsActive: number;
+}
+
+/** Phase F — gated digest of inter-rival agreements for the Codex. */
+export interface InterRivalDigest {
+  intelLevel: 'none' | 'minimal' | 'moderate' | 'strong' | 'exceptional';
+  entries: InterRivalDigestEntry[];
+  /** Shown as an empty-state card when the intel tier is too low or nothing
+   *  is active. */
+  emptyLine?: string;
+}
 
 /** Phase 9 — per-region Codex entry. Compiled from RegionState + posture
  *  narrative fragments by `compileRegionSummaries(state)`. */

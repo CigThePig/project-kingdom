@@ -36,6 +36,13 @@ import {
   getSettlementDisplayName,
 } from './nameResolver';
 import {
+  getAdvisorName,
+  getAdvisorNameOrFallback,
+  SEAT_FALLBACK_LABEL,
+} from './advisorNameResolver';
+import { getAgentCodename } from './agentNameResolver';
+import { getBondDescriptor, findBondById } from './bondNameResolver';
+import {
   getRivalEconomicPhaseLabel,
   getRivalMoodDescriptor,
   getRivalCrisisClause,
@@ -123,12 +130,9 @@ type Resolver = (
   arg?: string,
 ) => string | undefined;
 
-export const SEAT_FALLBACK_LABEL: Record<CouncilSeat, string> = {
-  [CouncilSeat.Chancellor]: 'your chancellor',
-  [CouncilSeat.Marshal]: 'your marshal',
-  [CouncilSeat.Chamberlain]: 'your chamberlain',
-  [CouncilSeat.Spymaster]: 'your spymaster',
-};
+// Re-exported from advisorNameResolver so legacy callers (`petitionCardGenerator`)
+// keep their existing import surface after Phase F's resolver extraction.
+export { SEAT_FALLBACK_LABEL };
 
 const REGIONAL_POSTURE_LABELS: Record<RegionalPosture, string> = {
   [RegionalPosture.Develop]: 'Develop',
@@ -196,14 +200,14 @@ const DISPATCH: Record<string, Resolver> = {
   },
 
   // ---- §3.1 Identity — council seats ----
-  chancellor: (state) => resolveAdvisorName(state, CouncilSeat.Chancellor, false),
-  marshal: (state) => resolveAdvisorName(state, CouncilSeat.Marshal, false),
-  chamberlain: (state) => resolveAdvisorName(state, CouncilSeat.Chamberlain, false),
-  spymaster: (state) => resolveAdvisorName(state, CouncilSeat.Spymaster, false),
-  chancellor_or_fallback: (state) => resolveAdvisorName(state, CouncilSeat.Chancellor, true),
-  marshal_or_fallback: (state) => resolveAdvisorName(state, CouncilSeat.Marshal, true),
-  chamberlain_or_fallback: (state) => resolveAdvisorName(state, CouncilSeat.Chamberlain, true),
-  spymaster_or_fallback: (state) => resolveAdvisorName(state, CouncilSeat.Spymaster, true),
+  chancellor: (state) => getAdvisorName(CouncilSeat.Chancellor, state),
+  marshal: (state) => getAdvisorName(CouncilSeat.Marshal, state),
+  chamberlain: (state) => getAdvisorName(CouncilSeat.Chamberlain, state),
+  spymaster: (state) => getAdvisorName(CouncilSeat.Spymaster, state),
+  chancellor_or_fallback: (state) => getAdvisorNameOrFallback(CouncilSeat.Chancellor, state),
+  marshal_or_fallback: (state) => getAdvisorNameOrFallback(CouncilSeat.Marshal, state),
+  chamberlain_or_fallback: (state) => getAdvisorNameOrFallback(CouncilSeat.Chamberlain, state),
+  spymaster_or_fallback: (state) => getAdvisorNameOrFallback(CouncilSeat.Spymaster, state),
 
   // ---- §3.1 Identity — active entities by title ----
   initiative_title: (state, ctx) => {
@@ -313,9 +317,13 @@ const DISPATCH: Record<string, Resolver> = {
   // ---- §3.1 Identity — bonds (Phase C) ----
   bond_kind: (state, ctx) => {
     if (!ctx.bondId) return 'bond';
-    const bond = state.diplomacy.bonds?.find((b) => b.bondId === ctx.bondId);
+    const bond = findBondById(ctx.bondId, state);
     if (!bond) return 'bond';
     return BOND_KIND_LABELS[bond.kind] ?? 'bond';
+  },
+  bond: (state, ctx) => {
+    if (!ctx.bondId) return 'the bond';
+    return getBondDescriptor(ctx.bondId, state);
   },
 
   // ---- §3.4 Stakes — rival-scoped (Phase C) ----
@@ -364,8 +372,7 @@ const DISPATCH: Record<string, Resolver> = {
   agent: (state, ctx, arg) => {
     const id = arg ?? ctx.agentId;
     if (!id) return 'the agent';
-    const agent = state.espionage?.agents?.find((a) => a.id === id);
-    return agent?.codename ?? 'the agent';
+    return getAgentCodename(id, state);
   },
   prior_decision_clause: (state, _ctx, arg) => priorDecisionClause(state, arg),
 };
@@ -373,16 +380,6 @@ const DISPATCH: Record<string, Resolver> = {
 // ============================================================
 // Helpers
 // ============================================================
-
-function resolveAdvisorName(
-  state: GameState,
-  seat: CouncilSeat,
-  withFallback: boolean,
-): string {
-  const advisor = state.council?.appointments?.[seat];
-  if (advisor?.name) return advisor.name;
-  return withFallback ? SEAT_FALLBACK_LABEL[seat] : `your ${seat.toLowerCase()}`;
-}
 
 function resolveMonthName(state: GameState): string {
   const { season, month } = state.turn;

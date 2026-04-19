@@ -43,7 +43,13 @@ import { generateOvertureCards } from '../bridge/diplomaticOvertureGenerator';
 import { generateInterRivalCards } from '../bridge/interRivalCardGenerator';
 import { applyDirectEffects } from '../bridge/directEffectApplier';
 import { generateWorldPulse } from '../bridge/worldPulseGenerator';
-import { compileKingdomState, compileRegionSummaries } from '../bridge/codexCompiler';
+import {
+  compileAgentRoster,
+  compileBonds,
+  compileInterRivalDigest,
+  compileKingdomState,
+  compileRegionSummaries,
+} from '../bridge/codexCompiler';
 import { deductActionCost } from '../engine/resolution/action-budget';
 import { compileDossier } from '../bridge/dossierCompiler';
 import { compileActiveSituations } from '../bridge/situationTracker';
@@ -708,6 +714,9 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
         onSetRegionalPosture={(regionId, posture) =>
           ctx.dispatch({ type: 'SET_REGIONAL_POSTURE', regionId, posture })
         }
+        agents={compileAgentRoster(ctx.state.gameState)}
+        bonds={compileBonds(ctx.state.gameState)}
+        interRival={compileInterRivalDigest(ctx.state.gameState)}
       />
     </div>
   );
