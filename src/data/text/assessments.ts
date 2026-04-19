@@ -47,7 +47,7 @@ export const ASSESSMENT_TEXT: Record<string, EventTextEntry> = {
 
   assess_foreign_famine: {
     title: 'Reports of Foreign Famine',
-    body: 'Travelers and merchants bring reports that a neighboring kingdom suffers from severe food shortages. Refugee columns have been spotted near the border. The situation presents both an opportunity to build goodwill through humanitarian aid and a temptation to press an advantage while a rival weakens.',
+    body: "Travelers and merchants bring reports that {neighbor} suffers from severe food shortages. Refugee columns have been spotted streaming away from {capital}, and {ruler}'s grip is reported to be uncertain. The situation presents both an opportunity to build goodwill through humanitarian aid and a temptation to press an advantage while a rival weakens.",
     choices: {
       send_humanitarian_aid: 'Send Humanitarian Aid',
       exploit_weakness: 'Exploit Their Weakness',

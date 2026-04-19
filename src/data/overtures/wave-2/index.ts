@@ -5,13 +5,17 @@
 // flavors for several of the original six. The generator picks deterministically
 // from the union of inline + wave-2 candidates, widening the variety of
 // rival-initiated propositions surfaced to the player.
+//
+// Phase B — strings carry smart-card placeholders ({ruler_full}, {capital},
+// {neighbor}, {dynasty}, {neighbor_short}). The generator pipes the resulting
+// OvertureSpec through `substituteSmartPlaceholders` with the neighbor's id.
 
 import { RivalAgenda } from '../../../engine/types';
 import type { OvertureSpec } from '../../../bridge/diplomaticOvertureGenerator';
 
 export interface Wave2Overture {
   agenda: RivalAgenda;
-  build: (neighborName: string) => OvertureSpec;
+  build: () => OvertureSpec;
 }
 
 export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
@@ -20,9 +24,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   // ============================================================
   {
     agenda: RivalAgenda.BleedTheRivals,
-    build: (n) => ({
-      title: `${n} demands tribute`,
-      body: `${n}'s envoy arrives with a list of grievances and a demand for restitution in gold. Refusal will be heard at every court in the region.`,
+    build: () => ({
+      title: '{ruler_full} demands tribute',
+      body: "An envoy of {ruler_full} arrives from {capital} with a list of grievances and a demand for restitution in gold. Refusal will be heard at every court in the region — {dynasty} will see to that.",
       grantTitle: 'Pay the tribute',
       grantEffects: [
         { label: 'Treasury ↓↓', type: 'negative' },
@@ -36,9 +40,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   },
   {
     agenda: RivalAgenda.SubjugateAVassal,
-    build: (n) => ({
-      title: `${n} presses vassalage terms`,
-      body: `${n} formally invites you to swear fealty in exchange for protection and a share of their tariffs. Acceptance binds your foreign policy to theirs.`,
+    build: () => ({
+      title: '{ruler_full} presses vassalage terms',
+      body: '{ruler_full} formally invites you to swear fealty in exchange for protection and a share of {neighbor_short}\u2019s tariffs. Acceptance binds your foreign policy to the throne in {capital}.',
       grantTitle: 'Accept the terms',
       grantEffects: [
         { label: 'Relationship ↑↑', type: 'positive' },
@@ -52,9 +56,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   },
   {
     agenda: RivalAgenda.SackASettlement,
-    build: (n) => ({
-      title: `${n} threatens a border raid`,
-      body: `Scouts report ${n}'s warbands massing along the frontier. Their envoy hints that a discreet payment would redirect them elsewhere.`,
+    build: () => ({
+      title: '{neighbor} threatens a border raid',
+      body: "Scouts report {neighbor_short}'s warbands massing along the frontier. {ruler}'s envoy hints, blandly, that a discreet payment would redirect them elsewhere.",
       grantTitle: 'Pay the warbands off',
       grantEffects: [
         { label: 'Treasury ↓', type: 'negative' },
@@ -71,9 +75,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   },
   {
     agenda: RivalAgenda.IsolationistRetreat,
-    build: (n) => ({
-      title: `${n} seeks a closed-borders pact`,
-      body: `${n}'s envoys propose a mutual closing of the border to merchants and missionaries — a quiet seclusion both crowns can blame on the other.`,
+    build: () => ({
+      title: '{neighbor} seeks a closed-borders pact',
+      body: "Envoys from {capital} propose a mutual closing of the border to merchants and missionaries — a quiet seclusion both crowns can blame on the other. {ruler} would prefer the pact signed quickly.",
       grantTitle: 'Sign the seclusion pact',
       grantEffects: [
         { label: 'Relationship ↑', type: 'positive' },
@@ -87,9 +91,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   },
   {
     agenda: RivalAgenda.EconomicRecovery,
-    build: (n) => ({
-      title: `${n} requests a grain credit`,
-      body: `Famine grips ${n}. Their envoy asks for a sale of grain on credit, to be repaid when their harvest recovers.`,
+    build: () => ({
+      title: '{neighbor} requests a grain credit',
+      body: "Famine grips {neighbor}. {ruler}'s envoy asks for a sale of grain on credit, to be repaid when {neighbor_short}'s harvest recovers.",
       grantTitle: 'Extend the credit',
       grantEffects: [
         { label: 'Food ↓', type: 'negative' },
@@ -103,9 +107,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   },
   {
     agenda: RivalAgenda.ProveDominance,
-    build: (n) => ({
-      title: `${n} challenges your court to a tournament`,
-      body: `${n} proposes a grand tournament between your champions. The winning crown takes the bards, the banners, and the bragging rights.`,
+    build: () => ({
+      title: '{ruler_full} challenges your court to a tournament',
+      body: '{ruler_full} proposes a grand tournament between your champions, to be held outside {capital}. The winning crown takes the bards, the banners, and the bragging rights.',
       grantTitle: 'Send your champions',
       grantEffects: [
         { label: 'Treasury ↓', type: 'negative' },
@@ -123,9 +127,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   // ============================================================
   {
     agenda: RivalAgenda.DynasticAlliance,
-    build: (n) => ({
-      title: `${n} proposes a hostage exchange`,
-      body: `${n}'s court suggests a quieter assurance than a marriage: each crown sends a young heir to be raised at the other's court.`,
+    build: () => ({
+      title: '{neighbor} proposes a hostage exchange',
+      body: "{dynasty}'s court suggests a quieter assurance than a marriage: each crown sends a young heir to be raised at the other's court.",
       grantTitle: 'Exchange the wards',
       grantEffects: [{ label: 'Relationship ↑', type: 'positive' }],
       grantSignals: [{ label: 'FOLLOW-UP LIKELY', tone: 'followup' }],
@@ -136,9 +140,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   },
   {
     agenda: RivalAgenda.DominateTrade,
-    build: (n) => ({
-      title: `${n} proposes a guild monopoly`,
-      body: `${n}'s great houses propose a joint monopoly on a key trade good — vast profits, but the lesser merchants of both realms will suffer.`,
+    build: () => ({
+      title: '{neighbor} proposes a guild monopoly',
+      body: "The great houses of {capital} propose a joint monopoly on a key trade good — vast profits, but the lesser merchants of both realms will suffer.",
       grantTitle: 'Sign the monopoly',
       grantEffects: [
         { label: 'Treasury ↑↑', type: 'positive' },
@@ -152,9 +156,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   },
   {
     agenda: RivalAgenda.ReligiousHegemony,
-    build: (n) => ({
-      title: `${n} requests pilgrimage rights`,
-      body: `${n}'s clergy ask the right to lead pilgrim caravans through your territory. The faithful will spend; the heterodox will whisper.`,
+    build: () => ({
+      title: '{neighbor} requests pilgrimage rights',
+      body: "Clergy under {ruler}'s patronage ask the right to lead pilgrim caravans through your territory. The faithful will spend; the heterodox will whisper.",
       grantTitle: 'Grant the pilgrimage',
       grantEffects: [
         { label: 'Treasury ↑', type: 'positive' },
@@ -168,9 +172,9 @@ export const WAVE_2_OVERTURES: readonly Wave2Overture[] = [
   },
   {
     agenda: RivalAgenda.DefensiveConsolidation,
-    build: (n) => ({
-      title: `${n} proposes a joint border survey`,
-      body: `${n}'s envoys propose a joint commission to map and mark the contested border once and for all. A small thing, but it would settle generations of quiet disputes.`,
+    build: () => ({
+      title: '{neighbor} proposes a joint border survey',
+      body: "Envoys of {ruler_full} propose a joint commission to map and mark the contested border once and for all. A small thing, but it would settle generations of quiet disputes between your courts and {dynasty}'s.",
       grantTitle: 'Send the surveyors',
       grantEffects: [
         { label: 'Relationship ↑', type: 'positive' },

@@ -705,7 +705,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility],
     effectPreview:
-      'Send emissaries to a neighboring kingdom to improve relations. Slow but steady path toward diplomatic cooperation and reduced tensions.',
+      'Send emissaries to a foreign court to improve relations. Slow but steady path toward diplomatic cooperation and reduced tensions.',
     isHighImpact: false,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -725,7 +725,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Merchants],
     effectPreview:
-      'Build a permanent diplomatic mission in a neighboring capital. Provides ongoing relationship improvement and intelligence gathering opportunities.',
+      'Build a permanent diplomatic mission in a foreign capital. Provides ongoing relationship improvement and intelligence gathering opportunities.',
     isHighImpact: false,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -769,7 +769,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Merchants, PopulationClass.Nobility],
     effectPreview:
-      'Offer a structured trade agreement to a neighboring kingdom. Increases mutual commerce if relations are sufficient. Merchants profit directly.',
+      'Offer a structured trade agreement to a foreign court. Increases mutual commerce if relations are sufficient. Merchants profit directly.',
     isHighImpact: false,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -789,7 +789,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Clergy],
     effectPreview:
-      'Forge a dynastic bond with a neighboring ruling house. Significantly improves diplomatic relations but commits the crown to a long-term alliance.',
+      'Forge a dynastic bond with a foreign ruling house. Significantly improves diplomatic relations but commits the crown to a long-term alliance.',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,

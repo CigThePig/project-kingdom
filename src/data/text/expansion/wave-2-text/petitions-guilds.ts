@@ -5,7 +5,7 @@ import type { EventTextEntry } from '../../events';
 export const EXPANSION_WAVE_2_PETITIONS_GUILD_TEXT: Record<string, EventTextEntry> = {
   faction_req_w2_merchant_tariff_reform: {
     title: 'The Merchants Plead for Tariff Reform',
-    body: 'The merchant consuls of three cities present a joint petition asking for a reduction of the internal tariffs. They promise increased revenue through volume; their competitors warn that the Crown will simply lose every copper it concedes.',
+    body: 'The merchant consuls of three cities present a joint petition to {chancellor_or_fallback}, asking for a reduction of the internal tariffs. They promise increased revenue through volume; their competitors warn that the Crown will simply lose every copper it concedes.',
     choices: {
       reform_the_tariffs: 'Reform the Tariffs',
       defer_the_petition: 'Defer the Petition',
@@ -21,7 +21,7 @@ export const EXPANSION_WAVE_2_PETITIONS_GUILD_TEXT: Record<string, EventTextEntr
   },
   faction_req_w2_fishermens_protection: {
     title: 'The Fishermen Beg for Coastal Patrols',
-    body: 'The coastal fishermen report that pirates from the inland sea have twice taken their catches this month. They ask the Crown for sailing patrols; the treasurer points out that patrols cost silver every week.',
+    body: '{marshal_or_fallback} brings a petition from the coastal fishermen: pirates from the inland sea have twice taken their catches this month. They ask the Crown for sailing patrols; the treasurer points out that patrols cost silver every week.',
     choices: {
       fund_coastal_patrols: 'Fund Coastal Patrols',
       decline_patrol_request: 'Decline the Request',
@@ -37,7 +37,7 @@ export const EXPANSION_WAVE_2_PETITIONS_GUILD_TEXT: Record<string, EventTextEntr
   },
   faction_req_w2_millers_tax_relief: {
     title: 'The Millers Beg Tax Relief',
-    body: 'The millers\' league petitions for relief from the mill tax, arguing that with the weight of the levy they cannot afford to keep the stones turning. Villagers are already carrying grain to rival mills across the border.',
+    body: "The millers' league petitions {chancellor_or_fallback} for relief from the mill tax, arguing that with the weight of the levy they cannot afford to keep the stones turning. Villagers are already carrying grain to rival mills across the border.",
     choices: {
       grant_millers_relief: 'Grant the Relief',
       maintain_the_mill_tax: 'Maintain the Mill Tax',
@@ -45,7 +45,7 @@ export const EXPANSION_WAVE_2_PETITIONS_GUILD_TEXT: Record<string, EventTextEntr
   },
   faction_req_w2_goldsmiths_seal: {
     title: 'The Goldsmiths Ask for a Royal Seal',
-    body: 'The goldsmiths\' guild requests a royal seal — effectively a monopoly on assay — in exchange for an annual tribute. Rival smiths in lesser cities will be ruined; the Crown\'s purse will fatten.',
+    body: "The goldsmiths' guild has presented {chancellor_or_fallback} a request for a royal seal — effectively a monopoly on assay — in exchange for an annual tribute. Rival smiths in lesser cities will be ruined; the Crown's purse will fatten.",
     choices: {
       grant_the_goldsmith_seal: 'Grant the Seal',
       refuse_monopoly: 'Refuse the Monopoly',

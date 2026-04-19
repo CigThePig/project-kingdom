@@ -8,13 +8,6 @@
 // Synthetic eventIds are prefixed `overture_` so that action-resolution can
 // detect them and apply inline relationship + memory effects without
 // requiring an entry in EVENT_POOL / EVENT_CHOICE_EFFECTS.
-//
-// TODO(smart-cards): This generator builds titles/bodies via inline template
-// literals instead of placeholder-based authored text. A follow-up PR should
-// migrate overture strings into an OVERTURE_TEXT map and route them through
-// `substituteSmartPlaceholders` so they can participate in the same
-// placeholder vocabulary as petitions/crises/decrees.
-// See docs/SMART_CARD_ENGINE_SURFACE.md Phase A notes.
 
 import {
   RivalAgenda,
@@ -26,7 +19,9 @@ import type { EffectHint, SignalTag } from '../ui/types';
 import type { CardOfFamily } from '../engine/cards/types';
 import { overtureToCard } from '../engine/cards/adapters';
 import { getNeighborDisplayName } from './nameResolver';
+import { OVERTURE_TEXT } from '../data/text/overtures';
 import { WAVE_2_OVERTURES } from '../data/overtures/wave-2';
+import { substituteSmartPlaceholders, type SmartTextContext } from './smartText';
 
 const PROGRESS_THRESHOLD = 40;
 
@@ -41,76 +36,72 @@ export interface OvertureSpec {
   denySignals: SignalTag[];
 }
 
-function buildInlineSpec(
-  agenda: RivalAgenda,
-  neighborName: string,
-): OvertureSpec | null {
-  switch (agenda) {
-    case RivalAgenda.DynasticAlliance:
-      return {
-        title: `${neighborName} proposes a dynastic union`,
-        body: `Envoys from ${neighborName} arrive with a formal proposal of marriage between your houses — a binding of the two crowns that would reshape the map.`,
-        grantTitle: 'Accept the match',
-        grantEffects: [{ label: 'Relationship ↑↑', type: 'positive' }],
-        grantSignals: [{ label: 'FOLLOW-UP LIKELY', tone: 'followup' }],
-        denyTitle: 'Decline with courtesies',
-        denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
-        denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
-      };
+const INLINE_EFFECTS: Partial<Record<RivalAgenda, Pick<OvertureSpec,
+  'grantEffects' | 'grantSignals' | 'denyEffects' | 'denySignals'>>> = {
+  [RivalAgenda.DynasticAlliance]: {
+    grantEffects: [{ label: 'Relationship ↑↑', type: 'positive' }],
+    grantSignals: [{ label: 'FOLLOW-UP LIKELY', tone: 'followup' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
+  },
+  [RivalAgenda.DominateTrade]: {
+    grantEffects: [
+      { label: 'Gold income ↑', type: 'positive' },
+      { label: 'Relationship ↑', type: 'positive' },
+    ],
+    grantSignals: [{ label: '+COMMERCIAL', tone: 'style' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
+  },
+  [RivalAgenda.RestoreTheOldBorders]: {
+    grantEffects: [
+      { label: 'Relationship ↑', type: 'positive' },
+      { label: 'Stability ↓', type: 'negative' },
+    ],
+    grantSignals: [{ label: 'FOLLOW-UP LIKELY', tone: 'followup' }],
+    denyEffects: [{ label: 'Relationship ↓↓', type: 'negative' }],
+    denySignals: [{ label: 'BORDER TENSION ↑', tone: 'consequence' }],
+  },
+  [RivalAgenda.DefensiveConsolidation]: {
+    grantEffects: [{ label: 'Relationship ↑', type: 'positive' }],
+    grantSignals: [{ label: '+DIPLOMATIC', tone: 'style' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'AUTHORITY ↑', tone: 'consequence' }],
+  },
+  [RivalAgenda.ReligiousHegemony]: {
+    grantEffects: [
+      { label: 'Relationship ↑', type: 'positive' },
+      { label: 'Heterodoxy ↑', type: 'warning' },
+    ],
+    grantSignals: [{ label: '+FAITH', tone: 'style' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
+  },
+  [RivalAgenda.ConvertThePlayer]: {
+    grantEffects: [
+      { label: 'Relationship ↑', type: 'positive' },
+      { label: 'Heterodoxy ↑', type: 'warning' },
+    ],
+    grantSignals: [{ label: '+FAITH', tone: 'style' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
+  },
+};
 
-    case RivalAgenda.DominateTrade:
-      return {
-        title: `${neighborName} presses a trade concession`,
-        body: `${neighborName}'s merchants press for preferential access to your markets. Granting it enriches both treasuries — and ties your prosperity to theirs.`,
-        grantTitle: 'Grant the concession',
-        grantEffects: [{ label: 'Gold income ↑', type: 'positive' }, { label: 'Relationship ↑', type: 'positive' }],
-        grantSignals: [{ label: '+COMMERCIAL', tone: 'style' }],
-        denyTitle: 'Protect the home markets',
-        denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
-        denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
-      };
-
-    case RivalAgenda.RestoreTheOldBorders:
-      return {
-        title: `${neighborName} demands restitution of old lands`,
-        body: `${neighborName} formally revives ancient claims, demanding you cede the disputed territory. Refusal will be remembered.`,
-        grantTitle: 'Negotiate a quiet concession',
-        grantEffects: [{ label: 'Relationship ↑', type: 'positive' }, { label: 'Stability ↓', type: 'negative' }],
-        grantSignals: [{ label: 'FOLLOW-UP LIKELY', tone: 'followup' }],
-        denyTitle: 'Reject the claim outright',
-        denyEffects: [{ label: 'Relationship ↓↓', type: 'negative' }],
-        denySignals: [{ label: 'BORDER TENSION ↑', tone: 'consequence' }],
-      };
-
-    case RivalAgenda.DefensiveConsolidation:
-      return {
-        title: `${neighborName} seeks a non-aggression pact`,
-        body: `${neighborName}'s envoys propose a formal non-aggression pact. Signing would calm their border and free your hand elsewhere.`,
-        grantTitle: 'Sign the pact',
-        grantEffects: [{ label: 'Relationship ↑', type: 'positive' }],
-        grantSignals: [{ label: '+DIPLOMATIC', tone: 'style' }],
-        denyTitle: 'Reserve your freedom',
-        denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
-        denySignals: [{ label: 'AUTHORITY ↑', tone: 'consequence' }],
-      };
-
-    case RivalAgenda.ReligiousHegemony:
-    case RivalAgenda.ConvertThePlayer:
-      return {
-        title: `${neighborName} proposes a religious accord`,
-        body: `${neighborName}'s clergy seek permission to establish missions across your realm — an act of faith, and of influence.`,
-        grantTitle: 'Permit the missions',
-        grantEffects: [{ label: 'Relationship ↑', type: 'positive' }, { label: 'Heterodoxy ↑', type: 'warning' }],
-        grantSignals: [{ label: '+FAITH', tone: 'style' }],
-        denyTitle: 'Refuse the presence',
-        denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
-        denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
-      };
-
-    default:
-      // Other agendas do not currently surface as overture cards.
-      return null;
-  }
+function buildInlineSpec(agenda: RivalAgenda): OvertureSpec | null {
+  const text = OVERTURE_TEXT[agenda];
+  const effects = INLINE_EFFECTS[agenda];
+  if (!text || !effects) return null;
+  return {
+    title: text.title,
+    body: text.body,
+    grantTitle: text.grantTitle,
+    denyTitle: text.denyTitle,
+    grantEffects: effects.grantEffects,
+    grantSignals: effects.grantSignals,
+    denyEffects: effects.denyEffects,
+    denySignals: effects.denySignals,
+  };
 }
 
 /** Phase 7 — selects an overture spec from the union of inline + wave-2
@@ -118,13 +109,12 @@ function buildInlineSpec(
  *  (turnNumber, neighborId) so the same state always produces the same card. */
 function buildSpec(
   agenda: RivalAgenda,
-  neighborName: string,
   neighborId: string,
   turnNumber: number,
 ): OvertureSpec | null {
-  const inline = buildInlineSpec(agenda, neighborName);
+  const inline = buildInlineSpec(agenda);
   const wave2 = WAVE_2_OVERTURES.filter((o) => o.agenda === agenda).map((o) =>
-    o.build(neighborName),
+    o.build(),
   );
   const candidates: OvertureSpec[] = inline ? [inline, ...wave2] : wave2;
   if (candidates.length === 0) return null;
@@ -152,13 +142,21 @@ export function generateOvertureCards(state: GameState): PetitionCardData[] {
     if (!neighbor.agenda) continue;
     if (neighbor.agenda.progressValue < PROGRESS_THRESHOLD) continue;
 
-    const spec = buildSpec(
+    const rawSpec = buildSpec(
       neighbor.agenda.current,
-      getNeighborDisplayName(neighbor.id, state),
       neighbor.id,
       state.turn.turnNumber,
     );
-    if (!spec) continue;
+    if (!rawSpec) continue;
+
+    const ctx: SmartTextContext = { neighborId: neighbor.id };
+    const spec: OvertureSpec = {
+      ...rawSpec,
+      title: substituteSmartPlaceholders(rawSpec.title, state, ctx),
+      body: substituteSmartPlaceholders(rawSpec.body, state, ctx),
+      grantTitle: substituteSmartPlaceholders(rawSpec.grantTitle, state, ctx),
+      denyTitle: substituteSmartPlaceholders(rawSpec.denyTitle, state, ctx),
+    };
 
     const eventId = `overture_${neighbor.id}_${neighbor.agenda.current}_t${state.turn.turnNumber}`;
     const grantChoiceId = `${eventId}_grant`;
@@ -170,6 +168,7 @@ export function generateOvertureCards(state: GameState): PetitionCardData[] {
       spec,
       grantChoiceId,
       denyChoiceId,
+      state,
     ));
   }
 
@@ -182,6 +181,7 @@ function buildOverturePetition(
   spec: OvertureSpec,
   grantChoiceId: string,
   denyChoiceId: string,
+  state: GameState,
 ): PetitionCardData {
   return {
     eventId,
@@ -210,7 +210,7 @@ function buildOverturePetition(
     ],
     context: [
       {
-        text: `Overture from ${neighbor.displayName ?? neighbor.id}`,
+        text: `Overture from ${getNeighborDisplayName(neighbor.id, state)}`,
         tone: 'info',
       },
     ],

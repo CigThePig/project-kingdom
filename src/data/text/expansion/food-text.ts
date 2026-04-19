@@ -45,7 +45,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_crop_disease: {
     title: 'Blight Upon the Fields',
-    body: 'A creeping rot has appeared in the wheat fields of the eastern provinces, turning golden stalks to blackened husks. Farmers watch helplessly as the disease spreads from field to field, and your agricultural advisors warn that without swift action, the harvest will be devastated.',
+    body: 'A creeping rot has appeared in the wheat fields of {region}, turning golden stalks to blackened husks. Farmers watch helplessly as the disease spreads from field to field, and {chancellor_or_fallback} warns that without swift action, the harvest will be devastated.',
     choices: {
       burn_infected_fields: 'Burn the Infected Fields',
       quarantine_affected_regions: 'Quarantine Affected Regions',
@@ -71,7 +71,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_distribution_inequity: {
     title: 'The Hungry and the Well-Fed',
-    body: 'While noble tables groan under the weight of roasted meats and fresh bread, common folk queue for hours to receive meagre portions of thin gruel. Unrest simmers in the lower quarters of the capital, and your advisors warn that the disparity has grown too visible to ignore.',
+    body: '{chancellor_or_fallback} warns that the disparity has grown too visible to ignore: while noble tables groan under the weight of roasted meats and fresh bread, common folk queue for hours to receive meagre portions of thin gruel. Unrest simmers in the lower quarters of the capital.',
     choices: {
       mandate_equal_rationing: 'Mandate Equal Rationing',
       open_royal_granaries: 'Open the Royal Granaries',
@@ -110,7 +110,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_noble_hoarding: {
     title: 'Noble Storehouses Overflow',
-    body: 'While the common granaries run low, your spymaster confirms that several noble houses have been quietly stockpiling grain and salted meat within their private holdings. The lords claim they merely exercise prudent management, but the people see only greed in a time of want.',
+    body: '{spymaster_or_fallback} confirms that several noble houses have been quietly stockpiling grain and salted meat within their private holdings while the common granaries run low. The lords claim they merely exercise prudent management, but the people see only greed in a time of want.',
     choices: {
       confiscate_noble_stores: 'Confiscate Noble Stores',
       negotiate_voluntary_sharing: 'Negotiate Voluntary Sharing',

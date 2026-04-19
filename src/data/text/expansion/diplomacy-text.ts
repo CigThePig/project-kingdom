@@ -1,9 +1,15 @@
 import type { EventTextEntry } from '../events';
 
+// Phase B identity sweep — bodies weave smart-card placeholders so the engine's
+// procgen rulers, dynasties, and capitals reach the player. Pattern: at most
+// one {ruler_full} per body (first mention), then {ruler}/{neighbor_short} for
+// follow-ups, then pronouns. {neighbor} stays in titles where realm-name
+// brevity reads better than ruler-name verbosity.
+
 export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   evt_exp_dip_foreign_emissary_arrives: {
     title: 'Foreign Emissary at the Gates',
-    body: 'An emissary from {neighbor} has arrived at the capital, bearing letters of introduction and requesting an audience. The nature of their mission is unclear, but the gesture suggests a desire for dialogue.',
+    body: 'An emissary of {ruler_full} has arrived at the capital from {capital}, bearing letters of introduction and requesting an audience. The nature of their mission is unclear, but the gesture suggests a desire for dialogue.',
     choices: {
       welcome_with_feast: 'Welcome with a Feast',
       formal_audience_only: 'Grant a Formal Audience',
@@ -11,7 +17,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_border_greeting: {
     title: 'Friendly Gesture at the Border',
-    body: 'The governor of {neighbor}\'s border province has sent a delegation bearing gifts and warm words. The gesture appears genuine and suggests they seek closer ties with the crown.',
+    body: "The governor of {neighbor_short}'s border province has sent a delegation bearing gifts and warm words on behalf of {ruler}. The gesture appears genuine and suggests {dynasty} seeks closer ties with the crown.",
     choices: {
       reciprocate_warmly: 'Reciprocate Warmly',
       acknowledge_politely: 'Acknowledge Politely',
@@ -19,7 +25,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_trade_proposal: {
     title: 'Trade Agreement Proposed',
-    body: '{neighbor} has proposed a formal trade agreement that would reduce tariffs on both sides of the border. Their merchants stand to benefit handsomely, though the terms could also enrich our own trading houses.',
+    body: '{ruler_full} has proposed a formal trade agreement that would reduce tariffs on both sides of the border. The merchants of {capital} stand to benefit handsomely, though the terms could also enrich our own trading houses.',
     choices: {
       accept_trade_terms: 'Accept Their Terms',
       counter_propose: 'Counter-Propose Better Terms',
@@ -28,7 +34,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_diplomatic_incident: {
     title: 'Diplomatic Incident with {neighbor}',
-    body: 'A clash between our border guards and {neighbor}\'s patrol has escalated into a serious diplomatic incident. Their ambassador demands satisfaction, and failure to respond could poison relations for years to come.',
+    body: "A clash between our border guards and {neighbor_short}'s patrol has escalated into a serious diplomatic incident. {ruler}'s ambassador demands satisfaction, and failure to respond could poison relations for years to come.",
     choices: {
       issue_formal_apology: 'Issue a Formal Apology',
       demand_reciprocal_apology: 'Demand They Apologize First',
@@ -37,7 +43,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_refugee_plea: {
     title: 'Refugees Seek Asylum',
-    body: 'A stream of refugees from {neighbor} has appeared at the kingdom\'s borders, pleading for sanctuary. They bring little but their labor and their desperation. The court debates whether charity or caution should prevail.',
+    body: "A stream of refugees from {neighbor} has appeared at the kingdom's borders, pleading for sanctuary. They bring little but their labor and their desperation, and the troubles that drove them from {ruler}'s realm are only half-told. The court debates whether charity or caution should prevail.",
     choices: {
       welcome_refugees: 'Welcome the Refugees',
       limited_asylum: 'Grant Limited Asylum',
@@ -46,7 +52,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_alliance_overture: {
     title: 'Alliance Proposed by {neighbor}',
-    body: 'The court of {neighbor} has sent a formal proposal for a mutual defense alliance. Such a pact would strengthen both realms against external threats, though it would also bind the crown to foreign entanglements.',
+    body: 'The court at {capital} has sent a formal proposal for a mutual defense alliance under the seal of {ruler_full}. Such a pact would strengthen both realms against external threats, though it would also bind the crown to {dynasty}\'s entanglements.',
     choices: {
       accept_alliance: 'Accept the Alliance',
       propose_limited_pact: 'Propose a Limited Pact',
@@ -55,7 +61,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_hostage_exchange: {
     title: 'Hostage Exchange Demanded',
-    body: '{neighbor} holds several of our subjects and demands an exchange of prisoners. The captives include a minor noble whose family petitions the crown daily. Negotiations will be delicate and costly.',
+    body: '{ruler_full} holds several of our subjects and demands an exchange of prisoners. The captives include a minor noble whose family petitions the crown daily; the negotiations with {capital} will be delicate and costly.',
     choices: {
       negotiate_exchange: 'Negotiate the Exchange',
       refuse_and_retaliate: 'Refuse and Retaliate',
@@ -64,7 +70,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_cultural_envoy: {
     title: 'Cultural Envoy Arrives',
-    body: 'A troupe of scholars and artists has arrived from {neighbor}, offering to share knowledge and artistic traditions. Their visit could enrich the kingdom\'s cultural life, though some view foreign influence with suspicion.',
+    body: "A troupe of scholars and artists has arrived from {capital}, sent by {ruler_full} to share knowledge and artistic traditions. Their visit could enrich the kingdom's cultural life, though some view foreign influence with suspicion.",
     choices: {
       host_cultural_exchange: 'Host a Cultural Exchange',
       polite_reception: 'Offer a Polite Reception',
@@ -72,7 +78,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_treaty_violation: {
     title: '{neighbor} Violates the Treaty',
-    body: 'Intelligence confirms that {neighbor} has flagrantly violated the terms of our standing agreement. Their forces have been spotted in restricted territory, and their merchants operate outside sanctioned channels. This cannot stand unanswered.',
+    body: '{ruler_full} has flagrantly violated the terms of our standing agreement. {neighbor_short}\'s forces have been spotted in restricted territory, and {dynasty}\'s merchants operate outside sanctioned channels. This cannot stand unanswered.',
     choices: {
       demand_reparations: 'Demand Reparations',
       military_posturing: 'Military Posturing',
@@ -82,7 +88,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_marriage_proposal: {
     title: 'Royal Marriage Proposed',
-    body: 'The court of {neighbor} proposes a marriage between a member of their ruling family and ours. Such a union would cement diplomatic ties and bring a substantial dowry, though it would intertwine our dynasties permanently.',
+    body: '{ruler_full} proposes a marriage between a member of {dynasty} and our own ruling family. Such a union would cement diplomatic ties and bring a substantial dowry, though it would intertwine the bloodlines of {capital} and the crown permanently.',
     choices: {
       accept_the_match: 'Accept the Match',
       negotiate_terms: 'Negotiate Better Terms',
@@ -91,7 +97,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_spy_scandal: {
     title: 'Espionage Scandal Erupts',
-    body: 'A network of foreign spies has been uncovered operating within the kingdom. {neighbor} denies involvement, but the evidence is damning. The court must decide how to respond without further destabilizing relations.',
+    body: '{spymaster_or_fallback} reports that a network of foreign spies has been uncovered operating within the kingdom. {ruler_full} denies involvement, but the evidence is damning. The court must decide how to respond without further destabilizing relations.',
     choices: {
       deny_involvement: 'Deny Our Own Involvement',
       expel_foreign_diplomats: 'Expel Foreign Diplomats',
@@ -100,7 +106,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_border_dispute_escalation: {
     title: 'Border Dispute Escalates',
-    body: 'The long-simmering dispute over the northern borderlands with {neighbor} has erupted into open confrontation. Both sides have moved troops to the contested region, and a single miscalculation could trigger armed conflict.',
+    body: 'The long-simmering dispute over the borderlands with {neighbor} has erupted into open confrontation. {ruler_full} has moved troops to the contested region, and a single miscalculation could trigger armed conflict.',
     choices: {
       show_of_force: 'Show of Force',
       propose_border_commission: 'Propose a Border Commission',
@@ -109,7 +115,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_peace_conference: {
     title: 'Regional Peace Conference',
-    body: '{neighbor} and other neighboring realms have expressed interest in a formal peace conference to address lingering tensions. Hosting such a gathering would be expensive but could establish the kingdom as a diplomatic leader in the region.',
+    body: '{ruler_full} and other neighboring crowns have expressed interest in a formal peace conference, to be hosted at {capital} or elsewhere. Hosting such a gathering would be expensive but could establish the kingdom as a diplomatic leader in the region.',
     choices: {
       host_the_conference: 'Host the Conference',
       attend_as_participant: 'Attend as Participant',
@@ -118,7 +124,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_trade_embargo_threat: {
     title: '{neighbor} Threatens Trade Embargo',
-    body: '{neighbor} has threatened to impose a complete trade embargo unless the kingdom meets a series of demands. Our merchants are alarmed, as {neighbor} controls key trade routes that our economy depends upon.',
+    body: '{ruler_full} has threatened to impose a complete trade embargo unless the kingdom meets a series of demands. Our merchants are alarmed, as {neighbor_short} controls key trade routes that our economy depends upon.',
     choices: {
       negotiate_compromise: 'Negotiate a Compromise',
       counter_embargo: 'Impose a Counter-Embargo',
@@ -128,7 +134,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_diplomatic_gift: {
     title: 'Generous Diplomatic Gift',
-    body: '{neighbor} has sent a lavish gift to the crown — fine textiles, rare spices, and a beautifully illuminated manuscript. The gesture speaks of genuine goodwill, though diplomacy rarely comes without expectation.',
+    body: '{ruler_full} has sent a lavish gift from {capital} — fine textiles, rare spices, and a beautifully illuminated manuscript bearing the seal of {dynasty}. The gesture speaks of genuine goodwill, though diplomacy rarely comes without expectation.',
     choices: {
       accept_graciously: 'Accept Graciously',
       reciprocate_generously: 'Reciprocate Generously',
@@ -136,7 +142,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_war_reparations_demand: {
     title: 'War Reparations Demanded',
-    body: '{neighbor} has issued a formal demand for war reparations, citing damages from past border conflicts. The sum is staggering, and refusal would almost certainly lead to military confrontation — yet paying would cripple the treasury.',
+    body: '{ruler_full} has issued a formal demand for war reparations, citing damages from past border conflicts. The sum is staggering, and refusal would almost certainly lead to military confrontation — yet paying would cripple the treasury.',
     choices: {
       pay_reparations: 'Pay the Reparations',
       refuse_and_mobilize: 'Refuse and Mobilize',
@@ -146,7 +152,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_visiting_dignitary: {
     title: 'Visiting Dignitary',
-    body: 'A dignitary of modest rank but considerable influence has arrived from {neighbor}. The visit offers an opportunity to strengthen informal ties and gather intelligence about their intentions.',
+    body: 'A dignitary of modest rank but considerable influence has arrived from {capital}, sent in {ruler}\'s name. The visit offers an opportunity to strengthen informal ties and gather intelligence about {neighbor_short}\'s intentions.',
     choices: {
       grand_welcome: 'Arrange a Grand Welcome',
       standard_reception: 'Standard Reception',
@@ -154,7 +160,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_foreign_merchant_dispute: {
     title: 'Foreign Merchant Dispute',
-    body: 'A dispute has erupted between local merchants and traders from {neighbor} over trading rights in the capital\'s market district. Both sides appeal to the crown for a ruling, and the decision will set a precedent for future commerce.',
+    body: "A dispute has erupted between local merchants and traders from {neighbor} over trading rights in the capital's market district. Both sides appeal to the crown for a ruling, and the decision will set a precedent for future commerce with {dynasty}.",
     choices: {
       side_with_local_merchants: 'Side with Local Merchants',
       side_with_foreign_traders: 'Side with Foreign Traders',
@@ -163,7 +169,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_border_patrol_contact: {
     title: 'Border Patrol Encounter',
-    body: 'Our border patrols report increased activity along the frontier. Soldiers from {neighbor} have been sighted near the boundary markers, their intentions unclear. The situation calls for either vigilance or outreach.',
+    body: 'Our border patrols report increased activity along the frontier. Soldiers under {ruler}\'s banner have been sighted near the boundary markers, their intentions unclear. The situation calls for either vigilance or outreach.',
     choices: {
       reinforce_patrols: 'Reinforce the Patrols',
       open_dialogue: 'Open Diplomatic Dialogue',
@@ -172,7 +178,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_tribute_request: {
     title: 'Tribute Demanded by {neighbor}',
-    body: 'The court of {neighbor} has sent envoys demanding annual tribute as a condition for continued peace. The demand is humiliating, but our military position leaves us vulnerable should diplomacy fail.',
+    body: '{ruler_full} has sent envoys demanding annual tribute as a condition for continued peace between {capital} and our throne. The demand is humiliating, but our military position leaves us vulnerable should diplomacy fail.',
     choices: {
       pay_the_tribute: 'Pay the Tribute',
       refuse_defiantly: 'Refuse Defiantly',
@@ -181,7 +187,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_diplomatic_marriage_offer: {
     title: 'Marriage Alliance Offered',
-    body: 'A noble house from {neighbor} proposes a marriage alliance that would bind our families and strengthen the bond between our realms. The match is advantageous, though it would create lasting obligations.',
+    body: 'A noble house allied to {dynasty} proposes a marriage alliance that would bind our families and strengthen the bond between our realms. The match is advantageous, though it would create lasting obligations toward {ruler}.',
     choices: {
       arrange_the_marriage: 'Arrange the Marriage',
       delay_decision: 'Delay the Decision',
@@ -189,7 +195,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_joint_military_exercise: {
     title: 'Joint Military Exercise Proposed',
-    body: '{neighbor} proposes joint military exercises along the shared border — a show of unity that would strengthen both armies and deter potential aggressors. Participation would demonstrate commitment to the alliance.',
+    body: '{ruler_full} proposes joint military exercises along the shared border — a show of unity that would strengthen both armies and deter potential aggressors. Participation would demonstrate commitment to the alliance with {dynasty}.',
     choices: {
       participate_fully: 'Participate Fully',
       send_observers_only: 'Send Observers Only',

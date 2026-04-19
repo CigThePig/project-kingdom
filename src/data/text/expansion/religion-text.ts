@@ -48,7 +48,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 5. Interfaith Dialogue ---
   evt_exp_rel_interfaith_dialogue: {
     title: 'Proposal for Interfaith Dialogue',
-    body: 'Scholars from a neighboring realm have proposed a formal dialogue between the faiths practiced on either side of the border. Some clergy see an opportunity for understanding and influence, while others view it as an invitation to heresy and foreign corruption.',
+    body: 'Scholars from across the border have proposed a formal dialogue between the faiths practiced on either side. Some clergy see an opportunity for understanding and influence, while others view it as an invitation to heresy and foreign corruption.',
     choices: {
       host_dialogue: 'Host the Dialogue at Court',
       permit_cautiously: 'Permit with Caution',
