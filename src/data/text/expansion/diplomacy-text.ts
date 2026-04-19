@@ -9,7 +9,7 @@ import type { EventTextEntry } from '../events';
 export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   evt_exp_dip_foreign_emissary_arrives: {
     title: 'Foreign Emissary at the Gates',
-    body: 'An emissary of {ruler_full} has arrived at the capital from {capital}, bearing letters of introduction and requesting an audience. The nature of their mission is unclear, but the gesture suggests a desire for dialogue.',
+    body: 'An emissary of {ruler_full} has arrived at the capital from {capital} this {season}, bearing letters of introduction and requesting an audience. The nature of their mission is unclear — though with the mood in {capital} reported as {rival_mood}, the gesture carries weight — and it suggests a desire for dialogue.',
     choices: {
       welcome_with_feast: 'Welcome with a Feast',
       formal_audience_only: 'Grant a Formal Audience',
@@ -25,7 +25,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_trade_proposal: {
     title: 'Trade Agreement Proposed',
-    body: '{ruler_full} has proposed a formal trade agreement that would reduce tariffs on both sides of the border. The merchants of {capital} stand to benefit handsomely, though the terms could also enrich our own trading houses.',
+    body: '{ruler_full} has proposed a formal trade agreement that would reduce tariffs on both sides of the border. With {neighbor_short} in {rival_economic_phase_lc}, the merchants of {capital} stand to benefit handsomely, though the terms could also enrich our own trading houses.',
     choices: {
       accept_trade_terms: 'Accept Their Terms',
       counter_propose: 'Counter-Propose Better Terms',
@@ -34,7 +34,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_diplomatic_incident: {
     title: 'Diplomatic Incident with {neighbor}',
-    body: "A clash between our border guards and {neighbor_short}'s patrol has escalated into a serious diplomatic incident. {ruler}'s ambassador demands satisfaction, and failure to respond could poison relations for years to come.",
+    body: "A clash between our border guards and {neighbor_short}'s patrol has escalated into a serious diplomatic incident this {season}. Relations between the courts presently stand at {diplomatic_posture}; {ruler}'s ambassador demands satisfaction, and failure to respond could poison them for years to come.",
     choices: {
       issue_formal_apology: 'Issue a Formal Apology',
       demand_reciprocal_apology: 'Demand They Apologize First',
@@ -43,7 +43,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_refugee_plea: {
     title: 'Refugees Seek Asylum',
-    body: "A stream of refugees from {neighbor} has appeared at the kingdom's borders, pleading for sanctuary. They bring little but their labor and their desperation, and the troubles that drove them from {ruler}'s realm are only half-told. The court debates whether charity or caution should prevail.",
+    body: "A stream of refugees from {neighbor} has appeared at the kingdom's borders this {season}, pleading for sanctuary. They bring little but their labor and their desperation, and the troubles that drove them from {ruler}'s realm — where {spymaster_or_fallback} reports the populace as {rival_mood} — are only half-told. The court debates whether charity or caution should prevail.",
     choices: {
       welcome_refugees: 'Welcome the Refugees',
       limited_asylum: 'Grant Limited Asylum',
@@ -52,7 +52,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_alliance_overture: {
     title: 'Alliance Proposed by {neighbor}',
-    body: 'The court at {capital} has sent a formal proposal for a mutual defense alliance under the seal of {ruler_full}. Such a pact would strengthen both realms against external threats, though it would also bind the crown to {dynasty}\'s entanglements.',
+    body: 'The court at {capital} has sent a formal proposal for a mutual defense alliance under the seal of {ruler_full}, with relations between the realms presently at {diplomatic_posture}. Such a pact would strengthen both realms against external threats, though it would also bind the crown to {dynasty}\'s entanglements.',
     choices: {
       accept_alliance: 'Accept the Alliance',
       propose_limited_pact: 'Propose a Limited Pact',
@@ -78,7 +78,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_treaty_violation: {
     title: '{neighbor} Violates the Treaty',
-    body: '{ruler_full} has flagrantly violated the terms of our standing agreement. {neighbor_short}\'s forces have been spotted in restricted territory, and {dynasty}\'s merchants operate outside sanctioned channels. This cannot stand unanswered.',
+    body: '{ruler_full} has flagrantly violated the terms of our standing agreement, pushing relations toward {diplomatic_posture}. {neighbor_short}\'s forces have been spotted in restricted territory, and {dynasty}\'s merchants operate outside sanctioned channels. This cannot stand unanswered.',
     choices: {
       demand_reparations: 'Demand Reparations',
       military_posturing: 'Military Posturing',
@@ -97,7 +97,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_spy_scandal: {
     title: 'Espionage Scandal Erupts',
-    body: '{spymaster_or_fallback} reports that a network of foreign spies has been uncovered operating within the kingdom. {ruler_full} denies involvement, but the evidence is damning. The court must decide how to respond without further destabilizing relations.',
+    body: '{spymaster_or_fallback} reports — from {intel_tier} standing on {neighbor} — that a network of foreign spies has been uncovered operating within the kingdom. {ruler_full} denies involvement, but the evidence is damning. The court must decide how to respond without pushing relations, already at {diplomatic_posture}, any further.',
     choices: {
       deny_involvement: 'Deny Our Own Involvement',
       expel_foreign_diplomats: 'Expel Foreign Diplomats',
@@ -106,7 +106,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_border_dispute_escalation: {
     title: 'Border Dispute Escalates',
-    body: 'The long-simmering dispute over the borderlands with {neighbor} has erupted into open confrontation. {ruler_full} has moved troops to the contested region, and a single miscalculation could trigger armed conflict.',
+    body: 'The long-simmering dispute over the borderlands with {neighbor} has erupted into open confrontation, with relations now at {diplomatic_posture}. {ruler_full} has moved troops to the contested region this {season}, and a single miscalculation could trigger armed conflict.',
     choices: {
       show_of_force: 'Show of Force',
       propose_border_commission: 'Propose a Border Commission',
@@ -124,7 +124,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_trade_embargo_threat: {
     title: '{neighbor} Threatens Trade Embargo',
-    body: '{ruler_full} has threatened to impose a complete trade embargo unless the kingdom meets a series of demands. Our merchants are alarmed, as {neighbor_short} controls key trade routes that our economy depends upon.',
+    body: '{ruler_full} has threatened to impose a complete trade embargo unless the kingdom meets a series of demands — a gambit that would bite hardest with our treasury in {treasury_tier} condition and {neighbor_short} itself in {rival_economic_phase_lc}. Our merchants are alarmed, as {neighbor_short} controls key trade routes that our economy depends upon.',
     choices: {
       negotiate_compromise: 'Negotiate a Compromise',
       counter_embargo: 'Impose a Counter-Embargo',
@@ -142,7 +142,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_war_reparations_demand: {
     title: 'War Reparations Demanded',
-    body: '{ruler_full} has issued a formal demand for war reparations, citing damages from past border conflicts. The sum is staggering, and refusal would almost certainly lead to military confrontation — yet paying would cripple the treasury.',
+    body: '{ruler_full} has issued a formal demand for war reparations, citing damages from past border conflicts. The sum is staggering, and refusal would almost certainly lead to military confrontation — yet paying from a treasury in {treasury_tier} condition would cripple the kingdom.',
     choices: {
       pay_reparations: 'Pay the Reparations',
       refuse_and_mobilize: 'Refuse and Mobilize',
@@ -152,7 +152,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_visiting_dignitary: {
     title: 'Visiting Dignitary',
-    body: 'A dignitary of modest rank but considerable influence has arrived from {capital}, sent in {ruler}\'s name. The visit offers an opportunity to strengthen informal ties and gather intelligence about {neighbor_short}\'s intentions.',
+    body: 'A dignitary of modest rank but considerable influence has arrived from {capital} this {season}, sent in {ruler}\'s name. The visit — welcome in light of {intel_tier} current intelligence on {neighbor} — offers an opportunity to strengthen informal ties and gather what {spymaster_or_fallback} cannot otherwise reach.',
     choices: {
       grand_welcome: 'Arrange a Grand Welcome',
       standard_reception: 'Standard Reception',
@@ -169,7 +169,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_border_patrol_contact: {
     title: 'Border Patrol Encounter',
-    body: 'Our border patrols report increased activity along the frontier. Soldiers under {ruler}\'s banner have been sighted near the boundary markers, their intentions unclear. The situation calls for either vigilance or outreach.',
+    body: 'Our border patrols report increased activity along the frontier this {season}. Soldiers under {ruler}\'s banner have been sighted near the boundary markers, their intentions unclear — and with intelligence on {neighbor} presently at {intel_tier}, {spymaster_or_fallback} cannot yet tell posture from provocation. The situation calls for either vigilance or outreach.',
     choices: {
       reinforce_patrols: 'Reinforce the Patrols',
       open_dialogue: 'Open Diplomatic Dialogue',
@@ -178,7 +178,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_tribute_request: {
     title: 'Tribute Demanded by {neighbor}',
-    body: '{ruler_full} has sent envoys demanding annual tribute as a condition for continued peace between {capital} and our throne. The demand is humiliating, but our military position leaves us vulnerable should diplomacy fail.',
+    body: '{ruler_full} has sent envoys demanding annual tribute as a condition for continued peace between {capital} and our throne, presently at {diplomatic_posture}. The demand is humiliating, but with our treasury in {treasury_tier} condition and military morale {morale_tier}, our position leaves us vulnerable should diplomacy fail.',
     choices: {
       pay_the_tribute: 'Pay the Tribute',
       refuse_defiantly: 'Refuse Defiantly',

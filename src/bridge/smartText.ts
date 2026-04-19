@@ -13,8 +13,14 @@
 // Exception: `{neighbor}` with no neighborId preserves the literal so legacy
 // call sites that had no event context keep their current behavior.
 
-import type { GameState, PopulationClass } from '../engine/types';
-import { CouncilSeat, Season, SeasonMonth, RegionalPosture } from '../engine/types';
+import type { GameState, PopulationClass, KingdomCondition } from '../engine/types';
+import {
+  CouncilSeat,
+  Season,
+  SeasonMonth,
+  RegionalPosture,
+  ConditionType,
+} from '../engine/types';
 import {
   getNeighborDisplayName,
   getNeighborRulerName,
@@ -27,9 +33,17 @@ import {
   getSettlementDisplayName,
 } from './nameResolver';
 import {
+  getRivalEconomicPhaseLabel,
+  getRivalMoodDescriptor,
+  getRivalCrisisClause,
+} from './rivalState';
+import {
   ECONOMIC_PHASE_LABELS,
   DIPLOMATIC_POSTURE_LABELS,
   TERRAIN_TYPE_LABELS,
+  CONDITION_TYPE_LABELS,
+  CONDITION_SEVERITY_ARTICLE,
+  BOND_KIND_LABELS,
 } from '../data/text/labels';
 import { THEMATIC_MONTH_NAMES } from '../data/text/month-names';
 import { SEASON_MONTHS } from '../engine/constants';
@@ -261,6 +275,66 @@ const DISPATCH: Record<string, Resolver> = {
   faith_tradition: (state) => titleCaseId(state.faithCulture.kingdomFaithTraditionId, 'the kingdom faith'),
   culture_identity: (state) => titleCaseId(state.faithCulture.kingdomCultureIdentityId, "the realm's ways"),
 
+  // ---- §3.2 Situational — region loyalty & military tier (Phase C) ----
+  loyalty_tier: (state, ctx) => {
+    if (!ctx.regionId) return 'settled';
+    const region = state.regions.find((r) => r.id === ctx.regionId);
+    if (region?.loyalty === undefined || region.loyalty === null) return 'settled';
+    return loyaltyTier(region.loyalty);
+  },
+  morale_tier: (state) => moraleTier(state.military.morale),
+  equipment_condition_tier: (state) => equipmentTier(state.military.equipmentCondition),
+
+  // ---- §3.2 Situational — parameterised active conditions ----
+  // `{condition:Drought}` → "a severe Drought" if a matching KingdomCondition is
+  // active on ctx.regionId (or kingdom-wide), otherwise "".
+  condition: (state, ctx, arg) => {
+    if (!arg) return '';
+    const found = findActiveCondition(state, ctx, arg);
+    if (!found) return '';
+    const label = CONDITION_TYPE_LABELS[found.type] ?? found.type;
+    return `${CONDITION_SEVERITY_ARTICLE[found.severity]} ${label}`;
+  },
+  // Companion: a short listing of all active conditions on the context region
+  // (or kingdom-wide). Empty if none.
+  condition_context: (state, ctx) => {
+    const conditions = collectActiveConditions(state, ctx);
+    if (conditions.length === 0) return '';
+    const labels = conditions.map((c) => CONDITION_TYPE_LABELS[c.type] ?? c.type);
+    return `already gripped by ${joinWithAnd(labels)}`;
+  },
+
+  // ---- §3.1 Identity — bonds (Phase C) ----
+  bond_kind: (state, ctx) => {
+    if (!ctx.bondId) return 'bond';
+    const bond = state.diplomacy.bonds?.find((b) => b.bondId === ctx.bondId);
+    if (!bond) return 'bond';
+    return BOND_KIND_LABELS[bond.kind] ?? 'bond';
+  },
+
+  // ---- §3.4 Stakes — rival-scoped (Phase C) ----
+  // Prefer the arg form `{rival_mood:neighbor_a}`; fall back to ctx.neighborId.
+  rival_mood: (state, ctx, arg) => {
+    const id = arg ?? ctx.neighborId;
+    if (!id) return 'settled';
+    return getRivalMoodDescriptor(id, state);
+  },
+  rival_crisis: (state, ctx, arg) => {
+    const id = arg ?? ctx.neighborId;
+    if (!id) return '';
+    return getRivalCrisisClause(id, state);
+  },
+  rival_economic_phase: (state, ctx, arg) => {
+    const id = arg ?? ctx.neighborId;
+    if (!id) return 'Stagnation';
+    return getRivalEconomicPhaseLabel(id, state);
+  },
+  rival_economic_phase_lc: (state, ctx, arg) => {
+    const id = arg ?? ctx.neighborId;
+    if (!id) return 'stagnation';
+    return getRivalEconomicPhaseLabel(id, state).toLowerCase();
+  },
+
   // ---- §3.5 Grammar helpers (gender-neutral defaults; refine in later phase) ----
   'their/his/her': () => 'their',
   'They/He/She': () => 'They',
@@ -274,12 +348,8 @@ const DISPATCH: Record<string, Resolver> = {
   watching_faction: () => '',
   storyline_arc_note: () => '',
 
-  // ---- §3.3 / §3.4 Parameterised tokens — reserved, empty until Phase D ----
-  // `{condition:Drought}`, `{agent:agent_abc}`, `{rival_mood:neighbor_a}`, etc.
-  condition: () => '',
+  // ---- §3.3 Parameterised memory tokens — reserved, empty until Phase D ----
   agent: () => '',
-  rival_mood: () => '',
-  rival_crisis: () => '',
   prior_decision_clause: () => '',
 };
 
@@ -349,4 +419,89 @@ function ordinal(n: number): string {
   const s = ['th', 'st', 'nd', 'rd'];
   const v = n % 100;
   return n + (s[(v - 20) % 10] ?? s[v] ?? s[0]);
+}
+
+// ---- Phase C tier helpers ----
+// Band edges align with the gameplay-blueprint thresholds in engine/constants:
+//   region.loyalty: <15 rebellion, <25 separatist, <40 reduced-tax
+//   military.morale, military.equipmentCondition: 0..100, starting 65/55.
+
+function loyaltyTier(value: number): string {
+  if (value < 15) return 'rebellious';
+  if (value < 25) return 'resentful';
+  if (value < 40) return 'restless';
+  if (value < 60) return 'neutral';
+  if (value < 80) return 'loyal';
+  return 'devoted';
+}
+
+function moraleTier(value: number): string {
+  if (value < 20) return 'broken';
+  if (value < 40) return 'shaken';
+  if (value < 60) return 'steady';
+  if (value < 80) return 'confident';
+  return 'ardent';
+}
+
+function equipmentTier(value: number): string {
+  if (value < 20) return 'ruined';
+  if (value < 40) return 'worn';
+  if (value < 60) return 'serviceable';
+  if (value < 80) return 'sound';
+  return 'pristine';
+}
+
+// Resolve a ConditionType argument from the authored token. Authors may write
+// either the enum key (`{condition:Drought}`) or the value it serializes to
+// (they are identical here), so we look the string up directly.
+function resolveConditionType(arg: string): ConditionType | undefined {
+  // ConditionType is a string enum where keys and values coincide; cast after
+  // guarding against unknown entries.
+  const match = (ConditionType as Record<string, string>)[arg];
+  if (match !== undefined) return match as ConditionType;
+  // Also allow authored args whose casing differs from the enum member name.
+  const normalised = arg.toLowerCase();
+  for (const v of Object.values(ConditionType)) {
+    if (v.toLowerCase() === normalised) return v as ConditionType;
+  }
+  return undefined;
+}
+
+function findActiveCondition(
+  state: GameState,
+  ctx: SmartTextContext,
+  arg: string,
+): KingdomCondition | undefined {
+  const type = resolveConditionType(arg);
+  if (!type) return undefined;
+  // Prefer a match on the context region if supplied; otherwise kingdom-wide.
+  if (ctx.regionId) {
+    const region = state.regions.find((r) => r.id === ctx.regionId);
+    const hit = region?.localConditions?.find((c) => c.type === type);
+    if (hit) return hit;
+  }
+  return state.environment?.activeConditions?.find((c) => c.type === type);
+}
+
+function collectActiveConditions(
+  state: GameState,
+  ctx: SmartTextContext,
+): KingdomCondition[] {
+  const scope: KingdomCondition[] = [];
+  if (ctx.regionId) {
+    const region = state.regions.find((r) => r.id === ctx.regionId);
+    if (region?.localConditions?.length) scope.push(...region.localConditions);
+  }
+  const kingdomWide = state.environment?.activeConditions ?? [];
+  for (const c of kingdomWide) {
+    if (!scope.some((existing) => existing.type === c.type)) scope.push(c);
+  }
+  return scope;
+}
+
+function joinWithAnd(parts: string[]): string {
+  if (parts.length === 0) return '';
+  if (parts.length === 1) return parts[0];
+  if (parts.length === 2) return `${parts[0]} and ${parts[1]}`;
+  return `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]}`;
 }

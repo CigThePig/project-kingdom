@@ -22,6 +22,7 @@ import {
   ReligiousOrderType,
   ReligiousTolerance,
   ResourceType,
+  RivalCrisisType,
   Season,
   StorylineCategory,
   TaxationLevel,
@@ -29,6 +30,7 @@ import {
   TradeOpenness,
   ConditionSeverity,
 } from '../../engine/types';
+import type { BondKind } from '../../engine/types';
 
 // ============================================================
 // Navigation & Screen Labels
@@ -542,6 +544,47 @@ export const CONDITION_SEVERITY_LABELS: Record<ConditionSeverity, string> = {
   [ConditionSeverity.Mild]: 'Mild',
   [ConditionSeverity.Moderate]: 'Moderate',
   [ConditionSeverity.Severe]: 'Severe',
+};
+
+// Article prefix ("a"/"an") used when a condition is introduced mid-sentence via
+// the `{condition:Type}` smart-text token.
+export const CONDITION_SEVERITY_ARTICLE: Record<ConditionSeverity, string> = {
+  [ConditionSeverity.Mild]: 'a mild',
+  [ConditionSeverity.Moderate]: 'a',
+  [ConditionSeverity.Severe]: 'a severe',
+};
+
+// Phase 13 — Bond kind → lower-case display phrase, used inside sentences
+// ("the marriage bond", "the trade league with…").
+export const BOND_KIND_LABELS: Record<BondKind, string> = {
+  royal_marriage: 'royal marriage',
+  hostage_exchange: 'hostage exchange',
+  vassalage: 'vassalage',
+  mutual_defense: 'mutual-defense pact',
+  coalition: 'coalition',
+  trade_league: 'trade league',
+  religious_accord: 'religious accord',
+  cultural_exchange: 'cultural exchange',
+};
+
+// Phase C — Rival mood descriptor bands for `{rival_mood:id}` smart-text token.
+export const RIVAL_MOOD_LABELS = {
+  restive: 'restive',
+  uneasy: 'uneasy',
+  settled: 'settled',
+  content: 'content',
+  jubilant: 'jubilant',
+} as const;
+
+// Phase C — Rival crisis short clauses for `{rival_crisis:id}` smart-text token.
+// Each clause is designed to sit mid-sentence without punctuation.
+export const RIVAL_CRISIS_CLAUSES: Record<RivalCrisisType, string> = {
+  [RivalCrisisType.Famine]: 'facing a grain failure of their own',
+  [RivalCrisisType.Insolvency]: 'with their coffers running dry',
+  [RivalCrisisType.CivilUnrest]: 'struggling to hold their streets',
+  [RivalCrisisType.SuccessionStruggle]: 'locked in a succession dispute',
+  [RivalCrisisType.Plague]: 'haunted by a spreading sickness',
+  [RivalCrisisType.ReligiousSchism]: 'split by a religious schism',
 };
 
 export const ECONOMIC_OUTPUT_LABELS: Record<string, string> = {
