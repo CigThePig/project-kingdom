@@ -490,7 +490,8 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
     triggerConditions: [
       { type: 'any_of', conditions: [
         { type: 'stability_below', threshold: 40 },
-        { type: 'consequence_tag_present', consequenceTag: 'currency_debased' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_eco_currency_debasement:debase_the_coinage' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_exp_w2_monetary_crisis:debase_the_coinage' },
       ]},
       { type: 'population_above', threshold: 600 },
     ],
