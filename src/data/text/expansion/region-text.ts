@@ -4,7 +4,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 1. Provincial Autonomy Dispute ---
   evt_exp_reg_autonomy_dispute: {
     title: 'Provincial Demands for Autonomy',
-    body: 'The governor of {region} — where the folk are presently {loyalty_tier} under a posture of {posture} — has petitioned the crown for expanded powers of self-governance. Local lords echo the call, citing the particular needs and traditions of their {terrain} reaches. Yielding may preserve peace, yet it risks emboldening others to seek the same.',
+    body: 'The governor of {region} — where the folk are presently {loyalty_tier} under a posture of {posture} — has petitioned the crown for expanded powers of self-governance. Local lords echo the call, citing the particular needs and traditions of their {terrain} reaches. Yielding may preserve peace, yet it risks emboldening others to seek the same.{prior_decision_clause:tax}',
     choices: {
       grant_limited_autonomy: 'Grant Limited Autonomy',
       reassert_central_control: 'Reassert Central Control',

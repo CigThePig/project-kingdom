@@ -13,13 +13,16 @@
 // Exception: `{neighbor}` with no neighborId preserves the literal so legacy
 // call sites that had no event context keep their current behavior.
 
-import type { GameState, PopulationClass, KingdomCondition } from '../engine/types';
+import type { GameState, KingdomCondition } from '../engine/types';
 import {
   CouncilSeat,
   Season,
   SeasonMonth,
   RegionalPosture,
   ConditionType,
+  EventCategory,
+  StyleAxis,
+  PopulationClass,
 } from '../engine/types';
 import {
   getNeighborDisplayName,
@@ -44,6 +47,7 @@ import {
   CONDITION_TYPE_LABELS,
   CONDITION_SEVERITY_ARTICLE,
   BOND_KIND_LABELS,
+  CLASS_PLURAL_LABELS,
 } from '../data/text/labels';
 import { THEMATIC_MONTH_NAMES } from '../data/text/month-names';
 import { SEASON_MONTHS } from '../engine/constants';
@@ -67,6 +71,8 @@ export interface SmartTextContext {
   initiativeDefId?: string;
   storylineDefId?: string;
   worldEventDefId?: string;
+  /** Phase D — biases `{recent_causal}` and `{watching_faction}` selection. */
+  eventCategory?: EventCategory;
 }
 
 // ============================================================
@@ -340,17 +346,22 @@ const DISPATCH: Record<string, Resolver> = {
   'They/He/She': () => 'They',
   'is/was': () => 'is',
 
-  // ---- §3.3 Memory clauses — reserved, empty until Phase D ----
-  neighbor_memory_clause: () => '',
-  ruling_style_note: () => '',
-  recent_causal: () => '',
-  inter_rival_note: () => '',
-  watching_faction: () => '',
-  storyline_arc_note: () => '',
+  // ---- §3.3 Memory clauses (Phase D) ----
+  // Each clause emits a short trailing fragment with a leading space when state
+  // supports it, or an empty string otherwise. Clauses must compose cleanly
+  // when concatenated by template authors (e.g. `{ruling_style_note}{recent_causal}`).
+  neighbor_memory_clause: (state, ctx) => neighborMemoryClause(state, ctx),
+  ruling_style_note: (state) => rulingStyleNote(state),
+  recent_causal: (state, ctx) => recentCausalClause(state, ctx),
+  inter_rival_note: (state, ctx) => interRivalClause(state, ctx),
+  watching_faction: (state, ctx) => watchingFactionClause(state, ctx),
+  storyline_arc_note: (state, ctx) => storylineArcNote(state, ctx),
 
-  // ---- §3.3 Parameterised memory tokens — reserved, empty until Phase D ----
+  // ---- §3.3 Parameterised memory tokens (Phase D) ----
+  // `{agent:id}` is reserved for Phase F (advisor/agent name resolvers) and
+  // remains empty here so authoring against it stays safe.
   agent: () => '',
-  prior_decision_clause: () => '',
+  prior_decision_clause: (state, _ctx, arg) => priorDecisionClause(state, arg),
 };
 
 // ============================================================
@@ -505,3 +516,292 @@ function joinWithAnd(parts: string[]): string {
   if (parts.length === 2) return `${parts[0]} and ${parts[1]}`;
   return `${parts.slice(0, -1).join(', ')}, and ${parts[parts.length - 1]}`;
 }
+
+// ============================================================
+// Phase D — Memory clause generators (§3.3)
+// ============================================================
+//
+// Every helper below returns a string that *either* starts with a leading
+// space and reads as a complete trailing clause, *or* is empty. Authors
+// concatenate them straight into a body without worrying about agreement,
+// punctuation, or doubled spaces — empty inputs disappear.
+
+const PRIOR_DECISION_MAX_AGE_TURNS = 8;
+
+/**
+ * Walks `persistentConsequences` newest-first for a tag matching `prefix`
+ * (case-insensitive substring match against the full tag). Caps at
+ * PRIOR_DECISION_MAX_AGE_TURNS so old decisions don't echo forever.
+ */
+function priorDecisionClause(state: GameState, prefix: string | undefined): string {
+  if (!prefix) return '';
+  const consequences = state.persistentConsequences;
+  if (!consequences?.length) return '';
+  const needle = prefix.toLowerCase();
+  const sorted = [...consequences].sort((a, b) => b.turnApplied - a.turnApplied);
+  for (const pc of sorted) {
+    if (!pc.tag.toLowerCase().includes(needle)) continue;
+    const turnsAgo = state.turn.turnNumber - pc.turnApplied;
+    if (turnsAgo < 0) continue;
+    if (turnsAgo > PRIOR_DECISION_MAX_AGE_TURNS) continue;
+    return ` — echoes of a decision ${seasonsAgoPhrase(turnsAgo)}`;
+  }
+  return '';
+}
+
+// One turn = one season per turn-resolution.ts ("1 turn = 1 season ≈ 3 months").
+function seasonsAgoPhrase(turnsAgo: number): string {
+  if (turnsAgo <= 0) return 'this season';
+  if (turnsAgo === 1) return 'a season past';
+  return `${turnsAgo} seasons past`;
+}
+
+const MEMORY_TYPE_PHRASE: Record<RivalMemoryEntry['type'], string> = {
+  breach: 'has not forgotten',
+  slight: 'still smarts from',
+  territorial_loss: 'still grieves the loss of',
+  favor: 'still remembers your kindness over',
+  demonstration: 'remembers your show of strength at',
+};
+
+// Coarse humanization of memory `source` strings into noun phrases. Sources
+// are internal tokens like `bond_breach:royal_marriage:reason` or
+// `accepted_proposal:treaty_t8`; we match on segments so authoring drift
+// doesn't immediately desync the copy.
+function humanizeMemorySource(source: string): string {
+  const lower = source.toLowerCase();
+  if (lower.includes('royal_marriage')) return 'the broken marriage pact';
+  if (lower.includes('hostage')) return 'the hostage exchange';
+  if (lower.includes('vassalage')) return 'the broken oath of vassalage';
+  if (lower.includes('mutual_defense') || lower.includes('coalition')) {
+    return 'the abandoned defense pact';
+  }
+  if (lower.includes('religious_accord')) return 'the religious accord';
+  if (lower.includes('cultural_exchange')) return 'the cultural exchange';
+  if (lower.includes('trade_league')) return 'the broken trade league';
+  if (lower.startsWith('accepted_proposal') || lower.includes('accepted')) {
+    return 'the proposal you accepted';
+  }
+  if (lower.startsWith('overture_granted')) return 'the overture you granted';
+  if (lower.startsWith('overture_denied')) return 'the overture you refused';
+  if (lower.startsWith('lost_region')) return 'the territory it once held';
+  return 'the matter between you';
+}
+
+function neighborMemoryClause(state: GameState, ctx: SmartTextContext): string {
+  const id = ctx.neighborId;
+  if (!id) return '';
+  const neighbor = state.diplomacy.neighbors.find((n) => n.id === id);
+  const memory = neighbor?.memory ?? [];
+  if (memory.length === 0) return '';
+  // Filter by minimum weight; prefer dramatic types when weights tie.
+  const TYPE_DRAMA: Record<RivalMemoryEntry['type'], number> = {
+    breach: 4,
+    territorial_loss: 4,
+    slight: 3,
+    demonstration: 2,
+    favor: 1,
+  };
+  const eligible = memory.filter((m) => m.weight >= 0.4);
+  if (eligible.length === 0) return '';
+  const sorted = [...eligible].sort((a, b) => {
+    if (b.weight !== a.weight) return b.weight - a.weight;
+    return TYPE_DRAMA[b.type] - TYPE_DRAMA[a.type];
+  });
+  const pick = sorted[0];
+  const verb = MEMORY_TYPE_PHRASE[pick.type];
+  const noun = humanizeMemorySource(pick.source);
+  const display = neighbor ? getNeighborDisplayName(id, state) : 'They';
+  const subject = stripNeighborPrefix(display);
+  return ` ${subject} ${verb} ${noun}.`;
+}
+
+// Mirrors the prefix-stripping inside the {neighbor_short} resolver so the
+// memory clause reads "Agroth has…" rather than "Kingdom of Agroth has…".
+function stripNeighborPrefix(display: string): string {
+  return display
+    .replace(/^Kingdom of /, '')
+    .replace(/^Realm of /, '')
+    .replace(/^Crown of /, '')
+    .replace(/^Free Cities of /, '')
+    .replace(/^The /, '')
+    .replace(/ Dominion$/, '')
+    .replace(/ Confederation$/, '')
+    .replace(/ Marches$/, '');
+}
+
+const RULING_STYLE_MIN_ABS = 20;
+
+const AXIS_POSITIVE_NAMES: Record<StyleAxis, string> = {
+  [StyleAxis.Authority]: 'Authoritarian',
+  [StyleAxis.Economy]: 'Mercantilist',
+  [StyleAxis.Military]: 'Martial',
+  [StyleAxis.Faith]: 'Theocratic',
+};
+const AXIS_NEGATIVE_NAMES: Record<StyleAxis, string> = {
+  [StyleAxis.Authority]: 'Permissive',
+  [StyleAxis.Economy]: 'Populist',
+  [StyleAxis.Military]: 'Pacifist',
+  [StyleAxis.Faith]: 'Secular',
+};
+
+function rulingStyleNote(state: GameState): string {
+  const axes = state.rulingStyle?.axes;
+  if (!axes) return '';
+  let bestAxis: StyleAxis | null = null;
+  let bestAbs = RULING_STYLE_MIN_ABS - 1;
+  for (const axis of Object.values(StyleAxis)) {
+    const v = axes[axis] ?? 0;
+    const abs = Math.abs(v);
+    if (abs > bestAbs) {
+      bestAbs = abs;
+      bestAxis = axis;
+    }
+  }
+  if (!bestAxis) return '';
+  const value = axes[bestAxis] ?? 0;
+  const label = value >= 0
+    ? AXIS_POSITIVE_NAMES[bestAxis]
+    : AXIS_NEGATIVE_NAMES[bestAxis];
+  return ` as befits your ${label} reign`;
+}
+
+// Map causal `description` codes (internal, set at maybeRecord call sites in
+// turn-resolution.ts) to short human noun-phrases. Unknown codes return null
+// so {recent_causal} can decline to emit a clause rather than leak codes.
+const CAUSAL_PHRASES: Record<string, string> = {
+  // economy
+  momentum_shift: 'the economy shifting under foot',
+  cycle_phase_changed: 'the changing economic tide',
+  income_and_expenses: 'the kingdom\'s ledgers',
+  trade_income_reduced: 'trade revenues weakened',
+  balance_changed: 'the treasury balance',
+  // food
+  production_and_consumption: 'the harvest tally',
+  reserves_changed: 'the granary reserves',
+  production_decreased: 'reduced harvests',
+  condition_food_penalty: 'the spreading blight',
+  // population
+  growth_and_death: 'the births and deaths',
+  total_changed: 'shifting populations',
+  migration_pressure: 'the migration pressures',
+  migration_flow: 'people moving between provinces',
+  // stability & regions
+  loyalty_crisis: 'a loyalty crisis',
+  regional_unrest: 'regional unrest',
+  social_condition: 'the strained social fabric',
+  stability_changed: 'the realm\'s stability',
+  condition_stability_effect: 'the active conditions',
+  condition_trade_penalty: 'disrupted trade routes',
+};
+
+function humanizeCausalNode(desc: string): string | null {
+  const direct = CAUSAL_PHRASES[desc];
+  if (direct) return direct;
+  // Heuristic: '<thing>_<verb>' → render the verb as past tense if recognizable.
+  if (desc.endsWith('_emerged')) {
+    const base = desc.slice(0, -'_emerged'.length).replace(/_/g, ' ');
+    return `the rise of ${base}`;
+  }
+  return null;
+}
+
+const CATEGORY_TO_CAUSAL_SYSTEM: Partial<Record<EventCategory, string>> = {
+  [EventCategory.Food]: 'food',
+  [EventCategory.Economy]: 'treasury',
+  [EventCategory.Military]: 'military',
+  [EventCategory.Diplomacy]: 'diplomacy',
+  [EventCategory.Environment]: 'environment',
+  [EventCategory.PublicOrder]: 'stability',
+  [EventCategory.Religion]: 'faith',
+  [EventCategory.Culture]: 'culture',
+  [EventCategory.Espionage]: 'espionage',
+  [EventCategory.Knowledge]: 'knowledge',
+  [EventCategory.ClassConflict]: 'population',
+  [EventCategory.Region]: 'region',
+  [EventCategory.Kingdom]: 'governance',
+};
+
+function recentCausalClause(state: GameState, ctx: SmartTextContext): string {
+  const chains = state.causalLedger?.recentChains;
+  if (!chains?.length) return '';
+  const targetSystem = ctx.eventCategory
+    ? CATEGORY_TO_CAUSAL_SYSTEM[ctx.eventCategory] ?? null
+    : null;
+  // Prefer a chain that touches the target system, otherwise fall back to the
+  // highest-magnitude chain whose root *and* effect both humanize cleanly.
+  const matched = targetSystem
+    ? chains.find(
+        (c) => c.rootCause.system === targetSystem || c.finalEffect.system === targetSystem,
+      )
+    : null;
+  const fallback = [...chains].sort((a, b) => b.totalMagnitude - a.totalMagnitude)[0];
+  const candidates = matched ? [matched, fallback] : [fallback];
+  for (const chain of candidates) {
+    if (!chain) continue;
+    const cause = humanizeCausalNode(chain.rootCause.description);
+    const effect = humanizeCausalNode(chain.finalEffect.description);
+    if (!cause || !effect) continue;
+    return ` — ${cause} has shaped ${effect}`;
+  }
+  return '';
+}
+
+const AGREEMENT_PHRASE: Record<string, string> = {
+  trade_pact: 'fresh from signing a trade pact with',
+  alliance: 'bound in alliance with',
+  war: 'now at open war with',
+};
+
+function interRivalClause(state: GameState, ctx: SmartTextContext): string {
+  const id = ctx.neighborId;
+  if (!id) return '';
+  const agreements = state.diplomacy.interRivalAgreements ?? [];
+  if (agreements.length === 0) return '';
+  const involving = agreements
+    .filter((ag) => ag.a === id || ag.b === id)
+    .sort((a, b) => b.turnStarted - a.turnStarted);
+  const pick = involving[0];
+  if (!pick) return '';
+  const otherId = pick.a === id ? pick.b : pick.a;
+  const otherName = stripNeighborPrefix(getNeighborDisplayName(otherId, state));
+  const phrase = AGREEMENT_PHRASE[pick.kind] ?? `bound by a ${pick.kind} with`;
+  return ` — ${phrase} ${otherName}`;
+}
+
+function watchingFactionClause(state: GameState, ctx: SmartTextContext): string {
+  const target = ctx.classId ?? findPressuredClass(state);
+  if (!target) return '';
+  const label = (CLASS_PLURAL_LABELS[target] ?? String(target)).toLowerCase();
+  return ` — the ${label} watch closely`;
+}
+
+function findPressuredClass(state: GameState): PopulationClass | null {
+  let best: PopulationClass | null = null;
+  let bestScore = 0;
+  for (const cls of Object.values(PopulationClass)) {
+    const stats = state.population[cls];
+    if (!stats) continue;
+    const delta = Math.abs(stats.satisfactionDeltaLastTurn ?? 0);
+    const lowness = Math.max(0, 35 - stats.satisfaction);
+    const score = Math.max(delta >= 5 ? delta : 0, lowness);
+    if (score > bestScore) {
+      bestScore = score;
+      best = cls;
+    }
+  }
+  return best;
+}
+
+function storylineArcNote(state: GameState, ctx: SmartTextContext): string {
+  const id = ctx.storylineDefId ?? state.activeStorylines?.[0]?.definitionId;
+  if (!id) return '';
+  const title = STORYLINE_TEXT[id]?.title;
+  if (!title) return '';
+  return ` — a beat in the unfolding ${title}`;
+}
+
+// Local re-import keeps the helper section self-contained for readability.
+type RivalMemoryEntry = NonNullable<
+  GameState['diplomacy']['neighbors'][number]['memory']
+>[number];

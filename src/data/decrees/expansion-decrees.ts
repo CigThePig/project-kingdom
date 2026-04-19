@@ -59,7 +59,7 @@ export const EXPANSION_DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.MilitaryCaste],
     effectPreview:
-      'Create a secret advisory council of spymasters. Maximizes intelligence capability but concentrates dangerous power outside public oversight.',
+      'Create a secret advisory council of spymasters. Maximizes intelligence capability but concentrates dangerous power outside public oversight.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -123,7 +123,7 @@ export const EXPANSION_DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Commoners, PopulationClass.Clergy, PopulationClass.Nobility],
     effectPreview:
-      'Create a kingdom-wide university system. Transforms knowledge acquisition and cultural prestige, but requires enormous investment and may upset traditional power structures.',
+      'Create a kingdom-wide university system. Transforms knowledge acquisition and cultural prestige, but requires enormous investment and may upset traditional power structures.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: { branch: KnowledgeBranch.CulturalScholarly, milestoneIndex: 1 },
     isRepeatable: false,
@@ -187,7 +187,7 @@ export const EXPANSION_DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Commoners, PopulationClass.Merchants],
     effectPreview:
-      'Launch a comprehensive modernization of farming practices. Dramatically increases food production and trade in agricultural goods.',
+      'Launch a comprehensive modernization of farming practices. Dramatically increases food production and trade in agricultural goods.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: { branch: KnowledgeBranch.Agricultural, milestoneIndex: 2 },
     isRepeatable: false,
@@ -251,7 +251,7 @@ export const EXPANSION_DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Commoners, PopulationClass.Nobility, PopulationClass.Clergy],
     effectPreview:
-      'Create a supreme judicial body with authority over all courts. Establishes rule of law at the highest level but permanently limits royal discretion.',
+      'Create a supreme judicial body with authority over all courts. Establishes rule of law at the highest level but permanently limits royal discretion.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: { branch: KnowledgeBranch.Civic, milestoneIndex: 2 },
     isRepeatable: false,

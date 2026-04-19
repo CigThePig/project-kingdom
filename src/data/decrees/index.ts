@@ -125,7 +125,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners, PopulationClass.Nobility],
     effectPreview:
-      'Grant merchants formal political representation and autonomous trade governance. A transformative act that massively boosts commerce but permanently shifts power away from the nobility.',
+      'Grant merchants formal political representation and autonomous trade governance. A transformative act that massively boosts commerce but permanently shifts power away from the nobility.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -189,7 +189,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners, PopulationClass.Nobility],
     effectPreview:
-      'Declare the kingdom a dominant commercial power, establishing trade dominance across all neighboring regions. Transforms the economy but draws the ire of foreign rivals and domestic nobles alike.',
+      'Declare the kingdom a dominant commercial power, establishing trade dominance across all neighboring regions. Transforms the economy but draws the ire of foreign rivals and domestic nobles alike.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -281,7 +281,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.MilitaryCaste, PopulationClass.Commoners, PopulationClass.Nobility],
     effectPreview:
-      'Transform the entire kingdom into a fortified domain with layered defenses and militarized infrastructure. An extreme commitment that makes the realm nearly impregnable but reshapes society around permanent defense.',
+      'Transform the entire kingdom into a fortified domain with layered defenses and militarized infrastructure. An extreme commitment that makes the realm nearly impregnable but reshapes society around permanent defense.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -345,7 +345,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.MilitaryCaste, PopulationClass.Merchants, PopulationClass.Commoners],
     effectPreview:
-      'Reorganize the kingdom\'s entire manufacturing capacity around military production. Creates an unmatched arsenal but diverts resources from civilian needs and reshapes the economy around war.',
+      'Reorganize the kingdom\'s entire manufacturing capacity around military production. Creates an unmatched arsenal but diverts resources from civilian needs and reshapes the economy around war.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -436,7 +436,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners, PopulationClass.MilitaryCaste],
     effectPreview:
-      'Complete a unified transit system with way stations, bridges, and military supply routes. The kingdom becomes interconnected as never before, benefiting commerce, defense, and civilian life alike.',
+      'Complete a unified transit system with way stations, bridges, and military supply routes. The kingdom becomes interconnected as never before, benefiting commerce, defense, and civilian life alike.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -526,7 +526,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: ['Civic Administration milestone 2'],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Clergy, PopulationClass.Commoners],
     effectPreview:
-      'Consolidate all governance under direct crown authority, eliminating feudal intermediaries. A revolutionary act that maximizes administrative efficiency but provokes intense aristocratic opposition.',
+      'Consolidate all governance under direct crown authority, eliminating feudal intermediaries. A revolutionary act that maximizes administrative efficiency but provokes intense aristocratic opposition.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: {
       branch: KnowledgeBranch.Civic,
@@ -617,7 +617,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Clergy, PopulationClass.Nobility, PopulationClass.Commoners],
     effectPreview:
-      'Establish a permanent religious council with formal advisory power over crown decisions. Faith becomes a pillar of governance, but the clergy gains unprecedented influence over temporal affairs.',
+      'Establish a permanent religious council with formal advisory power over crown decisions. Faith becomes a pillar of governance, but the clergy gains unprecedented influence over temporal affairs.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,

@@ -11,11 +11,25 @@ import {
   ConditionSeverity,
   ConditionType,
   CouncilSeat,
+  EventCategory,
+  PopulationClass,
   RegionalPosture,
   RivalCrisisType,
   Season,
+  StorylineCategory,
+  StorylineStatus,
+  StyleAxis,
 } from '../engine/types';
-import type { Bond, GameState, KingdomCondition } from '../engine/types';
+import type {
+  ActiveStoryline,
+  Bond,
+  CausalChain,
+  GameState,
+  InterRivalAgreement,
+  KingdomCondition,
+  PersistentConsequence,
+  RivalMemoryEntry,
+} from '../engine/types';
 
 function mutate(state: GameState, fn: (s: GameState) => void): GameState {
   fn(state);
@@ -582,27 +596,355 @@ describe('substituteSmartPlaceholders', () => {
   });
 
   // ----------------------------------------------------------------
-  // §3.3 Memory tokens — still reserved, empty until Phase D
+  // §3.3 Memory tokens — Phase D
   // ----------------------------------------------------------------
 
-  describe('deferred Phase D tokens resolve to empty strings (no raw leaks)', () => {
-    const reserved = [
-      '{neighbor_memory_clause}',
-      '{ruling_style_note}',
-      '{recent_causal}',
-      '{inter_rival_note}',
-      '{watching_faction}',
-      '{storyline_arc_note}',
-      '{agent:agent_abc}',
-      '{prior_decision_clause:merchant}',
-    ];
+  describe('Phase D — memory clause tokens', () => {
+    // ---- prior_decision_clause ---------------------------------
 
-    for (const token of reserved) {
-      it(`${token} resolves to empty string`, () => {
-        const state = createDefaultScenario();
-        expect(substituteSmartPlaceholders(token, state)).toBe('');
+    it('{prior_decision_clause} emits an empty string on a fresh scenario', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{prior_decision_clause:merchant}', state))
+        .toBe('');
+    });
+
+    it('{prior_decision_clause:trade} resolves with a season count', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.turn.turnNumber = 10;
+        const pc: PersistentConsequence = {
+          sourceId: 'decree_market_charter',
+          sourceType: 'event',
+          choiceMade: 'enact',
+          turnApplied: 7,
+          tag: 'decree:trade_agreement',
+        };
+        s.persistentConsequences = [pc];
       });
+      expect(substituteSmartPlaceholders('{prior_decision_clause:trade}', state))
+        .toBe(' — echoes of a decision 3 seasons past');
+    });
+
+    it('{prior_decision_clause} renders "a season past" for a single-season delta', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.turn.turnNumber = 5;
+        s.persistentConsequences = [{
+          sourceId: 'evt_x',
+          sourceType: 'event',
+          choiceMade: 'c',
+          turnApplied: 4,
+          tag: 'evt_conscription_levy:offer',
+        }];
+      });
+      expect(substituteSmartPlaceholders('{prior_decision_clause:conscription}', state))
+        .toBe(' — echoes of a decision a season past');
+    });
+
+    it('{prior_decision_clause} ignores prefixes that do not match', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.persistentConsequences = [{
+          sourceId: 'evt_x',
+          sourceType: 'event',
+          choiceMade: 'c',
+          turnApplied: s.turn.turnNumber - 2,
+          tag: 'decree:religious_reform',
+        }];
+      });
+      expect(substituteSmartPlaceholders('{prior_decision_clause:trade}', state))
+        .toBe('');
+    });
+
+    it('{prior_decision_clause} ignores consequences older than the age cap', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.turn.turnNumber = 30;
+        s.persistentConsequences = [{
+          sourceId: 'evt_x',
+          sourceType: 'event',
+          choiceMade: 'c',
+          turnApplied: 1, // 29 turns ago, well past the 8-turn cap
+          tag: 'decree:trade_agreement',
+        }];
+      });
+      expect(substituteSmartPlaceholders('{prior_decision_clause:trade}', state))
+        .toBe('');
+    });
+
+    // ---- neighbor_memory_clause --------------------------------
+
+    it('{neighbor_memory_clause} is empty when no neighborId is supplied', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{neighbor_memory_clause}', state))
+        .toBe('');
+    });
+
+    it('{neighbor_memory_clause} is empty when memory weights are below threshold', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        const entry: RivalMemoryEntry = {
+          turnRecorded: s.turn.turnNumber - 1,
+          type: 'breach',
+          source: 'bond_breach:royal_marriage:reason',
+          weight: 0.1,
+          context: 'low-weight breach',
+        };
+        s.diplomacy.neighbors[0].memory = [entry];
+      });
+      const ctx: SmartTextContext = { neighborId: state.diplomacy.neighbors[0].id };
+      expect(substituteSmartPlaceholders('{neighbor_memory_clause}', state, ctx))
+        .toBe('');
+    });
+
+    it('{neighbor_memory_clause} renders a sentence for a strong breach memory', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.diplomacy.neighbors[0].memory = [{
+          turnRecorded: s.turn.turnNumber - 2,
+          type: 'breach',
+          source: 'bond_breach:royal_marriage:succession_dispute',
+          weight: 0.7,
+          context: 'marriage broken',
+        }];
+      });
+      const nb = state.diplomacy.neighbors[0];
+      const ctx: SmartTextContext = { neighborId: nb.id };
+      const out = substituteSmartPlaceholders('{neighbor_memory_clause}', state, ctx);
+      expect(out).toMatch(/has not forgotten the broken marriage pact\.$/);
+      // Subject should be the short form, not "Kingdom of …"
+      expect(out).not.toContain('Kingdom of');
+    });
+
+    it('{neighbor_memory_clause} prefers a higher-weight entry over a lower-weight one', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.diplomacy.neighbors[0].memory = [
+          {
+            turnRecorded: s.turn.turnNumber - 1,
+            type: 'favor',
+            source: 'overture_granted',
+            weight: 0.9,
+            context: 'favor',
+          },
+          {
+            turnRecorded: s.turn.turnNumber - 1,
+            type: 'breach',
+            source: 'bond_breach:vassalage:revolt',
+            weight: 0.5,
+            context: 'breach',
+          },
+        ];
+      });
+      const ctx: SmartTextContext = { neighborId: state.diplomacy.neighbors[0].id };
+      const out = substituteSmartPlaceholders('{neighbor_memory_clause}', state, ctx);
+      expect(out).toContain('still remembers your kindness');
+    });
+
+    // ---- ruling_style_note -------------------------------------
+
+    it('{ruling_style_note} is empty on a freshly-started reign', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{ruling_style_note}', state)).toBe('');
+    });
+
+    it('{ruling_style_note} surfaces the dominant positive axis as Martial reign', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.rulingStyle.axes[StyleAxis.Military] = 25;
+      });
+      expect(substituteSmartPlaceholders('{ruling_style_note}', state))
+        .toBe(' as befits your Martial reign');
+    });
+
+    it('{ruling_style_note} surfaces the dominant negative axis as Pacifist reign', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.rulingStyle.axes[StyleAxis.Military] = -22;
+      });
+      expect(substituteSmartPlaceholders('{ruling_style_note}', state))
+        .toBe(' as befits your Pacifist reign');
+    });
+
+    it('{ruling_style_note} stays empty when the axis lean is below the threshold', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.rulingStyle.axes[StyleAxis.Faith] = 18;
+      });
+      expect(substituteSmartPlaceholders('{ruling_style_note}', state)).toBe('');
+    });
+
+    // ---- recent_causal -----------------------------------------
+
+    function makeChain(
+      rootSystem: string,
+      rootDesc: string,
+      effectSystem: string,
+      effectDesc: string,
+      magnitude: number,
+      turn: number,
+    ): CausalChain {
+      return {
+        id: `chain_t${turn}_${rootDesc}`,
+        rootCause: { system: rootSystem, description: rootDesc, numericDelta: null },
+        finalEffect: { system: effectSystem, description: effectDesc, numericDelta: -magnitude },
+        intermediateSteps: [],
+        totalMagnitude: magnitude,
+        turnRecorded: turn,
+      };
     }
+
+    it('{recent_causal} is empty when the ledger has no chains', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{recent_causal}', state)).toBe('');
+    });
+
+    it('{recent_causal} renders a humanized clause for a known chain', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.causalLedger.recentChains = [
+          makeChain('environment', 'condition_food_penalty', 'food', 'production_decreased', 20, 4),
+        ];
+      });
+      const out = substituteSmartPlaceholders('{recent_causal}', state);
+      expect(out.startsWith(' — ')).toBe(true);
+      expect(out).toContain('blight');
+      expect(out).toContain('reduced harvests');
+    });
+
+    it('{recent_causal} declines to emit when chain descriptions cannot be humanized', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.causalLedger.recentChains = [
+          makeChain('xxx', 'unknown_root', 'yyy', 'unknown_effect', 50, 4),
+        ];
+      });
+      expect(substituteSmartPlaceholders('{recent_causal}', state)).toBe('');
+    });
+
+    // ---- inter_rival_note --------------------------------------
+
+    it('{inter_rival_note} is empty when no neighborId is in context', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{inter_rival_note}', state)).toBe('');
+    });
+
+    it('{inter_rival_note} surfaces a recent trade pact between two rivals', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        const [a, b] = s.diplomacy.neighbors;
+        const lo = a.id < b.id ? a.id : b.id;
+        const hi = a.id < b.id ? b.id : a.id;
+        const ag: InterRivalAgreement = {
+          id: `${lo}_${hi}_trade_pact_t1`,
+          kind: 'trade_pact',
+          a: lo,
+          b: hi,
+          turnStarted: 1,
+          sharedTargetId: null,
+        };
+        s.diplomacy.interRivalAgreements = [ag];
+      });
+      const target = state.diplomacy.neighbors[0];
+      const other = state.diplomacy.neighbors[1];
+      const ctx: SmartTextContext = { neighborId: target.id };
+      const out = substituteSmartPlaceholders('{inter_rival_note}', state, ctx);
+      const otherShort = (other.displayName ?? other.id)
+        .replace(/^Kingdom of /, '')
+        .replace(/^Realm of /, '')
+        .replace(/^Crown of /, '')
+        .replace(/^Free Cities of /, '')
+        .replace(/^The /, '')
+        .replace(/ Dominion$/, '')
+        .replace(/ Confederation$/, '')
+        .replace(/ Marches$/, '');
+      expect(out).toContain('fresh from signing a trade pact with');
+      expect(out).toContain(otherShort);
+    });
+
+    it('{inter_rival_note} renders alliances and wars distinctly', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        const [a, b] = s.diplomacy.neighbors;
+        const lo = a.id < b.id ? a.id : b.id;
+        const hi = a.id < b.id ? b.id : a.id;
+        s.diplomacy.interRivalAgreements = [
+          { id: `${lo}_${hi}_alliance_t2`, kind: 'alliance', a: lo, b: hi, turnStarted: 2, sharedTargetId: 'player' },
+        ];
+      });
+      const ctx: SmartTextContext = { neighborId: state.diplomacy.neighbors[0].id };
+      expect(substituteSmartPlaceholders('{inter_rival_note}', state, ctx))
+        .toContain('bound in alliance with');
+    });
+
+    // ---- watching_faction --------------------------------------
+
+    it('{watching_faction} is empty when no class is under pressure', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{watching_faction}', state)).toBe('');
+    });
+
+    it('{watching_faction} surfaces a class with low satisfaction', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.population[PopulationClass.Merchants].satisfaction = 22;
+        s.population[PopulationClass.Merchants].satisfactionDeltaLastTurn = 0;
+      });
+      expect(substituteSmartPlaceholders('{watching_faction}', state))
+        .toBe(' — the merchants watch closely');
+    });
+
+    it('{watching_faction} prefers an explicit ctx.classId over scanning', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.population[PopulationClass.Clergy].satisfaction = 20;
+      });
+      const ctx: SmartTextContext = { classId: PopulationClass.Nobility };
+      expect(substituteSmartPlaceholders('{watching_faction}', state, ctx))
+        .toBe(' — the nobles watch closely');
+    });
+
+    // ---- storyline_arc_note ------------------------------------
+
+    it('{storyline_arc_note} is empty when no storyline is active', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{storyline_arc_note}', state)).toBe('');
+    });
+
+    it('{storyline_arc_note} renders the active storyline title', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        const sl: ActiveStoryline = {
+          id: 'sl_active_1',
+          definitionId: 'sl_exp_council_of_lords',
+          category: StorylineCategory.Political,
+          status: StorylineStatus.Active,
+          currentBranchId: 'bp_council_lords_opening',
+          decisionHistory: [],
+          turnActivated: 1,
+          turnsUntilNextBranchPoint: 3,
+        };
+        s.activeStorylines = [sl];
+      });
+      expect(substituteSmartPlaceholders('{storyline_arc_note}', state))
+        .toBe(' — a beat in the unfolding The Council of Lords');
+    });
+
+    // ---- recent_causal — category biasing ----------------------
+
+    it('{recent_causal} biases its pick toward ctx.eventCategory when supplied', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.causalLedger.recentChains = [
+          // Higher magnitude in food, but not category-aligned to Diplomacy.
+          makeChain('food', 'production_decreased', 'food', 'reserves_changed', 50, 4),
+          // Lower magnitude, but category-aligned to Diplomacy.
+          makeChain('diplomacy', 'condition_trade_penalty', 'treasury', 'trade_income_reduced', 10, 4),
+        ];
+      });
+      const ctx: SmartTextContext = { eventCategory: EventCategory.Diplomacy };
+      const out = substituteSmartPlaceholders('{recent_causal}', state, ctx);
+      // Either chain has humanizable nodes, but the diplomacy-biased chain
+      // surfaces "trade routes" / "trade revenues weakened".
+      expect(out).toContain('trade');
+    });
+
+    // ---- composability — empty clauses do not break templates ----
+
+    it('empty memory clauses degrade silently inside a longer template', () => {
+      const state = createDefaultScenario();
+      const tpl = 'Body text.{ruling_style_note}{recent_causal}';
+      expect(substituteSmartPlaceholders(tpl, state)).toBe('Body text.');
+    });
+
+    // ---- {agent:id} stays reserved for Phase F -----------------
+
+    it('{agent:id} continues to resolve to empty string (Phase F)', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{agent:agent_abc}', state)).toBe('');
+    });
   });
 
   // ----------------------------------------------------------------
