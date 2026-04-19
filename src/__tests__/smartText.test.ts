@@ -7,8 +7,15 @@ import { describe, it, expect } from 'vitest';
 import { substituteSmartPlaceholders } from '../bridge/smartText';
 import type { SmartTextContext } from '../bridge/smartText';
 import { createDefaultScenario } from '../data/scenarios/default';
-import { CouncilSeat, RegionalPosture, Season } from '../engine/types';
-import type { GameState } from '../engine/types';
+import {
+  ConditionSeverity,
+  ConditionType,
+  CouncilSeat,
+  RegionalPosture,
+  RivalCrisisType,
+  Season,
+} from '../engine/types';
+import type { Bond, GameState, KingdomCondition } from '../engine/types';
 
 function mutate(state: GameState, fn: (s: GameState) => void): GameState {
   fn(state);
@@ -351,10 +358,234 @@ describe('substituteSmartPlaceholders', () => {
   });
 
   // ----------------------------------------------------------------
-  // §3.3 / §3.4 Memory & parameterised — reserved to Phase C/D
+  // §3.2 Situational — military & region tiers (Phase C)
   // ----------------------------------------------------------------
 
-  describe('deferred Phase C/D tokens resolve to empty strings (no raw leaks)', () => {
+  describe('military & region tier tokens (Phase C)', () => {
+    it('resolves {morale_tier} across the banded range', () => {
+      const cases: Array<[number, string]> = [
+        [10, 'broken'],
+        [30, 'shaken'],
+        [50, 'steady'],
+        [70, 'confident'],
+        [90, 'ardent'],
+      ];
+      for (const [value, expected] of cases) {
+        const state = mutate(createDefaultScenario(), (s) => {
+          s.military.morale = value;
+        });
+        expect(substituteSmartPlaceholders('{morale_tier}', state)).toBe(expected);
+      }
+    });
+
+    it('resolves {equipment_condition_tier} across the banded range', () => {
+      const cases: Array<[number, string]> = [
+        [10, 'ruined'],
+        [30, 'worn'],
+        [50, 'serviceable'],
+        [70, 'sound'],
+        [90, 'pristine'],
+      ];
+      for (const [value, expected] of cases) {
+        const state = mutate(createDefaultScenario(), (s) => {
+          s.military.equipmentCondition = value;
+        });
+        expect(substituteSmartPlaceholders('{equipment_condition_tier}', state))
+          .toBe(expected);
+      }
+    });
+
+    it('resolves {loyalty_tier} from the region in context', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.regions[0].loyalty = 10;
+      });
+      const ctx: SmartTextContext = { regionId: state.regions[0].id };
+      expect(substituteSmartPlaceholders('{loyalty_tier}', state, ctx))
+        .toBe('rebellious');
+    });
+
+    it('{loyalty_tier} falls back to "settled" with no region context', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{loyalty_tier}', state)).toBe('settled');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // §3.2 Situational — parameterised active conditions (Phase C)
+  // ----------------------------------------------------------------
+
+  describe('condition tokens (Phase C)', () => {
+    function makeCondition(
+      type: ConditionType,
+      severity: ConditionSeverity,
+      regionId: string | null,
+    ): KingdomCondition {
+      return {
+        id: `cond_${type}_test`,
+        type,
+        severity,
+        turnsActive: 1,
+        turnsRemaining: null,
+        systemEffects: [],
+        regionId,
+        canEscalate: false,
+        escalatesTo: null,
+      };
+    }
+
+    it('resolves {condition:Drought} to a severity + label phrase when active kingdom-wide', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.environment.activeConditions.push(
+          makeCondition(ConditionType.Drought, ConditionSeverity.Severe, null),
+        );
+      });
+      expect(substituteSmartPlaceholders('{condition:Drought}', state))
+        .toBe('a severe Drought');
+    });
+
+    it('prefers a region-scoped condition match over kingdom-wide', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        const regionId = s.regions[0].id;
+        s.regions[0].localConditions = [
+          makeCondition(ConditionType.Blight, ConditionSeverity.Mild, regionId),
+        ];
+        s.environment.activeConditions.push(
+          makeCondition(ConditionType.Blight, ConditionSeverity.Severe, null),
+        );
+      });
+      const ctx: SmartTextContext = { regionId: state.regions[0].id };
+      // Region match wins (mild) over kingdom-wide (severe).
+      expect(substituteSmartPlaceholders('{condition:Blight}', state, ctx))
+        .toBe('a mild Crop Blight');
+    });
+
+    it('returns empty string when no matching condition is active', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{condition:Plague}', state)).toBe('');
+    });
+
+    it('ignores an unknown condition arg gracefully', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{condition:NotAThing}', state)).toBe('');
+    });
+
+    it('lists active conditions in {condition_context}', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.environment.activeConditions.push(
+          makeCondition(ConditionType.Drought, ConditionSeverity.Severe, null),
+          makeCondition(ConditionType.Banditry, ConditionSeverity.Moderate, null),
+        );
+      });
+      expect(substituteSmartPlaceholders('{condition_context}', state))
+        .toBe('already gripped by Drought and Banditry');
+    });
+
+    it('{condition_context} is empty when nothing is active', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{condition_context}', state)).toBe('');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // §3.1 Identity — bonds (Phase C)
+  // ----------------------------------------------------------------
+
+  describe('bond tokens (Phase C)', () => {
+    it('resolves {bond_kind} from a known bondId', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        const bond: Bond = {
+          bondId: 'royal_marriage_t1_abc',
+          kind: 'royal_marriage',
+          turnStarted: 1,
+          turnsRemaining: null,
+          participants: [s.diplomacy.neighbors[0].id],
+          breachPenalty: -10,
+          spouseName: 'Lady Sarielle',
+          dynastyId: 'house_marrowmoor',
+          heirProduced: false,
+        };
+        s.diplomacy.bonds = [bond];
+      });
+      const ctx: SmartTextContext = { bondId: 'royal_marriage_t1_abc' };
+      expect(substituteSmartPlaceholders('{bond_kind}', state, ctx))
+        .toBe('royal marriage');
+    });
+
+    it('falls back to "bond" when no bondId context is supplied', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{bond_kind}', state)).toBe('bond');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // §3.4 Stakes — rival-scoped (Phase C)
+  // ----------------------------------------------------------------
+
+  describe('rival mood / crisis / economic-phase tokens (Phase C)', () => {
+    it('resolves {rival_mood:id} across bands', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.diplomacy.neighbors[0].kingdomSimulation!.populationMood = 15;
+      });
+      const id = state.diplomacy.neighbors[0].id;
+      expect(substituteSmartPlaceholders(`{rival_mood:${id}}`, state))
+        .toBe('restive');
+    });
+
+    it('falls back to ctx.neighborId when rival_mood arg is absent', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.diplomacy.neighbors[0].kingdomSimulation!.populationMood = 85;
+      });
+      const ctx: SmartTextContext = { neighborId: state.diplomacy.neighbors[0].id };
+      expect(substituteSmartPlaceholders('{rival_mood}', state, ctx))
+        .toBe('jubilant');
+    });
+
+    it('returns "settled" when no neighbor context is available at all', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{rival_mood}', state)).toBe('settled');
+    });
+
+    it('resolves {rival_crisis:id} to a crisis clause when the neighbor is in crisis', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        const sim = s.diplomacy.neighbors[0].kingdomSimulation!;
+        sim.isInCrisis = true;
+        sim.crisisType = RivalCrisisType.Famine;
+      });
+      const id = state.diplomacy.neighbors[0].id;
+      expect(substituteSmartPlaceholders(`{rival_crisis:${id}}`, state))
+        .toBe('facing a grain failure of their own');
+    });
+
+    it('returns empty string when the rival is not in crisis', () => {
+      const state = createDefaultScenario();
+      const id = state.diplomacy.neighbors[0].id;
+      expect(substituteSmartPlaceholders(`{rival_crisis:${id}}`, state)).toBe('');
+    });
+
+    it('resolves {rival_economic_phase_lc} across bands', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.diplomacy.neighbors[0].kingdomSimulation!.treasuryHealth = 90;
+      });
+      const id = state.diplomacy.neighbors[0].id;
+      expect(substituteSmartPlaceholders(`{rival_economic_phase_lc:${id}}`, state))
+        .toBe('boom');
+    });
+
+    it('{rival_economic_phase} title-cases the label', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.diplomacy.neighbors[0].kingdomSimulation!.treasuryHealth = 10;
+      });
+      const id = state.diplomacy.neighbors[0].id;
+      expect(substituteSmartPlaceholders(`{rival_economic_phase:${id}}`, state))
+        .toBe('Depression');
+    });
+  });
+
+  // ----------------------------------------------------------------
+  // §3.3 Memory tokens — still reserved, empty until Phase D
+  // ----------------------------------------------------------------
+
+  describe('deferred Phase D tokens resolve to empty strings (no raw leaks)', () => {
     const reserved = [
       '{neighbor_memory_clause}',
       '{ruling_style_note}',
@@ -362,10 +593,7 @@ describe('substituteSmartPlaceholders', () => {
       '{inter_rival_note}',
       '{watching_faction}',
       '{storyline_arc_note}',
-      '{condition:Drought}',
       '{agent:agent_abc}',
-      '{rival_mood:neighbor_a}',
-      '{rival_crisis:neighbor_a}',
       '{prior_decision_clause:merchant}',
     ];
 
