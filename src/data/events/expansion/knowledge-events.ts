@@ -204,7 +204,15 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     category: EventCategory.Knowledge,
     triggerConditions: [
       { type: 'any_of', conditions: [
-        { type: 'consequence_tag_present', consequenceTag: 'plague_active' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_mild:quarantine_district' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_mild:hire_healers' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_mild:ignore_sickness' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_moderate:citywide_quarantine' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_moderate:burn_infected_quarters' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_moderate:pray_for_deliverance' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_severe:seal_the_gates' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_severe:mass_exodus' },
+        { type: 'consequence_tag_present', consequenceTag: 'evt_cond_plague_severe:accept_fate' },
         { type: 'food_below', threshold: 60 },
       ]},
     ],
