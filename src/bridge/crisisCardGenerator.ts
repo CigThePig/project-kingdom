@@ -10,10 +10,10 @@ import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
-import { getNeighborDisplayName } from './nameResolver';
 import { extractEventContext } from './contextExtractor';
 import { extractChoiceSignals } from './signalExtractor';
 import { extractModifierTags } from './modifierTagExtractor';
+import { substituteSmartPlaceholders } from './smartText';
 import { WORLD_EVENT_DEFINITIONS, WORLD_EVENT_CHOICE_EFFECTS } from '../data/world-events';
 import { WORLD_EVENT_TEXT } from '../data/text/world-events';
 
@@ -140,10 +140,16 @@ export function generateCrisisPhaseData(event: ActiveEvent, gameState?: GameStat
   let title = textEntry?.title ?? 'CRISIS';
   let body = textEntry?.body ?? 'The court faces an urgent matter requiring your decision.';
 
-  if (event.affectedNeighborId) {
-    const neighborName = gameState
-      ? getNeighborDisplayName(event.affectedNeighborId, gameState)
-      : (NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId);
+  if (gameState) {
+    const ctx = {
+      neighborId: event.affectedNeighborId ?? undefined,
+      regionId: event.affectedRegionId ?? undefined,
+      classId: event.affectedClassId ?? undefined,
+    };
+    title = substituteSmartPlaceholders(title, gameState, ctx);
+    body = substituteSmartPlaceholders(body, gameState, ctx);
+  } else if (event.affectedNeighborId) {
+    const neighborName = NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId;
     title = title.replace(/\{neighbor\}/g, neighborName);
     body = body.replace(/\{neighbor\}/g, neighborName);
   }
@@ -191,9 +197,20 @@ function generateWorldEventCrisisPhaseData(
   const def = WORLD_EVENT_DEFINITIONS.find((d) => d.id === event.definitionId);
   const textEntry = WORLD_EVENT_TEXT[event.definitionId];
 
-  const title = textEntry?.title ?? 'WORLD EVENT';
-  const body = textEntry?.body
+  let title = textEntry?.title ?? 'WORLD EVENT';
+  let body = textEntry?.body
     ?? 'A matter spanning the region reaches the court.';
+
+  if (gameState) {
+    const ctx = {
+      worldEventDefId: event.definitionId,
+      neighborId: event.affectedNeighborId ?? undefined,
+      regionId: event.affectedRegionId ?? undefined,
+      classId: event.affectedClassId ?? undefined,
+    };
+    title = substituteSmartPlaceholders(title, gameState, ctx);
+    body = substituteSmartPlaceholders(body, gameState, ctx);
+  }
 
   const crisisCard: CrisisCardData = {
     eventId: event.id,

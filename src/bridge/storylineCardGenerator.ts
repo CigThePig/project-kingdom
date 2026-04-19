@@ -2,7 +2,7 @@
 // Translates ActiveStoryline branch points into CrisisPhaseData
 // and storyline resolutions into LegacyCardData for the summary phase.
 
-import type { ActiveStoryline } from '../engine/types';
+import type { ActiveStoryline, GameState } from '../engine/types';
 import { StorylineStatus } from '../engine/types';
 import type { CrisisPhaseData, CrisisCardData, ResponseCardData } from './crisisCardGenerator';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
@@ -11,6 +11,7 @@ import { STORYLINE_TEXT } from '../data/text/events';
 import { STORYLINE_POOL } from '../data/storylines/index';
 import { STORYLINE_CHOICE_EFFECTS, STORYLINE_RESOLUTION_EFFECTS } from '../data/storylines/effects';
 import { StyleAxis } from '../engine/types';
+import { substituteSmartPlaceholders } from './smartText';
 
 // ============================================================
 // Storyline Branch → Crisis Card
@@ -22,6 +23,7 @@ import { StyleAxis } from '../engine/types';
  */
 export function generateStorylineCrisisData(
   storyline: ActiveStoryline,
+  gameState?: GameState,
 ): CrisisPhaseData | null {
   if (storyline.status !== StorylineStatus.Active) return null;
   if (storyline.turnsUntilNextBranchPoint != null && storyline.turnsUntilNextBranchPoint > 0) return null;
@@ -43,11 +45,15 @@ export function generateStorylineCrisisData(
 
   const choiceEffects = STORYLINE_CHOICE_EFFECTS[storyline.definitionId] ?? {};
 
+  const smartCtx = { storylineDefId: storyline.definitionId };
+  const render = (s: string) =>
+    gameState ? substituteSmartPlaceholders(s, gameState, smartCtx) : s;
+
   const crisisCard: CrisisCardData = {
     eventId: `storyline:${storyline.id}`,
     definitionId: storyline.definitionId,
-    title: textEntry.title,
-    body: branchText.body,
+    title: render(textEntry.title),
+    body: render(branchText.body),
     effects: [{ label: 'STORYLINE', type: 'warning' }],
     storylineId: storyline.id,
     branchPointId: storyline.currentBranchId,
@@ -60,8 +66,8 @@ export function generateStorylineCrisisData(
       return {
         id: `storyline:${storyline.id}:${choice.choiceId}`,
         choiceId: choice.choiceId,
-        title: branchText.choices[choice.choiceId] ?? choice.choiceId,
-        effects: mechDeltaToEffectHints(delta),
+        title: render(branchText.choices[choice.choiceId] ?? choice.choiceId),
+        effects: mechDeltaToEffectHints(delta, gameState),
         signals: [],
         slotCost: 0,
         isFree: true,
@@ -82,6 +88,7 @@ export function generateStorylineCrisisData(
  */
 export function generateStorylineResolutionLegacy(
   storyline: ActiveStoryline,
+  gameState?: GameState,
 ): LegacyCardData | null {
   if (storyline.status !== StorylineStatus.Active) return null;
 
@@ -109,11 +116,15 @@ export function generateStorylineResolutionLegacy(
   const midArcChoiceId = midArcDecision?.choiceId;
   const delta = midArcChoiceId ? resolutionEffects[midArcChoiceId] ?? {} : {};
 
+  const smartCtx = { storylineDefId: storyline.definitionId };
+  const render = (s: string) =>
+    gameState ? substituteSmartPlaceholders(s, gameState, smartCtx) : s;
+
   return {
-    title: `${textEntry.title} — Resolved`,
-    body: branchText.body,
+    title: `${render(textEntry.title)} — Resolved`,
+    body: render(branchText.body),
     axis: StyleAxis.Authority, // storyline legacies don't map to a single axis
     threshold: 0,
-    effects: mechDeltaToEffectHints(delta),
+    effects: mechDeltaToEffectHints(delta, gameState),
   };
 }
