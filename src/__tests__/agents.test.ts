@@ -278,3 +278,90 @@ describe('pickCoverSettlement', () => {
     expect(region?.borderRegion !== true).toBe(true);
   });
 });
+
+// Smart Card Engine Surface — Phase E: Agent Burn Extraction petition.
+// Tests the smart-text upgrade of synthesizePhase14Petitions — the body must
+// name the agent by codename, the cover settlement by its displayName, and
+// state how long the agent has been in cover.
+describe('Agent Burn Extraction petition — smart text', () => {
+  it('renders the codename, cover settlement, and turns in cover', async () => {
+    const { synthesizePhase14Petitions } = await import(
+      '../bridge/petitionCardGenerator'
+    );
+    const state = baseState();
+    const coverSettlement = state.geography?.settlements?.[0];
+    if (!coverSettlement) throw new Error('test requires a settlement');
+    state.turn.turnNumber = 12;
+    state.espionage!.agents = [
+      {
+        id: 'agent_test_1',
+        codename: 'Shrike',
+        specialization: AgentSpecialization.Court,
+        coverSettlementId: coverSettlement.id,
+        reliability: 70,
+        burnRisk: 85,
+        status: AgentStatus.Active,
+        recruitedTurn: 6,
+      },
+    ];
+
+    const cards = synthesizePhase14Petitions(state);
+    expect(cards).toHaveLength(1);
+    const [card] = cards;
+    expect(card.definitionId).toBe('phase14_extract');
+    expect(card.title).toContain('Shrike');
+    expect(card.title).toContain(coverSettlement.displayName ?? coverSettlement.id);
+    // Body: codename + settlement + 6 seasons (12 - 6).
+    expect(card.body).toContain('Shrike');
+    expect(card.body).toContain(coverSettlement.displayName ?? coverSettlement.id);
+    expect(card.body).toContain('6 seasons');
+    // No unresolved tokens left behind.
+    expect(card.body).not.toMatch(/\{[a-z_]/);
+    expect(card.title).not.toMatch(/\{[a-z_]/);
+  });
+
+  it('uses singular "season" when exactly one turn has elapsed', async () => {
+    const { synthesizePhase14Petitions } = await import(
+      '../bridge/petitionCardGenerator'
+    );
+    const state = baseState();
+    const coverSettlement = state.geography?.settlements?.[0];
+    if (!coverSettlement) throw new Error('test requires a settlement');
+    state.turn.turnNumber = 5;
+    state.espionage!.agents = [
+      {
+        id: 'agent_test_2',
+        codename: 'Hawk',
+        specialization: AgentSpecialization.Military,
+        coverSettlementId: coverSettlement.id,
+        reliability: 60,
+        burnRisk: 80,
+        status: AgentStatus.Active,
+        recruitedTurn: 4,
+      },
+    ];
+    const [card] = synthesizePhase14Petitions(state);
+    expect(card.body).toContain('1 season');
+    expect(card.body).not.toContain('1 seasons');
+  });
+
+  it('does not surface a petition below the burn-risk threshold', async () => {
+    const { synthesizePhase14Petitions } = await import(
+      '../bridge/petitionCardGenerator'
+    );
+    const state = baseState();
+    state.espionage!.agents = [
+      {
+        id: 'agent_safe',
+        codename: 'Ember',
+        specialization: AgentSpecialization.Counter,
+        coverSettlementId: state.geography!.settlements![0].id,
+        reliability: 80,
+        burnRisk: 40,
+        status: AgentStatus.Active,
+        recruitedTurn: 1,
+      },
+    ];
+    expect(synthesizePhase14Petitions(state)).toHaveLength(0);
+  });
+});

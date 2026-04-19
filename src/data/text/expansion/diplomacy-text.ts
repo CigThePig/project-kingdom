@@ -201,4 +201,19 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
       send_observers_only: 'Send Observers Only',
     },
   },
+
+  // --- Smart Card Engine Surface — Phase E ---
+  // Rival Crisis Window: informational notification. Body reads purely from
+  // rival kingdomSimulation state — no effects, no decision. The empty-arg
+  // forms `{rival_crisis:}` / `{rival_mood:}` fall through to ctx.neighborId
+  // (populated from the event's __IN_CRISIS__ resolved affectedNeighborId).
+  evt_rival_crisis_window: {
+    title: 'Whispers from {capital}',
+    body:
+      '{spymaster_or_fallback} lays a dossier before the throne. {ruler_full} of {neighbor} is {rival_crisis}; ' +
+      'the mood in {capital} has turned {rival_mood}.{inter_rival_note}',
+    choices: {
+      acknowledge: 'Acknowledge',
+    },
+  },
 };
