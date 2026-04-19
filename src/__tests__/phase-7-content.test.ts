@@ -135,10 +135,14 @@ describe('Phase 7 — wave-2 overtures', () => {
     expect(WAVE_2_OVERTURES).toHaveLength(10);
   });
 
-  it('every wave-2 overture build() produces a well-formed spec', () => {
+  it('every wave-2 overture build() produces a well-formed spec with placeholder text', () => {
     for (const o of WAVE_2_OVERTURES) {
-      const spec = o.build('Test Realm');
-      expect(spec.title).toContain('Test Realm');
+      const spec = o.build();
+      // Phase B — strings carry smart-card placeholders; the generator
+      // resolves them via substituteSmartPlaceholders at card creation time.
+      expect(spec.title.length).toBeGreaterThan(0);
+      expect(spec.title).toMatch(/\{[a-z_]+\}/);
+      expect(spec.body).toMatch(/\{[a-z_]+\}/);
       expect(spec.grantTitle.length).toBeGreaterThan(0);
       expect(spec.denyTitle.length).toBeGreaterThan(0);
       expect(spec.grantEffects.length).toBeGreaterThan(0);

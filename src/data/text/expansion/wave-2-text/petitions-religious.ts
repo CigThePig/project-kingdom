@@ -5,7 +5,7 @@ import type { EventTextEntry } from '../../events';
 export const EXPANSION_WAVE_2_PETITIONS_RELIGIOUS_TEXT: Record<string, EventTextEntry> = {
   faction_req_w2_mendicant_order_charter: {
     title: 'A Mendicant Order Begs a Charter',
-    body: 'A travelling preacher has founded a small mendicant order and asks royal leave to expand. The bishops are wary of any brotherhood outside their chain of command; the commons already press alms into their hands.',
+    body: '{chamberlain_or_fallback} brings before the throne a travelling preacher who has founded a small mendicant order and asks royal leave to expand. The bishops are wary of any brotherhood outside their chain of command; the commons already press alms into their hands.',
     choices: {
       charter_the_mendicants: 'Charter the Mendicants',
       refer_to_the_bishop: 'Refer to the Bishop',
@@ -13,7 +13,7 @@ export const EXPANSION_WAVE_2_PETITIONS_RELIGIOUS_TEXT: Record<string, EventText
   },
   faction_req_w2_militant_brotherhood: {
     title: 'A Militant Brotherhood Requests Funding',
-    body: 'A militant brotherhood of knight-monks petitions for royal funding to pursue heretics in the hinterland. They promise swift action; their detractors warn of massacres charged to the Crown.',
+    body: 'A militant brotherhood of knight-monks petitions {chamberlain_or_fallback} for royal funding to pursue heretics in the hinterland. They promise swift action; their detractors warn of massacres charged to the Crown.',
     choices: {
       fund_the_brotherhood: 'Fund the Brotherhood',
       decline_militant_funding: 'Decline Funding',

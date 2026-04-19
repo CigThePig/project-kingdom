@@ -445,7 +445,7 @@ export const EXPANSION_DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility],
     effectPreview:
-      'Send an official peace envoy to a neighboring realm. Improves diplomatic relations at modest cost, though hawks may view it as weakness.',
+      'Send an official peace envoy to a foreign court. Improves diplomatic relations at modest cost, though hawks may view it as weakness.',
     isHighImpact: false,
     knowledgePrerequisite: null,
     isRepeatable: true,

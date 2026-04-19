@@ -6,7 +6,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_coded_correspondence: {
     title: 'Coded Correspondence Intercepted',
-    body: 'A patrol has intercepted a bundle of letters written in an unfamiliar cipher, carried by a merchant traveling from the borderlands. Your spymaster believes the correspondence may contain intelligence of considerable value, but deciphering it will require skilled codebreakers and a modest investment of coin.',
+    body: '{spymaster_or_fallback} brings word of a bundle of letters written in an unfamiliar cipher, intercepted from a merchant traveling the borderlands. The correspondence may contain intelligence of considerable value, but deciphering it will require skilled codebreakers and a modest investment of coin.',
     choices: {
       fund_codebreakers: 'Fund Codebreakers',
       archive_for_later: 'Archive for Later',
@@ -14,7 +14,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_informant_tip: {
     title: 'A Whisper from the Shadows',
-    body: 'One of the crown\'s informants has surfaced with a fragment of intelligence regarding troop movements along the northern frontier. The information appears credible, though the informant requests compensation for the personal risk undertaken in acquiring it.',
+    body: "One of {spymaster_or_fallback}'s informants has surfaced with a fragment of intelligence regarding troop movements along the northern frontier. The information appears credible, though the informant requests compensation for the personal risk undertaken in acquiring it.",
     choices: {
       reward_informant: 'Reward the Informant',
       note_intelligence: 'Note the Intelligence',
@@ -22,7 +22,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_spy_equipment_advance: {
     title: 'Advances in Covert Craft',
-    body: 'A guild of skilled artisans has developed improved tools for clandestine work — concealed writing implements, undetectable lock mechanisms, and disguises of remarkable quality. They offer to supply the crown\'s agents, though their services do not come cheaply.',
+    body: "A guild of skilled artisans has developed improved tools for clandestine work — concealed writing implements, undetectable lock mechanisms, and disguises of remarkable quality. {spymaster_or_fallback} would gladly equip the crown's agents, though their services do not come cheaply.",
     choices: {
       commission_equipment: 'Commission the Equipment',
       acknowledge_progress: 'Acknowledge Their Work',
@@ -34,7 +34,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_double_agent_dilemma: {
     title: 'The Double Agent\'s Dilemma',
-    body: 'Your spymaster presents a delicate situation: one of your agents embedded in {neighbor}\'s court has been approached to serve as a double agent. The opportunity could yield extraordinary intelligence, but the risks of exposure and disinformation are considerable.',
+    body: "{spymaster_or_fallback} presents a delicate situation: one of your agents embedded in {ruler}'s court has been approached to serve as a double agent. The opportunity could yield extraordinary intelligence, but the risks of exposure and disinformation are considerable.",
     choices: {
       turn_agent_double: 'Accept the Double Role',
       extract_and_debrief: 'Extract and Debrief',
@@ -43,7 +43,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_foreign_spy_ring: {
     title: 'Foreign Spy Ring Discovered',
-    body: 'Counter-intelligence operatives have uncovered a network of agents from {neighbor} operating within the capital. The ring has been gathering information on troop deployments, fortification plans, and courtly alliances. Your advisors debate whether to crush the network outright or exploit it for your own ends.',
+    body: "{spymaster_or_fallback} brings a dossier before the throne: a network of {neighbor_short}'s agents has been operating within the capital under {ruler}'s direction. The ring has been gathering information on troop deployments, fortification plans, and courtly alliances. Your advisors debate whether to crush the network outright or exploit it for your own ends.",
     choices: {
       dismantle_network: 'Dismantle the Network',
       surveil_and_exploit: 'Monitor and Exploit',
@@ -52,7 +52,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_blackmail_discovery: {
     title: 'Compromising Documents Uncovered',
-    body: 'Your agents have discovered documents revealing that a prominent noble has been secretly corresponding with {neighbor}, promising favors in exchange for personal enrichment. The evidence is damning, and how you wield it will shape the balance of power at court.',
+    body: "{spymaster_or_fallback}'s agents have discovered documents revealing that a prominent noble has been secretly corresponding with {ruler_full}, promising favors in exchange for personal enrichment. The evidence is damning, and how you wield it will shape the balance of power at court.",
     choices: {
       confront_noble_privately: 'Confront Privately',
       use_leverage_quietly: 'Use as Leverage',
@@ -61,7 +61,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_intercepted_dispatches: {
     title: 'Intercepted Diplomatic Dispatches',
-    body: 'Your agents have intercepted sealed dispatches from {neighbor} to a minor border principality, detailing plans that could threaten regional trade routes. The contents are valuable to multiple parties, and how you share — or withhold — this intelligence will have diplomatic consequences.',
+    body: "{spymaster_or_fallback}'s agents have intercepted sealed dispatches from {capital} to a minor border principality, detailing plans by {ruler_full} that could threaten regional trade routes. The contents are valuable to multiple parties, and how you share — or withhold — this intelligence will have diplomatic consequences.",
     choices: {
       share_with_arenthal: 'Share with Arenthal',
       confront_valdris: 'Confront Valdris Directly',
@@ -70,7 +70,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_mole_hunt: {
     title: 'Suspicion of a Mole',
-    body: 'Troubling patterns have emerged in recent intelligence failures — operations compromised, agents exposed, and safe houses discovered. Your spymaster suspects a mole has penetrated your inner circle, but identifying the traitor without alerting them will require careful and costly measures.',
+    body: 'Troubling patterns have emerged in recent intelligence failures — operations compromised, agents exposed, and safe houses discovered. {spymaster_or_fallback} suspects a mole has penetrated your inner circle, but identifying the traitor without alerting them will require careful and costly measures.',
     choices: {
       thorough_investigation: 'Launch Full Investigation',
       controlled_leak_test: 'Test with False Intelligence',
@@ -79,7 +79,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_defector_opportunity: {
     title: 'A Defector from {neighbor}',
-    body: 'A senior official from {neighbor}\'s intelligence apparatus has made contact through back channels, offering to defect to your kingdom. The official claims to possess detailed knowledge of {neighbor}\'s military capabilities and diplomatic strategy, but granting asylum will strain relations.',
+    body: "A senior official from {ruler}'s intelligence apparatus has made contact through back channels, offering to defect to your kingdom. The official claims to possess detailed knowledge of {neighbor_short}'s military capabilities and diplomatic strategy, but granting asylum will strain relations with {capital}.",
     choices: {
       grant_asylum: 'Grant Asylum',
       debrief_and_return: 'Debrief and Return',
@@ -92,7 +92,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_assassination_plot: {
     title: 'Assassination Plot Uncovered',
-    body: 'Your spymaster has uncovered a plot against the royal person — a conspiracy involving disaffected nobles and possibly agents of {neighbor}. The plotters have already procured poison and suborned members of the household guard. Swift action is required, though the scope of the conspiracy remains unclear.',
+    body: "{spymaster_or_fallback} has uncovered a plot against the royal person — a conspiracy involving disaffected nobles and possibly agents of {ruler_full}. The plotters have already procured poison and suborned members of the household guard. Swift action is required, though the scope of the conspiracy remains unclear.",
     choices: {
       preemptive_arrests: 'Order Preemptive Arrests',
       double_royal_guard: 'Double the Royal Guard',
@@ -101,7 +101,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_counter_espionage_raid: {
     title: 'Counter-Espionage Operation',
-    body: 'Intelligence has pinpointed a safe house operated by {neighbor} within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation\'s scale and diplomatic fallout require careful consideration.',
+    body: "{spymaster_or_fallback} has pinpointed a safe house operated by {ruler_full} within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation's scale and diplomatic fallout require careful consideration.",
     choices: {
       full_scale_raid: 'Launch Full Raid',
       surgical_strike: 'Conduct Surgical Strike',
@@ -128,7 +128,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_secret_alliance_exposed: {
     title: 'Secret Alliance Brought to Light',
-    body: 'Your covert understanding with {neighbor} — kept carefully hidden from rivals — has been exposed through unknown means. Foreign ambassadors are furious, and even {neighbor}\'s diplomats are nervous about the revelation. The court must decide how to navigate this diplomatic crisis.',
+    body: "Your covert understanding with {neighbor} — kept carefully hidden from rivals — has been exposed through unknown means. Foreign ambassadors are furious, and even {ruler}'s diplomats are nervous about the revelation. The court must decide how to navigate this diplomatic crisis.",
     choices: {
       publicly_confirm: 'Publicly Confirm the Alliance',
       deny_and_distance: 'Deny and Create Distance',
@@ -141,7 +141,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_enemy_infiltration: {
     title: 'Deep Enemy Infiltration',
-    body: 'The unthinkable has been confirmed: operatives of {neighbor} have penetrated the highest levels of the kingdom\'s administration. Critical military plans, treasury figures, and diplomatic correspondence have been flowing to them for months. The rot runs deep, and excising it will be painful.',
+    body: "The unthinkable has been confirmed: operatives loyal to {ruler_full} have penetrated the highest levels of the kingdom's administration. Critical military plans, treasury figures, and diplomatic correspondence have been flowing to {capital} for months. The rot runs deep, and excising it will be painful.",
     choices: {
       martial_law_purge: 'Declare Martial Law and Purge',
       targeted_counter_ops: 'Targeted Counter-Operations',
@@ -150,7 +150,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_underground_resistance: {
     title: 'Underground Resistance Movement',
-    body: 'An organized resistance movement has taken root among the common folk, operating through hidden cells and secret meeting places. Their grievances are real, but their methods — sabotage, intimidation, and covert recruitment — pose a grave threat to order. Your spymaster warns that the movement is growing rapidly.',
+    body: '{spymaster_or_fallback} warns of an organized resistance movement that has taken root among the common folk, operating through hidden cells and secret meeting places. Their grievances are real, but their methods — sabotage, intimidation, and covert recruitment — pose a grave threat to order, and the movement is growing rapidly.',
     choices: {
       infiltrate_resistance: 'Infiltrate the Movement',
       address_grievances: 'Address Their Grievances',
@@ -159,7 +159,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_military_secrets_stolen: {
     title: 'Military Secrets Stolen',
-    body: 'A breach of devastating proportions has occurred: detailed plans for the kingdom\'s frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {neighbor}. Winter\'s cover aided the thieves, and by now the intelligence may already be in enemy hands.',
+    body: "A breach of devastating proportions has occurred: detailed plans for the kingdom's frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {capital}. Winter's cover aided the thieves, and by now the intelligence may already be in {ruler}'s hands.",
     choices: {
       change_all_plans: 'Overhaul All Defenses',
       hunt_the_thief: 'Hunt Down the Thief',
@@ -170,7 +170,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // --- 18. Spymaster Introduction ---
   evt_exp_esp_spymaster_introduction: {
     title: 'A Shadow at Court',
-    body: 'A figure you do not recognize requests a private audience. He introduces himself as the crown\'s spymaster \u2014 a post your predecessor kept carefully hidden from public view. He speaks of watching eyes along every border and whispers gathered from foreign courts. His network, he admits, has grown thin of late and requires investment if it is to serve its new sovereign.',
+    body: "{spymaster_or_fallback} requests a private audience \u2014 a post your predecessor kept carefully hidden from public view. He speaks of watching eyes along every border and whispers gathered from foreign courts. His network, he admits, has grown thin of late and requires investment if it is to serve its new sovereign.",
     choices: {
       fund_intelligence_network: 'Fund the Intelligence Network',
       request_dossiers_on_neighbors: 'Request Dossiers on Our Neighbors',

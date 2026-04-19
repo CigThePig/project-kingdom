@@ -409,3 +409,92 @@ describe('substituteSmartPlaceholders', () => {
     });
   });
 });
+
+// ----------------------------------------------------------------
+// Phase B — Integration: real authored bodies render through
+// substituteSmartPlaceholders with no raw `{...}` tokens left behind.
+// ----------------------------------------------------------------
+
+describe('Phase B — authored text resolves end-to-end', () => {
+  it('resolves identity tokens in EXPANSION_DIPLOMACY_TEXT bodies', async () => {
+    const { EXPANSION_DIPLOMACY_TEXT } = await import(
+      '../data/text/expansion/diplomacy-text'
+    );
+    const state = createDefaultScenario();
+    const nb = state.diplomacy.neighbors[0];
+    const ctx: SmartTextContext = { neighborId: nb.id };
+    const entry = EXPANSION_DIPLOMACY_TEXT.evt_exp_dip_foreign_emissary_arrives;
+    const body = substituteSmartPlaceholders(entry.body, state, ctx);
+    // Resolved kingdom + capital should appear; no raw placeholders left.
+    expect(body).toContain(nb.capitalName ?? '');
+    expect(body).not.toMatch(/\{[a-z_]+\}/);
+  });
+
+  it('resolves OVERTURE_TEXT bodies for inline-covered agendas', async () => {
+    const { OVERTURE_TEXT } = await import('../data/text/overtures');
+    const { RivalAgenda } = await import('../engine/types');
+    const state = createDefaultScenario();
+    const nb = state.diplomacy.neighbors[0];
+    const ctx: SmartTextContext = { neighborId: nb.id };
+    const entry = OVERTURE_TEXT[RivalAgenda.DynasticAlliance];
+    expect(entry).toBeDefined();
+    const title = substituteSmartPlaceholders(entry!.title, state, ctx);
+    const body = substituteSmartPlaceholders(entry!.body, state, ctx);
+    expect(title).not.toMatch(/\{[a-z_]+\}/);
+    expect(body).not.toMatch(/\{[a-z_]+\}/);
+    // Resolved capital + dynasty should appear in the marriage proposal body.
+    expect(body).toContain(nb.capitalName ?? '');
+    expect(body).toContain(nb.dynastyName ?? '');
+  });
+
+  it('resolves seat tokens in petition wave-2 text without context', async () => {
+    const { EXPANSION_WAVE_2_PETITIONS_MILITARY_TEXT } = await import(
+      '../data/text/expansion/wave-2-text/petitions-military'
+    );
+    const state = createDefaultScenario();
+    // Appoint a Marshal so the seat token resolves to a real name.
+    const marshalName = 'Marshal Vellis';
+    state.council = state.council ?? { appointments: {}, pendingCandidates: [] } as never;
+    state.council!.appointments = state.council!.appointments ?? ({} as never);
+    state.council!.appointments[CouncilSeat.Marshal] = {
+      seat: CouncilSeat.Marshal,
+      name: marshalName,
+      personality: 'Cautious',
+      loyalty: 50,
+      flaws: [],
+      patronClass: null,
+      background: 'test',
+      appointedOnTurn: 1,
+    } as never;
+    const entry = EXPANSION_WAVE_2_PETITIONS_MILITARY_TEXT.faction_req_w2_border_captains_garrison;
+    const body = substituteSmartPlaceholders(entry.body, state);
+    expect(body).toContain(marshalName);
+    expect(body).not.toMatch(/\{[a-z_]+\}/);
+  });
+
+  it('resolves region token in region-text bodies', async () => {
+    const { EXPANSION_REGION_TEXT } = await import(
+      '../data/text/expansion/region-text'
+    );
+    const state = createDefaultScenario();
+    const region = state.regions[0];
+    const ctx: SmartTextContext = { regionId: region.id };
+    const entry = EXPANSION_REGION_TEXT.evt_exp_reg_autonomy_dispute;
+    const body = substituteSmartPlaceholders(entry.body, state, ctx);
+    expect(body).toContain(region.displayName ?? region.id);
+    expect(body).not.toMatch(/\{[a-z_]+\}/);
+  });
+
+  it('resolves both ruler and capital tokens in neighbor-actions', async () => {
+    const { NEIGHBOR_ACTION_TEXT } = await import('../data/text/neighbor-actions');
+    const { NeighborActionType } = await import('../engine/types');
+    const state = createDefaultScenario();
+    const nb = state.diplomacy.neighbors[0];
+    const ctx: SmartTextContext = { neighborId: nb.id };
+    const entry = NEIGHBOR_ACTION_TEXT[NeighborActionType.WarDeclaration];
+    const body = substituteSmartPlaceholders(entry.body, state, ctx);
+    expect(body).toContain(nb.rulerName ?? '');
+    expect(body).toContain(nb.capitalName ?? '');
+    expect(body).not.toMatch(/\{[a-z_]+\}/);
+  });
+});

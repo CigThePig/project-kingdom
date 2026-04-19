@@ -6,7 +6,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_border_patrol_gaps: {
     title: 'Gaps in the Border Watch',
-    body: 'Your marshal reports that patrol routes along the frontier have grown dangerously thin. Several outposts have gone unmanned for weeks, and local villages report unfamiliar riders passing unchallenged through Crown lands.',
+    body: '{marshal_or_fallback} reports that patrol routes along the frontier have grown dangerously thin. Several outposts have gone unmanned for weeks, and local villages report unfamiliar riders passing unchallenged through Crown lands.',
     choices: {
       increase_patrol_frequency: 'Increase Patrol Frequency',
       recruit_local_militia: 'Recruit Local Militia',
@@ -32,7 +32,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_cavalry_training: {
     title: 'Proposal for a Cavalry Academy',
-    body: 'Your master-at-arms argues that the kingdom\'s mounted forces lag behind those of {neighbor}. He proposes converting fertile pastureland into dedicated training grounds, a plan that would strengthen the cavalry but displease those who farm the land.',
+    body: "{marshal_or_fallback} argues that the kingdom's mounted forces lag behind those of {ruler_full}. The proposal: convert fertile pastureland into dedicated training grounds — a plan that would strengthen the cavalry but displease those who farm the land.",
     choices: {
       build_cavalry_academy: 'Build a Cavalry Academy',
       expand_existing_stables: 'Expand Existing Stables',
@@ -45,7 +45,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_siege_preparations: {
     title: '{neighbor} Masses Near the Border',
-    body: 'Scouts confirm that {neighbor} has assembled siege engines and supply trains within striking distance of your southern fortifications. Your generals urge immediate preparations, but full mobilization would strain the treasury and alarm the populace.',
+    body: "{marshal_or_fallback} confirms that {ruler_full} has assembled siege engines and supply trains within striking distance of your southern fortifications. The generals urge immediate preparations, but full mobilization would strain the treasury and alarm the populace.",
     choices: {
       full_siege_mobilization: 'Order Full Mobilization',
       reinforce_key_fortifications: 'Reinforce Key Fortifications',
@@ -97,7 +97,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_arms_deal: {
     title: '{neighbor} Offers Arms',
-    body: 'Envoys from {neighbor} propose a shipment of crossbows and plate armor at favorable terms. The deal would strengthen your forces and deepen ties with {neighbor}, though rivals may view such an arrangement as a provocation.',
+    body: 'Envoys of {ruler_full} propose a shipment of crossbows and plate armor at favorable terms. The deal would strengthen your forces and deepen ties with {dynasty}, though rivals may view such an arrangement as a provocation.',
     choices: {
       accept_arms_shipment: 'Accept the Shipment',
       negotiate_mutual_pact: 'Negotiate a Mutual Pact',
@@ -175,7 +175,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_intel_report: {
     title: 'Whispers from the Border',
-    body: 'Your spymaster presents a troubling intelligence briefing. {neighbor} has been conducting nighttime patrols along disputed territory and stockpiling timber suitable for siege construction. The activity may be routine, or it may signal darker intentions.',
+    body: "{spymaster_or_fallback} presents a troubling intelligence briefing. {ruler_full} has been conducting nighttime patrols along disputed territory and stockpiling timber suitable for siege construction. The activity may be routine, or it may signal darker intentions from {capital}.",
     choices: {
       increase_border_watch: 'Increase the Border Watch',
       deploy_counter_intelligence: 'Deploy Counter-Intelligence',
@@ -201,7 +201,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_war_preparations: {
     title: 'The Drums of War',
-    body: 'Relations with {neighbor} have deteriorated beyond recovery. Your war council convenes in grim assembly, laying out the costs and consequences of full mobilization. Every path forward demands sacrifice; the only question is what kind.',
+    body: "Relations with {neighbor} have deteriorated beyond recovery. {marshal_or_fallback}'s war council convenes in grim assembly, laying out the costs and consequences of full mobilization against {ruler_full}. Every path forward demands sacrifice; the only question is what kind.",
     choices: {
       full_war_mobilization: 'Order Full War Mobilization',
       defensive_preparations_only: 'Prepare Defenses Only',
@@ -227,7 +227,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_strategic_alliance: {
     title: '{neighbor} Proposes a Military Pact',
-    body: '{neighbor}\'s ambassador arrives with a formal proposal for a mutual defense treaty. The alliance would present a united front against common threats, but binding your armies to another sovereign\'s wars is a commitment the nobility views with alarm.',
+    body: "{ruler_full}'s ambassador arrives from {capital} with a formal proposal for a mutual defense treaty. The alliance would present a united front against common threats, but binding your armies to {dynasty}'s wars is a commitment the nobility views with alarm.",
     choices: {
       formal_military_pact: 'Sign a Formal Pact',
       limited_cooperation: 'Agree to Limited Cooperation',
@@ -264,7 +264,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // --- 21. Garrison Inspection ---
   evt_exp_mil_garrison_inspection: {
     title: 'The State of Your Forces',
-    body: 'Your newly appointed marshal presents a candid assessment of the royal garrison. The soldiers are loyal but their equipment shows years of neglect \u2014 rust flecks the helms, and several crossbow strings have rotted through. The men stand at attention, watching their new sovereign with hopeful eyes.',
+    body: '{marshal_or_fallback} presents a candid assessment of the royal garrison. The soldiers are loyal but their equipment shows years of neglect \u2014 rust flecks the helms, and several crossbow strings have rotted through. The men stand at attention, watching their new sovereign with hopeful eyes.',
     choices: {
       fund_equipment_upgrades: 'Fund Equipment Upgrades',
       host_a_feast_for_soldiers: 'Feast the Garrison in Your Name',

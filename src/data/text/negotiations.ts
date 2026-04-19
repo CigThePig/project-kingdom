@@ -16,7 +16,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
   // ============================================================
   neg_trade_deal: {
     title: 'Trade Negotiations with {neighbor}',
-    body: 'Envoys from {neighbor} have arrived to negotiate a comprehensive trade agreement. They present several terms for your consideration — each bringing benefits but also entanglements with a foreign power.',
+    body: 'Envoys of {ruler_full} have arrived from {capital} to negotiate a comprehensive trade agreement. They present several terms for your consideration — each bringing benefits but also entanglements with the merchant houses of {dynasty}.',
     contextLabel: 'DIPLOMATIC NEGOTIATION',
     terms: {
       exclusive_market_access: {
@@ -29,7 +29,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
       },
       port_rights_concession: {
         title: 'Port Rights Concession',
-        description: 'Allow {neighbor} ships to dock freely in our harbors. Merchants gain new trade partners, but the military loses control of key coastal access points.',
+        description: "Allow {neighbor_short}'s ships to dock freely in our harbors. Merchants gain new trade partners, but the military loses control of key coastal access points.",
       },
     },
     rejectLabel: 'Reject the Proposal Entirely',
@@ -37,7 +37,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
 
   neg_treaty_terms: {
     title: 'Treaty Negotiations with {neighbor}',
-    body: '{neighbor} proposes formalizing relations through a binding treaty. The terms would deepen cooperation but constrain the kingdom\'s freedom of action in significant ways.',
+    body: "{ruler_full} proposes formalizing relations through a binding treaty between our throne and {dynasty}. The terms would deepen cooperation but constrain the kingdom's freedom of action in significant ways.",
     contextLabel: 'DIPLOMATIC NEGOTIATION',
     terms: {
       mutual_defense_clause: {
@@ -83,7 +83,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
 
   neg_alliance_pact: {
     title: 'Alliance Proposal from {neighbor}',
-    body: '{neighbor} proposes a formal military and economic alliance. The pact would bind the two kingdoms together against common threats — but each term limits sovereignty in exchange for security.',
+    body: '{ruler_full} proposes a formal military and economic alliance from {capital}. The pact would bind the two kingdoms together against common threats — but each term limits sovereignty in exchange for security with {dynasty}.',
     contextLabel: 'DIPLOMATIC NEGOTIATION',
     terms: {
       military_commitment: {
@@ -236,7 +236,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
 
   neg_resource_blockade: {
     title: 'Blockade Negotiations with {neighbor}',
-    body: '{neighbor} has imposed a resource blockade on the kingdom, choking vital supply lines. Their envoys arrive with a list of demands — each term extracts a painful concession, but continued blockade may cost more than compliance. The kingdom\'s reserves dwindle with each passing day.',
+    body: "{ruler_full} has imposed a resource blockade on the kingdom, choking vital supply lines. Envoys from {capital} arrive with a list of demands — each term extracts a painful concession, but continued blockade may cost more than compliance. The kingdom's reserves dwindle with each passing day.",
     contextLabel: 'DIPLOMATIC NEGOTIATION',
     terms: {
       payment_tribute: {
@@ -261,7 +261,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
 
   neg_marriage_alliance: {
     title: 'Marriage Alliance Proposed by {neighbor}',
-    body: '{neighbor} proposes a dynastic marriage to bind the two kingdoms together. The alliance would bring lasting peace and cooperation, but the terms of the union involve significant concessions — each one a permanent commitment that reshapes the kingdom\'s future.',
+    body: "{ruler_full} proposes a dynastic marriage to bind the two kingdoms together, knitting our bloodline to {dynasty}. The alliance would bring lasting peace and cooperation, but the terms of the union involve significant concessions — each one a permanent commitment that reshapes the kingdom's future.",
     contextLabel: 'DIPLOMATIC NEGOTIATION',
     terms: {
       royal_dowry: {
