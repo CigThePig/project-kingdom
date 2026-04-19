@@ -11,6 +11,7 @@ import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { ASSESSMENT_TEXT } from '../data/text/assessments';
 import { turnRng } from '../engine/resolution/turn-rng';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
+import { substituteSmartPlaceholders } from './smartText';
 import type { CrisisPhaseData, CrisisCardData, ResponseCardData } from './crisisCardGenerator';
 import type { ConfidenceLevel } from '../ui/types';
 import type { MechanicalEffectDelta } from '../engine/types';
@@ -90,21 +91,23 @@ export function generateAssessmentPhaseData(
   const text = ASSESSMENT_TEXT[selected.id];
   if (!effects || !text) return null;
 
-  // Build crisis card (assessment card)
-  const crisisCard: CrisisCardData = {
-    eventId: `assessment:${selected.id}`,
-    definitionId: selected.id,
-    title: text.title,
-    body: text.body,
-    effects: [],
-  };
-
   // Resolve neighbor once and reuse for all choices.
   const neighbors = state.diplomacy.neighbors;
   const peaceful = neighbors
     .filter((n) => !n.isAtWarWithPlayer)
     .sort((a, b) => b.relationshipScore - a.relationshipScore);
   const resolvedNeighborId = peaceful[0]?.id ?? neighbors[0]?.id ?? undefined;
+
+  const smartCtx = resolvedNeighborId ? { neighborId: resolvedNeighborId } : {};
+
+  // Build crisis card (assessment card)
+  const crisisCard: CrisisCardData = {
+    eventId: `assessment:${selected.id}`,
+    definitionId: selected.id,
+    title: substituteSmartPlaceholders(text.title, state, smartCtx),
+    body: substituteSmartPlaceholders(text.body, state, smartCtx),
+    effects: [],
+  };
 
   // Build response cards from choices
   // Assessments don't have ruling-style tags or follow-up definitions,
@@ -116,7 +119,11 @@ export function generateAssessmentPhaseData(
     return {
       id: `assessment:${selected.id}:${choice.choiceId}`,
       choiceId: choice.choiceId,
-      title: text.choices[choice.choiceId] ?? choice.choiceId,
+      title: substituteSmartPlaceholders(
+        text.choices[choice.choiceId] ?? choice.choiceId,
+        state,
+        smartCtx,
+      ),
       effects: mechDeltaToEffectHints(resolved),
       signals: [],
       slotCost: choice.slotCost,

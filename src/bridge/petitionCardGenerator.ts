@@ -14,6 +14,7 @@ import { getNeighborDisplayName } from './nameResolver';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
 import { extractEventContext } from './contextExtractor';
 import { extractChoiceSignals } from './signalExtractor';
+import { substituteSmartPlaceholders } from './smartText';
 import {
   BURN_RISK_EXTRACTION_THRESHOLD,
   MOLE_DETECTION_EXPOSE_THRESHOLD,
@@ -47,14 +48,31 @@ export interface PetitionCardData {
 }
 
 // ============================================================
-// Neighbor substitution helper
+// Smart-text substitution
 // ============================================================
+//
+// When a GameState is available, we route card text through the full
+// smartText pipeline so that any placeholder (identity, situational,
+// or grammar) is resolved consistently across card families.
+//
+// Callers that have no GameState (a handful of unit tests) still need
+// the legacy `{neighbor}` behavior: substitute from NEIGHBOR_LABELS, or
+// leave the literal in place when no affected neighbor is set.
 
-function substituteNeighbor(text: string, event: ActiveEvent, gameState?: GameState): string {
+function renderEventText(
+  text: string,
+  event: ActiveEvent,
+  gameState: GameState | undefined,
+): string {
+  if (gameState) {
+    return substituteSmartPlaceholders(text, gameState, {
+      neighborId: event.affectedNeighborId ?? undefined,
+      regionId: event.affectedRegionId ?? undefined,
+      classId: event.affectedClassId ?? undefined,
+    });
+  }
   if (!event.affectedNeighborId) return text;
-  const name = gameState
-    ? getNeighborDisplayName(event.affectedNeighborId, gameState)
-    : (NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId);
+  const name = NEIGHBOR_LABELS[event.affectedNeighborId] ?? event.affectedNeighborId;
   return text.replace(/\{neighbor\}/g, name);
 }
 
@@ -98,8 +116,8 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
       cards.push({
         eventId: event.id,
         definitionId: event.definitionId,
-        title: substituteNeighbor(textEntry.title, event, gameState),
-        body: substituteNeighbor(textEntry.body, event, gameState),
+        title: renderEventText(textEntry.title, event, gameState),
+        body: renderEventText(textEntry.body, event, gameState),
         grantChoiceId: onlyChoice.choiceId,
         denyChoiceId: onlyChoice.choiceId,
         grantEffects: onlyEffects,
@@ -124,8 +142,8 @@ export function generatePetitionCards(events: ActiveEvent[], gameState?: GameSta
     cards.push({
       eventId: event.id,
       definitionId: event.definitionId,
-      title: substituteNeighbor(textEntry.title, event, gameState),
-      body: substituteNeighbor(textEntry.body, event, gameState),
+      title: renderEventText(textEntry.title, event, gameState),
+      body: renderEventText(textEntry.body, event, gameState),
       grantChoiceId: grantChoice.choiceId,
       denyChoiceId: denyChoice.choiceId,
       grantEffects: mechDeltaToEffectHints(choiceEffects[grantChoice.choiceId] ?? {}, gameState),
@@ -180,8 +198,8 @@ export function generateNotificationCards(
     cards.push({
       eventId: event.id,
       definitionId: event.definitionId,
-      title: substituteNeighbor(textEntry.title, event, gameState),
-      body: substituteNeighbor(textEntry.body, event, gameState),
+      title: renderEventText(textEntry.title, event, gameState),
+      body: renderEventText(textEntry.body, event, gameState),
       acknowledgeChoiceId: def.choices[0].choiceId,
     });
   }

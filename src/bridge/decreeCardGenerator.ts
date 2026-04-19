@@ -13,6 +13,7 @@ import { getDecreeAvailability } from '../engine/systems/decree-progression';
 import { getDominantAxes } from '../engine/systems/ruling-style';
 import { StyleAxis } from '../engine/types';
 import { extractDecreeContext } from './contextExtractor';
+import { substituteSmartPlaceholders } from './smartText';
 import { turnRng } from '../engine/resolution/turn-rng';
 
 // ============================================================
@@ -85,9 +86,9 @@ export function generateDecreeCards(
     const context = extractDecreeContext(gameState, decree.category);
     return {
       decreeId: decree.id,
-      title: decree.title,
+      title: substituteSmartPlaceholders(decree.title, gameState),
       category: decree.category,
-      body: decree.effectPreview,
+      body: substituteSmartPlaceholders(decree.effectPreview, gameState),
       effects: mechDeltaToEffectHints(DECREE_EFFECTS[decree.id] ?? {}),
       slotCost: decree.slotCost,
       isHighImpact: decree.isHighImpact,

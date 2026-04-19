@@ -8,6 +8,13 @@
 // Synthetic eventIds are prefixed `overture_` so that action-resolution can
 // detect them and apply inline relationship + memory effects without
 // requiring an entry in EVENT_POOL / EVENT_CHOICE_EFFECTS.
+//
+// TODO(smart-cards): This generator builds titles/bodies via inline template
+// literals instead of placeholder-based authored text. A follow-up PR should
+// migrate overture strings into an OVERTURE_TEXT map and route them through
+// `substituteSmartPlaceholders` so they can participate in the same
+// placeholder vocabulary as petitions/crises/decrees.
+// See docs/SMART_CARD_ENGINE_SURFACE.md Phase A notes.
 
 import {
   RivalAgenda,

@@ -204,7 +204,7 @@ export function RoundController({ onGameOver }: RoundControllerProps = {}) {
 
     // Generate crisis cards from active storylines at branch points
     const storylineCrises = (gameState.activeStorylines ?? [])
-      .map(generateStorylineCrisisData)
+      .map((s) => generateStorylineCrisisData(s, gameState))
       .filter((d): d is CrisisPhaseData => d !== null);
 
     // Generate cards from neighbor AI actions

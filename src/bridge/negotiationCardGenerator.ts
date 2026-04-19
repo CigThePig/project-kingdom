@@ -12,6 +12,7 @@ import { NEGOTIATION_TEXT } from '../data/text/negotiations';
 import { turnRng } from '../engine/resolution/turn-rng';
 import { getNeighborDisplayName } from './nameResolver';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
+import { substituteSmartPlaceholders } from './smartText';
 import type { NegotiationCard, NegotiationTerm } from '../ui/types';
 import type { CardOfFamily } from '../engine/cards/types';
 import { negotiationToCard } from '../engine/cards/adapters';
@@ -101,8 +102,8 @@ export function generateNegotiationCard(
     ? pickExternalNeighbor(state)
     : { id: '', name: '' };
 
-  const resolveText = (s: string) =>
-    s.replace(/\{neighbor\}/g, neighbor.name);
+  const smartCtx = neighbor.id ? { neighborId: neighbor.id } : {};
+  const resolveText = (s: string) => substituteSmartPlaceholders(s, state, smartCtx);
 
   // Build terms
   const terms: NegotiationTerm[] = selected.terms.map((termDef) => {
