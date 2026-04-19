@@ -4,6 +4,7 @@
 
 import type { MechanicalEffectDelta } from '../../engine/types';
 import { EXPANSION_DECREE_EFFECTS } from './expansion-effects';
+import { EXPANSION_WAVE_2_DECREE_EFFECTS } from './expansion-wave-2/effects';
 
 export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
   // ====================
@@ -392,4 +393,7 @@ export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
 
   // Expansion Decree Effects
   ...EXPANSION_DECREE_EFFECTS,
+
+  // Phase 7 — Wave-2 Decree Effects
+  ...EXPANSION_WAVE_2_DECREE_EFFECTS,
 };
