@@ -10,11 +10,10 @@ import { EVENT_TEXT } from '../data/text/events';
 import { EVENT_POOL, FOLLOW_UP_POOL } from '../data/events/index';
 import { EVENT_CHOICE_EFFECTS } from '../data/events/effects';
 import { mechDeltaToEffectHints } from './crisisCardGenerator';
-import { getNeighborDisplayName } from './nameResolver';
 import { NEIGHBOR_LABELS } from '../data/text/labels';
 import { extractEventContext } from './contextExtractor';
 import { extractChoiceSignals } from './signalExtractor';
-import { substituteSmartPlaceholders } from './smartText';
+import { substituteSmartPlaceholders, SEAT_FALLBACK_LABEL } from './smartText';
 import {
   BURN_RISK_EXTRACTION_THRESHOLD,
   MOLE_DETECTION_EXPOSE_THRESHOLD,
@@ -244,17 +243,35 @@ export function synthesizePhase14Petitions(state: GameState): PetitionCardData[]
   const out: PetitionCardData[] = [];
   const esp = state.espionage;
   if (!esp) return out;
+  const currentTurn = state.turn?.turnNumber ?? 0;
 
   // Extraction petitions ------------------------------------------------
+  // Smart Card Engine Surface — Phase E: body surfaces codename, cover
+  // settlement, and turns in cover. Ruler/realm not mentioned; this is a
+  // domestic decision about one of our own agents.
   for (const agent of esp.agents ?? []) {
     if (agent.status !== AgentStatus.Active) continue;
     if (agent.burnRisk < BURN_RISK_EXTRACTION_THRESHOLD) continue;
     const eventId = `${PHASE14_EXTRACT_PREFIX}${agent.id}`;
+    const turnsInCover = Math.max(0, currentTurn - agent.recruitedTurn);
+    const seasonWord = turnsInCover === 1 ? 'season' : 'seasons';
+    const coverRegionId = state.geography?.settlements
+      ?.find((s) => s.id === agent.coverSettlementId)?.regionId;
+    const ctx = {
+      agentId: agent.id,
+      settlementId: agent.coverSettlementId,
+      regionId: coverRegionId,
+    };
+    const titleTpl = 'Extract {agent} from {settlement}?';
+    const bodyTpl =
+      "{spymaster_or_fallback} reports that {agent}'s cover in {settlement} is fraying — " +
+      `${turnsInCover} ${seasonWord} in place, and the watch has grown curious. ` +
+      'Pull them home now, or hold and hope they weather the coming month.';
     out.push({
       eventId,
       definitionId: 'phase14_extract',
-      title: `Agent ${agent.codename} Burnt`,
-      body: `${agent.codename}'s cover is fraying. Pull them home now — or hold, and hope they weather the next month.`,
+      title: substituteSmartPlaceholders(titleTpl, state, ctx),
+      body: substituteSmartPlaceholders(bodyTpl, state, ctx),
       grantChoiceId: 'extract',
       denyChoiceId: 'hold',
       grantEffects: [],
@@ -269,16 +286,26 @@ export function synthesizePhase14Petitions(state: GameState): PetitionCardData[]
   }
 
   // Mole-exposure petitions --------------------------------------------
+  // Smart Card Engine Surface — Phase E: body names the affected seat but
+  // NEVER names the planter (§9 spec invariant). The player chooses with
+  // incomplete information; identifying the planter is a separate beat.
   for (const mole of esp.moles ?? []) {
     if (mole.isExposed) continue;
     if (mole.detectionProgress < MOLE_DETECTION_EXPOSE_THRESHOLD) continue;
-    const planterName = getNeighborDisplayName(mole.plantedByNeighborId, state);
     const eventId = `${PHASE14_MOLE_PREFIX}${mole.id}`;
+    const seatAdvisor = state.council?.appointments?.[mole.seat];
+    const seatLabel = seatAdvisor?.name ?? SEAT_FALLBACK_LABEL[mole.seat];
+    const titleTpl = `Shadows at ${seatLabel}'s Desk`;
+    const bodyTpl =
+      `{spymaster_or_fallback}'s counter-intelligence traces a pattern of leaks ` +
+      `converging on ${seatLabel}'s office. The source remains uncertain — ` +
+      `expose the mole and take the diplomatic cost, or feed them false ` +
+      `intelligence and turn the leak against its source.`;
     out.push({
       eventId,
       definitionId: 'phase14_mole',
-      title: 'A Mole in the Council',
-      body: `Counter-intelligence has identified an agent in the council chamber, working for ${planterName}. Expose them — or feed them false intel?`,
+      title: substituteSmartPlaceholders(titleTpl, state, {}),
+      body: substituteSmartPlaceholders(bodyTpl, state, { seat: mole.seat }),
       grantChoiceId: 'expose',
       denyChoiceId: 'feed_false_intel',
       grantEffects: [],

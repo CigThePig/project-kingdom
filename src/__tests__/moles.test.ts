@@ -202,3 +202,111 @@ describe('applyMoleExposure', () => {
     expect(a.relationshipDelta).not.toBe(b.relationshipDelta);
   });
 });
+
+// Smart Card Engine Surface — Phase E: Mole Suspicion petition.
+// The body must name the affected council seat (or a sensible fallback) and
+// MUST NOT name the rival who planted the mole — per §9 spec, identifying the
+// planter is a separate, downstream beat.
+describe('Mole Suspicion petition — smart text (planter invariant)', () => {
+  it('names the affected seat via the appointed advisor, never the planter', async () => {
+    const { synthesizePhase14Petitions } = await import(
+      '../bridge/petitionCardGenerator'
+    );
+    const state = createDefaultScenario();
+    const planter = state.diplomacy.neighbors[0];
+    // Appoint a named advisor at the Chancellor seat so we can verify the
+    // body references them and not the planter.
+    state.council = {
+      appointments: {
+        [CouncilSeat.Chancellor]: {
+          id: 'adv_vessin',
+          name: 'Lord Vessin',
+          seat: CouncilSeat.Chancellor,
+        } as never,
+      },
+      pendingCandidates: [],
+    };
+    state.espionage = state.espionage ?? ({} as never);
+    state.espionage.moles = [
+      {
+        id: 'mole_suspicion_1',
+        plantedByNeighborId: planter.id,
+        seat: CouncilSeat.Chancellor,
+        detectionProgress: 80,
+        turnsActive: 6,
+        policyDriftIntensity: 0.2,
+        isExposed: false,
+        plantedTurn: 3,
+      } as Mole,
+    ];
+
+    const cards = synthesizePhase14Petitions(state);
+    expect(cards).toHaveLength(1);
+    const [card] = cards;
+    expect(card.definitionId).toBe('phase14_mole');
+    // Seat reference: the advisor's name must appear.
+    expect(card.body).toContain('Lord Vessin');
+    // Planter invariant: neither the rival's displayName nor rulerName may leak.
+    const banned = [
+      planter.displayName,
+      planter.rulerName,
+      planter.dynastyName,
+      planter.capitalName,
+    ].filter(Boolean) as string[];
+    for (const b of banned) {
+      expect(card.body).not.toContain(b);
+      expect(card.title).not.toContain(b);
+    }
+    // No unresolved tokens.
+    expect(card.body).not.toMatch(/\{[a-z_]/);
+    expect(card.title).not.toMatch(/\{[a-z_]/);
+  });
+
+  it('falls back to "your <seat>" when the seat is vacant and still hides the planter', async () => {
+    const { synthesizePhase14Petitions } = await import(
+      '../bridge/petitionCardGenerator'
+    );
+    const state = createDefaultScenario();
+    const planter = state.diplomacy.neighbors[0];
+    state.council = { appointments: {}, pendingCandidates: [] };
+    state.espionage = state.espionage ?? ({} as never);
+    state.espionage.moles = [
+      {
+        id: 'mole_suspicion_vacant',
+        plantedByNeighborId: planter.id,
+        seat: CouncilSeat.Marshal,
+        detectionProgress: 85,
+        turnsActive: 4,
+        policyDriftIntensity: 0.3,
+        isExposed: false,
+        plantedTurn: 1,
+      } as Mole,
+    ];
+    const [card] = synthesizePhase14Petitions(state);
+    expect(card.body).toContain('your marshal');
+    if (planter.displayName) {
+      expect(card.body).not.toContain(planter.displayName);
+    }
+  });
+
+  it('does not surface a mole petition below the detection threshold', async () => {
+    const { synthesizePhase14Petitions } = await import(
+      '../bridge/petitionCardGenerator'
+    );
+    const state = createDefaultScenario();
+    state.espionage = state.espionage ?? ({} as never);
+    state.espionage.moles = [
+      {
+        id: 'mole_too_quiet',
+        plantedByNeighborId: state.diplomacy.neighbors[0].id,
+        seat: CouncilSeat.Chamberlain,
+        detectionProgress: 40,
+        turnsActive: 2,
+        policyDriftIntensity: 0.1,
+        isExposed: false,
+        plantedTurn: 0,
+      } as Mole,
+    ];
+    expect(synthesizePhase14Petitions(state)).toHaveLength(0);
+  });
+});

@@ -939,11 +939,28 @@ describe('substituteSmartPlaceholders', () => {
       expect(substituteSmartPlaceholders(tpl, state)).toBe('Body text.');
     });
 
-    // ---- {agent:id} stays reserved for Phase F -----------------
+    // ---- {agent:id} — resolver landed in Phase E (Agent Burn Extraction) --
 
-    it('{agent:id} continues to resolve to empty string (Phase F)', () => {
+    it('{agent:id} resolves to the agent codename when the id matches', () => {
       const state = createDefaultScenario();
-      expect(substituteSmartPlaceholders('{agent:agent_abc}', state)).toBe('');
+      state.espionage!.agents = [
+        {
+          id: 'agent_abc',
+          codename: 'Shrike',
+          specialization: 'Court' as never,
+          coverSettlementId: 'settlement_x',
+          reliability: 50,
+          burnRisk: 10,
+          status: 'Active' as never,
+          recruitedTurn: 1,
+        },
+      ];
+      expect(substituteSmartPlaceholders('{agent:agent_abc}', state)).toBe('Shrike');
+    });
+
+    it('{agent:id} falls back to "the agent" when no agent matches', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{agent:missing_id}', state)).toBe('the agent');
     });
   });
 

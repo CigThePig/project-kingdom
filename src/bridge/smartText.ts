@@ -123,7 +123,7 @@ type Resolver = (
   arg?: string,
 ) => string | undefined;
 
-const SEAT_FALLBACK_LABEL: Record<CouncilSeat, string> = {
+export const SEAT_FALLBACK_LABEL: Record<CouncilSeat, string> = {
   [CouncilSeat.Chancellor]: 'your chancellor',
   [CouncilSeat.Marshal]: 'your marshal',
   [CouncilSeat.Chamberlain]: 'your chamberlain',
@@ -358,9 +358,15 @@ const DISPATCH: Record<string, Resolver> = {
   storyline_arc_note: (state, ctx) => storylineArcNote(state, ctx),
 
   // ---- §3.3 Parameterised memory tokens (Phase D) ----
-  // `{agent:id}` is reserved for Phase F (advisor/agent name resolvers) and
-  // remains empty here so authoring against it stays safe.
-  agent: () => '',
+  // `{agent:id}` resolves to an agent codename (Phase E — Agent Burn
+  // Extraction). When the arg is absent, falls back to ctx.agentId so the
+  // same template works from per-agent synthesized petitions.
+  agent: (state, ctx, arg) => {
+    const id = arg ?? ctx.agentId;
+    if (!id) return 'the agent';
+    const agent = state.espionage?.agents?.find((a) => a.id === id);
+    return agent?.codename ?? 'the agent';
+  },
   prior_decision_clause: (state, _ctx, arg) => priorDecisionClause(state, arg),
 };
 
