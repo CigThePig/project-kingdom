@@ -1,0 +1,121 @@
+// Card Audit — shared types
+// See docs/CARD_AUDIT_RULES.md §8 for severity definitions and §13 for scans.
+
+export type FindingSeverity = 'CRITICAL' | 'MAJOR' | 'MINOR' | 'POLISH';
+
+export type Family =
+  | 'decree'
+  | 'crisis'
+  | 'petition'
+  | 'assessment'
+  | 'negotiation'
+  | 'overture'
+  | 'notification'
+  | 'hand'
+  | 'world'
+  | 'unknown';
+
+export type ScanCategory = 'wiring' | 'substance' | 'text' | 'reach';
+
+export interface Finding {
+  severity: FindingSeverity;
+  family: Family;
+  scanId: string;
+  code: string;
+  cardId: string;
+  choiceId?: string;
+  filePath?: string;
+  message: string;
+  details?: Record<string, unknown>;
+}
+
+export interface Corpus {
+  events: { pool: import('../../src/engine/events/event-engine').EventDefinition[]; followUpPool: import('../../src/engine/events/event-engine').EventDefinition[] };
+  decrees: {
+    pool: import('../../src/data/decrees/index').DecreeDefinition[];
+    effects: Record<string, import('../../src/engine/types').MechanicalEffectDelta>;
+  };
+  assessments: {
+    pool: import('../../src/engine/events/event-engine').EventDefinition[];
+    effects: Record<string, Record<string, import('../../src/engine/types').MechanicalEffectDelta>>;
+    text: Record<string, import('../../src/data/text/events').EventTextEntry>;
+  };
+  negotiations: {
+    pool: import('../../src/data/events/negotiations').NegotiationDefinition[];
+    effects: Record<string, Record<string, import('../../src/engine/types').MechanicalEffectDelta>>;
+    text: Record<string, import('../../src/data/text/events').EventTextEntry>;
+  };
+  worldEvents: {
+    defs: import('../../src/engine/types').WorldEventDefinition[];
+    effects: Record<string, import('../../src/engine/types').MechanicalEffectDelta>;
+    text: Record<string, { title: string; body: string; choices: Record<string, string> }>;
+  };
+  handCards: import('../../src/data/cards/hand-cards').HandCardDefinition[];
+  text: { events: Record<string, import('../../src/data/text/events').EventTextEntry> };
+  effects: {
+    events: Record<string, Record<string, import('../../src/engine/types').MechanicalEffectDelta>>;
+  };
+  styleTags: Record<string, Record<string, Partial<Record<import('../../src/engine/types').StyleAxis, number>>>>;
+  tempModifiers: Record<string, Record<string, import('../../src/data/events/effects').TemporaryModifierSpec>>;
+  featureRegistry: Record<string, import('../../src/data/kingdom-features/index').KingdomFeatureDefinition>;
+
+  // Pre-built indexed views
+  /** All event definitions reachable from EVENT_POOL ∪ FOLLOW_UP_POOL ∪ ASSESSMENT_POOL. */
+  eventById: Map<string, import('../../src/engine/events/event-engine').EventDefinition>;
+  /** Family classification for a given card id. Built from pool membership + classification flag. */
+  familyByCardId: Map<string, Family>;
+  /** Map cardId -> source file path (best-effort, derived from a one-shot directory walk). */
+  filePathByCardId: Map<string, string>;
+  /** Tags produced by some choice anywhere in the corpus, with producer locations. */
+  tagProducers: Map<string, Array<{ kind: 'event' | 'decree'; id: string; choiceId?: string }>>;
+  /** Tags read by triggers/storylines/branches. */
+  tagReaders: Map<string, Array<{ where: 'event-trigger' | 'decree-trigger'; id: string }>>;
+}
+
+export interface ScanResult {
+  scanId: string;
+  category: ScanCategory;
+  findings: Finding[];
+}
+
+export type Scan = (corpus: Corpus, opts: ScanOptions) => Finding[];
+
+export interface ScanOptions {
+  /** When set, scan only emits findings for cards in the given family. */
+  family?: Family;
+  /** When true, MINOR findings are emitted; otherwise suppressed. */
+  includeMinor: boolean;
+  /** When true, POLISH findings are emitted; otherwise suppressed. */
+  includePolish: boolean;
+}
+
+export interface AuditConfig {
+  outputDir: string;
+  family?: Family;
+  includeMinor: boolean;
+  includePolish: boolean;
+  withReach: boolean;
+  failOn?: FindingSeverity;
+  seedArtifacts: boolean;
+}
+
+/** Severity rank — higher is worse. Used for fail-on threshold comparison. */
+export const SEVERITY_RANK: Record<FindingSeverity, number> = {
+  POLISH: 0,
+  MINOR: 1,
+  MAJOR: 2,
+  CRITICAL: 3,
+};
+
+/** Stable, total ordering on findings — produces minimal diffs between runs. */
+export function compareFindings(a: Finding, b: Finding): number {
+  if (a.family !== b.family) return a.family.localeCompare(b.family);
+  const af = a.filePath ?? '';
+  const bf = b.filePath ?? '';
+  if (af !== bf) return af.localeCompare(bf);
+  if (a.cardId !== b.cardId) return a.cardId.localeCompare(b.cardId);
+  const ac = a.choiceId ?? '';
+  const bc = b.choiceId ?? '';
+  if (ac !== bc) return ac.localeCompare(bc);
+  return a.scanId.localeCompare(b.scanId);
+}
