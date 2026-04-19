@@ -11,6 +11,9 @@ import type {
   ChronicleEntry,
   CodexSection,
   RegionSummary,
+  AgentRosterEntry,
+  BondCodexEntry,
+  InterRivalDigest,
 } from '../types';
 import type { CouncilState, CouncilSeat, RegionalPosture } from '../../engine/types';
 import { KingdomStateCards } from './codex/KingdomStateCards';
@@ -20,6 +23,9 @@ import { ActiveSituationsCards } from './codex/ActiveSituationsCards';
 import { ReignChronicleCards } from './codex/ReignChronicleCards';
 import { CombosCards } from './codex/CombosCards';
 import { CouncilCards } from './codex/CouncilCards';
+import { IntelligenceRosterCards } from './codex/IntelligenceRosterCards';
+import { BondCards } from './codex/BondCards';
+import { InterRivalCards } from './codex/InterRivalCards';
 import { COMBOS } from '../../data/cards/combos';
 
 // ============================================================
@@ -38,6 +44,9 @@ const TABS: TabDef[] = [
   { id: 'rivals', label: 'Rivals', color: 'var(--color-accent-advisor)' },
   { id: 'situations', label: 'Situations', color: 'var(--color-negative)' },
   { id: 'council', label: 'Council', color: 'var(--color-accent-advisor)' },
+  { id: 'intelligence', label: 'Intel', color: 'var(--color-accent-advisor)' },
+  { id: 'bonds', label: 'Bonds', color: 'var(--color-accent-response)' },
+  { id: 'interrival', label: 'Abroad', color: 'var(--color-accent-advisor)' },
   { id: 'chronicle', label: 'Chronicle', color: 'var(--color-accent-response)' },
   { id: 'combos', label: 'Combos', color: 'var(--color-accent-response)' },
 ];
@@ -63,6 +72,12 @@ interface CodexOverlayProps {
   regions?: RegionSummary[];
   /** Phase 9 — apply a posture change from the inline Codex picker. */
   onSetRegionalPosture?: (regionId: string, posture: RegionalPosture) => void;
+  /** Phase F — Intelligence Roster (one entry per agent). */
+  agents?: AgentRosterEntry[];
+  /** Phase F — Active diplomatic bonds. */
+  bonds?: BondCodexEntry[];
+  /** Phase F — Inter-rival situation digest, gated by intel tier. */
+  interRival?: InterRivalDigest;
   initialSection?: CodexSection;
 }
 
@@ -78,6 +93,9 @@ export function CodexOverlay({
   onDismissAdvisor,
   regions,
   onSetRegionalPosture,
+  agents,
+  bonds,
+  interRival,
   initialSection,
 }: CodexOverlayProps) {
   const [activeTab, setActiveTab] = useState<CodexSection>(initialSection ?? 'kingdom');
@@ -313,6 +331,22 @@ export function CodexOverlay({
         {activeTab === 'situations' && <ActiveSituationsCards situations={situations} />}
         {activeTab === 'council' && (
           <CouncilCards council={council} onDismiss={onDismissAdvisor} />
+        )}
+        {activeTab === 'intelligence' && (
+          <IntelligenceRosterCards agents={agents ?? []} />
+        )}
+        {activeTab === 'bonds' && <BondCards bonds={bonds ?? []} />}
+        {activeTab === 'interrival' && (
+          <InterRivalCards
+            digest={
+              interRival ?? {
+                intelLevel: 'none',
+                entries: [],
+                emptyLine:
+                  'Your network is too thin to read the currents between foreign courts.',
+              }
+            }
+          />
         )}
         {activeTab === 'chronicle' && <ReignChronicleCards entries={chronicle} />}
         {activeTab === 'combos' && (

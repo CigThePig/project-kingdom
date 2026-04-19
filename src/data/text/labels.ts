@@ -1,5 +1,6 @@
 import {
   ActionType,
+  AgentSpecialization,
   ConditionType,
   ConflictPhase,
   ConstructionCategory,
@@ -607,6 +608,16 @@ export const NEIGHBOR_LABELS: Record<string, string> = {
 // ============================================================
 // Intelligence Operation Labels
 // ============================================================
+
+// Phase F — Agent specialization display labels for the Intelligence Roster
+// codex domain. Each describes what the agent is trained to pursue.
+export const AGENT_SPECIALIZATION_LABELS: Record<AgentSpecialization, string> = {
+  [AgentSpecialization.Diplomatic]: 'Diplomatic',
+  [AgentSpecialization.Military]: 'Military',
+  [AgentSpecialization.Economic]: 'Economic',
+  [AgentSpecialization.Counter]: 'Counter-Intelligence',
+  [AgentSpecialization.Court]: 'Court',
+};
 
 export const INTELLIGENCE_OP_LABELS: Record<IntelligenceOperationType, string> = {
   [IntelligenceOperationType.Reconnaissance]: 'Reconnaissance',

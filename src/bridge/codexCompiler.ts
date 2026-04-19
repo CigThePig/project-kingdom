@@ -3,8 +3,22 @@
 // Pure function: state in, CodexDomain[] out.
 
 import { QualitativeTier, RegionalPosture } from '../engine/types';
-import type { GameState, NarrativePressure, RegionState, TreasuryExpenseBreakdown } from '../engine/types';
-import type { CodexDomain, RegionSummary } from '../ui/types';
+import type {
+  Bond,
+  GameState,
+  InterRivalAgreement,
+  NarrativePressure,
+  RegionState,
+  TreasuryExpenseBreakdown,
+} from '../engine/types';
+import type {
+  AgentRosterEntry,
+  BondCodexEntry,
+  CodexDomain,
+  InterRivalDigest,
+  InterRivalDigestEntry,
+  RegionSummary,
+} from '../ui/types';
 import {
   CODEX_NARRATIVES,
   POSTURE_NARRATIVE,
@@ -19,7 +33,17 @@ import {
   POSTURE_SHORT_EFFECT,
   isPostureStale,
 } from '../engine/systems/regional-posture';
-import { getRegionDisplayName } from './nameResolver';
+import { getNeighborDisplayName, getRegionDisplayName } from './nameResolver';
+import {
+  getAgentCoverSettlementLabel,
+} from './agentNameResolver';
+import { describeBond, getBondParticipantNames } from './bondNameResolver';
+import { getIntelLevel } from './dossierCompiler';
+import {
+  AGENT_SPECIALIZATION_LABELS,
+  BOND_KIND_LABELS,
+  INTELLIGENCE_OP_LABELS,
+} from '../data/text/labels';
 
 // ============================================================
 // Domain definitions
@@ -306,4 +330,216 @@ export function compileNarrativePulse(
     headline: dominantDef.codexHeadline,
     description: generatePulseDescription(dominant, secondary),
   };
+}
+
+// ============================================================
+// Phase F — Intelligence Roster (§10)
+// ============================================================
+
+/** Burn risk is inverted relative to the standard 0–100 tiers: high = bad. */
+function assignInvertedTier(score: number): QualitativeTier {
+  if (score >= 85) return QualitativeTier.Dire;
+  if (score >= 65) return QualitativeTier.Troubled;
+  if (score >= 45) return QualitativeTier.Stable;
+  if (score >= 25) return QualitativeTier.Prosperous;
+  return QualitativeTier.Flourishing;
+}
+
+const OPERATION_STAGE_LABELS = ['Scouting', 'Developing', 'Closing In', 'Reporting'];
+
+function operationStageLabel(turnsElapsed: number, turnsTotal: number): string {
+  if (turnsTotal <= 0) return 'Ongoing';
+  const ratio = Math.max(0, Math.min(1, turnsElapsed / turnsTotal));
+  const idx = Math.min(
+    OPERATION_STAGE_LABELS.length - 1,
+    Math.floor(ratio * OPERATION_STAGE_LABELS.length),
+  );
+  return OPERATION_STAGE_LABELS[idx];
+}
+
+/**
+ * Compiles the Intelligence Roster Codex entries — one per active agent.
+ * Returns [] when the espionage roster is empty or not yet seeded.
+ */
+export function compileAgentRoster(state: GameState): AgentRosterEntry[] {
+  const agents = state.espionage?.agents ?? [];
+  if (agents.length === 0) return [];
+  const operations = state.espionage?.ongoingOperations ?? [];
+  const currentTurn = state.turn.turnNumber;
+
+  return agents.map((agent) => {
+    const ops = operations
+      .filter((op) => op.agentId === agent.id && op.status === 'running')
+      .map((op) => ({
+        label: INTELLIGENCE_OP_LABELS[op.operationType] ?? String(op.operationType),
+        stageLabel: operationStageLabel(op.turnsElapsed, op.turnsTotal),
+      }));
+
+    return {
+      id: agent.id,
+      codename: agent.codename,
+      specialization: agent.specialization,
+      specializationLabel:
+        AGENT_SPECIALIZATION_LABELS[agent.specialization] ?? String(agent.specialization),
+      coverSettlementLabel: getAgentCoverSettlementLabel(agent.id, state),
+      status: agent.status,
+      reliabilityTier: assignStandardTier(agent.reliability),
+      reliabilityValue: agent.reliability,
+      burnRiskTier: assignInvertedTier(agent.burnRisk),
+      burnRiskValue: agent.burnRisk,
+      turnsActive: Math.max(0, currentTurn - agent.recruitedTurn),
+      ongoingOperations: ops,
+    };
+  });
+}
+
+// ============================================================
+// Phase F — Bonds (§10)
+// ============================================================
+
+function turnsRemainingLabel(bond: Bond): string {
+  if (bond.turnsRemaining === null || bond.turnsRemaining === undefined) {
+    return 'Indefinite';
+  }
+  if (bond.turnsRemaining <= 0) return 'Expiring this season';
+  if (bond.turnsRemaining === 1) return '1 season remaining';
+  return `${bond.turnsRemaining} seasons remaining`;
+}
+
+// Sort priority: marriage & vassalage first (they shape long-term play),
+// then indefinite bonds, then oldest to youngest so the player sees the
+// earliest commitments at the top.
+const BOND_KIND_ORDER: Record<Bond['kind'], number> = {
+  royal_marriage: 0,
+  vassalage: 1,
+  hostage_exchange: 2,
+  mutual_defense: 3,
+  coalition: 4,
+  trade_league: 5,
+  religious_accord: 6,
+  cultural_exchange: 7,
+};
+
+/**
+ * Compiles the Codex "Bonds" entries — one per active diplomatic bond.
+ * Returns [] when `state.diplomacy.bonds` is empty or not yet seeded.
+ */
+export function compileBonds(state: GameState): BondCodexEntry[] {
+  const bonds = state.diplomacy.bonds ?? [];
+  if (bonds.length === 0) return [];
+  const currentTurn = state.turn.turnNumber;
+
+  const sorted = [...bonds].sort((a, b) => {
+    const kindDelta = (BOND_KIND_ORDER[a.kind] ?? 99) - (BOND_KIND_ORDER[b.kind] ?? 99);
+    if (kindDelta !== 0) return kindDelta;
+    const aIndefinite = a.turnsRemaining === null ? 0 : 1;
+    const bIndefinite = b.turnsRemaining === null ? 0 : 1;
+    if (aIndefinite !== bIndefinite) return aIndefinite - bIndefinite;
+    return a.turnStarted - b.turnStarted;
+  });
+
+  return sorted.map((bond) => {
+    const entry: BondCodexEntry = {
+      bondId: bond.bondId,
+      kind: bond.kind,
+      kindLabel: BOND_KIND_LABELS[bond.kind] ?? String(bond.kind),
+      descriptor: describeBond(bond, state),
+      participantNames: getBondParticipantNames(bond, state),
+      ageInTurns: Math.max(0, currentTurn - bond.turnStarted),
+      turnsRemainingLabel: turnsRemainingLabel(bond),
+      breachPenalty: bond.breachPenalty,
+    };
+    switch (bond.kind) {
+      case 'royal_marriage':
+        entry.heirProduced = bond.heirProduced;
+        break;
+      case 'vassalage':
+        entry.tributePerTurn = bond.tributePerTurn;
+        break;
+      case 'trade_league':
+        entry.incomePerTurn = bond.incomePerTurn;
+        break;
+      case 'hostage_exchange':
+        entry.hostageName = bond.hostageName;
+        break;
+      case 'coalition':
+        entry.commonEnemyName = getNeighborDisplayName(bond.commonEnemyId, state);
+        break;
+    }
+    return entry;
+  });
+}
+
+// ============================================================
+// Phase F — Inter-Rival Situation (§10)
+// ============================================================
+
+const INTER_RIVAL_KIND_LABELS: Record<InterRivalAgreement['kind'], string> = {
+  alliance: 'Alliance',
+  trade_pact: 'Trade Pact',
+  war: 'War',
+};
+
+const INTEL_TIER_RANK = {
+  none: 0,
+  minimal: 1,
+  moderate: 2,
+  strong: 3,
+  exceptional: 4,
+} as const;
+
+/**
+ * Compiles a qualitative digest of inter-rival agreements. Gated by the
+ * player's intelligence-network tier (§10: "gated by intel tier").
+ *
+ *   - none / minimal → no entries; emptyLine describes the blind spot.
+ *   - moderate+       → all agreements surface.
+ *   - strong+         → shared targets (alliance "against X") surface.
+ */
+export function compileInterRivalDigest(state: GameState): InterRivalDigest {
+  const intelLevel = getIntelLevel(state.espionage?.networkStrength ?? 0);
+  const agreements = state.diplomacy.interRivalAgreements ?? [];
+
+  if (INTEL_TIER_RANK[intelLevel] < INTEL_TIER_RANK.moderate) {
+    return {
+      intelLevel,
+      entries: [],
+      emptyLine:
+        'Your network is too thin to read the currents between foreign courts. Invest in espionage to see who allies, trades, or wars with whom.',
+    };
+  }
+
+  if (agreements.length === 0) {
+    return {
+      intelLevel,
+      entries: [],
+      emptyLine: 'No alliances, trade pacts, or wars between your neighbors are known at court.',
+    };
+  }
+
+  const currentTurn = state.turn.turnNumber;
+  const canSeeSharedTargets = INTEL_TIER_RANK[intelLevel] >= INTEL_TIER_RANK.strong;
+
+  const entries: InterRivalDigestEntry[] = agreements
+    .slice()
+    .sort((a, b) => b.turnStarted - a.turnStarted)
+    .map((ag) => {
+      const entry: InterRivalDigestEntry = {
+        id: ag.id,
+        kind: ag.kind,
+        kindLabel: INTER_RIVAL_KIND_LABELS[ag.kind],
+        participantAName: getNeighborDisplayName(ag.a, state),
+        participantBName: getNeighborDisplayName(ag.b, state),
+        turnsActive: Math.max(0, currentTurn - ag.turnStarted),
+      };
+      if (canSeeSharedTargets && ag.sharedTargetId) {
+        entry.sharedTargetName =
+          ag.sharedTargetId === 'player'
+            ? 'your realm'
+            : getNeighborDisplayName(ag.sharedTargetId, state);
+      }
+      return entry;
+    });
+
+  return { intelLevel, entries };
 }
