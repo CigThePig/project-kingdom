@@ -43,7 +43,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_foreign_spy_ring: {
     title: 'Foreign Spy Ring Discovered',
-    body: "{spymaster_or_fallback} brings a dossier before the throne: a network of {neighbor_short}'s agents has been operating within the capital under {ruler}'s direction. The ring has been gathering information on troop deployments, fortification plans, and courtly alliances. Your advisors debate whether to crush the network outright or exploit it for your own ends.",
+    body: "{spymaster_or_fallback} brings a dossier before the throne: a network of {neighbor_short}'s agents has been operating within the capital under {ruler}'s direction. The ring has been gathering information on troop deployments, fortification plans, and courtly alliances. Your advisors debate whether to crush the network outright or exploit it for your own ends.{inter_rival_note}",
     choices: {
       dismantle_network: 'Dismantle the Network',
       surveil_and_exploit: 'Monitor and Exploit',

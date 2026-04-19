@@ -76,7 +76,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Food (2) ---
   evt_harvest_blight: {
     title: 'Blight Threatens the Harvest',
-    body: 'A persistent blight has spread across the kingdom\'s central farmlands. Crop yields are falling sharply, and agricultural laborers report entire fields lost to the affliction. Without intervention, the coming months will bring severe shortages.',
+    body: 'A persistent blight has spread across the kingdom\'s central farmlands. Crop yields are falling sharply, and agricultural laborers report entire fields lost to the affliction. Without intervention, the coming months will bring severe shortages.{prior_decision_clause:conscription}',
     choices: {
       quarantine_affected_fields: 'Quarantine Affected Fields',
       redirect_labor_to_salvage: 'Redirect Labor to Salvage',
@@ -183,7 +183,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Military (2) — Chain ---
   evt_military_equipment_shortage_1: {
     title: 'Equipment Shortages Reported',
-    body: 'The military quartermaster has filed an urgent report: equipment stores are running dangerously low. Weapons require repair, armor is deteriorating, and supply lines for raw materials have thinned. If unaddressed, readiness will continue to decline.',
+    body: 'The military quartermaster has filed an urgent report: equipment stores are running dangerously low. Weapons require repair, armor is deteriorating, and supply lines for raw materials have thinned. If unaddressed, readiness will continue to decline.{recent_causal}',
     choices: {
       emergency_procurement: 'Order Emergency Procurement',
       redistribute_existing_stock: 'Redistribute Existing Stock',
@@ -203,7 +203,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Diplomacy (2) ---
   evt_neighbor_trade_overture: {
     title: 'Foreign Trade Overture',
-    body: 'An envoy of {ruler_full} has arrived from {capital} bearing proposals for expanded trade agreements. The terms appear favorable, though the nobility bristles at the growing influence of merchant-class wealth that foreign trade enables. Accepting would deepen economic ties and mutual dependency with {neighbor}.',
+    body: 'An envoy of {ruler_full} has arrived from {capital} bearing proposals for expanded trade agreements. The terms appear favorable, though the nobility bristles at the growing influence of merchant-class wealth that foreign trade enables. Accepting would deepen economic ties and mutual dependency with {neighbor}.{neighbor_memory_clause}',
     choices: {
       accept_trade_terms: 'Accept the Terms',
       propose_modifications: 'Propose Modifications',
