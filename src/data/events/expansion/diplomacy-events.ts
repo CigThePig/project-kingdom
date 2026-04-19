@@ -476,4 +476,31 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     relatedStorylineId: null,
     phase: 'established',
   },
+
+  // --- Smart Card Engine Surface — Phase E ---
+  // Rival Crisis Window: a notification that surfaces when any neighbor is in
+  // crisis and the player's intelligence on them is at least moderate. Body is
+  // authored in diplomacy-text.ts and leans entirely on smart placeholders.
+  {
+    id: 'evt_rival_crisis_window',
+    severity: EventSeverity.Informational,
+    category: EventCategory.Diplomacy,
+    triggerConditions: [
+      { type: 'neighbor_in_crisis', minIntelLevel: 'moderate' },
+    ],
+    weight: 1.0,
+    chainId: null,
+    chainStep: null,
+    chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'acknowledge', slotCost: 0, isFree: true },
+    ],
+    affectsClass: null,
+    affectsRegion: false,
+    affectsNeighbor: '__IN_CRISIS__',
+    relatedStorylineId: null,
+    phase: 'any',
+    classification: 'notification',
+    repeatable: true,
+  },
 ];

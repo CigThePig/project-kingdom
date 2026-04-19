@@ -114,4 +114,9 @@ export const EXPANSION_DIPLOMACY_EFFECTS: Record<string, Record<string, Mechanic
     participate_fully:   { militaryReadinessDelta: +4, militaryMoraleDelta: +2, treasuryDelta: -25, diplomacyDeltas: { neighbor_arenthal: +4, neighbor_valdris: +4 } },
     send_observers_only: { militaryReadinessDelta: +1, diplomacyDeltas: { neighbor_arenthal: +1, neighbor_valdris: +1 } },
   },
+
+  // --- Smart Card Engine Surface — Phase E ---
+  evt_rival_crisis_window: {
+    acknowledge: {},
+  },
 };

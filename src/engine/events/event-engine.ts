@@ -71,7 +71,9 @@ export interface EventTriggerCondition {
     | 'inflation_above'
     | 'trade_volume_below'
     // Regional Life (Expansion 5)
-    | 'region_loyalty_below';
+    | 'region_loyalty_below'
+    // Smart Card Engine Surface — Phase E
+    | 'neighbor_in_crisis';
   /** Numeric threshold for above/below condition types. */
   threshold?: number;
   /** Required for class_satisfaction_* conditions. */
@@ -100,6 +102,12 @@ export interface EventTriggerCondition {
   economicPhase?: EconomicPhase;
   /** Required for region_loyalty_below: which region to check (null = any). */
   regionId?: string | null;
+  /**
+   * Optional for neighbor_in_crisis: minimum player espionage tier required
+   * to "see" the rival crisis. Defaults to 'moderate' — i.e. networkStrength
+   * must exceed 30. Banding follows getIntelLevel() in dossierCompiler.
+   */
+  minIntelLevel?: 'minimal' | 'moderate' | 'strong' | 'exceptional';
 }
 
 /**
@@ -389,9 +397,33 @@ export function evaluateCondition(
       );
     }
 
+    // Smart Card Engine Surface — Phase E
+    case 'neighbor_in_crisis': {
+      const anyInCrisis = state.diplomacy.neighbors.some(
+        (n) => n.kingdomSimulation?.isInCrisis === true,
+      );
+      if (!anyInCrisis) return false;
+      const strength = state.espionage?.networkStrength ?? 0;
+      const min = condition.minIntelLevel ?? 'moderate';
+      return meetsIntelTier(strength, min);
+    }
+
     default:
       return false;
   }
+}
+
+/** Returns true when the player's network strength meets the required tier. */
+function meetsIntelTier(
+  networkStrength: number,
+  min: 'minimal' | 'moderate' | 'strong' | 'exceptional',
+): boolean {
+  // Mirrors getIntelLevel() bands in bridge/dossierCompiler.ts so the engine
+  // stays free of a bridge-layer import.
+  if (min === 'minimal') return networkStrength > 10;
+  if (min === 'moderate') return networkStrength > 30;
+  if (min === 'strong') return networkStrength > 60;
+  return networkStrength > 80;
 }
 
 /**
@@ -441,6 +473,12 @@ export function resolveNeighborId(
     case '__ANY__': {
       const rng = eventRng(state, turnNumber, `any-neighbor:${siteTag}`);
       return neighbors[Math.floor(rng() * neighbors.length)].id;
+    }
+    case '__IN_CRISIS__': {
+      const candidates = neighbors.filter((n) => n.kingdomSimulation?.isInCrisis === true);
+      if (candidates.length === 0) return null;
+      const rng = eventRng(state, turnNumber, `in-crisis-neighbor:${siteTag}`);
+      return candidates[Math.floor(rng() * candidates.length)].id;
     }
     default:
       return null;
