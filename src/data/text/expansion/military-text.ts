@@ -201,7 +201,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_war_preparations: {
     title: 'The Drums of War',
-    body: "Relations with {neighbor} have deteriorated beyond recovery. {marshal_or_fallback}'s war council convenes in grim assembly, laying out the costs and consequences of full mobilization against {ruler_full}. With the force\'s morale {morale_tier}, its equipment {equipment_condition_tier}, and the treasury in {treasury_tier} condition, every path forward demands sacrifice; the only question is what kind.",
+    body: "Relations with {neighbor} have deteriorated beyond recovery. {marshal_or_fallback}'s war council convenes in grim assembly, laying out the costs and consequences of full mobilization against {ruler_full}. With the force's morale {morale_tier}, its equipment {equipment_condition_tier}, and the treasury in {treasury_tier} condition, every path forward demands sacrifice; the only question is what kind.",
     choices: {
       full_war_mobilization: 'Order Full War Mobilization',
       defensive_preparations_only: 'Prepare Defenses Only',
