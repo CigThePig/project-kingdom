@@ -10,7 +10,19 @@
     "lint": "eslint src",
     "format": "prettier --write src",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "audit": "tsx scripts/audit/index.ts",
+    "audit:inventory": "tsx scripts/audit/inventory.ts",
+    "audit:seed": "tsx scripts/audit/index.ts --seed-artifacts",
+    "audit:decrees": "tsx scripts/audit/index.ts --family=decree",
+    "audit:crises": "tsx scripts/audit/index.ts --family=crisis",
+    "audit:petitions": "tsx scripts/audit/index.ts --family=petition",
+    "audit:assessments": "tsx scripts/audit/index.ts --family=assessment",
+    "audit:negotiations": "tsx scripts/audit/index.ts --family=negotiation",
+    "audit:overtures": "tsx scripts/audit/index.ts --family=overture",
+    "audit:notifications": "tsx scripts/audit/index.ts --family=notification",
+    "audit:hand": "tsx scripts/audit/index.ts --family=hand",
+    "audit:reach": "tsx scripts/audit/index.ts --with-reach"
   },
   "dependencies": {
     "react": "^18.3.0",
@@ -27,6 +39,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "prettier": "^3.3.0",
     "tailwindcss": "^4.2.2",
+    "tsx": "^4.19.0",
     "typescript": "^5.5.0",
     "typescript-eslint": "^8.0.0",
     "vite": "^5.4.0",
