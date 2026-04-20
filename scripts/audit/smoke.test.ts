@@ -28,6 +28,7 @@ import { scan as pressurePrefixParityScan } from './scans/engine/pressure-prefix
 import { scan as consequenceWriteParityScan } from './scans/engine/consequence-write-parity';
 import { scan as textSourceParityScan } from './scans/engine/text-source-parity';
 import { scan as runtimePathParityScan } from './scans/engine/runtime-path-parity';
+import { scan as readerWriterRoundtripScan } from './scans/engine/reader-writer-roundtrip';
 
 const ALL_SCANS = [
   missingTextScan, choiceLabelScan, missingEffectsScan, emptyEffectsScan,
@@ -35,7 +36,7 @@ const ALL_SCANS = [
   surfaceOnlyScan, singleChoiceScan, categoryTouchScan, severityMagScan, choiceClonesScan,
   unresolvedTokensScan,
   pressurePrefixParityScan, consequenceWriteParityScan,
-  textSourceParityScan, runtimePathParityScan,
+  textSourceParityScan, runtimePathParityScan, readerWriterRoundtripScan,
 ];
 
 const FULL_OPTS: ScanOptions = { includeMinor: true, includePolish: true };

@@ -1,4 +1,4 @@
-// Engine parity §M1 — `persistentConsequences` write sites vs the scanner's
+// Engine parity — `persistentConsequences` write sites vs the scanner's
 // tag producer model (`corpus.tagProducers`).
 //
 // The engine writes to `persistentConsequences` at three sites in
@@ -13,45 +13,48 @@
 // trigger reads `consequence_tag_present` for a storyline outcome.
 //
 // We flag that gap as ENGINE_MISMATCH (scanner-model failure, not content
-// failure). M5 (§5b) promotes this to the AST writer/reader index and adds
-// a reader-writer roundtrip.
+// failure). This scan walks the M3 AST writer/reader index — no regex —
+// so it stays stable across refactors of the surrounding engine code.
 
-import { readFileSync } from 'node:fs';
-import * as path from 'node:path';
-
+import { getWriterReaderIndex } from '../../ast/runtime-writer-reader-index';
 import type { Corpus, Finding, Scan } from '../../types';
 
 export const SCAN_ID = 'engine.consequence-write-parity';
 
-const APPLY_EFFECTS_SRC = path.resolve(
-  process.cwd(),
-  'src',
-  'engine',
-  'resolution',
-  'apply-action-effects.ts',
-);
-
-// Detect the 3 known write sites via their `tag:` template-literal shapes.
-// Using these specific patterns instead of a generic `persistentConsequences:`
-// match keeps the scan stable against unrelated refactors of the surrounding
-// code.
-const DECREE_TAG_RE = /tag:\s*`decree:\$\{[^}]+\}`/;
-const EVENT_TAG_RE = /tag:\s*`\$\{[^}]+\}:\$\{[^}]+\}`/;
-const STORYLINE_TAG_RE = /tag:\s*`\$\{[^}]+\}:\$\{[^}]+\}:\$\{[^}]+\}`/;
+const APPLY_EFFECTS_PATH = 'src/engine/resolution/apply-action-effects.ts';
 
 export const scan: Scan = (corpus: Corpus): Finding[] => {
-  let source: string;
-  try {
-    source = readFileSync(APPLY_EFFECTS_SRC, 'utf8');
-  } catch {
-    return [];
-  }
+  const index = getWriterReaderIndex();
+  const sites = index.consequenceWriteSites.filter(
+    (s) => s.filePath === APPLY_EFFECTS_PATH,
+  );
 
   const out: Finding[] = [];
 
-  const hasDecree = DECREE_TAG_RE.test(source);
-  const hasEvent = EVENT_TAG_RE.test(source);
-  const hasStoryline = STORYLINE_TAG_RE.test(source);
+  if (sites.length < 3) {
+    out.push({
+      severity: 'MAJOR',
+      family: 'unknown',
+      scanId: SCAN_ID,
+      code: 'CONSEQUENCE_WRITE_SITE_COUNT_REGRESSED',
+      cardId: 'apply-action-effects:persistentConsequences',
+      filePath: APPLY_EFFECTS_PATH,
+      message: `Expected at least 3 persistentConsequences assignment sites in apply-action-effects.ts but found ${sites.length} — scanner's tag-producer model assumes three write shapes (decree, event-choice, storyline).`,
+      confidence: 'ENGINE_MISMATCH',
+      details: { foundSites: sites.map((s) => `${s.filePath}:${s.line}`) },
+    });
+  }
+
+  // Detect the 3 write-shape templates directly from the snippets each
+  // WriteSite carries. The tsquery selector matches the PropertyAssignment,
+  // so `snippet` contains the `persistentConsequences: [...]` expression
+  // text — enough to distinguish `decree:`, 2-part, and 3-part tag forms.
+  const siteTexts = sites.map((s) => s.snippet);
+  const hasDecree = siteTexts.some((t) => /`decree:\$\{/.test(t));
+  const hasEvent = siteTexts.some((t) => /`\$\{[^}]+\}:\$\{[^}]+\}`/.test(t));
+  const hasStoryline = siteTexts.some(
+    (t) => /`\$\{[^}]+\}:\$\{[^}]+\}:\$\{[^}]+\}`/.test(t),
+  );
 
   if (!hasDecree) {
     out.push({
@@ -60,8 +63,8 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
       scanId: SCAN_ID,
       code: 'CONSEQUENCE_WRITE_SITE_MISSING',
       cardId: 'apply-action-effects:decree',
-      filePath: 'src/engine/resolution/apply-action-effects.ts',
-      message: 'Expected a `decree:<id>` persistentConsequences write site in apply-action-effects.ts but none was found — the scanner\'s tag-producer model is out of sync with the engine.',
+      filePath: APPLY_EFFECTS_PATH,
+      message: 'Expected a `decree:<id>` persistentConsequences assignment in apply-action-effects.ts but none was found — the scanner\'s tag-producer model is out of sync with the engine.',
       confidence: 'ENGINE_MISMATCH',
     });
   }
@@ -72,14 +75,11 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
       scanId: SCAN_ID,
       code: 'CONSEQUENCE_WRITE_SITE_MISSING',
       cardId: 'apply-action-effects:event-choice',
-      filePath: 'src/engine/resolution/apply-action-effects.ts',
-      message: 'Expected a `<eventId>:<choiceId>` persistentConsequences write site in apply-action-effects.ts but none was found — the scanner\'s tag-producer model is out of sync with the engine.',
+      filePath: APPLY_EFFECTS_PATH,
+      message: 'Expected a `<eventId>:<choiceId>` persistentConsequences assignment in apply-action-effects.ts but none was found — the scanner\'s tag-producer model is out of sync with the engine.',
       confidence: 'ENGINE_MISMATCH',
     });
   }
-
-  // Storyline 3-part tag shape: the engine writes it, but buildTagProducers()
-  // in corpus.ts doesn't model it. That's a scanner gap, not a content gap.
   if (hasStoryline) {
     const hasThreePart = [...corpus.tagProducers.keys()].some(
       (tag) => tag.split(':').length === 3,

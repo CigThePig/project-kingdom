@@ -13,6 +13,7 @@ import { loadCorpus } from '../../../corpus';
 import { scan as pressurePrefixScan, SCAN_ID as PRESSURE_ID } from '../pressure-prefix-parity';
 import { scan as textSourceScan, SCAN_ID as TEXT_SOURCE_ID } from '../text-source-parity';
 import { scan as runtimePathScan, SCAN_ID as RUNTIME_PATH_ID } from '../runtime-path-parity';
+import { scan as roundtripScan, SCAN_ID as ROUNDTRIP_ID } from '../reader-writer-roundtrip';
 
 describe('engine parity scans', () => {
   it('pressure-prefix-parity emits ENGINE_MISMATCH for the four known orphan prefixes', async () => {
@@ -46,5 +47,24 @@ describe('engine parity scans', () => {
     expect(findings.every((f) => f.confidence === 'ENGINE_MISMATCH')).toBe(true);
     const unknown = findings.filter((f) => f.code === 'RUNTIME_PATH_UNKNOWN');
     expect(unknown.length).toBe(0);
+  });
+
+  it('reader-writer-roundtrip surfaces one finding per orphan PRESSURE_WEIGHTS prefix with the affected key list', async () => {
+    const corpus = await loadCorpus();
+    const findings = roundtripScan(corpus, {});
+    expect(findings.every((f) => f.scanId === ROUNDTRIP_ID)).toBe(true);
+    expect(findings.every((f) => f.confidence === 'ENGINE_MISMATCH')).toBe(true);
+    const orphanFindings = findings.filter((f) => f.code === 'PRESSURE_KEY_NO_WRITER');
+    const orphanPrefixes = new Set(
+      orphanFindings.map((f) => f.details?.prefix as string | undefined),
+    );
+    expect(orphanPrefixes).toEqual(
+      new Set(['assessment', 'faction', 'negotiation', 'neighbor']),
+    );
+    // Each finding must list the orphan keys — a non-empty array.
+    for (const f of orphanFindings) {
+      expect(Array.isArray(f.details?.orphanKeys)).toBe(true);
+      expect((f.details!.orphanKeys as unknown[]).length).toBeGreaterThan(0);
+    }
   });
 });
