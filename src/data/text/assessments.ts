@@ -47,7 +47,7 @@ export const ASSESSMENT_TEXT: Record<string, EventTextEntry> = {
 
   assess_foreign_famine: {
     title: 'Reports of Foreign Famine',
-    body: "Travelers and merchants bring reports that {neighbor} suffers from severe food shortages. Refugee columns have been spotted streaming away from {capital}, and {ruler}'s grip is reported to be uncertain. The situation presents both an opportunity to build goodwill through humanitarian aid and a temptation to press an advantage while a rival weakens.",
+    body: "Travelers and merchants bring reports that {neighbor} suffers from severe food shortages. Refugee columns have been spotted streaming away from {capital}, and {ruler}'s grip is reported to be uncertain. The situation presents both an opportunity to earn goodwill through humanitarian aid and a temptation to press an advantage while {neighbor} weakens.",
     choices: {
       send_humanitarian_aid: 'Send Humanitarian Aid',
       exploit_weakness: 'Exploit Their Weakness',
@@ -67,7 +67,7 @@ export const ASSESSMENT_TEXT: Record<string, EventTextEntry> = {
 
   assess_merchant_caravan_disappearance: {
     title: 'Merchant Caravan Gone Missing',
-    body: 'A well-provisioned merchant caravan has vanished on a route considered safe. Local patrols found no wreckage, no bodies, no tracks leading away from the road. The merchants\' guild demands answers, but the disappearance could have any number of explanations — bandits, desertion, a rival guild\'s sabotage, or simply bad weather in the mountain passes.',
+    body: 'A well-provisioned merchant caravan has vanished on a route considered safe. Local patrols found no wreckage, no bodies, no tracks leading away from the road. The merchants\' guild demands answers, but the disappearance could have any number of explanations — bandits, desertion, a competing guild\'s sabotage, or simply bad weather in the mountain passes.',
     choices: {
       fund_investigation: 'Fund a Formal Investigation',
       increase_road_patrols: 'Increase Road Patrols',

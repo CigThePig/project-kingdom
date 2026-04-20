@@ -124,6 +124,22 @@ export function applyDirectEffects(
       if (rawDelta) {
         const delta = resolveNeighborPlaceholders(rawDelta, current, d.targetNeighborId);
         current = applyMechanicalEffectDelta(current, delta, null);
+        // Record a persistent consequence so future conditions can gate on
+        // whether a player engaged with this intelligence — parallels the
+        // `${eventId}:${choiceId}` tag recorded for regular event choices.
+        current = {
+          ...current,
+          persistentConsequences: [
+            ...current.persistentConsequences,
+            {
+              sourceId: assessId,
+              sourceType: 'event',
+              choiceMade: bareChoiceId,
+              turnApplied: current.turn.turnNumber,
+              tag: `${assessId}:${bareChoiceId}`,
+            },
+          ],
+        };
       }
     }
 

@@ -2,7 +2,7 @@
 family: negotiation
 totalCards: 12
 status: pending
-lastScan: 2026-04-20T21:42:14.542Z
+lastScan: 2026-04-20T21:46:10.294Z
 ---
 
 # Negotiation — Audit findings
