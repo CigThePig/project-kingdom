@@ -11,57 +11,9 @@
 // wiring the claim to a real effect.
 
 import type { Corpus, Finding, Scan } from '../../types';
+import { PROMISE_KEYWORD_RULES } from '../shared';
 
 export const SCAN_ID = 'text.promise-delivery';
-
-interface PromiseRule {
-  keyword: RegExp;
-  requires: string[];
-  label: string;
-}
-
-const PROMISE_RULES: PromiseRule[] = [
-  {
-    label: 'construction',
-    keyword: /\bconstruct(?:ion|s|ed|ing)?\b|\bbuild(?:ing|s|ers?)?\b|\bwalls?\b/i,
-    requires: ['constructionProjects', 'regions', 'infrastructure'],
-  },
-  {
-    label: 'granaries/food',
-    keyword: /\bgranar(?:y|ies)\b|\bharvest\b|\breserves?\b/i,
-    requires: ['food', 'granaries'],
-  },
-  {
-    label: 'treasury/gold',
-    keyword: /\btreasur(?:y|ies)\b|\bcoffers?\b|\brevenue\b|\btax(?:es|ation)?\b/i,
-    requires: ['treasury'],
-  },
-  {
-    label: 'military readiness',
-    keyword: /\breadiness\b|\bmuster\b|\bgarrison(?:ed|s)?\b|\bdrill\b/i,
-    requires: ['military'],
-  },
-  {
-    label: 'faith',
-    keyword: /\bfaith(?:ful)?\b|\bclerg(?:y|ies)\b|\baltar\b|\bheterodox(?:y|ies)?\b/i,
-    requires: ['faith', 'heterodoxy', 'religiousOrders'],
-  },
-  {
-    label: 'bond/diplomacy',
-    keyword: /\btreat(?:y|ies)\b|\balliance\b|\bcovenant\b|\bbond\b/i,
-    requires: ['diplomacy', 'diplomaticBonds'],
-  },
-  {
-    label: 'rival/neighbor',
-    keyword: /\bneighbo[ru]rs?\b|\brivals?\b|\bambassador\b|\benvoy\b/i,
-    requires: ['diplomacy', 'neighbors'],
-  },
-  {
-    label: 'agent/operation',
-    keyword: /\bagents?\b|\bspymaster\b|\bcovert\b|\binfiltrat(?:e|ion|ing)\b/i,
-    requires: ['espionage', 'agents', 'operations'],
-  },
-];
 
 export const scan: Scan = (corpus: Corpus): Finding[] => {
   const out: Finding[] = [];
@@ -75,7 +27,7 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
       const fp = path.runtimeFingerprint;
       if (!fp || fp.noOp) continue;
 
-      for (const rule of PROMISE_RULES) {
+      for (const rule of PROMISE_KEYWORD_RULES) {
         if (!rule.keyword.test(body)) continue;
         const satisfied = fp.touches.some((t) =>
           rule.requires.some((req) => t.includes(req)),

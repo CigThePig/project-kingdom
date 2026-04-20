@@ -62,10 +62,13 @@ export function toAuditCards(corpus: Corpus): AuditCard[] {
         choices: [grantPath, denyPath],
         coverage: defaultCoverage({
           textCoverage: hasText,
-          // Flagged false: INLINE_EFFECTS is a UI label table, not the
-          // mechanical-effect payload the engine actually applies. M4's
-          // runtime harness closes this gap.
-          generatedFamilyCoverage: false,
+          // Phase 5C — the runtime harness now dispatches overtures through
+          // their real `applyActionEffects` -> `applyOvertureDecision` path,
+          // so the generated family is covered. `effectCoverage` stays false
+          // because OVERTURE_TEXT + INLINE_EFFECTS together are not a
+          // mechanical-effect table the way ASSESSMENT_EFFECTS is — the real
+          // effects live in `applyOvertureDecision` inline code.
+          generatedFamilyCoverage: true,
           effectCoverage: false,
         }),
       }),

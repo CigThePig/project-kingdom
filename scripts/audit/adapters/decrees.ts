@@ -26,8 +26,10 @@ export function toAuditCards(corpus: Corpus): AuditCard[] {
 
     // `decree:` handler-key membership tells us whether runtime actually
     // resolves this decree — a decree in DECREE_POOL without a handler key
-    // is authored-but-dead.
-    const hasHandler = corpus.decrees.handlerKeys.has(d.id);
+    // is authored-but-dead. applyDecreeEffect strips the `decree_` prefix
+    // before looking up DECREE_EFFECT_REGISTRY, so we mirror that here.
+    const registryKey = d.id.replace(/^decree_/, '');
+    const hasHandler = corpus.decrees.handlerKeys.has(registryKey);
     const effects = (corpus.decrees.effects as Record<string, unknown>)[d.id] ?? null;
 
     const choices = [

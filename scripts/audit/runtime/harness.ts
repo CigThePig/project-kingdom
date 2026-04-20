@@ -5,21 +5,37 @@
 // production app uses, so scans that read the harness result read the
 // engine's actual behavior — not a scanner-side reimplementation.
 //
-// Scope for M4.1: hand cards run through their inline `apply`, the
-// remaining paths return `{ unsupported: true }` and downstream scans
-// treat that as "coverage gap, not a finding." Later milestones flesh out
-// event/decree/overture/world dispatch as those families' support lands.
+// Scope:
+//   - inline-hand-apply       → HandCardDefinition.apply()
+//   - decree-resolution       → applyActionEffects() with ActionType.Decree
+//   - direct-effect-assessment → applyDirectEffects() with InteractionType.Assessment
+//   - direct-effect-negotiation → applyDirectEffects() with InteractionType.Negotiation
+//   - generated-overture      → applyActionEffects() with ActionType.CrisisResponse
+//                                (parameters encode a synthesized overture_*
+//                                eventId the engine routes into its inline
+//                                diplomatic-overture path)
 //
 // Calls are pure: fixtures are cloned-on-mutate by the engine itself, so
 // the harness never hands back a leaked reference.
 
-import { PopulationClass, type GameState } from '../../../src/engine/types';
+import {
+  ActionType,
+  InteractionType,
+  PopulationClass,
+  RivalAgenda,
+  type GameState,
+  type QueuedAction,
+} from '../../../src/engine/types';
 import {
   HAND_CARDS,
   type HandCardChoice,
   type HandCardDefinition,
   type HandCardId,
 } from '../../../src/data/cards/hand-cards';
+import { applyActionEffects } from '../../../src/engine/resolution/apply-action-effects';
+import { applyDirectEffects } from '../../../src/bridge/directEffectApplier';
+import type { MonthDecision } from '../../../src/ui/types';
+import { SeasonMonth } from '../../../src/engine/types';
 import type { AuditCard, AuditDecisionPath } from '../ir';
 
 export interface HarnessResultSupported {
@@ -58,11 +74,15 @@ export function runChoice(
   switch (card.runtimePath) {
     case 'inline-hand-apply':
       return runHandCard(card, choice, state);
-    case 'event-resolution':
-    case 'direct-effect-assessment':
-    case 'direct-effect-negotiation':
-    case 'generated-overture':
     case 'decree-resolution':
+      return runDecree(card, state);
+    case 'direct-effect-assessment':
+      return runAssessment(card, choice, state);
+    case 'direct-effect-negotiation':
+      return runNegotiation(card, choice, state);
+    case 'generated-overture':
+      return runOverture(card, choice, state);
+    case 'event-resolution':
     case 'world-event-resolution':
       return {
         supported: false,
@@ -81,9 +101,8 @@ export function runChoice(
  * detect cards that claim a target-dependent effect but produce identical
  * output diffs regardless of target.
  *
- * Returns `{ supported: false }` when the card does not declare
- * `requiresChoice`, when the dispatch path is unsupported, or when the
- * fixture can't supply two distinct targets.
+ * Only `inline-hand-apply` declares `requiresChoice`; other paths never
+ * populate variant runs.
  */
 export function runChoiceVariants(
   card: AuditCard,
@@ -153,11 +172,6 @@ function lookupHandCard(id: string): HandCardDefinition | null {
   return registry[id as HandCardId] ?? null;
 }
 
-/**
- * Synthesize a HandCardChoice for cards that demand one. The first rival in
- * the fixture's neighbor list and a canonical class (Commoners) are fine —
- * the harness is diffing shapes, not testing game balance.
- */
 function pickSyntheticChoice(
   def: HandCardDefinition,
   state: GameState,
@@ -174,13 +188,6 @@ function pickSyntheticChoice(
   return null;
 }
 
-/**
- * Pick two distinct synthetic `HandCardChoice` targets so the caller can
- * compare two apply runs. Returns `[null, null]` when the fixture cannot
- * supply two distinct targets. For class-driven cards, two different
- * PopulationClasses are always available (five enum values). For rival-
- * driven cards we need at least two neighbors in the fixture.
- */
 function pickSyntheticChoicePair(
   def: HandCardDefinition,
   state: GameState,
@@ -203,4 +210,110 @@ function pickSyntheticChoicePair(
     ];
   }
   return [null, null];
+}
+
+// ============================================================
+// Decree dispatch
+// ============================================================
+
+function runDecree(card: AuditCard, state: GameState): HarnessResult {
+  const action: QueuedAction = {
+    id: `audit-harness-${card.id}`,
+    type: ActionType.Decree,
+    actionDefinitionId: card.id,
+    slotCost: 0,
+    isFree: true,
+    targetRegionId: state.regions?.[0]?.id ?? null,
+    targetNeighborId: state.diplomacy.neighbors[0]?.id ?? null,
+    parameters: {},
+  };
+  const after = applyActionEffects(state, [action]);
+  return { supported: true, before: state, after };
+}
+
+// ============================================================
+// Assessment dispatch
+// ============================================================
+
+function runAssessment(
+  card: AuditCard,
+  choice: AuditDecisionPath,
+  state: GameState,
+): HarnessResult {
+  const decision: MonthDecision = {
+    cardId: `assessment:${card.id}`,
+    choiceId: `assessment:${card.id}:${choice.choiceId}`,
+    interactionType: InteractionType.Assessment,
+    month: SeasonMonth.Early,
+    targetNeighborId: pickPeacefulNeighbor(state),
+  };
+  const after = applyDirectEffects(state, [decision], null);
+  return { supported: true, before: state, after };
+}
+
+// ============================================================
+// Negotiation dispatch
+// ============================================================
+
+function runNegotiation(
+  card: AuditCard,
+  choice: AuditDecisionPath,
+  state: GameState,
+): HarnessResult {
+  // Reject paths prefix `reject:` so the direct-effect applier routes them
+  // through the reject branch; term paths carry the bare termId.
+  const rejectChoiceId = card.metadata?.rejectChoiceId as string | undefined;
+  const isReject = rejectChoiceId != null && choice.choiceId === rejectChoiceId;
+  const decision: MonthDecision = {
+    cardId: `negotiation:${card.id}`,
+    choiceId: isReject ? `reject:${choice.choiceId}` : choice.choiceId,
+    interactionType: InteractionType.Negotiation,
+    month: SeasonMonth.Early,
+    targetNeighborId: pickPeacefulNeighbor(state),
+  };
+  const after = applyDirectEffects(state, [decision], card.id);
+  return { supported: true, before: state, after };
+}
+
+// ============================================================
+// Overture dispatch
+// ============================================================
+
+function runOverture(
+  card: AuditCard,
+  choice: AuditDecisionPath,
+  state: GameState,
+): HarnessResult {
+  const neighborId = state.diplomacy.neighbors[0]?.id;
+  if (!neighborId) {
+    return { supported: false, reason: `fixture lacks a neighbor for ${card.id}` };
+  }
+  const agenda = card.metadata?.agenda as RivalAgenda | undefined;
+  if (!agenda) {
+    return { supported: false, reason: `${card.id} missing agenda metadata` };
+  }
+  const turn = state.turn.turnNumber;
+  const eventId = `overture_${neighborId}_${agenda}_t${turn}`;
+  const suffix = choice.choiceId === 'grant' ? '_grant' : '_deny';
+  const choiceId = `${eventId}${suffix}`;
+  const action: QueuedAction = {
+    id: `audit-harness-${card.id}-${choice.choiceId}`,
+    type: ActionType.CrisisResponse,
+    actionDefinitionId: eventId,
+    slotCost: 0,
+    isFree: true,
+    targetRegionId: null,
+    targetNeighborId: neighborId,
+    parameters: { eventId, choiceId },
+  };
+  const after = applyActionEffects(state, [action]);
+  return { supported: true, before: state, after };
+}
+
+function pickPeacefulNeighbor(state: GameState): string | undefined {
+  const neighbors = state.diplomacy.neighbors;
+  const peaceful = neighbors
+    .filter((n) => !n.isAtWarWithPlayer)
+    .sort((a, b) => b.relationshipScore - a.relationshipScore);
+  return peaceful[0]?.id ?? neighbors[0]?.id;
 }

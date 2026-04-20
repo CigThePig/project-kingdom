@@ -11,19 +11,9 @@
 // `population.*SatDelta`) fails the rule.
 
 import type { Corpus, Finding, Scan } from '../../types';
+import { STRUCTURAL_TOUCH_CLASSES } from '../shared';
 
 export const SCAN_ID = 'hand.runtime-structural-depth';
-
-const STRUCTURAL_CLASSES = new Set([
-  'structural',
-  'diplomatic',
-  'temporal',
-  'narrative',
-  'operations',
-  'region',
-  'policy',
-  'construction',
-]);
 
 export const scan: Scan = (corpus: Corpus): Finding[] => {
   const out: Finding[] = [];
@@ -35,7 +25,7 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
       const fp = path.runtimeFingerprint;
       if (!fp) continue;
       if (fp.noOp) continue; // handled by no-op-apply scan
-      if (fp.classes.some((c) => STRUCTURAL_CLASSES.has(c))) continue;
+      if (fp.classes.some((c) => STRUCTURAL_TOUCH_CLASSES.has(c))) continue;
 
       out.push({
         severity: 'MAJOR',
