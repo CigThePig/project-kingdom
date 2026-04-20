@@ -3,6 +3,22 @@
 
 export type FindingSeverity = 'CRITICAL' | 'MAJOR' | 'MINOR' | 'POLISH';
 
+/**
+ * How confident the audit is that a finding represents reality, distinct
+ * from its severity to the player-facing corpus:
+ *   - DETERMINISTIC:   table/shape check with no runtime inference.
+ *   - RUNTIME_GROUNDED: backed by a real runtime-diff or AST-verified fact.
+ *   - HEURISTIC:       pattern- or magnitude-based suspicion.
+ *   - ENGINE_MISMATCH: the scanner's model disagrees with runtime. These
+ *                      are scanner-model failures, NOT content failures, and
+ *                      must be isolated from card-cleanup backlogs.
+ */
+export type FindingConfidence =
+  | 'DETERMINISTIC'
+  | 'RUNTIME_GROUNDED'
+  | 'HEURISTIC'
+  | 'ENGINE_MISMATCH';
+
 export type Family =
   | 'decree'
   | 'crisis'
@@ -15,7 +31,7 @@ export type Family =
   | 'world'
   | 'unknown';
 
-export type ScanCategory = 'wiring' | 'substance' | 'text' | 'reach';
+export type ScanCategory = 'wiring' | 'substance' | 'text' | 'reach' | 'engine';
 
 export interface Finding {
   severity: FindingSeverity;
@@ -27,6 +43,8 @@ export interface Finding {
   filePath?: string;
   message: string;
   details?: Record<string, unknown>;
+  /** When omitted, the reporter treats the finding as DETERMINISTIC. */
+  confidence?: FindingConfidence;
 }
 
 export interface Corpus {

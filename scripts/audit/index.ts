@@ -44,6 +44,9 @@ import { scan as choiceClonesScan, SCAN_ID as CHOICE_CLONES_ID } from './scans/s
 
 import { scan as unresolvedTokensScan, SCAN_ID as UNRESOLVED_TOKENS_ID } from './scans/text/unresolved-tokens';
 
+import { scan as pressurePrefixParityScan, SCAN_ID as PRESSURE_PREFIX_PARITY_ID } from './scans/engine/pressure-prefix-parity';
+import { scan as consequenceWriteParityScan, SCAN_ID as CONSEQUENCE_WRITE_PARITY_ID } from './scans/engine/consequence-write-parity';
+
 import { scan as triggerReachScan, SCAN_ID as TRIGGER_REACH_ID } from './scans/reach/trigger-attainability';
 
 interface RegisteredScan {
@@ -70,6 +73,8 @@ const SCANS: RegisteredScan[] = [
   { id: SEVERITY_MAG_ID, scan: severityMagScan },
   { id: CHOICE_CLONES_ID, scan: choiceClonesScan },
   { id: UNRESOLVED_TOKENS_ID, scan: unresolvedTokensScan },
+  { id: PRESSURE_PREFIX_PARITY_ID, scan: pressurePrefixParityScan },
+  { id: CONSEQUENCE_WRITE_PARITY_ID, scan: consequenceWriteParityScan },
   { id: TRIGGER_REACH_ID, scan: triggerReachScan, reachOnly: true },
 ];
 

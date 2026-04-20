@@ -93,7 +93,8 @@ function renderMarkdown(findings: Finding[], inputs: ReportInputs): string {
 
 function formatFindingRow(f: Finding): string {
   const choice = f.choiceId ? `:${f.choiceId}` : '';
-  return `- \`${f.scanId}\` \`${f.code}\` \`${f.cardId}${choice}\` — ${f.message}`;
+  const confidence = f.confidence && f.confidence !== 'DETERMINISTIC' ? ` _(${f.confidence})_` : '';
+  return `- \`${f.scanId}\` \`${f.code}\` \`${f.cardId}${choice}\`${confidence} — ${f.message}`;
 }
 
 // ============================================================
@@ -105,6 +106,7 @@ const CATEGORY_BY_PREFIX: Array<[prefix: string, label: string]> = [
   ['substance.', 'substance'],
   ['text.', 'text'],
   ['reach.', 'reach'],
+  ['engine.', 'engine'],
 ];
 
 function renderHeatmap(findings: Finding[], _inputs: ReportInputs): string {

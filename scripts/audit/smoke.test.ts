@@ -24,12 +24,15 @@ import { scan as categoryTouchScan } from './scans/substance/category-without-to
 import { scan as severityMagScan } from './scans/substance/severity-magnitude';
 import { scan as choiceClonesScan } from './scans/substance/choice-clones';
 import { scan as unresolvedTokensScan } from './scans/text/unresolved-tokens';
+import { scan as pressurePrefixParityScan } from './scans/engine/pressure-prefix-parity';
+import { scan as consequenceWriteParityScan } from './scans/engine/consequence-write-parity';
 
 const ALL_SCANS = [
   missingTextScan, choiceLabelScan, missingEffectsScan, emptyEffectsScan,
   styleTagScan, followupScan, featureRegistryScan, tagProducersScan, tagConsumersScan,
   surfaceOnlyScan, singleChoiceScan, categoryTouchScan, severityMagScan, choiceClonesScan,
   unresolvedTokensScan,
+  pressurePrefixParityScan, consequenceWriteParityScan,
 ];
 
 const FULL_OPTS: ScanOptions = { includeMinor: true, includePolish: true };
@@ -51,6 +54,12 @@ function isWellFormedFinding(f: unknown): f is Finding {
   if (typeof o.message !== 'string' || o.message.length === 0) return false;
   if (o.choiceId !== undefined && typeof o.choiceId !== 'string') return false;
   if (o.filePath !== undefined && typeof o.filePath !== 'string') return false;
+  if (
+    o.confidence !== undefined &&
+    !['DETERMINISTIC', 'RUNTIME_GROUNDED', 'HEURISTIC', 'ENGINE_MISMATCH'].includes(
+      o.confidence as string,
+    )
+  ) return false;
   return true;
 }
 
@@ -92,7 +101,7 @@ describe('audit pipeline smoke test', () => {
 
   it('every finding carries a known scanId category prefix', async () => {
     const corpus = await loadCorpus();
-    const known = ['wiring.', 'substance.', 'text.', 'reach.'];
+    const known = ['wiring.', 'substance.', 'text.', 'reach.', 'engine.'];
     for (const scan of ALL_SCANS) {
       const findings = scan(corpus, FULL_OPTS);
       for (const f of findings) {
