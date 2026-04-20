@@ -2,7 +2,7 @@
 family: negotiation
 totalCards: 12
 status: pending
-lastScan: 2026-04-20T21:46:10.294Z
+lastScan: 2026-04-20T21:48:15.277Z
 ---
 
 # Negotiation — Audit findings
@@ -29,9 +29,6 @@ in place but write an outcome — the seeder will keep your edits.
 
 | cardId | choiceId | severity | confidence | scanId | message | outcome | notes |
 |---|---|---|---|---|---|---|---|
-| neg_resource_blockade | payment_tribute | MAJOR | HEURISTIC | text.promise-delivery | neg_resource_blockade: body references "granaries/food" but runtime diff shows no matching touch (touches: treasury.balance, population.Commoners.satisfaction, diplomacy.neighbors[0].relationshipScore, diplomacy.neighbors[0].attitudePosture, diplomacy.bonds). |  |  |
-| neg_resource_blockade | trade_concessions | MAJOR | HEURISTIC | text.promise-delivery | neg_resource_blockade: body references "granaries/food" but runtime diff shows no matching touch (touches: treasury.balance, population.Merchants.satisfaction, diplomacy.neighbors[0].relationshipScore, diplomacy.bonds). |  |  |
-| neg_resource_blockade | military_passage_rights | MAJOR | HEURISTIC | text.promise-delivery | neg_resource_blockade: body references "granaries/food" but runtime diff shows no matching touch (touches: military.readiness, diplomacy.neighbors[0].relationshipScore, espionage.networkStrength). |  |  |
-| neg_resource_blockade | hostage_exchange | MAJOR | HEURISTIC | text.promise-delivery | neg_resource_blockade: body references "granaries/food" but runtime diff shows no matching touch (touches: population.Nobility.satisfaction, stability.value, diplomacy.neighbors[0].relationshipScore, diplomacy.neighbors[0].attitudePosture, diplomacy.bonds). |  |  |
+| _(no findings — clean!)_ | | | | | | | |
 
 <!-- AUTO-GENERATED:END -->

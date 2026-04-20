@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "startedAt": "2026-04-20T21:46:10.294Z",
-  "durationMs": 3688,
+  "startedAt": "2026-04-20T21:48:15.277Z",
+  "durationMs": 3716,
   "scansRun": [
     "wiring.missing-text",
     "wiring.choice-label-coverage",
@@ -53,114 +53,17 @@
   ],
   "counts": {
     "CRITICAL": 0,
-    "MAJOR": 679,
+    "MAJOR": 675,
     "MINOR": 0,
     "POLISH": 0
   },
   "countsByConfidence": {
     "DETERMINISTIC": 32,
     "RUNTIME_GROUNDED": 6,
-    "HEURISTIC": 632,
+    "HEURISTIC": 628,
     "ENGINE_MISMATCH": 9
   },
   "findings": [
-    {
-      "severity": "MAJOR",
-      "family": "negotiation",
-      "scanId": "text.promise-delivery",
-      "code": "PROMISE_NOT_DELIVERED",
-      "cardId": "neg_resource_blockade",
-      "choiceId": "hostage_exchange",
-      "filePath": "src/data/events/negotiations.ts",
-      "message": "neg_resource_blockade: body references \"granaries/food\" but runtime diff shows no matching touch (touches: population.Nobility.satisfaction, stability.value, diplomacy.neighbors[0].relationshipScore, diplomacy.neighbors[0].attitudePosture, diplomacy.bonds).",
-      "confidence": "HEURISTIC",
-      "details": {
-        "ruleLabel": "granaries/food",
-        "expectedTouchSubstrings": [
-          "food",
-          "granaries"
-        ],
-        "actualTouches": [
-          "population.Nobility.satisfaction",
-          "stability.value",
-          "diplomacy.neighbors[0].relationshipScore",
-          "diplomacy.neighbors[0].attitudePosture",
-          "diplomacy.bonds"
-        ]
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "negotiation",
-      "scanId": "text.promise-delivery",
-      "code": "PROMISE_NOT_DELIVERED",
-      "cardId": "neg_resource_blockade",
-      "choiceId": "military_passage_rights",
-      "filePath": "src/data/events/negotiations.ts",
-      "message": "neg_resource_blockade: body references \"granaries/food\" but runtime diff shows no matching touch (touches: military.readiness, diplomacy.neighbors[0].relationshipScore, espionage.networkStrength).",
-      "confidence": "HEURISTIC",
-      "details": {
-        "ruleLabel": "granaries/food",
-        "expectedTouchSubstrings": [
-          "food",
-          "granaries"
-        ],
-        "actualTouches": [
-          "military.readiness",
-          "diplomacy.neighbors[0].relationshipScore",
-          "espionage.networkStrength"
-        ]
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "negotiation",
-      "scanId": "text.promise-delivery",
-      "code": "PROMISE_NOT_DELIVERED",
-      "cardId": "neg_resource_blockade",
-      "choiceId": "payment_tribute",
-      "filePath": "src/data/events/negotiations.ts",
-      "message": "neg_resource_blockade: body references \"granaries/food\" but runtime diff shows no matching touch (touches: treasury.balance, population.Commoners.satisfaction, diplomacy.neighbors[0].relationshipScore, diplomacy.neighbors[0].attitudePosture, diplomacy.bonds).",
-      "confidence": "HEURISTIC",
-      "details": {
-        "ruleLabel": "granaries/food",
-        "expectedTouchSubstrings": [
-          "food",
-          "granaries"
-        ],
-        "actualTouches": [
-          "treasury.balance",
-          "population.Commoners.satisfaction",
-          "diplomacy.neighbors[0].relationshipScore",
-          "diplomacy.neighbors[0].attitudePosture",
-          "diplomacy.bonds"
-        ]
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "negotiation",
-      "scanId": "text.promise-delivery",
-      "code": "PROMISE_NOT_DELIVERED",
-      "cardId": "neg_resource_blockade",
-      "choiceId": "trade_concessions",
-      "filePath": "src/data/events/negotiations.ts",
-      "message": "neg_resource_blockade: body references \"granaries/food\" but runtime diff shows no matching touch (touches: treasury.balance, population.Merchants.satisfaction, diplomacy.neighbors[0].relationshipScore, diplomacy.bonds).",
-      "confidence": "HEURISTIC",
-      "details": {
-        "ruleLabel": "granaries/food",
-        "expectedTouchSubstrings": [
-          "food",
-          "granaries"
-        ],
-        "actualTouches": [
-          "treasury.balance",
-          "population.Merchants.satisfaction",
-          "diplomacy.neighbors[0].relationshipScore",
-          "diplomacy.bonds"
-        ]
-      }
-    },
     {
       "severity": "MAJOR",
       "family": "notification",
