@@ -75,13 +75,14 @@ async function writeFamilyFile(
 ): Promise<void> {
   const existing = await readIfExists(filePath);
   const preservedRows = parseHumanColumns(existing);
+  const preservedStatus = parseStatus(existing) ?? 'pending';
   const newBlock = renderFamilyBlock(findings, preservedRows);
 
   const frontmatter = [
     '---',
     `family: ${family}`,
     `totalCards: ${totalCards}`,
-    'status: pending',
+    `status: ${preservedStatus}`,
     `lastScan: ${lastScanAt}`,
     '---',
     '',
@@ -122,6 +123,12 @@ function renderFamilyBlock(findings: Finding[], preserved: Map<string, { outcome
       escapeCell(human.notes),
     ].map((c) => ` ${c} `).join('|').replace(/^/, '|').concat('|');
   });
+}
+
+function parseStatus(existing: string | null): string | null {
+  if (!existing) return null;
+  const match = existing.match(/^status:\s*([^\s]+)\s*$/m);
+  return match ? match[1] : null;
 }
 
 function parseHumanColumns(existing: string | null): Map<string, { outcome: string; notes: string }> {

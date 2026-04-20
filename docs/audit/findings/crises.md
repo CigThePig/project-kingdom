@@ -2,7 +2,7 @@
 family: crisis
 totalCards: 230
 status: pending
-lastScan: 2026-04-19T23:01:26.762Z
+lastScan: 2026-04-20T00:10:11.743Z
 ---
 
 # Crisis — Audit findings
@@ -16,12 +16,9 @@ in place but write an outcome — the seeder will keep your edits.
 
 | cardId | choiceId | severity | scanId | message | outcome | notes |
 |---|---|---|---|---|---|---|
-| evt_exp_eco_counterfeit_coins |  | CRITICAL | wiring.tag-producers | event-trigger on evt_exp_eco_counterfeit_coins reads consequence tag 'currency_debased' that no choice in the corpus produces. |  |  |
-| evt_exp_kno_plague_remedy |  | CRITICAL | wiring.tag-producers | event-trigger on evt_exp_kno_plague_remedy reads consequence tag 'plague_active' that no choice in the corpus produces. |  |  |
 | evt_library_fire | accept_and_rebuild | MAJOR | substance.surface-only | Choice evt_library_fire:accept_and_rebuild only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_noble_resentment_merchant_favor | mediate_compromise | MAJOR | substance.surface-only | Choice evt_noble_resentment_merchant_favor:mediate_compromise only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_schism_factions | remain_neutral | MAJOR | substance.surface-only | Choice evt_schism_factions:remain_neutral only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_exp_eco_currency_debasement | debase_the_coinage | MAJOR | substance.surface-only | Choice evt_exp_eco_currency_debasement:debase_the_coinage only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_exp_eco_currency_debasement | raise_emergency_tax | MAJOR | substance.surface-only | Choice evt_exp_eco_currency_debasement:raise_emergency_tax only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_exp_eco_currency_debasement | seek_foreign_loan | MAJOR | substance.surface-only | Choice evt_exp_eco_currency_debasement:seek_foreign_loan only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_exp_eco_foreign_trade_disruption | reroute_trade_through_valdris | MAJOR | substance.surface-only | Choice evt_exp_eco_foreign_trade_disruption:reroute_trade_through_valdris only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
@@ -293,7 +290,6 @@ in place but write an outcome — the seeder will keep your edits.
 | evt_exp_w2_mercenary_defection | match_the_foreign_wages | MAJOR | substance.surface-only | Choice evt_exp_w2_mercenary_defection:match_the_foreign_wages only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_exp_w2_mercenary_defection | brand_them_as_deserters | MAJOR | substance.surface-only | Choice evt_exp_w2_mercenary_defection:brand_them_as_deserters only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_exp_w2_mercenary_defection | recruit_local_replacements | MAJOR | substance.surface-only | Choice evt_exp_w2_mercenary_defection:recruit_local_replacements only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_exp_w2_monetary_crisis | debase_the_coinage | MAJOR | substance.surface-only | Choice evt_exp_w2_monetary_crisis:debase_the_coinage only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_exp_w2_monetary_crisis | borrow_from_the_merchants | MAJOR | substance.surface-only | Choice evt_exp_w2_monetary_crisis:borrow_from_the_merchants only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_exp_w2_monetary_crisis | seize_the_old_hoards | MAJOR | substance.surface-only | Choice evt_exp_w2_monetary_crisis:seize_the_old_hoards only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_exp_w2_drought_escalation | ration_water_strictly | MAJOR | substance.surface-only | Choice evt_exp_w2_drought_escalation:ration_water_strictly only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
@@ -414,15 +410,6 @@ in place but write an outcome — the seeder will keep your edits.
 | evt_cond_harshwinter_moderate | distribute_firewood | MAJOR | substance.surface-only | Choice evt_cond_harshwinter_moderate:distribute_firewood only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_cond_harshwinter_moderate | open_shelters | MAJOR | substance.surface-only | Choice evt_cond_harshwinter_moderate:open_shelters only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_cond_harshwinter_moderate | wait_for_thaw | MAJOR | substance.surface-only | Choice evt_cond_harshwinter_moderate:wait_for_thaw only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_mild | quarantine_district | MAJOR | substance.surface-only | Choice evt_cond_plague_mild:quarantine_district only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_mild | hire_healers | MAJOR | substance.surface-only | Choice evt_cond_plague_mild:hire_healers only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_mild | ignore_sickness | MAJOR | substance.surface-only | Choice evt_cond_plague_mild:ignore_sickness only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_moderate | citywide_quarantine | MAJOR | substance.surface-only | Choice evt_cond_plague_moderate:citywide_quarantine only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_moderate | burn_infected_quarters | MAJOR | substance.surface-only | Choice evt_cond_plague_moderate:burn_infected_quarters only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_moderate | pray_for_deliverance | MAJOR | substance.surface-only | Choice evt_cond_plague_moderate:pray_for_deliverance only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_severe | seal_the_gates | MAJOR | substance.surface-only | Choice evt_cond_plague_severe:seal_the_gates only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_severe | mass_exodus | MAJOR | substance.surface-only | Choice evt_cond_plague_severe:mass_exodus only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
-| evt_cond_plague_severe | accept_fate | MAJOR | substance.surface-only | Choice evt_cond_plague_severe:accept_fate only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_cond_plague_escalation | martial_law | MAJOR | substance.surface-only | Choice evt_cond_plague_escalation:martial_law only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_cond_plague_escalation | appeal_to_clergy | MAJOR | substance.surface-only | Choice evt_cond_plague_escalation:appeal_to_clergy only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |
 | evt_cond_famine_moderate | emergency_rationing | MAJOR | substance.surface-only | Choice evt_cond_famine_moderate:emergency_rationing only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader. |  |  |

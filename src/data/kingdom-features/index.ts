@@ -776,4 +776,127 @@ export const KINGDOM_FEATURE_REGISTRY: Record<string, KingdomFeatureDefinition> 
     category: 'economic',
     ongoingEffect: { foodDelta: 1 },
   },
+
+  // ============================================================
+  // Phase 7 — Wave-2 Decrees
+  // Every decree in expansion-wave-2 needs a structural ongoing
+  // effect (§9.1). Shape and tone echo the effectPreview strings.
+  // ============================================================
+
+  // --- Civic & Law ---
+  'decree:decree_w2_codify_the_common_law': {
+    featureId: 'feature_w2_common_law',
+    title: 'Codified Common Law',
+    description: 'Royal rulings and customs bound into a single volume give justice steadier ground.',
+    category: 'infrastructure',
+    ongoingEffect: { stabilityDelta: 1, commonerSatDelta: 1 },
+  },
+  'decree:decree_w2_expand_the_bureaucracy': {
+    featureId: 'feature_w2_bureaucracy',
+    title: 'Expanded Royal Bureaucracy',
+    description: 'Appointed clerks audit grants and revenue at a quiet, steady cost.',
+    category: 'infrastructure',
+    ongoingEffect: { stabilityDelta: 1, treasuryDelta: -1 },
+  },
+  'decree:decree_w2_free_cities_charter': {
+    featureId: 'feature_w2_free_cities',
+    title: 'Chartered Free Cities',
+    description: 'Self-governing market towns pay annual levies that buttress the treasury.',
+    category: 'economic',
+    ongoingEffect: { merchantSatDelta: 1, treasuryDelta: 1 },
+  },
+  'decree:decree_w2_justice_circuits': {
+    featureId: 'feature_w2_justice_circuits',
+    title: 'Royal Justice Circuits',
+    description: 'Itinerant royal judges keep order on the highways and in the shires.',
+    category: 'infrastructure',
+    ongoingEffect: { stabilityDelta: 1, regionConditionDelta: 1 },
+  },
+
+  // --- Social ---
+  'decree:decree_w2_sumptuary_laws': {
+    featureId: 'feature_w2_sumptuary_laws',
+    title: 'Sumptuary Laws',
+    description: 'Silk and furs reserved for the peerage reinforce the visible social order.',
+    category: 'cultural',
+    ongoingEffect: { nobilitySatDelta: 1, culturalCohesionDelta: 1 },
+  },
+  'decree:decree_w2_hunting_regulations': {
+    featureId: 'feature_w2_hunting_regulations',
+    title: 'Royal Hunting Reserves',
+    description: 'Forest reserves for the peerage cost the commoner pot a small measure.',
+    category: 'cultural',
+    ongoingEffect: { nobilitySatDelta: 1, foodDelta: -1 },
+  },
+  'decree:decree_w2_language_standardization': {
+    featureId: 'feature_w2_court_tongue',
+    title: 'Standardized Court Tongue',
+    description: 'A single court dialect tidies royal writ at the cost of regional colour.',
+    category: 'cultural',
+    ongoingEffect: { stabilityDelta: 1, culturalCohesionDelta: -1 },
+  },
+
+  // --- Economic ---
+  'decree:decree_w2_weights_and_measures': {
+    featureId: 'feature_w2_weights_and_measures',
+    title: 'Standard Weights and Measures',
+    description: 'Royal standards on every market scale smooth trade month after month.',
+    category: 'economic',
+    ongoingEffect: { merchantSatDelta: 1, stabilityDelta: 1 },
+  },
+  'decree:decree_w2_mint_standards': {
+    featureId: 'feature_w2_mint_standards',
+    title: 'Fixed Mint Standards',
+    description: 'A fixed silver content for every royal coin steadies the realm\'s markets.',
+    category: 'economic',
+    ongoingEffect: { merchantSatDelta: 1, stabilityDelta: 1 },
+  },
+  'decree:decree_w2_road_construction': {
+    featureId: 'feature_w2_royal_roads',
+    title: 'Royal Roads',
+    description: 'Paved roads between the major settlements keep trade flowing all season.',
+    category: 'infrastructure',
+    ongoingEffect: { merchantSatDelta: 1, regionDevelopmentDelta: 1 },
+  },
+  'decree:decree_w2_bridge_program': {
+    featureId: 'feature_w2_great_bridges',
+    title: 'Great Stone Bridges',
+    description: 'Stone bridges spanning the great rivers extend the royal road network.',
+    category: 'infrastructure',
+    ongoingEffect: { merchantSatDelta: 1, regionDevelopmentDelta: 1 },
+  },
+
+  // --- Military ---
+  'decree:decree_w2_military_reforms': {
+    featureId: 'feature_w2_reformed_host',
+    title: 'Reformed Royal Host',
+    description: 'A professional standing cadre replaces the old banner-levy call-ups.',
+    category: 'military',
+    ongoingEffect: { militaryReadinessDelta: 1, militaryMoraleDelta: 1 },
+  },
+
+  // --- Religious ---
+  'decree:decree_w2_religious_councils': {
+    featureId: 'feature_w2_religious_councils',
+    title: 'Standing Religious Councils',
+    description: 'Provincial bishops in regular council catch heterodoxy before it spreads.',
+    category: 'cultural',
+    ongoingEffect: { clergySatDelta: 1, heterodoxyDelta: -1 },
+  },
+  'decree:decree_w2_calendar_reform': {
+    featureId: 'feature_w2_reformed_calendar',
+    title: 'Reformed Royal Calendar',
+    description: 'A single civil and liturgical calendar aligns the realm across regions.',
+    category: 'cultural',
+    ongoingEffect: { faithDelta: 1, culturalCohesionDelta: 1 },
+  },
+
+  // --- Civic (Cultural-Scholarly) ---
+  'decree:decree_w2_university_charter': {
+    featureId: 'feature_w2_university_charter',
+    title: 'Royal University Charter',
+    description: 'Chartered scholars teach the liberal arts in a standing royal studium.',
+    category: 'cultural',
+    ongoingEffect: { culturalCohesionDelta: 1, clergySatDelta: 1 },
+  },
 };

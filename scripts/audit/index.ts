@@ -32,6 +32,7 @@ import { scan as emptyEffectsScan, SCAN_ID as EMPTY_EFFECTS_ID } from './scans/w
 import { scan as styleTagScan, SCAN_ID as STYLE_TAG_ID } from './scans/wiring/style-tag-targets';
 import { scan as followupScan, SCAN_ID as FOLLOWUP_ID } from './scans/wiring/followup-targets';
 import { scan as featureRegistryScan, SCAN_ID as FEATURE_REGISTRY_ID } from './scans/wiring/feature-registry-reach';
+import { scan as decreeStructuralDepthScan, SCAN_ID as DECREE_STRUCTURAL_DEPTH_ID } from './scans/wiring/decree-structural-depth';
 import { scan as tagProducersScan, SCAN_ID as TAG_PRODUCERS_ID } from './scans/wiring/tag-producers';
 import { scan as tagConsumersScan, SCAN_ID as TAG_CONSUMERS_ID } from './scans/wiring/tag-consumers';
 
@@ -60,6 +61,7 @@ const SCANS: RegisteredScan[] = [
   { id: STYLE_TAG_ID, scan: styleTagScan },
   { id: FOLLOWUP_ID, scan: followupScan },
   { id: FEATURE_REGISTRY_ID, scan: featureRegistryScan },
+  { id: DECREE_STRUCTURAL_DEPTH_ID, scan: decreeStructuralDepthScan },
   { id: TAG_PRODUCERS_ID, scan: tagProducersScan },
   { id: TAG_CONSUMERS_ID, scan: tagConsumersScan },
   { id: SURFACE_ONLY_ID, scan: surfaceOnlyScan },
