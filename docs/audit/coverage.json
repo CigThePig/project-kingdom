@@ -1,46 +1,46 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-20T21:48:15.277Z",
+  "generatedAt": "2026-04-20T22:01:28.966Z",
   "overall": {
     "textCoverage": {
-      "total": 787,
-      "withCoverage": 787,
+      "total": 793,
+      "withCoverage": 793,
       "coveragePct": 100
     },
     "effectCoverage": {
-      "total": 787,
+      "total": 793,
       "withCoverage": 741,
-      "coveragePct": 94.2
+      "coveragePct": 93.4
     },
     "runtimeDiffCoverage": {
-      "total": 787,
-      "withCoverage": 167,
-      "coveragePct": 21.2
+      "total": 793,
+      "withCoverage": 173,
+      "coveragePct": 21.8
     },
     "pressureCoverage": {
-      "total": 787,
+      "total": 793,
       "withCoverage": 707,
-      "coveragePct": 89.8
+      "coveragePct": 89.2
     },
     "consequenceCoverage": {
-      "total": 787,
+      "total": 793,
       "withCoverage": 707,
-      "coveragePct": 89.8
+      "coveragePct": 89.2
     },
     "generatedFamilyCoverage": {
-      "total": 787,
-      "withCoverage": 6,
-      "coveragePct": 0.8
+      "total": 793,
+      "withCoverage": 12,
+      "coveragePct": 1.5
     },
     "astSemanticCoverage": {
-      "total": 787,
+      "total": 793,
       "withCoverage": 40,
-      "coveragePct": 5.1
+      "coveragePct": 5
     },
     "previewParityCoverage": {
-      "total": 787,
+      "total": 793,
       "withCoverage": 741,
-      "coveragePct": 94.2
+      "coveragePct": 93.4
     }
   },
   "byFamily": {
@@ -214,44 +214,44 @@
     },
     "overture": {
       "textCoverage": {
-        "total": 17,
-        "withCoverage": 17,
+        "total": 23,
+        "withCoverage": 23,
         "coveragePct": 100
       },
       "effectCoverage": {
-        "total": 17,
+        "total": 23,
         "withCoverage": 11,
-        "coveragePct": 64.7
+        "coveragePct": 47.8
       },
       "runtimeDiffCoverage": {
-        "total": 17,
-        "withCoverage": 6,
-        "coveragePct": 35.3
+        "total": 23,
+        "withCoverage": 12,
+        "coveragePct": 52.2
       },
       "pressureCoverage": {
-        "total": 17,
+        "total": 23,
         "withCoverage": 11,
-        "coveragePct": 64.7
+        "coveragePct": 47.8
       },
       "consequenceCoverage": {
-        "total": 17,
+        "total": 23,
         "withCoverage": 11,
-        "coveragePct": 64.7
+        "coveragePct": 47.8
       },
       "generatedFamilyCoverage": {
-        "total": 17,
-        "withCoverage": 6,
-        "coveragePct": 35.3
+        "total": 23,
+        "withCoverage": 12,
+        "coveragePct": 52.2
       },
       "astSemanticCoverage": {
-        "total": 17,
+        "total": 23,
         "withCoverage": 0,
         "coveragePct": 0
       },
       "previewParityCoverage": {
-        "total": 17,
+        "total": 23,
         "withCoverage": 11,
-        "coveragePct": 64.7
+        "coveragePct": 47.8
       }
     },
     "assessment": {

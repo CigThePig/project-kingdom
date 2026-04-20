@@ -110,7 +110,7 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   evt_foreign_cultural_influx: {
     embrace_exchange:           { [StyleAxis.Faith]: -1, [StyleAxis.Economy]: 1 },
     regulate_foreign_practices: { [StyleAxis.Authority]: 2, [StyleAxis.Faith]: 1 },
-    observe_and_assess:         {},
+    observe_and_assess:         { [StyleAxis.Authority]: 1 },
   },
   evt_cultural_festival_proposal: {
     approve_full_festival:  { [StyleAxis.Faith]: 1, [StyleAxis.Economy]: -1 },
@@ -1440,6 +1440,47 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     declare_martial_law: { [StyleAxis.Authority]: +3, [StyleAxis.Military]: +1 },
     negotiate_rebel_leaders: { [StyleAxis.Authority]: -1 },
     abdicate_demands: { [StyleAxis.Authority]: +2, [StyleAxis.Economy]: +1 },
+  },
+
+  // ---- Phase 6+ Diplomacy Expansion (overture-family cards) ----
+  evt_ambassador_dependency: {
+    accept_dependency: { [StyleAxis.Military]: -1 },
+    renegotiate_terms: { [StyleAxis.Authority]: +1 },
+  },
+  evt_border_envoy_terms: {
+    accept_unfavorable_terms: { [StyleAxis.Military]: -1 },
+    reject_terms: { [StyleAxis.Military]: +1, [StyleAxis.Authority]: +1 },
+  },
+  evt_exp_dip_border_greeting: {
+    acknowledge_politely: { [StyleAxis.Authority]: +1 },
+    reciprocate_warmly: { [StyleAxis.Military]: -1 },
+  },
+  evt_exp_dip_cultural_envoy: {
+    host_cultural_exchange: { [StyleAxis.Faith]: +1, [StyleAxis.Military]: -1 },
+    polite_reception: { [StyleAxis.Authority]: +1 },
+  },
+  evt_exp_dip_diplomatic_gift: {
+    accept_graciously: { [StyleAxis.Economy]: +1 },
+    reciprocate_generously: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: -1 },
+  },
+  // ---- Phase 6+ Espionage Expansion (overture-family cards) ----
+  evt_exp_esp_defector_opportunity: {
+    grant_asylum: { [StyleAxis.Military]: -1, [StyleAxis.Authority]: -1 },
+    debrief_and_return: { [StyleAxis.Military]: +1 },
+    refuse_defector: { [StyleAxis.Military]: +2, [StyleAxis.Authority]: +1 },
+  },
+  evt_exp_esp_double_agent_dilemma: {
+    extract_and_debrief: { [StyleAxis.Authority]: +1 },
+    feed_disinformation: { [StyleAxis.Military]: +2, [StyleAxis.Authority]: +1 },
+  },
+  evt_exp_esp_foreign_spy_ring: {
+    dismantle_network: { [StyleAxis.Military]: +2 },
+    expel_suspects: { [StyleAxis.Authority]: +1 },
+  },
+  evt_exp_esp_intercepted_dispatches: {
+    confront_valdris: { [StyleAxis.Military]: +2, [StyleAxis.Authority]: +1 },
+    share_with_arenthal: { [StyleAxis.Military]: +1 },
+    file_intelligence: { [StyleAxis.Authority]: +1 },
   },
 };
 

@@ -26,6 +26,7 @@ import {
   PersistentConsequence,
   PopulationClass,
   QueuedAction,
+  RivalAgenda,
   TemporaryModifier,
   RationingLevel,
   ReligiousOrder,
@@ -928,12 +929,12 @@ function applyOvertureDecision(
 ): GameState {
   const parsed = parseOvertureEventId(choiceId);
   if (!parsed) return state;
-  const { neighborId, grant } = parsed;
+  const { neighborId, agenda, grant } = parsed;
 
   const turn = state.turn.turnNumber;
   const relationshipDelta = grant ? 6 : -6;
 
-  return {
+  let next: GameState = {
     ...state,
     diplomacy: {
       ...state.diplomacy,
@@ -964,6 +965,84 @@ function applyOvertureDecision(
       }),
     },
   };
+
+  // Grant path records a persistent consequence so future events can gate on
+  // the agreement. Deny path nudges narrative pressure axes (authority on the
+  // refusal, isolation as the rival retreats). The two paths thus touch
+  // distinct state slices so overtures.grant-deny-runtime-parity sees a real
+  // mechanical difference.
+  if (grant) {
+    next = {
+      ...next,
+      persistentConsequences: [
+        ...next.persistentConsequences,
+        {
+          sourceId: `overture:${neighborId}:${agenda}`,
+          sourceType: 'event',
+          choiceMade: 'grant',
+          turnApplied: turn,
+          tag: `overture:${agenda}:granted`,
+        },
+      ],
+    };
+  } else {
+    const np = next.narrativePressure;
+    next = {
+      ...next,
+      narrativePressure: {
+        ...np,
+        authority: Math.min(100, np.authority + 2),
+        isolation: Math.min(100, np.isolation + 2),
+      },
+    };
+  }
+
+  // Agenda-thematic side effects so the overture body's mechanical keywords
+  // (faith, treasury) are reflected in the runtime diff even when the grant
+  // path is otherwise diplomatic-only.
+  switch (agenda) {
+    case RivalAgenda.ReligiousHegemony:
+    case RivalAgenda.ConvertThePlayer: {
+      // Granting a rival clergy's mission raises heterodoxy; denying it calms
+      // faith a touch as the local priesthood reasserts itself.
+      const fc = next.faithCulture;
+      next = {
+        ...next,
+        faithCulture: grant
+          ? { ...fc, heterodoxy: Math.min(100, fc.heterodoxy + 3) }
+          : { ...fc, faithLevel: Math.min(100, fc.faithLevel + 1) },
+      };
+      break;
+    }
+    case RivalAgenda.DominateTrade: {
+      // Granting trade concessions yields immediate trade revenue; denying
+      // costs the player a modest opportunity (spoiled negotiations, reroutes).
+      next = {
+        ...next,
+        treasury: {
+          ...next.treasury,
+          balance: Math.max(0, next.treasury.balance + (grant ? 20 : -5)),
+        },
+      };
+      break;
+    }
+    case RivalAgenda.EconomicRecovery: {
+      // Easing tolls costs the player treasury; holding them lightly boosts
+      // treasury via continued duties.
+      next = {
+        ...next,
+        treasury: {
+          ...next.treasury,
+          balance: Math.max(0, next.treasury.balance + (grant ? -15 : +5)),
+        },
+      };
+      break;
+    }
+    default:
+      break;
+  }
+
+  return next;
 }
 
 /**

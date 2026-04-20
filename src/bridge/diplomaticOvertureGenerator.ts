@@ -86,6 +86,48 @@ const INLINE_EFFECTS: Partial<Record<RivalAgenda, Pick<OvertureSpec,
     denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
     denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
   },
+  [RivalAgenda.BleedTheRivals]: {
+    grantEffects: [{ label: 'Relationship ↑', type: 'positive' }],
+    grantSignals: [{ label: 'INTER-RIVAL', tone: 'style' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'FOREIGN OPINION ↑', tone: 'consequence' }],
+  },
+  [RivalAgenda.EconomicRecovery]: {
+    grantEffects: [
+      { label: 'Relationship ↑', type: 'positive' },
+      { label: 'Merchants ↓', type: 'negative' },
+    ],
+    grantSignals: [{ label: '+COMMERCIAL', tone: 'style' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
+  },
+  [RivalAgenda.IsolationistRetreat]: {
+    grantEffects: [{ label: 'Relationship ↑', type: 'positive' }],
+    grantSignals: [{ label: '+ISOLATION', tone: 'style' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
+  },
+  [RivalAgenda.ProveDominance]: {
+    grantEffects: [
+      { label: 'Relationship ↑', type: 'positive' },
+      { label: 'Stability ↓', type: 'negative' },
+    ],
+    grantSignals: [{ label: 'FOLLOW-UP LIKELY', tone: 'followup' }],
+    denyEffects: [{ label: 'Relationship ↓↓', type: 'negative' }],
+    denySignals: [{ label: 'AUTHORITY ↑', tone: 'consequence' }],
+  },
+  [RivalAgenda.SackASettlement]: {
+    grantEffects: [{ label: 'Relationship ↑', type: 'positive' }],
+    grantSignals: [{ label: 'FOREIGN OPINION ↓', tone: 'consequence' }],
+    denyEffects: [{ label: 'Relationship ↓↓', type: 'negative' }],
+    denySignals: [{ label: 'AUTHORITY ↑', tone: 'style' }],
+  },
+  [RivalAgenda.SubjugateAVassal]: {
+    grantEffects: [{ label: 'Relationship ↑', type: 'positive' }],
+    grantSignals: [{ label: 'INTER-RIVAL', tone: 'style' }],
+    denyEffects: [{ label: 'Relationship ↓', type: 'negative' }],
+    denySignals: [{ label: 'AUTHORITY ↑', tone: 'consequence' }],
+  },
 };
 
 export function buildInlineSpec(agenda: RivalAgenda): OvertureSpec | null {
