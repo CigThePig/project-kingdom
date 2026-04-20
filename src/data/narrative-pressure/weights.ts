@@ -1789,98 +1789,26 @@ export const PRESSURE_WEIGHTS: Record<string, PressureWeightEntry> = {
   // --- Crisis-tier ---
 
   // WarDeclaration (Critical)
-  'neighbor:WarDeclaration:mobilize_for_war': {
-    axisWeights: { militarism: 5 },
-  },
-  'neighbor:WarDeclaration:seek_emergency_diplomacy': {
-    axisWeights: { openness: 3 },
-  },
-  'neighbor:WarDeclaration:defensive_posture': {
-    axisWeights: { militarism: 2, authority: 1 },
-  },
 
   // Demand (Serious)
-  'neighbor:Demand:comply_with_demand': {
-    axisWeights: { openness: 3 },
-  },
-  'neighbor:Demand:negotiate_terms': {
-    axisWeights: { openness: 3, intrigue: 1 },
-  },
-  'neighbor:Demand:reject_demand': {
-    axisWeights: { authority: 4, isolation: 2 },
-  },
 
   // MilitaryBuildup (Serious)
-  'neighbor:MilitaryBuildup:match_buildup': {
-    axisWeights: { militarism: 5 },
-  },
-  'neighbor:MilitaryBuildup:diplomatic_inquiry': {
-    axisWeights: { openness: 3, intrigue: 1 },
-  },
-  'neighbor:MilitaryBuildup:monitor_situation': {
-    axisWeights: { intrigue: 2 },
-  },
 
   // EspionageRetaliation (Serious)
-  'neighbor:EspionageRetaliation:deny_involvement': {
-    axisWeights: { intrigue: 3 },
-  },
-  'neighbor:EspionageRetaliation:offer_compensation': {
-    axisWeights: { openness: 3, commerce: 1 },
-  },
-  'neighbor:EspionageRetaliation:escalate_operations': {
-    axisWeights: { intrigue: 5 },
-  },
 
   // --- Petition-tier ---
 
   // TradeProposal (Notable)
-  'neighbor:TradeProposal:accept_trade_proposal': {
-    axisWeights: { commerce: 3, openness: 2 },
-  },
-  'neighbor:TradeProposal:decline_trade_proposal': {
-    axisWeights: { isolation: 3 },
-  },
 
   // TradeWithdrawal (Notable)
-  'neighbor:TradeWithdrawal:seek_reconciliation': {
-    axisWeights: { openness: 3 },
-  },
-  'neighbor:TradeWithdrawal:accept_withdrawal': {
-    axisWeights: { isolation: 2 },
-  },
 
   // TreatyProposal (Notable)
-  'neighbor:TreatyProposal:accept_treaty': {
-    axisWeights: { openness: 4 },
-  },
-  'neighbor:TreatyProposal:decline_treaty': {
-    axisWeights: { isolation: 4 },
-  },
 
   // PeaceOffer (Notable)
-  'neighbor:PeaceOffer:accept_peace': {
-    axisWeights: { openness: 4 },
-  },
-  'neighbor:PeaceOffer:reject_peace': {
-    axisWeights: { militarism: 4, isolation: 1 },
-  },
 
   // BorderTension (Notable)
-  'neighbor:BorderTension:reinforce_border': {
-    axisWeights: { militarism: 3, isolation: 1 },
-  },
-  'neighbor:BorderTension:ignore_provocation': {
-    axisWeights: { openness: 2 },
-  },
 
   // ReligiousPressure (Notable)
-  'neighbor:ReligiousPressure:counter_religious_influence': {
-    axisWeights: { piety: 3, isolation: 2 },
-  },
-  'neighbor:ReligiousPressure:tolerate_foreign_doctrine': {
-    axisWeights: { openness: 4 },
-  },
 
   // ============================================================
   // SECTION 12: STORYLINES (range 6-12, opening + mid-arc only)

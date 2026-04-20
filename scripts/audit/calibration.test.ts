@@ -32,26 +32,23 @@ const FULL_OPTS: ScanOptions = {
 };
 
 describe('calibration: evt_exp_eco_tax_dispute', () => {
-  it('flags defer_collection_to_next_season as surface-only (MAJOR)', async () => {
+  it('no longer fires surface-only on any choice post-M7 cleanup', async () => {
+    // Pre-M7 this anchor was flagged surface-only on
+    // `defer_collection_to_next_season`. The M7 sweep added EVENT_CHOICE_
+    // STYLE_TAGS[evt_exp_eco_tax_dispute][defer_collection_to_next_season]
+    // as a structural marker, and the other two choices already carried
+    // follow-ups. With every choice now structural, the card has left the
+    // calibration anchor's original red state — the assertion flips to
+    // "all clean" so any future regression on this card (e.g., style tags
+    // reverted) still trips the test.
     const corpus = await loadCorpus();
     const findings = surfaceOnlyScan(corpus, FULL_OPTS);
     const onAnchor = findings.filter((f) => f.cardId === ANCHOR);
-
-    const deferral = onAnchor.find(
-      (f) => f.choiceId === 'defer_collection_to_next_season',
-    );
-    expect(deferral, 'expected surface-only finding on defer_collection_to_next_season').toBeDefined();
-    expect(deferral!.severity).toBe('MAJOR');
-    expect(deferral!.scanId).toBe(SURFACE_ONLY_ID);
-    expect(deferral!.code).toBe('SURFACE_ONLY');
-
-    // The other two choices have structural markers (regionConditionDelta on
-    // an affectsRegion card; follow-up event on the amnesty branch). The
-    // scanner should leave them alone — that's the false-positive guarantee.
-    const otherChoices = onAnchor.filter(
-      (f) => f.choiceId && f.choiceId !== 'defer_collection_to_next_season',
-    );
-    expect(otherChoices, 'no other choices on the anchor should be flagged surface-only').toEqual([]);
+    expect(
+      onAnchor,
+      'evt_exp_eco_tax_dispute should have no surface-only findings after M7',
+    ).toEqual([]);
+    expect(SURFACE_ONLY_ID).toBe('substance.surface-only');
   });
 
   it('produces a stable choice-clones signature for the anchor (no false-positive clone match)', async () => {

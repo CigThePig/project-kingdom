@@ -67,9 +67,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     trust_existing_stores:           { stabilityDelta: +1 },
   },
   evt_foreign_grain_offer: {
-    accept_bulk_purchase:       { treasuryDelta: -40, foodDelta: +30, merchantSatDelta: +2 },
-    negotiate_ongoing_supply:   { treasuryDelta: -25, foodDelta: +15, merchantSatDelta: +3, nobilitySatDelta: -1 },
-    decline_offer:              { merchantSatDelta: -1 },
+    accept_bulk_purchase:       { treasuryDelta: -40, foodDelta: +30, merchantSatDelta: +2, diplomacyDeltas: { neighbor_arenthal: +3 } },
+    negotiate_ongoing_supply:   { treasuryDelta: -25, foodDelta: +15, merchantSatDelta: +3, nobilitySatDelta: -1, diplomacyDeltas: { neighbor_arenthal: +2 } },
+    decline_offer:              { merchantSatDelta: -1, diplomacyDeltas: { neighbor_arenthal: -2 } },
   },
   evt_military_foraging_campaign: {
     organize_military_hunts:  { foodDelta: +15, militaryMoraleDelta: +2, militaryCasteSatDelta: +1, regionConditionDelta: -2 },
@@ -119,9 +119,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // Diplomacy (2)
   // ============================================================
   evt_neighbor_trade_overture: {
-    accept_trade_terms:     { merchantSatDelta: +3, treasuryDelta: +25, nobilitySatDelta: -1 },
-    propose_modifications:  { merchantSatDelta: +1, treasuryDelta: +15, stabilityDelta: +1 },
-    decline_politely:       { merchantSatDelta: -2 },
+    accept_trade_terms:     { merchantSatDelta: +3, treasuryDelta: +25, nobilitySatDelta: -1, diplomacyDeltas: { neighbor_valdris: +4 } },
+    propose_modifications:  { merchantSatDelta: +1, treasuryDelta: +15, stabilityDelta: +1, diplomacyDeltas: { neighbor_valdris: +1 } },
+    decline_politely:       { merchantSatDelta: -2, diplomacyDeltas: { neighbor_valdris: -2 } },
   },
   evt_border_tension_escalation: {
     reinforce_border_garrisons:  { treasuryDelta: -40, militaryReadinessDelta: +5, stabilityDelta: +3, regionConditionDelta: -2, diplomacyDeltas: { rival_north: -3 } },
@@ -1160,8 +1160,8 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     ignore_and_absorb:         { treasuryDelta: -15, stabilityDelta: -2 },
   },
   evt_audit_whistleblower: {
-    protect_whistleblower:  { commonerSatDelta: +3, nobilitySatDelta: -2, stabilityDelta: +1 },
-    silence_whistleblower:  { commonerSatDelta: -3, nobilitySatDelta: +2, stabilityDelta: -2 },
+    protect_whistleblower:  { commonerSatDelta: +3, nobilitySatDelta: -2, stabilityDelta: +1, treasuryDelta: +10, merchantSatDelta: +1 },
+    silence_whistleblower:  { commonerSatDelta: -3, nobilitySatDelta: +2, stabilityDelta: -2, treasuryDelta: -5, merchantSatDelta: -1 },
   },
   evt_audit_quiet: {
     acknowledge: {},

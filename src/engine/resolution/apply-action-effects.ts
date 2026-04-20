@@ -1213,25 +1213,31 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
     };
   }
 
-  // Record a persistent consequence.
-  const consequence: PersistentConsequence = {
-    sourceId: event.definitionId,
-    sourceType: 'event',
-    choiceMade: choiceId,
-    turnApplied: state.turn.turnNumber,
-    tag: `${event.definitionId}:${choiceId}`,
-  };
+  // Record a persistent consequence. The tag string is inlined into the
+  // persistentConsequences assignment so the audit's AST writer-reader
+  // index can see the `${eventId}:${choiceId}` template-literal shape
+  // without chasing the variable assignment.
+  const eventChoiceTag = `${event.definitionId}:${choiceId}`;
   updatedState = {
     ...updatedState,
-    persistentConsequences: [...updatedState.persistentConsequences, consequence],
+    persistentConsequences: [
+      ...updatedState.persistentConsequences,
+      {
+        sourceId: event.definitionId,
+        sourceType: 'event',
+        choiceMade: choiceId,
+        turnApplied: state.turn.turnNumber,
+        tag: `${event.definitionId}:${choiceId}`,
+      } satisfies PersistentConsequence,
+    ],
   };
 
   // Create a kingdom feature if this event choice has a registry entry.
-  const featureDef = KINGDOM_FEATURE_REGISTRY[consequence.tag];
+  const featureDef = KINGDOM_FEATURE_REGISTRY[eventChoiceTag];
   if (featureDef) {
     const feature: KingdomFeature = {
       id: `kf-${featureDef.featureId}-t${state.turn.turnNumber}`,
-      sourceTag: consequence.tag,
+      sourceTag: eventChoiceTag,
       turnEstablished: state.turn.turnNumber,
       ongoingEffect: featureDef.ongoingEffect,
       category: featureDef.category,
@@ -1247,7 +1253,7 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
   if (modifierSpec) {
     const modifier: TemporaryModifier = {
       id: `tmod-${event.definitionId}-${choiceId}-${rngSuffix(turnRng(state, `tmod:${event.definitionId}:${choiceId}`))}`,
-      sourceTag: consequence.tag,
+      sourceTag: eventChoiceTag,
       turnsRemaining: modifierSpec.durationTurns,
       turnApplied: state.turn.turnNumber,
       effectPerTurn: modifierSpec.effectPerTurn,

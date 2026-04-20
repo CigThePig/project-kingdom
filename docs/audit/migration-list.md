@@ -1,4 +1,4 @@
-<!-- lastScan: 2026-04-20T22:01:28.966Z -->
+<!-- lastScan: 2026-04-20T22:30:13.588Z -->
 
 # Card Audit — Migration List
 
@@ -11,8 +11,6 @@ seeder preserves them across reruns.
 
 | cardId | currentFamily | destination | rationale |
 |---|---|---|---|
-| evt_commoner_harvest_festival | notification | TBD | single-choice card surfaced through monthly pool — relocate per §10 |
-| evt_annual_state_assessment | notification | TBD | single-choice card surfaced through monthly pool — relocate per §10 |
-| evt_rival_crisis_window | notification | TBD | single-choice card surfaced through monthly pool — relocate per §10 |
+| _(no candidates yet)_ | | | |
 
 <!-- AUTO-GENERATED:END -->

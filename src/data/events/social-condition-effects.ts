@@ -30,8 +30,8 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
   // ============================================================
   evt_social_corruption_mild: {
     launch_investigation: { treasuryDelta: -30, nobilitySatDelta: -3, stabilityDelta: +1 },
-    public_denouncement: { nobilitySatDelta: -5, commonerSatDelta: +3, stabilityDelta: +1 },
-    tolerate_graft: { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1 },
+    public_denouncement: { nobilitySatDelta: -5, commonerSatDelta: +3, stabilityDelta: +2, faithDelta: +1 },
+    tolerate_graft: { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1, treasuryDelta: -5 },
   },
   evt_social_corruption_moderate: {
     purge_corrupt_officials: { treasuryDelta: -50, nobilitySatDelta: -8, stabilityDelta: +3, commonerSatDelta: +3 },
