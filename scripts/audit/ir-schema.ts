@@ -12,7 +12,8 @@
 import Ajv, { type ValidateFunction } from 'ajv';
 
 import type { AuditCard } from './ir';
-import type { Finding } from './types';
+import type { CoverageMatrix } from './coverage/matrix';
+import type { Finding, FindingSeverity } from './types';
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 
@@ -277,6 +278,199 @@ export function validateFindings(findings: unknown): asserts findings is Finding
       `Finding[] validation failed:\n${errors
         .map((e) => `  ${e.instancePath || '(root)'} ${e.message}`)
         .join('\n')}`,
+    );
+  }
+}
+
+// ---------- Phase 7 report envelope schemas ----------
+//
+// These envelopes are what get written to docs/audit/*.json. Scans never emit
+// them directly; the reporter and report-artifacts modules build them from
+// Finding[] + CoverageMatrix. Ajv validation runs at write time so scanner
+// drift fails loud before hitting disk.
+
+const SEVERITY_VALUES = ['CRITICAL', 'MAJOR', 'MINOR', 'POLISH'] as const;
+const CONFIDENCE_VALUES = [
+  'DETERMINISTIC',
+  'RUNTIME_GROUNDED',
+  'HEURISTIC',
+  'ENGINE_MISMATCH',
+] as const;
+
+const severityCountsSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [...SEVERITY_VALUES],
+  properties: Object.fromEntries(
+    SEVERITY_VALUES.map((s) => [s, { type: 'integer', minimum: 0 }]),
+  ),
+} as const;
+
+const confidenceCountsSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [...CONFIDENCE_VALUES],
+  properties: Object.fromEntries(
+    CONFIDENCE_VALUES.map((c) => [c, { type: 'integer', minimum: 0 }]),
+  ),
+} as const;
+
+const findingsReportSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'schemaVersion',
+    'startedAt',
+    'durationMs',
+    'scansRun',
+    'counts',
+    'countsByConfidence',
+    'findings',
+  ],
+  properties: {
+    schemaVersion: { type: 'integer', const: 2 },
+    startedAt: { type: 'string', minLength: 1 },
+    durationMs: { type: 'integer', minimum: 0 },
+    scansRun: { type: 'array', items: { type: 'string', minLength: 1 } },
+    counts: severityCountsSchema,
+    countsByConfidence: confidenceCountsSchema,
+    findings: findingsSchema,
+  },
+} as const;
+
+const coverageCellSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['total', 'withCoverage', 'coveragePct'],
+  properties: {
+    total: { type: 'integer', minimum: 0 },
+    withCoverage: { type: 'integer', minimum: 0 },
+    coveragePct: { type: 'number', minimum: 0, maximum: 100 },
+  },
+} as const;
+
+const COVERAGE_DIMENSION_KEYS = [
+  'textCoverage',
+  'effectCoverage',
+  'runtimeDiffCoverage',
+  'pressureCoverage',
+  'consequenceCoverage',
+  'generatedFamilyCoverage',
+  'astSemanticCoverage',
+  'previewParityCoverage',
+] as const;
+
+const coverageRowSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [...COVERAGE_DIMENSION_KEYS],
+  properties: Object.fromEntries(
+    COVERAGE_DIMENSION_KEYS.map((d) => [d, coverageCellSchema]),
+  ),
+} as const;
+
+const coverageReportSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: ['schemaVersion', 'generatedAt', 'overall', 'byFamily'],
+  properties: {
+    schemaVersion: { type: 'integer', const: 1 },
+    generatedAt: { type: 'string', minLength: 1 },
+    overall: coverageRowSchema,
+    byFamily: {
+      type: 'object',
+      additionalProperties: coverageRowSchema,
+    },
+  },
+} as const;
+
+const engineMismatchReportSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'schemaVersion',
+    'generatedAt',
+    'count',
+    'countsByScan',
+    'findings',
+  ],
+  properties: {
+    schemaVersion: { type: 'integer', const: 1 },
+    generatedAt: { type: 'string', minLength: 1 },
+    count: { type: 'integer', minimum: 0 },
+    countsByScan: {
+      type: 'object',
+      additionalProperties: { type: 'integer', minimum: 0 },
+    },
+    findings: findingsSchema,
+  },
+} as const;
+
+export interface FindingsReport {
+  schemaVersion: 2;
+  startedAt: string;
+  durationMs: number;
+  scansRun: string[];
+  counts: Record<FindingSeverity, number>;
+  countsByConfidence: Record<
+    'DETERMINISTIC' | 'RUNTIME_GROUNDED' | 'HEURISTIC' | 'ENGINE_MISMATCH',
+    number
+  >;
+  findings: Finding[];
+}
+
+export interface CoverageReport {
+  schemaVersion: 1;
+  generatedAt: string;
+  overall: CoverageMatrix['overall'];
+  byFamily: CoverageMatrix['byFamily'];
+}
+
+export interface EngineMismatchReport {
+  schemaVersion: 1;
+  generatedAt: string;
+  count: number;
+  countsByScan: Record<string, number>;
+  findings: Finding[];
+}
+
+const validateFindingsReportImpl: ValidateFunction<FindingsReport> =
+  ajv.compile(findingsReportSchema);
+const validateCoverageReportImpl: ValidateFunction<CoverageReport> =
+  ajv.compile(coverageReportSchema);
+const validateEngineMismatchReportImpl: ValidateFunction<EngineMismatchReport> =
+  ajv.compile(engineMismatchReportSchema);
+
+function formatAjvErrors(errors: import('ajv').ErrorObject[] | null | undefined): string {
+  return (errors ?? [])
+    .map((e) => `  ${e.instancePath || '(root)'} ${e.message}`)
+    .join('\n');
+}
+
+export function validateFindingsReport(payload: unknown): asserts payload is FindingsReport {
+  if (!validateFindingsReportImpl(payload)) {
+    throw new Error(
+      `FindingsReport validation failed:\n${formatAjvErrors(validateFindingsReportImpl.errors)}`,
+    );
+  }
+}
+
+export function validateCoverageReport(payload: unknown): asserts payload is CoverageReport {
+  if (!validateCoverageReportImpl(payload)) {
+    throw new Error(
+      `CoverageReport validation failed:\n${formatAjvErrors(validateCoverageReportImpl.errors)}`,
+    );
+  }
+}
+
+export function validateEngineMismatchReport(
+  payload: unknown,
+): asserts payload is EngineMismatchReport {
+  if (!validateEngineMismatchReportImpl(payload)) {
+    throw new Error(
+      `EngineMismatchReport validation failed:\n${formatAjvErrors(
+        validateEngineMismatchReportImpl.errors,
+      )}`,
     );
   }
 }

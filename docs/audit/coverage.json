@@ -1,0 +1,468 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-04-20T09:00:48.251Z",
+  "overall": {
+    "textCoverage": {
+      "total": 787,
+      "withCoverage": 787,
+      "coveragePct": 100
+    },
+    "effectCoverage": {
+      "total": 787,
+      "withCoverage": 741,
+      "coveragePct": 94.2
+    },
+    "runtimeDiffCoverage": {
+      "total": 787,
+      "withCoverage": 167,
+      "coveragePct": 21.2
+    },
+    "pressureCoverage": {
+      "total": 787,
+      "withCoverage": 707,
+      "coveragePct": 89.8
+    },
+    "consequenceCoverage": {
+      "total": 787,
+      "withCoverage": 707,
+      "coveragePct": 89.8
+    },
+    "generatedFamilyCoverage": {
+      "total": 787,
+      "withCoverage": 6,
+      "coveragePct": 0.8
+    },
+    "astSemanticCoverage": {
+      "total": 787,
+      "withCoverage": 40,
+      "coveragePct": 5.1
+    },
+    "previewParityCoverage": {
+      "total": 787,
+      "withCoverage": 741,
+      "coveragePct": 94.2
+    }
+  },
+  "byFamily": {
+    "petition": {
+      "textCoverage": {
+        "total": 231,
+        "withCoverage": 231,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 231,
+        "withCoverage": 231,
+        "coveragePct": 100
+      },
+      "runtimeDiffCoverage": {
+        "total": 231,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "pressureCoverage": {
+        "total": 231,
+        "withCoverage": 231,
+        "coveragePct": 100
+      },
+      "consequenceCoverage": {
+        "total": 231,
+        "withCoverage": 231,
+        "coveragePct": 100
+      },
+      "generatedFamilyCoverage": {
+        "total": 231,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 231,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 231,
+        "withCoverage": 231,
+        "coveragePct": 100
+      }
+    },
+    "unknown": {
+      "textCoverage": {
+        "total": 65,
+        "withCoverage": 65,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 65,
+        "withCoverage": 65,
+        "coveragePct": 100
+      },
+      "runtimeDiffCoverage": {
+        "total": 65,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "pressureCoverage": {
+        "total": 65,
+        "withCoverage": 65,
+        "coveragePct": 100
+      },
+      "consequenceCoverage": {
+        "total": 65,
+        "withCoverage": 65,
+        "coveragePct": 100
+      },
+      "generatedFamilyCoverage": {
+        "total": 65,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 65,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 65,
+        "withCoverage": 65,
+        "coveragePct": 100
+      }
+    },
+    "crisis": {
+      "textCoverage": {
+        "total": 230,
+        "withCoverage": 230,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 230,
+        "withCoverage": 230,
+        "coveragePct": 100
+      },
+      "runtimeDiffCoverage": {
+        "total": 230,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "pressureCoverage": {
+        "total": 230,
+        "withCoverage": 230,
+        "coveragePct": 100
+      },
+      "consequenceCoverage": {
+        "total": 230,
+        "withCoverage": 230,
+        "coveragePct": 100
+      },
+      "generatedFamilyCoverage": {
+        "total": 230,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 230,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 230,
+        "withCoverage": 230,
+        "coveragePct": 100
+      }
+    },
+    "notification": {
+      "textCoverage": {
+        "total": 73,
+        "withCoverage": 73,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 73,
+        "withCoverage": 73,
+        "coveragePct": 100
+      },
+      "runtimeDiffCoverage": {
+        "total": 73,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "pressureCoverage": {
+        "total": 73,
+        "withCoverage": 73,
+        "coveragePct": 100
+      },
+      "consequenceCoverage": {
+        "total": 73,
+        "withCoverage": 73,
+        "coveragePct": 100
+      },
+      "generatedFamilyCoverage": {
+        "total": 73,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 73,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 73,
+        "withCoverage": 73,
+        "coveragePct": 100
+      }
+    },
+    "overture": {
+      "textCoverage": {
+        "total": 17,
+        "withCoverage": 17,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 17,
+        "withCoverage": 11,
+        "coveragePct": 64.7
+      },
+      "runtimeDiffCoverage": {
+        "total": 17,
+        "withCoverage": 6,
+        "coveragePct": 35.3
+      },
+      "pressureCoverage": {
+        "total": 17,
+        "withCoverage": 11,
+        "coveragePct": 64.7
+      },
+      "consequenceCoverage": {
+        "total": 17,
+        "withCoverage": 11,
+        "coveragePct": 64.7
+      },
+      "generatedFamilyCoverage": {
+        "total": 17,
+        "withCoverage": 6,
+        "coveragePct": 35.3
+      },
+      "astSemanticCoverage": {
+        "total": 17,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 17,
+        "withCoverage": 11,
+        "coveragePct": 64.7
+      }
+    },
+    "assessment": {
+      "textCoverage": {
+        "total": 12,
+        "withCoverage": 12,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 12,
+        "withCoverage": 12,
+        "coveragePct": 100
+      },
+      "runtimeDiffCoverage": {
+        "total": 12,
+        "withCoverage": 12,
+        "coveragePct": 100
+      },
+      "pressureCoverage": {
+        "total": 12,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "consequenceCoverage": {
+        "total": 12,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "generatedFamilyCoverage": {
+        "total": 12,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 12,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 12,
+        "withCoverage": 12,
+        "coveragePct": 100
+      }
+    },
+    "negotiation": {
+      "textCoverage": {
+        "total": 12,
+        "withCoverage": 12,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 12,
+        "withCoverage": 12,
+        "coveragePct": 100
+      },
+      "runtimeDiffCoverage": {
+        "total": 12,
+        "withCoverage": 12,
+        "coveragePct": 100
+      },
+      "pressureCoverage": {
+        "total": 12,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "consequenceCoverage": {
+        "total": 12,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "generatedFamilyCoverage": {
+        "total": 12,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 12,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 12,
+        "withCoverage": 12,
+        "coveragePct": 100
+      }
+    },
+    "hand": {
+      "textCoverage": {
+        "total": 40,
+        "withCoverage": 40,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 40,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "runtimeDiffCoverage": {
+        "total": 40,
+        "withCoverage": 40,
+        "coveragePct": 100
+      },
+      "pressureCoverage": {
+        "total": 40,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "consequenceCoverage": {
+        "total": 40,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "generatedFamilyCoverage": {
+        "total": 40,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 40,
+        "withCoverage": 40,
+        "coveragePct": 100
+      },
+      "previewParityCoverage": {
+        "total": 40,
+        "withCoverage": 0,
+        "coveragePct": 0
+      }
+    },
+    "decree": {
+      "textCoverage": {
+        "total": 97,
+        "withCoverage": 97,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 97,
+        "withCoverage": 97,
+        "coveragePct": 100
+      },
+      "runtimeDiffCoverage": {
+        "total": 97,
+        "withCoverage": 97,
+        "coveragePct": 100
+      },
+      "pressureCoverage": {
+        "total": 97,
+        "withCoverage": 97,
+        "coveragePct": 100
+      },
+      "consequenceCoverage": {
+        "total": 97,
+        "withCoverage": 97,
+        "coveragePct": 100
+      },
+      "generatedFamilyCoverage": {
+        "total": 97,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 97,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 97,
+        "withCoverage": 97,
+        "coveragePct": 100
+      }
+    },
+    "world": {
+      "textCoverage": {
+        "total": 10,
+        "withCoverage": 10,
+        "coveragePct": 100
+      },
+      "effectCoverage": {
+        "total": 10,
+        "withCoverage": 10,
+        "coveragePct": 100
+      },
+      "runtimeDiffCoverage": {
+        "total": 10,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "pressureCoverage": {
+        "total": 10,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "consequenceCoverage": {
+        "total": 10,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "generatedFamilyCoverage": {
+        "total": 10,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "astSemanticCoverage": {
+        "total": 10,
+        "withCoverage": 0,
+        "coveragePct": 0
+      },
+      "previewParityCoverage": {
+        "total": 10,
+        "withCoverage": 10,
+        "coveragePct": 100
+      }
+    }
+  }
+}

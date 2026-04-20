@@ -6,10 +6,17 @@
 // inside the `<!-- AUTO-GENERATED:START --> ... END -->` block, and within
 // that block it preserves any human-edited cells when the row's cardId is
 // already present.
+//
+// As of Phase 7 the per-family table carries a `confidence` column and an
+// inline coverage matrix. Old 7-column tables are migrated to the 8-column
+// shape on the next run; outcome/notes survive the migration.
 
 import { promises as fs } from 'node:fs';
 import * as path from 'node:path';
 
+import type { CoverageMatrix, CoverageRow } from './coverage/matrix';
+import { renderCoverageTable } from './reporter';
+import { materializeConfidence } from './report-artifacts';
 import type { Family, Finding } from './types';
 
 const AUTO_BEGIN = '<!-- AUTO-GENERATED:START -->';
@@ -45,6 +52,7 @@ export interface SeedInputs {
   findings: Finding[];
   totalsByFamily: Record<Family, number>;
   lastScanAt: string;
+  coverage: CoverageMatrix;
 }
 
 export async function seedArtifacts(
@@ -55,8 +63,17 @@ export async function seedArtifacts(
 
   for (const family of FAMILIES) {
     const file = path.join(docsAuditDir, 'findings', FAMILY_FILES[family]);
-    const findings = inputs.findings.filter((f) => f.family === family);
-    await writeFamilyFile(file, family, findings, inputs.totalsByFamily[family] ?? 0, inputs.lastScanAt);
+    const findings = inputs.findings
+      .filter((f) => f.family === family)
+      .map(materializeConfidence);
+    await writeFamilyFile(
+      file,
+      family,
+      findings,
+      inputs.totalsByFamily[family] ?? 0,
+      inputs.lastScanAt,
+      inputs.coverage.byFamily[family],
+    );
   }
 
   await writeMigrationListFile(
@@ -72,11 +89,16 @@ async function writeFamilyFile(
   findings: Finding[],
   totalCards: number,
   lastScanAt: string,
+  familyCoverage: CoverageRow | undefined,
 ): Promise<void> {
   const existing = await readIfExists(filePath);
   const preservedRows = parseHumanColumns(existing);
   const preservedStatus = parseStatus(existing) ?? 'pending';
   const newBlock = renderFamilyBlock(findings, preservedRows);
+
+  const coverageBlock = familyCoverage
+    ? ['**Coverage**', '', ...renderCoverageTable(familyCoverage), '']
+    : ['_Coverage matrix unavailable — no cards indexed for this family yet._', ''];
 
   const frontmatter = [
     '---',
@@ -95,8 +117,9 @@ async function writeFamilyFile(
     '',
     AUTO_BEGIN,
     '',
-    '| cardId | choiceId | severity | scanId | message | outcome | notes |',
-    '|---|---|---|---|---|---|---|',
+    ...coverageBlock,
+    '| cardId | choiceId | severity | confidence | scanId | message | outcome | notes |',
+    '|---|---|---|---|---|---|---|---|',
     ...newBlock,
     '',
     AUTO_END,
@@ -108,7 +131,7 @@ async function writeFamilyFile(
 
 function renderFamilyBlock(findings: Finding[], preserved: Map<string, { outcome: string; notes: string }>): string[] {
   if (findings.length === 0) {
-    return ['| _(no findings — clean!)_ | | | | | | |'];
+    return ['| _(no findings — clean!)_ | | | | | | | |'];
   }
   return findings.map((f) => {
     const key = `${f.cardId}|${f.choiceId ?? ''}|${f.scanId}`;
@@ -117,6 +140,7 @@ function renderFamilyBlock(findings: Finding[], preserved: Map<string, { outcome
       escapeCell(f.cardId),
       escapeCell(f.choiceId ?? ''),
       f.severity,
+      f.confidence ?? 'DETERMINISTIC',
       escapeCell(f.scanId),
       escapeCell(f.message),
       escapeCell(human.outcome),
@@ -143,10 +167,21 @@ function parseHumanColumns(existing: string | null): Map<string, { outcome: stri
     const trimmed = line.trim();
     if (!trimmed.startsWith('|') || trimmed.startsWith('|---')) continue;
     const cells = splitMarkdownRow(trimmed);
-    if (cells.length < 7) continue;
-    const [cardId, choiceId, , scanId, , outcome, notes] = cells;
-    if (!cardId || cardId.startsWith('_')) continue;
-    out.set(`${cardId}|${choiceId}|${scanId}`, { outcome, notes });
+    // Back-compat: old files had 7 columns (no confidence).
+    // [cardId, choiceId, severity, scanId, message, outcome, notes]
+    if (cells.length === 7) {
+      const [cardId, choiceId, , scanId, , outcome, notes] = cells;
+      if (!cardId || cardId.startsWith('_')) continue;
+      out.set(`${cardId}|${choiceId}|${scanId}`, { outcome, notes });
+      continue;
+    }
+    // New 8-column shape:
+    // [cardId, choiceId, severity, confidence, scanId, message, outcome, notes]
+    if (cells.length >= 8) {
+      const [cardId, choiceId, , , scanId, , outcome, notes] = cells;
+      if (!cardId || cardId.startsWith('_')) continue;
+      out.set(`${cardId}|${choiceId}|${scanId}`, { outcome, notes });
+    }
   }
   return out;
 }
