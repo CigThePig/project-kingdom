@@ -27,7 +27,9 @@ describe('hand-card analyzer', () => {
     expect(m).toBeDefined();
     expect(m!.appliesMechanicalDelta).toBe(true);
     expect(m!.touchesPersistentConsequences).toBe(false);
-    expect(m!.queuesTemporaryModifier).toBe(false);
+    // The card now also queues a lingering readiness modifier so it passes
+    // hand.runtime-structural-depth — see M3 audit pass.
+    expect(m!.queuesTemporaryModifier).toBe(true);
   });
 
   it('classifies hand_quiet_word as queueing a temporary modifier', () => {
@@ -71,11 +73,14 @@ describe('hand-card analyzer', () => {
     expect(m!.silentFallbackOnChoiceKind).toBe(false);
   });
 
-  it('hand_court_favor has a silent fallback on choice.kind and deep choice usage', () => {
+  it('hand_court_favor routes non-class choices to a real fallback class (no silent return)', () => {
     const m = index.get('hand_court_favor');
     expect(m).toBeDefined();
-    expect(m!.silentFallbackOnChoiceKind).toBe(true);
-    // `choice.class` is read after the guard — deep usage.
+    // After M3, the card picks the lowest-satisfied class on a non-class
+    // choice rather than returning state unchanged — the silent fallback
+    // is gone.
+    expect(m!.silentFallbackOnChoiceKind).toBe(false);
+    // `choice.class` is still read when the class choice is present.
     expect(m!.choiceUsageKind).toBe('deep');
   });
 
@@ -113,9 +118,10 @@ describe('hand-card analyzer', () => {
     ]);
   });
 
-  it('hand_reserve_forces records no queued modifiers', () => {
+  it('hand_reserve_forces records the lingering readiness modifier added in M3', () => {
     const m = index.get('hand_reserve_forces');
     expect(m).toBeDefined();
-    expect(m!.queuedModifiers).toEqual([]);
+    expect(m!.queuedModifiers.length).toBe(1);
+    expect(m!.queuedModifiers[0].effectKeys).toContain('militaryReadinessDelta');
   });
 });

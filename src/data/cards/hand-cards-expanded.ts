@@ -77,79 +77,127 @@ export const HAND_CARDS_EXPANDED: Record<HandCardIdExpanded, HandCardDefinition>
   hand_emergency_levy: {
     id: 'hand_emergency_levy',
     title: 'Emergency Levy',
-    body: 'A snap tax fills the coffers — and rattles the realm.',
+    body: 'A snap tax fills the coffers — commoners and merchants mutter for weeks after.',
     expiresAfterTurns: 9,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
-        { treasuryDelta: 30, stabilityDelta: -2 },
+        { treasuryDelta: 30, stabilityDelta: -2, commonerSatDelta: -2, merchantSatDelta: -2 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_emergency_levy_${state.turn.turnNumber}`,
+        sourceTag: 'hand:emergency_levy',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { stabilityDelta: -1 },
+      });
+    },
   },
 
   hand_market_day_proclaimed: {
     id: 'hand_market_day_proclaimed',
     title: 'Market Day Proclaimed',
-    body: 'A royal market draws crowds and coin to the capital.',
+    body: 'A royal market draws crowds and coin to the capital. Trade hums for two turns.',
     expiresAfterTurns: 11,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { treasuryDelta: 20, commonerSatDelta: 3, merchantSatDelta: 3 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_market_day_${state.turn.turnNumber}`,
+        sourceTag: 'hand:market_day_proclaimed',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { treasuryDelta: 5, merchantSatDelta: 1 },
+      });
+    },
   },
 
   hand_seize_contraband: {
     id: 'hand_seize_contraband',
     title: 'Seize Contraband',
-    body: 'Customs agents raid the warehouses. Gold for the crown; resentment in the guilds.',
+    body: 'Customs agents raid the warehouses. Gold for the crown; the agents pick up smuggling leads along the way; resentment in the guilds.',
     expiresAfterTurns: 10,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
-        { treasuryDelta: 35, merchantSatDelta: -4 },
+        { treasuryDelta: 35, merchantSatDelta: -4, espionageNetworkDelta: 3 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_seize_contraband_${state.turn.turnNumber}`,
+        sourceTag: 'hand:seize_contraband',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { merchantSatDelta: -1 },
+      });
+    },
   },
 
   hand_treasury_inspection: {
     id: 'hand_treasury_inspection',
     title: 'Treasury Inspection',
-    body: 'A surprise audit recovers misallocated funds. The nobility bristles at the scrutiny.',
+    body: 'A surprise audit recovers misallocated funds. The nobility bristles; clerks stay sharp for weeks.',
     expiresAfterTurns: 12,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { treasuryDelta: 15, nobilitySatDelta: -3 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_treasury_inspection_${state.turn.turnNumber}`,
+        sourceTag: 'hand:treasury_inspection',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { treasuryDelta: 3 },
+      });
+    },
   },
 
   hand_call_to_arms: {
     id: 'hand_call_to_arms',
     title: 'Call to Arms',
-    body: 'Paid mobilisation swells the ranks without the resentment of conscription.',
+    body: 'Paid mobilisation swells the ranks without the resentment of conscription. Drillmasters keep the new cohort sharp for a season.',
     expiresAfterTurns: 9,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { militaryForceSizeDelta: 150, treasuryDelta: -20 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_call_to_arms_${state.turn.turnNumber}`,
+        sourceTag: 'hand:call_to_arms',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { militaryMoraleDelta: 1 },
+      });
+    },
   },
 
   hand_veterans_homecoming: {
     id: 'hand_veterans_homecoming',
     title: "Veterans' Homecoming",
-    body: 'Returning soldiers are honoured at court. The military caste stands taller.',
+    body: 'Returning soldiers are honoured at court. The military caste stands taller — and their bearing lifts the ranks behind them.',
     expiresAfterTurns: 10,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { militaryCasteSatDelta: 6, militaryMoraleDelta: 3 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_veterans_homecoming_${state.turn.turnNumber}`,
+        sourceTag: 'hand:veterans_homecoming',
+        turnsRemaining: 3,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { militaryMoraleDelta: 1 },
+      });
+    },
   },
 
   hand_iron_will: {
@@ -170,14 +218,22 @@ export const HAND_CARDS_EXPANDED: Record<HandCardIdExpanded, HandCardDefinition>
   hand_warlords_bargain: {
     id: 'hand_warlords_bargain',
     title: "Warlord's Bargain",
-    body: 'A captain of mercenaries swears his sword. The clergy mutter about heathens in the ranks.',
+    body: 'A captain of mercenaries swears his sword. The clergy mutter about heathens in the ranks — and will keep muttering while the contract holds.',
     expiresAfterTurns: 8,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { militaryReadinessDelta: 15, faithDelta: -2 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_warlords_bargain_${state.turn.turnNumber}`,
+        sourceTag: 'hand:warlords_bargain',
+        turnsRemaining: 3,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { clergySatDelta: -1 },
+      });
+    },
   },
 
   hand_envoy_recalled: {
@@ -237,27 +293,43 @@ export const HAND_CARDS_EXPANDED: Record<HandCardIdExpanded, HandCardDefinition>
   hand_papal_blessing: {
     id: 'hand_papal_blessing',
     title: 'Papal Blessing',
-    body: 'A high cleric blesses the realm. Faith and clergy alike rise.',
+    body: 'A high cleric blesses the crown. Faith and clergy alike rise, and the devotion lingers through the coming weeks.',
     expiresAfterTurns: 11,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { faithDelta: 5, clergySatDelta: 5 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_papal_blessing_${state.turn.turnNumber}`,
+        sourceTag: 'hand:papal_blessing',
+        turnsRemaining: 3,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { faithDelta: 1 },
+      });
+    },
   },
 
   hand_relic_unveiled: {
     id: 'hand_relic_unveiled',
     title: 'Relic Unveiled',
-    body: 'A holy relic is paraded through the streets to widespread veneration.',
+    body: 'A holy relic is paraded through the streets to widespread veneration. Pilgrims trickle in for weeks.',
     expiresAfterTurns: 10,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { clergySatDelta: 6, commonerSatDelta: 3, treasuryDelta: -15 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_relic_unveiled_${state.turn.turnNumber}`,
+        sourceTag: 'hand:relic_unveiled',
+        turnsRemaining: 3,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { faithDelta: 1 },
+      });
+    },
   },
 
   hand_anchorites_vigil: {
@@ -284,14 +356,28 @@ export const HAND_CARDS_EXPANDED: Record<HandCardIdExpanded, HandCardDefinition>
   hand_intercepted_dispatch: {
     id: 'hand_intercepted_dispatch',
     title: 'Intercepted Dispatch',
-    body: 'A captured courier yields a sheaf of foreign correspondence.',
+    body: 'A captured courier yields a sheaf of foreign correspondence. The crown files the names for later use.',
     expiresAfterTurns: 9,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { espionageNetworkDelta: 10 },
         null,
-      ),
+      );
+      return {
+        ...s,
+        persistentConsequences: [
+          ...s.persistentConsequences,
+          {
+            sourceId: 'hand_intercepted_dispatch',
+            sourceType: 'event',
+            choiceMade: 'play',
+            turnApplied: state.turn.turnNumber,
+            tag: 'hand:intercepted_dispatch',
+          },
+        ],
+      };
+    },
   },
 
   hand_double_agent: {
@@ -315,10 +401,10 @@ export const HAND_CARDS_EXPANDED: Record<HandCardIdExpanded, HandCardDefinition>
   hand_pardon_political_prisoners: {
     id: 'hand_pardon_political_prisoners',
     title: 'Pardon Political Prisoners',
-    body: 'Long-held dissidents walk free. The streets cheer; the lords grumble.',
+    body: 'Long-held dissidents walk free. The streets cheer; the lords grumble; the pardon is remembered.',
     expiresAfterTurns: 10,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         {
           stabilityDelta: 2,
@@ -326,46 +412,83 @@ export const HAND_CARDS_EXPANDED: Record<HandCardIdExpanded, HandCardDefinition>
           nobilitySatDelta: -2,
         },
         null,
-      ),
+      );
+      return {
+        ...s,
+        persistentConsequences: [
+          ...s.persistentConsequences,
+          {
+            sourceId: 'hand_pardon_political_prisoners',
+            sourceType: 'event',
+            choiceMade: 'play',
+            turnApplied: state.turn.turnNumber,
+            tag: 'hand:pardon_political_prisoners',
+          },
+        ],
+      };
+    },
   },
 
   hand_grand_assize: {
     id: 'hand_grand_assize',
     title: 'Grand Assize',
-    body: 'A travelling royal court hears grievances and binds the realm in common law.',
+    body: 'A travelling royal court hears grievances and binds the shires in common law. The assize leaves its mark on the record.',
     expiresAfterTurns: 11,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         {
           stabilityDelta: 2,
           nobilitySatDelta: 3,
+          commonerSatDelta: 2,
           treasuryDelta: -10,
         },
         null,
-      ),
+      );
+      return {
+        ...s,
+        persistentConsequences: [
+          ...s.persistentConsequences,
+          {
+            sourceId: 'hand_grand_assize',
+            sourceType: 'event',
+            choiceMade: 'play',
+            turnApplied: state.turn.turnNumber,
+            tag: 'hand:grand_assize',
+          },
+        ],
+      };
+    },
   },
 
   hand_chronicler_summoned: {
     id: 'hand_chronicler_summoned',
     title: 'Chronicler Summoned',
-    body: "A learned scribe is set to compose the realm's history. The story of you tightens.",
+    body: "A learned scribe is set to compose the crown's official history. The story of you tightens for a season.",
     expiresAfterTurns: 12,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { culturalCohesionDelta: 3, faithDelta: 1 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_chronicler_${state.turn.turnNumber}`,
+        sourceTag: 'hand:chronicler_summoned',
+        turnsRemaining: 3,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { culturalCohesionDelta: 1 },
+      });
+    },
   },
 
   hand_open_court: {
     id: 'hand_open_court',
     title: 'Open Court',
-    body: 'The crown opens its doors to all petitioners for a day. Every class feels seen.',
+    body: 'The crown opens its doors to all petitioners for a day. Every class feels seen; the goodwill lingers for a season.',
     expiresAfterTurns: 10,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         {
           culturalCohesionDelta: 2,
@@ -376,7 +499,15 @@ export const HAND_CARDS_EXPANDED: Record<HandCardIdExpanded, HandCardDefinition>
           militaryCasteSatDelta: 2,
         },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_open_court_${state.turn.turnNumber}`,
+        sourceTag: 'hand:open_court',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { stabilityDelta: 1 },
+      });
+    },
   },
 };
 

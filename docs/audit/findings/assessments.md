@@ -2,7 +2,7 @@
 family: assessment
 totalCards: 12
 status: pending
-lastScan: 2026-04-20T21:31:36.218Z
+lastScan: 2026-04-20T21:42:14.542Z
 ---
 
 # Assessment — Audit findings
