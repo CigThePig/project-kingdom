@@ -1,8 +1,10 @@
 // Hand-cards adapter — HAND_CARDS + HAND_CARDS_EXPANDED both resolve via
-// the card's inline `apply` function. We record metadata (expiresAfterTurns,
-// requiresChoice) but leave astSemanticCoverage false — the M3 hand-card
-// analyzer promotes that flag once it parses the apply body.
+// the card's inline `apply` function. The M3.2 hand-card analyzer walks
+// each apply body via ts-morph and returns a StructuralMarkerSummary; when
+// we find one, we attach it to the decision path and flip
+// astSemanticCoverage true.
 
+import { analyzeHandCards } from '../ast/hand-card-analyzer';
 import { runtimePathFor } from '../runtime-paths';
 import { getTextEntryForFamily } from '../text-sources';
 import type { Corpus } from '../types';
@@ -12,10 +14,12 @@ import { buildCard, buildDecisionPath, defaultCoverage, fileFor } from './shared
 
 export function toAuditCards(corpus: Corpus): AuditCard[] {
   const out: AuditCard[] = [];
+  const markerIndex = analyzeHandCards();
 
   for (const h of corpus.handCards) {
     const text = getTextEntryForFamily(corpus, 'hand', h.id);
     const hasText = !!h.title && !!h.body;
+    const markers = markerIndex.get(h.id);
 
     // Every hand card plays through a single path. requiresChoice splits the
     // UI selector but the mechanical `apply` signature is the same — keep one
@@ -30,6 +34,7 @@ export function toAuditCards(corpus: Corpus): AuditCard[] {
         effectSourceKind: 'inline-apply',
         textSourceKind: text?.sourceKind ?? 'inline-hand',
         runtimeTouchHints: ['inline-hand-apply'],
+        declaredStructuralMarkers: markers,
       }),
     ];
 
@@ -49,9 +54,7 @@ export function toAuditCards(corpus: Corpus): AuditCard[] {
         choices,
         coverage: defaultCoverage({
           textCoverage: hasText,
-          // Flipped true by the M3 hand-card analyzer once apply bodies
-          // are AST-classified.
-          astSemanticCoverage: false,
+          astSemanticCoverage: !!markers,
           effectCoverage: false,
         }),
       }),

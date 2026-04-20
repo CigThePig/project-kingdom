@@ -14,6 +14,7 @@ import {
   type AuditEffectSourceKind,
   type AuditSourceKind,
   type AuditTextSourceKind,
+  type StructuralMarkerSummary,
 } from '../ir';
 import type { RuntimePathKind } from '../runtime-paths';
 import type { Corpus, Family } from '../types';
@@ -52,6 +53,7 @@ export function buildDecisionPath(input: {
   runtimeTouchHints?: string[];
   contextRequirements?: string[];
   previewText?: string | null;
+  declaredStructuralMarkers?: StructuralMarkerSummary;
 }): AuditDecisionPath {
   return {
     cardId: input.cardId,
@@ -61,7 +63,8 @@ export function buildDecisionPath(input: {
     effectSourceKind: input.effectSourceKind,
     textSourceKind: input.textSourceKind,
     declaredEffects: input.declaredEffects ?? null,
-    declaredStructuralMarkers: emptyStructuralMarkerSummary(),
+    declaredStructuralMarkers:
+      input.declaredStructuralMarkers ?? emptyStructuralMarkerSummary(),
     pressureKey: input.pressureKey ?? null,
     consequenceTagsProduced: input.consequenceTagsProduced ?? [],
     consequenceTagsConsumed: input.consequenceTagsConsumed ?? [],
