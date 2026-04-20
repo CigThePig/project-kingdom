@@ -50,6 +50,21 @@ export type AuditEffectSourceKind =
 export type AuditSourceKind = 'authored' | 'generated' | 'inline';
 
 /**
+ * Shape summary of a single queued temporary modifier found by the AST
+ * analyzer. `turnsRemaining: 'dynamic'` means the initializer was not a
+ * numeric literal — usually a computed expression or imported constant —
+ * and is a hint to scans that the shape may not match the authoring
+ * convention used elsewhere.
+ */
+export interface QueuedModifierSummary {
+  turnsRemaining: 'literal' | 'dynamic';
+  effectKeys: string[];
+  hasSourceTag: boolean;
+  hasTurnApplied: boolean;
+  hasId: boolean;
+}
+
+/**
  * Coarse markers extracted by the M3 hand-card AST analyzer. Every flag is
  * conservative: `false` means "we did not observe this", not "definitely
  * doesn't happen". Callers must gate structural claims on
@@ -68,6 +83,25 @@ export interface StructuralMarkerSummary {
   writesPressure: boolean;
   /** Creates or modifies a bond (diplomaticBonds / inter-rival bonds). */
   touchesBond: boolean;
+  /**
+   * How deeply the `choice` parameter flows through the apply body.
+   *   - 'none'    — `choice` is not referenced.
+   *   - 'shallow' — `choice` only appears in an early-return guard
+   *     (e.g. `if (choice.kind !== 'class') return state`).
+   *   - 'deep'    — `choice` feeds a call argument, spread, or returned
+   *     expression so its value meaningfully changes the output.
+   */
+  choiceUsageKind: 'none' | 'shallow' | 'deep';
+  /**
+   * Apply contains `if (!<identifier>) return state;` — a silent bail-out
+   * that can undermine `requiresChoice` semantics when the identifier was
+   * derived from `choice`.
+   */
+  earlyReturnOnMissingId: boolean;
+  /** Apply contains `if (choice.kind !== '<literal>') return state;`. */
+  silentFallbackOnChoiceKind: boolean;
+  /** Every temporary modifier literal produced by the apply body. */
+  queuedModifiers: QueuedModifierSummary[];
 }
 
 export function emptyStructuralMarkerSummary(): StructuralMarkerSummary {
@@ -78,6 +112,10 @@ export function emptyStructuralMarkerSummary(): StructuralMarkerSummary {
     readsChoice: false,
     writesPressure: false,
     touchesBond: false,
+    choiceUsageKind: 'none',
+    earlyReturnOnMissingId: false,
+    silentFallbackOnChoiceKind: false,
+    queuedModifiers: [],
   };
 }
 
@@ -135,6 +173,18 @@ export interface AuditDecisionPath {
    * to the harness or when the path's runtime family isn't harness-supported.
    */
   runtimeFingerprint?: RuntimeFingerprint | null;
+  /**
+   * Pair of fingerprints produced by running the same path twice with
+   * different `choice` targets (e.g. two different classes or two different
+   * neighbors). Populated only when `card.metadata.requiresChoice != null`
+   * and the fixture supplies two distinct targets. Scans compare `a` vs `b`
+   * to detect paths where `requiresChoice` is declared but the two runs
+   * produce identical state diffs.
+   */
+  runtimeFingerprintVariants?: {
+    a: RuntimeFingerprint;
+    b: RuntimeFingerprint;
+  } | null;
 }
 
 /**

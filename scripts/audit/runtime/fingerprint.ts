@@ -5,11 +5,17 @@
 // non-empty persistentConsequences / temp-modifier arrays the hand cards
 // need to produce visible diffs.
 
+import type { GameState } from '../../../src/engine/types';
 import type { AuditCard, AuditDecisionPath, RuntimeFingerprint } from '../ir';
 import { classifyPath, touchClassesFor } from './classifier';
-import { diffStates } from './diff';
+import { diffStates, type DiffedPath } from './diff';
 import { buildFixtures, type RuntimeFixture } from './fixtures';
-import { runChoice } from './harness';
+import { runChoice, runChoiceVariants } from './harness';
+
+export interface RuntimeFingerprintVariants {
+  a: RuntimeFingerprint;
+  b: RuntimeFingerprint;
+}
 
 const FIXTURE_ORDER: Array<RuntimeFixture['id']> = [
   'mid-kingdom',
@@ -37,25 +43,48 @@ export function fingerprintChoice(
   for (const fx of ordered) {
     const result = runChoice(card, choice, fx.state);
     if (!result.supported) continue;
-    const paths = diffStates(result.before, result.after);
-    const classes = touchClassesFor(paths);
-    let structural = 0;
-    let surface = 0;
-    for (const p of paths) {
-      const cls = classifyPath(p);
-      if (cls === 'structural') structural++;
-      if (cls === 'surface') surface++;
-    }
+    return buildFingerprint(fx.id, result.before, result.after);
+  }
+  return null;
+}
+
+/**
+ * Fingerprint the same decision path against two distinct `choice` targets.
+ * Populated only when `card.metadata.requiresChoice != null` and the fixture
+ * can supply two distinct targets. The `a` and `b` fingerprints are compared
+ * by scans to catch cards that ignore the distinguishing target.
+ */
+export function fingerprintChoiceVariants(
+  card: AuditCard,
+  choice: AuditDecisionPath,
+  fixtures: RuntimeFixture[] = buildFixtures(),
+): RuntimeFingerprintVariants | null {
+  const ordered = orderFixtures(fixtures);
+  for (const fx of ordered) {
+    const result = runChoiceVariants(card, choice, fx.state);
+    if (!result.supported) continue;
     return {
-      fixtureId: fx.id,
-      touches: paths.map((p) => p.path),
-      classes,
-      structuralCount: structural,
-      surfaceCount: surface,
-      noOp: paths.length === 0,
+      a: buildFingerprint(fx.id, result.before, result.afterA),
+      b: buildFingerprint(fx.id, result.before, result.afterB),
     };
   }
   return null;
+}
+
+function buildFingerprint(
+  fixtureId: string,
+  before: GameState,
+  after: GameState,
+): RuntimeFingerprint {
+  const paths = diffStates(before, after);
+  return {
+    fixtureId,
+    touches: paths.map((p: DiffedPath) => p.path),
+    classes: touchClassesFor(paths),
+    structuralCount: paths.filter((p) => classifyPath(p) === 'structural').length,
+    surfaceCount: paths.filter((p) => classifyPath(p) === 'surface').length,
+    noOp: paths.length === 0,
+  };
 }
 
 function orderFixtures(fixtures: RuntimeFixture[]): RuntimeFixture[] {
