@@ -192,3 +192,62 @@ export function deltaTouchesCategory(
   }
   return false;
 }
+
+/**
+ * Per MechanicalEffectDelta field → set of GameState top-level path prefixes
+ * a runtime diff's `touches[]` entry can start with when the same kind of
+ * change happens at runtime. Used by substance scans that want to count a
+ * runtime-observed `treasury.balance` touch as fulfilment of an expected
+ * `treasuryDelta` field.
+ *
+ * Intentionally conservative: each field maps to one or more concrete
+ * top-level GameState path segments the diff walker produces (see
+ * runtime/classifier.ts). Keep in lockstep with that classifier's PREFIX
+ * map — new structural domains added there should appear here when a
+ * category depends on them.
+ */
+export const EFFECT_FIELD_RUNTIME_PREFIXES: Record<EffectField, readonly string[]> = {
+  treasuryDelta: ['treasury'],
+  foodDelta: ['food'],
+  stabilityDelta: ['stability'],
+  faithDelta: ['faithCulture'],
+  heterodoxyDelta: ['faithCulture'],
+  culturalCohesionDelta: ['faithCulture'],
+  militaryReadinessDelta: ['military'],
+  militaryMoraleDelta: ['military'],
+  militaryEquipmentDelta: ['military'],
+  militaryForceSizeDelta: ['military'],
+  espionageNetworkDelta: ['espionage'],
+  nobilitySatDelta: ['population'],
+  clergySatDelta: ['population'],
+  merchantSatDelta: ['population'],
+  commonerSatDelta: ['population'],
+  militaryCasteSatDelta: ['population'],
+  diplomacyDeltas: ['diplomacy'],
+  regionDevelopmentDelta: ['regions'],
+  regionConditionDelta: ['regions'],
+};
+
+/**
+ * Returns true when the runtime fingerprint's `touches[]` starts with any
+ * path prefix associated with any of the category's substantive fields.
+ * Used by substance/category-without-touch to corroborate declared-effect
+ * claims against the real runtime diff for harness-supported families.
+ */
+export function runtimeTouchesCategory(
+  touches: readonly string[],
+  category: EventCategory,
+): boolean {
+  if (touches.length === 0) return false;
+  const fields = CATEGORY_TOUCH_FIELDS[category];
+  const prefixes = new Set<string>();
+  for (const f of fields) {
+    for (const p of EFFECT_FIELD_RUNTIME_PREFIXES[f] ?? []) prefixes.add(p);
+  }
+  if (prefixes.size === 0) return false;
+  for (const touch of touches) {
+    const segment = touch.split(/[.\[]/)[0];
+    if (prefixes.has(segment)) return true;
+  }
+  return false;
+}
