@@ -40,12 +40,20 @@ export interface Corpus {
   assessments: {
     pool: import('../../src/engine/events/event-engine').EventDefinition[];
     effects: Record<string, Record<string, import('../../src/engine/types').MechanicalEffectDelta>>;
+    /** ASSESSMENT_TEXT — same row shape as EventTextEntry, separate table. */
     text: Record<string, import('../../src/data/text/events').EventTextEntry>;
   };
   negotiations: {
     pool: import('../../src/data/events/negotiations').NegotiationDefinition[];
     effects: Record<string, Record<string, import('../../src/engine/types').MechanicalEffectDelta>>;
-    text: Record<string, import('../../src/data/text/events').EventTextEntry>;
+    /** NEGOTIATION_TEXT — distinct shape (terms + rejectLabel, no `choices`). */
+    text: Record<string, import('../../src/data/text/negotiations').NegotiationTextEntry>;
+  };
+  overtures: {
+    /** OVERTURE_TEXT keyed by RivalAgenda. Sparse; not every agenda is authored. */
+    text: Partial<Record<import('../../src/engine/types').RivalAgenda, import('../../src/data/text/overtures').OvertureTextEntry>>;
+    /** Agendas with authored text entries — the audit's de-facto overture pool. */
+    authoredAgendas: import('../../src/engine/types').RivalAgenda[];
   };
   worldEvents: {
     defs: import('../../src/engine/types').WorldEventDefinition[];

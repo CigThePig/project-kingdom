@@ -13,8 +13,12 @@ import { EVENT_POOL, FOLLOW_UP_POOL } from '../../src/data/events/index';
 import { EVENT_CHOICE_EFFECTS, EVENT_CHOICE_TEMPORARY_MODIFIERS } from '../../src/data/events/effects';
 import { ASSESSMENT_POOL } from '../../src/data/events/assessments';
 import { ASSESSMENT_EFFECTS } from '../../src/data/events/assessment-effects';
+import { ASSESSMENT_TEXT } from '../../src/data/text/assessments';
 import { NEGOTIATION_POOL } from '../../src/data/events/negotiations';
 import { NEGOTIATION_EFFECTS } from '../../src/data/events/negotiation-effects';
+import { NEGOTIATION_TEXT } from '../../src/data/text/negotiations';
+import { OVERTURE_TEXT } from '../../src/data/text/overtures';
+import { RivalAgenda } from '../../src/engine/types';
 
 import { DECREE_POOL } from '../../src/data/decrees/index';
 import { DECREE_EFFECTS } from '../../src/data/decrees/effects';
@@ -48,12 +52,16 @@ export async function loadCorpus(): Promise<Corpus> {
     assessments: {
       pool: ASSESSMENT_POOL,
       effects: ASSESSMENT_EFFECTS,
-      text: pickEventTextEntries(ASSESSMENT_POOL.map((e) => e.id)),
+      text: ASSESSMENT_TEXT,
     },
     negotiations: {
       pool: NEGOTIATION_POOL,
       effects: NEGOTIATION_EFFECTS,
-      text: pickEventTextEntries(NEGOTIATION_POOL.map((n) => n.id)),
+      text: NEGOTIATION_TEXT,
+    },
+    overtures: {
+      text: OVERTURE_TEXT,
+      authoredAgendas: Object.keys(OVERTURE_TEXT) as RivalAgenda[],
     },
     worldEvents: {
       defs: WORLD_EVENT_DEFINITIONS,
@@ -208,15 +216,6 @@ function collectEventTagReads(ev: EventDefinition, push: (tag: string) => void):
   for (const fu of ev.followUpEvents ?? []) {
     for (const sc of fu.stateConditions ?? []) visit(sc);
   }
-}
-
-function pickEventTextEntries(ids: string[]): Record<string, import('../../src/data/text/events').EventTextEntry> {
-  const out: Record<string, import('../../src/data/text/events').EventTextEntry> = {};
-  for (const id of ids) {
-    const entry = EVENT_TEXT[id];
-    if (entry) out[id] = entry;
-  }
-  return out;
 }
 
 // ============================================================
