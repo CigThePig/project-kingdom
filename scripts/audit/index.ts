@@ -44,6 +44,12 @@ import { scan as choiceClonesScan, SCAN_ID as CHOICE_CLONES_ID } from './scans/s
 
 import { scan as unresolvedTokensScan, SCAN_ID as UNRESOLVED_TOKENS_ID } from './scans/text/unresolved-tokens';
 
+import { scan as pressurePrefixParityScan, SCAN_ID as PRESSURE_PREFIX_PARITY_ID } from './scans/engine/pressure-prefix-parity';
+import { scan as consequenceWriteParityScan, SCAN_ID as CONSEQUENCE_WRITE_PARITY_ID } from './scans/engine/consequence-write-parity';
+import { scan as textSourceParityScan, SCAN_ID as TEXT_SOURCE_PARITY_ID } from './scans/engine/text-source-parity';
+import { scan as runtimePathParityScan, SCAN_ID as RUNTIME_PATH_PARITY_ID } from './scans/engine/runtime-path-parity';
+import { scan as readerWriterRoundtripScan, SCAN_ID as READER_WRITER_ROUNDTRIP_ID } from './scans/engine/reader-writer-roundtrip';
+
 import { scan as triggerReachScan, SCAN_ID as TRIGGER_REACH_ID } from './scans/reach/trigger-attainability';
 
 interface RegisteredScan {
@@ -70,6 +76,11 @@ const SCANS: RegisteredScan[] = [
   { id: SEVERITY_MAG_ID, scan: severityMagScan },
   { id: CHOICE_CLONES_ID, scan: choiceClonesScan },
   { id: UNRESOLVED_TOKENS_ID, scan: unresolvedTokensScan },
+  { id: PRESSURE_PREFIX_PARITY_ID, scan: pressurePrefixParityScan },
+  { id: CONSEQUENCE_WRITE_PARITY_ID, scan: consequenceWriteParityScan },
+  { id: TEXT_SOURCE_PARITY_ID, scan: textSourceParityScan },
+  { id: RUNTIME_PATH_PARITY_ID, scan: runtimePathParityScan },
+  { id: READER_WRITER_ROUNDTRIP_ID, scan: readerWriterRoundtripScan },
   { id: TRIGGER_REACH_ID, scan: triggerReachScan, reachOnly: true },
 ];
 
@@ -78,7 +89,7 @@ async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
   const t0 = Date.now();
 
-  const corpus = await loadCorpus();
+  const corpus = await loadCorpus({ runtimeFingerprint: true });
   const opts: ScanOptions = {
     family: config.family,
     includeMinor: config.includeMinor,

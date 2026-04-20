@@ -24,12 +24,19 @@ import { scan as categoryTouchScan } from './scans/substance/category-without-to
 import { scan as severityMagScan } from './scans/substance/severity-magnitude';
 import { scan as choiceClonesScan } from './scans/substance/choice-clones';
 import { scan as unresolvedTokensScan } from './scans/text/unresolved-tokens';
+import { scan as pressurePrefixParityScan } from './scans/engine/pressure-prefix-parity';
+import { scan as consequenceWriteParityScan } from './scans/engine/consequence-write-parity';
+import { scan as textSourceParityScan } from './scans/engine/text-source-parity';
+import { scan as runtimePathParityScan } from './scans/engine/runtime-path-parity';
+import { scan as readerWriterRoundtripScan } from './scans/engine/reader-writer-roundtrip';
 
 const ALL_SCANS = [
   missingTextScan, choiceLabelScan, missingEffectsScan, emptyEffectsScan,
   styleTagScan, followupScan, featureRegistryScan, tagProducersScan, tagConsumersScan,
   surfaceOnlyScan, singleChoiceScan, categoryTouchScan, severityMagScan, choiceClonesScan,
   unresolvedTokensScan,
+  pressurePrefixParityScan, consequenceWriteParityScan,
+  textSourceParityScan, runtimePathParityScan, readerWriterRoundtripScan,
 ];
 
 const FULL_OPTS: ScanOptions = { includeMinor: true, includePolish: true };
@@ -51,6 +58,12 @@ function isWellFormedFinding(f: unknown): f is Finding {
   if (typeof o.message !== 'string' || o.message.length === 0) return false;
   if (o.choiceId !== undefined && typeof o.choiceId !== 'string') return false;
   if (o.filePath !== undefined && typeof o.filePath !== 'string') return false;
+  if (
+    o.confidence !== undefined &&
+    !['DETERMINISTIC', 'RUNTIME_GROUNDED', 'HEURISTIC', 'ENGINE_MISMATCH'].includes(
+      o.confidence as string,
+    )
+  ) return false;
   return true;
 }
 
@@ -63,6 +76,31 @@ describe('audit pipeline smoke test', () => {
         (inventory.byFamily[family] ?? 0),
         `family '${family}' must be non-empty in the corpus`,
       ).toBeGreaterThan(0);
+    }
+  });
+
+  it('every family appears in corpus.auditCards after M2 adapters run', async () => {
+    const corpus = await loadCorpus();
+    const familiesInIR = new Set(corpus.auditCards.map((c) => c.family));
+    // Overtures are the only family without native-pool membership — they're
+    // synthetic agenda-keyed cards. All other families must be present.
+    const IR_FAMILIES: Family[] = [
+      'decree', 'crisis', 'petition', 'assessment', 'negotiation',
+      'overture', 'hand', 'world',
+    ];
+    for (const family of IR_FAMILIES) {
+      expect(familiesInIR.has(family), `family '${family}' missing from auditCards`).toBe(true);
+    }
+  });
+
+  it('coverage matrix has a row for every family in the IR', async () => {
+    const corpus = await loadCorpus();
+    const irFamilies = new Set(corpus.auditCards.map((c) => c.family));
+    for (const family of irFamilies) {
+      expect(
+        corpus.coverage.byFamily[family],
+        `coverage.byFamily['${family}'] should be populated`,
+      ).toBeDefined();
     }
   });
 
@@ -92,7 +130,7 @@ describe('audit pipeline smoke test', () => {
 
   it('every finding carries a known scanId category prefix', async () => {
     const corpus = await loadCorpus();
-    const known = ['wiring.', 'substance.', 'text.', 'reach.'];
+    const known = ['wiring.', 'substance.', 'text.', 'reach.', 'engine.'];
     for (const scan of ALL_SCANS) {
       const findings = scan(corpus, FULL_OPTS);
       for (const f of findings) {

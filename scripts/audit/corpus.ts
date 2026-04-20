@@ -13,8 +13,12 @@ import { EVENT_POOL, FOLLOW_UP_POOL } from '../../src/data/events/index';
 import { EVENT_CHOICE_EFFECTS, EVENT_CHOICE_TEMPORARY_MODIFIERS } from '../../src/data/events/effects';
 import { ASSESSMENT_POOL } from '../../src/data/events/assessments';
 import { ASSESSMENT_EFFECTS } from '../../src/data/events/assessment-effects';
+import { ASSESSMENT_TEXT } from '../../src/data/text/assessments';
 import { NEGOTIATION_POOL } from '../../src/data/events/negotiations';
 import { NEGOTIATION_EFFECTS } from '../../src/data/events/negotiation-effects';
+import { NEGOTIATION_TEXT } from '../../src/data/text/negotiations';
+import { OVERTURE_TEXT } from '../../src/data/text/overtures';
+import { RivalAgenda } from '../../src/engine/types';
 
 import { DECREE_POOL } from '../../src/data/decrees/index';
 import { DECREE_EFFECTS } from '../../src/data/decrees/effects';
@@ -29,13 +33,30 @@ import { EVENT_TEXT } from '../../src/data/text/events';
 import { EVENT_CHOICE_STYLE_TAGS } from '../../src/data/ruling-style/flavor-tags';
 import { KINGDOM_FEATURE_REGISTRY } from '../../src/data/kingdom-features/index';
 
+import { buildAllAuditCards } from './adapters';
+import { buildCoverageMatrix } from './coverage/matrix';
+import { validateAuditCards } from './ir-schema';
+import { fingerprintChoice } from './runtime/fingerprint';
+import { buildFixtures } from './runtime/fixtures';
 import type { Corpus, Family } from './types';
+
+export interface LoadCorpusOptions {
+  /**
+   * When true, the loader runs every AuditDecisionPath through the runtime
+   * harness and attaches `runtimeFingerprint` to each path. Defaults to
+   * false so unit tests and ad-hoc inspection stay cheap; the CI audit
+   * entrypoint (scripts/audit/index.ts) opts in.
+   */
+  runtimeFingerprint?: boolean;
+}
 
 // ============================================================
 // Public entrypoint
 // ============================================================
 
-export async function loadCorpus(): Promise<Corpus> {
+export async function loadCorpus(
+  options: LoadCorpusOptions = {},
+): Promise<Corpus> {
   const filePathByCardId = await indexFilePaths();
 
   const corpus: Corpus = {
@@ -48,12 +69,16 @@ export async function loadCorpus(): Promise<Corpus> {
     assessments: {
       pool: ASSESSMENT_POOL,
       effects: ASSESSMENT_EFFECTS,
-      text: pickEventTextEntries(ASSESSMENT_POOL.map((e) => e.id)),
+      text: ASSESSMENT_TEXT,
     },
     negotiations: {
       pool: NEGOTIATION_POOL,
       effects: NEGOTIATION_EFFECTS,
-      text: pickEventTextEntries(NEGOTIATION_POOL.map((n) => n.id)),
+      text: NEGOTIATION_TEXT,
+    },
+    overtures: {
+      text: OVERTURE_TEXT,
+      authoredAgendas: Object.keys(OVERTURE_TEXT) as RivalAgenda[],
     },
     worldEvents: {
       defs: WORLD_EVENT_DEFINITIONS,
@@ -72,9 +97,39 @@ export async function loadCorpus(): Promise<Corpus> {
     filePathByCardId,
     tagProducers: buildTagProducers(),
     tagReaders: buildTagReaders(),
+
+    // Populated below once the rest of the corpus is built — adapters read
+    // familyByCardId/effects/text tables to shape their AuditCard output.
+    auditCards: [],
+    coverage: { byFamily: {}, overall: {} as never },
   };
 
+  // Run every family adapter, validate the combined IR, then index it.
+  const auditCards = buildAllAuditCards(corpus);
+  validateAuditCards(auditCards);
+  if (options.runtimeFingerprint) {
+    attachRuntimeFingerprints(auditCards);
+  }
+  corpus.auditCards = auditCards;
+  corpus.coverage = buildCoverageMatrix(auditCards);
+
   return Object.freeze(corpus);
+}
+
+function attachRuntimeFingerprints(cards: import('./ir').AuditCard[]): void {
+  const fixtures = buildFixtures();
+  for (const card of cards) {
+    for (const choice of card.choices) {
+      const fp = fingerprintChoice(card, choice, fixtures);
+      choice.runtimeFingerprint = fp;
+    }
+    // Flip runtimeDiffCoverage true once at least one path produced a
+    // fingerprint — the family is harness-supported even if a specific
+    // fixture couldn't produce a diff for one of its paths.
+    if (card.choices.some((c) => c.runtimeFingerprint)) {
+      card.coverage = { ...card.coverage, runtimeDiffCoverage: true };
+    }
+  }
 }
 
 // ============================================================
@@ -208,15 +263,6 @@ function collectEventTagReads(ev: EventDefinition, push: (tag: string) => void):
   for (const fu of ev.followUpEvents ?? []) {
     for (const sc of fu.stateConditions ?? []) visit(sc);
   }
-}
-
-function pickEventTextEntries(ids: string[]): Record<string, import('../../src/data/text/events').EventTextEntry> {
-  const out: Record<string, import('../../src/data/text/events').EventTextEntry> = {};
-  for (const id of ids) {
-    const entry = EVENT_TEXT[id];
-    if (entry) out[id] = entry;
-  }
-  return out;
 }
 
 // ============================================================

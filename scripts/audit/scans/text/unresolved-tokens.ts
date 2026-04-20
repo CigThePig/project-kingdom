@@ -4,9 +4,15 @@
 // when it fails in EVERY fixture — this avoids flagging tokens that
 // legitimately resolve to empty in early states (memory clauses, etc.) but
 // are well-formed.
+//
+// Family-aware: walks events (EVENT_TEXT), assessments (ASSESSMENT_TEXT),
+// negotiations (NEGOTIATION_TEXT — title/body + per-term title/description +
+// rejectLabel), overtures (OVERTURE_TEXT — title/body/grantTitle/denyTitle),
+// world events, hand cards, decrees.
 
 import { substituteSmartPlaceholders } from '../../../../src/bridge/smartText';
 import { buildSampleStates, type SampleState } from '../../fixtures/sample-states';
+import { getTextEntryForFamily } from '../../text-sources';
 import type { Corpus, Finding, Scan } from '../../types';
 import { familyOf, fileOf } from '../shared';
 
@@ -18,24 +24,67 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
   const out: Finding[] = [];
   const samples = buildSampleStates();
 
-  // Standard events — title, body, choice labels.
+  // Events (crisis/petition/notification/unknown).
   for (const ev of corpus.eventById.values()) {
-    const text = corpus.text.events[ev.id];
-    if (!text) continue;
-    pushIfUnresolved(out, samples, text.title, ev.id, undefined, 'title', familyOf(corpus, ev.id), fileOf(corpus, ev.id));
-    pushIfUnresolved(out, samples, text.body, ev.id, undefined, 'body', familyOf(corpus, ev.id), fileOf(corpus, ev.id));
-    for (const [choiceId, label] of Object.entries(text.choices ?? {})) {
-      pushIfUnresolved(out, samples, label, ev.id, choiceId, 'choice', familyOf(corpus, ev.id), fileOf(corpus, ev.id));
+    const family = familyOf(corpus, ev.id);
+    if (family === 'assessment') continue; // handled below
+    const entry = getTextEntryForFamily(corpus, family, ev.id);
+    if (!entry) continue;
+    pushIfUnresolved(out, samples, entry.title, ev.id, undefined, 'title', family, fileOf(corpus, ev.id));
+    pushIfUnresolved(out, samples, entry.body, ev.id, undefined, 'body', family, fileOf(corpus, ev.id));
+    for (const [choiceId, label] of Object.entries(entry.choiceLabels)) {
+      pushIfUnresolved(out, samples, label, ev.id, choiceId, 'choice', family, fileOf(corpus, ev.id));
+    }
+  }
+
+  // Assessments — ASSESSMENT_TEXT.
+  for (const a of corpus.assessments.pool) {
+    const entry = getTextEntryForFamily(corpus, 'assessment', a.id);
+    if (!entry) continue;
+    pushIfUnresolved(out, samples, entry.title, a.id, undefined, 'title', 'assessment', fileOf(corpus, a.id));
+    pushIfUnresolved(out, samples, entry.body, a.id, undefined, 'body', 'assessment', fileOf(corpus, a.id));
+    for (const [choiceId, label] of Object.entries(entry.choiceLabels)) {
+      pushIfUnresolved(out, samples, label, a.id, choiceId, 'choice', 'assessment', fileOf(corpus, a.id));
+    }
+  }
+
+  // Negotiations — title, body, per-term title + description, rejectLabel.
+  for (const n of corpus.negotiations.pool) {
+    const entry = getTextEntryForFamily(corpus, 'negotiation', n.id);
+    if (!entry) continue;
+    pushIfUnresolved(out, samples, entry.title, n.id, undefined, 'title', 'negotiation', fileOf(corpus, n.id));
+    pushIfUnresolved(out, samples, entry.body, n.id, undefined, 'body', 'negotiation', fileOf(corpus, n.id));
+    for (const [termId, title] of Object.entries(entry.choiceLabels)) {
+      pushIfUnresolved(out, samples, title, n.id, termId, 'term_title', 'negotiation', fileOf(corpus, n.id));
+    }
+    for (const [termId, description] of Object.entries(entry.termDescriptions ?? {})) {
+      pushIfUnresolved(out, samples, description, n.id, termId, 'term_description', 'negotiation', fileOf(corpus, n.id));
+    }
+    const raw = corpus.negotiations.text[n.id];
+    if (raw?.rejectLabel) {
+      pushIfUnresolved(out, samples, raw.rejectLabel, n.id, n.rejectChoiceId, 'reject_label', 'negotiation', fileOf(corpus, n.id));
+    }
+  }
+
+  // Overtures — title, body, grantTitle, denyTitle.
+  for (const agenda of corpus.overtures.authoredAgendas) {
+    const entry = getTextEntryForFamily(corpus, 'overture', agenda);
+    if (!entry) continue;
+    const cardId = `overture:${agenda}`;
+    pushIfUnresolved(out, samples, entry.title, cardId, undefined, 'title', 'overture', fileOf(corpus, cardId));
+    pushIfUnresolved(out, samples, entry.body, cardId, undefined, 'body', 'overture', fileOf(corpus, cardId));
+    for (const [choiceId, label] of Object.entries(entry.choiceLabels)) {
+      pushIfUnresolved(out, samples, label, cardId, choiceId, 'choice', 'overture', fileOf(corpus, cardId));
     }
   }
 
   // World event text.
   for (const we of corpus.worldEvents.defs) {
-    const text = corpus.worldEvents.text[we.id];
-    if (!text) continue;
-    pushIfUnresolved(out, samples, text.title, we.id, undefined, 'title', 'world', fileOf(corpus, we.id));
-    pushIfUnresolved(out, samples, text.body, we.id, undefined, 'body', 'world', fileOf(corpus, we.id));
-    for (const [choiceId, label] of Object.entries(text.choices ?? {})) {
+    const entry = getTextEntryForFamily(corpus, 'world', we.id);
+    if (!entry) continue;
+    pushIfUnresolved(out, samples, entry.title, we.id, undefined, 'title', 'world', fileOf(corpus, we.id));
+    pushIfUnresolved(out, samples, entry.body, we.id, undefined, 'body', 'world', fileOf(corpus, we.id));
+    for (const [choiceId, label] of Object.entries(entry.choiceLabels)) {
       pushIfUnresolved(out, samples, label, we.id, choiceId, 'choice', 'world', fileOf(corpus, we.id));
     }
   }
@@ -58,7 +107,7 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
 function pushIfUnresolved(
   out: Finding[],
   samples: SampleState[],
-  text: string,
+  text: string | undefined,
   cardId: string,
   choiceId: string | undefined,
   field: string,
@@ -66,8 +115,6 @@ function pushIfUnresolved(
   filePath: string | undefined,
 ): void {
   if (!text || text.indexOf('{') === -1) return;
-  // For each token in the source text, ask: did it remain unresolved in every
-  // fixture? Tokens that resolve in any fixture are good — they're conditional.
   const tokens = extractTokens(text);
   if (tokens.size === 0) return;
 
@@ -81,7 +128,6 @@ function pushIfUnresolved(
     if (stillUnresolved.size === 0) return;
   }
 
-  // What remains is unresolved across every fixture.
   for (const token of stillUnresolved) {
     out.push({
       severity: 'MAJOR',

@@ -3,6 +3,22 @@
 
 export type FindingSeverity = 'CRITICAL' | 'MAJOR' | 'MINOR' | 'POLISH';
 
+/**
+ * How confident the audit is that a finding represents reality, distinct
+ * from its severity to the player-facing corpus:
+ *   - DETERMINISTIC:   table/shape check with no runtime inference.
+ *   - RUNTIME_GROUNDED: backed by a real runtime-diff or AST-verified fact.
+ *   - HEURISTIC:       pattern- or magnitude-based suspicion.
+ *   - ENGINE_MISMATCH: the scanner's model disagrees with runtime. These
+ *                      are scanner-model failures, NOT content failures, and
+ *                      must be isolated from card-cleanup backlogs.
+ */
+export type FindingConfidence =
+  | 'DETERMINISTIC'
+  | 'RUNTIME_GROUNDED'
+  | 'HEURISTIC'
+  | 'ENGINE_MISMATCH';
+
 export type Family =
   | 'decree'
   | 'crisis'
@@ -15,7 +31,7 @@ export type Family =
   | 'world'
   | 'unknown';
 
-export type ScanCategory = 'wiring' | 'substance' | 'text' | 'reach';
+export type ScanCategory = 'wiring' | 'substance' | 'text' | 'reach' | 'engine';
 
 export interface Finding {
   severity: FindingSeverity;
@@ -27,6 +43,8 @@ export interface Finding {
   filePath?: string;
   message: string;
   details?: Record<string, unknown>;
+  /** When omitted, the reporter treats the finding as DETERMINISTIC. */
+  confidence?: FindingConfidence;
 }
 
 export interface Corpus {
@@ -40,12 +58,20 @@ export interface Corpus {
   assessments: {
     pool: import('../../src/engine/events/event-engine').EventDefinition[];
     effects: Record<string, Record<string, import('../../src/engine/types').MechanicalEffectDelta>>;
+    /** ASSESSMENT_TEXT — same row shape as EventTextEntry, separate table. */
     text: Record<string, import('../../src/data/text/events').EventTextEntry>;
   };
   negotiations: {
     pool: import('../../src/data/events/negotiations').NegotiationDefinition[];
     effects: Record<string, Record<string, import('../../src/engine/types').MechanicalEffectDelta>>;
-    text: Record<string, import('../../src/data/text/events').EventTextEntry>;
+    /** NEGOTIATION_TEXT — distinct shape (terms + rejectLabel, no `choices`). */
+    text: Record<string, import('../../src/data/text/negotiations').NegotiationTextEntry>;
+  };
+  overtures: {
+    /** OVERTURE_TEXT keyed by RivalAgenda. Sparse; not every agenda is authored. */
+    text: Partial<Record<import('../../src/engine/types').RivalAgenda, import('../../src/data/text/overtures').OvertureTextEntry>>;
+    /** Agendas with authored text entries — the audit's de-facto overture pool. */
+    authoredAgendas: import('../../src/engine/types').RivalAgenda[];
   };
   worldEvents: {
     defs: import('../../src/engine/types').WorldEventDefinition[];
@@ -72,6 +98,14 @@ export interface Corpus {
   tagProducers: Map<string, Array<{ kind: 'event' | 'decree'; id: string; choiceId?: string }>>;
   /** Tags read by triggers/storylines/branches. */
   tagReaders: Map<string, Array<{ where: 'event-trigger' | 'decree-trigger'; id: string }>>;
+
+  // ============================================================
+  // Normalized audit IR — produced by scripts/audit/adapters/*.
+  // Scans should prefer this over the raw pools above. See
+  // docs/AUDIT_SCANNER_OVERHAUL_PLAN.md §"Core data model to introduce".
+  // ============================================================
+  auditCards: import('./ir').AuditCard[];
+  coverage: import('./coverage/matrix').CoverageMatrix;
 }
 
 export interface ScanResult {
