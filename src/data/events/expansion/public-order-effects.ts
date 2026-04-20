@@ -77,7 +77,7 @@ export const EXPANSION_PUBLIC_ORDER_EFFECTS: Record<string, Record<string, Mecha
   // 9. Gang Warfare — Serious
   // ============================================================
   evt_exp_po_gang_warfare: {
-    military_sweep:               { stabilityDelta: +6, militaryReadinessDelta: -6, commonerSatDelta: -3, regionConditionDelta: -4 },
+    military_sweep:               { stabilityDelta: +6, militaryReadinessDelta: -6, commonerSatDelta: -3, regionConditionDelta: -4, treasuryDelta: -25 },
     pit_gangs_against_each_other: { stabilityDelta: -2, espionageNetworkDelta: +3, commonerSatDelta: -4, nobilitySatDelta: -1 },
     offer_gang_leaders_positions: { stabilityDelta: +2, commonerSatDelta: +2, nobilitySatDelta: -5, merchantSatDelta: -2 },
   },

@@ -68,7 +68,7 @@ export const CONDITION_EVENT_EFFECTS: Record<string, Record<string, MechanicalEf
   },
   evt_cond_plague_escalation: {
     martial_law: { stabilityDelta: -5, commonerSatDelta: -8, militaryMoraleDelta: -3, nobilitySatDelta: +2 },
-    appeal_to_clergy: { faithDelta: +5, clergySatDelta: +3, treasuryDelta: -30 },
+    appeal_to_clergy: { faithDelta: +5, clergySatDelta: +3, treasuryDelta: -45 },
   },
 
   // ============================================================

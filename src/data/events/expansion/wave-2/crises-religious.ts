@@ -171,6 +171,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISIS_EFFECTS: Record<
       commonerSatDelta: 3,
       heterodoxyDelta: 1,
       clergySatDelta: -2,
+      treasuryDelta: -20,
     },
     confine_to_a_monastery: {
       clergySatDelta: 3,

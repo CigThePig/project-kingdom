@@ -18,7 +18,7 @@ export const EXPANSION_DIPLOMACY_EFFECTS: Record<string, Record<string, Mechanic
 
   // --- Developing Phase ---
   evt_exp_dip_diplomatic_incident: {
-    issue_formal_apology:     { stabilityDelta: +2, diplomacyDeltas: { neighbor_arenthal: +5 }, nobilitySatDelta: -3, commonerSatDelta: -1 },
+    issue_formal_apology:     { stabilityDelta: +2, diplomacyDeltas: { neighbor_arenthal: +5 }, nobilitySatDelta: -3, commonerSatDelta: -1, treasuryDelta: -20 },
     demand_reciprocal_apology: { nobilitySatDelta: +2, diplomacyDeltas: { neighbor_arenthal: -5 }, militaryCasteSatDelta: +1, stabilityDelta: -2 },
     downplay_the_incident:    { diplomacyDeltas: { neighbor_arenthal: -2 }, stabilityDelta: -1 },
   },
@@ -56,7 +56,7 @@ export const EXPANSION_DIPLOMACY_EFFECTS: Record<string, Record<string, Mechanic
   },
   evt_exp_dip_spy_scandal: {
     deny_involvement:          { diplomacyDeltas: { neighbor_arenthal: -3, neighbor_valdris: -3 }, espionageNetworkDelta: -2, stabilityDelta: -1 },
-    expel_foreign_diplomats:   { diplomacyDeltas: { neighbor_arenthal: -6, neighbor_valdris: -6 }, espionageNetworkDelta: +3, stabilityDelta: +2 },
+    expel_foreign_diplomats:   { diplomacyDeltas: { neighbor_arenthal: -6, neighbor_valdris: -6 }, espionageNetworkDelta: +3, stabilityDelta: +2, treasuryDelta: -20 },
     offer_intelligence_sharing: { diplomacyDeltas: { neighbor_arenthal: +4, neighbor_valdris: +4 }, espionageNetworkDelta: -5, stabilityDelta: +1 },
   },
   evt_exp_dip_border_dispute_escalation: {
