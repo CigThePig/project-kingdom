@@ -15,6 +15,7 @@ import * as path from 'node:path';
 import { loadCorpus } from './corpus';
 import { computeInventory, renderInventoryMarkdown } from './inventory';
 import { writeReports, countBySeverity } from './reporter';
+import { writeDocsArtifacts } from './report-artifacts';
 import { seedArtifacts } from './seeder';
 import {
   SEVERITY_RANK,
@@ -182,6 +183,7 @@ async function main(): Promise<void> {
     scansRun,
     startedAt,
     durationMs: Date.now() - t0,
+    coverage: corpus.coverage,
   });
 
   // Always write inventory alongside the findings — cheap and useful.
@@ -203,6 +205,14 @@ async function main(): Promise<void> {
       findings: allFindings,
       totalsByFamily: inventory.byFamily,
       lastScanAt: startedAt,
+      coverage: corpus.coverage,
+    });
+    await writeDocsArtifacts(docsAuditDir, {
+      findings: allFindings,
+      scansRun,
+      startedAt,
+      durationMs: Date.now() - t0,
+      coverage: corpus.coverage,
     });
   }
 

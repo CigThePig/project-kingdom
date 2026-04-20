@@ -5,25 +5,41 @@
 import { promises as fs } from 'node:fs';
 import * as path from 'node:path';
 
+import { COVERAGE_DIMENSIONS, type CoverageDimension, type CoverageMatrix, type CoverageRow } from './coverage/matrix';
+import { buildFindingsReport, materializeConfidence } from './report-artifacts';
+import { validateFindingsReport } from './ir-schema';
 import {
   compareFindings,
   type Family,
   type Finding,
+  type FindingConfidence,
   type FindingSeverity,
 } from './types';
 
 const SEVERITY_ORDER: FindingSeverity[] = ['CRITICAL', 'MAJOR', 'MINOR', 'POLISH'];
+
+const COVERAGE_LABELS: Record<CoverageDimension, string> = {
+  textCoverage: 'text integrity',
+  effectCoverage: 'effect table coverage',
+  runtimeDiffCoverage: 'runtime diff',
+  pressureCoverage: 'pressure parity',
+  consequenceCoverage: 'consequence parity',
+  generatedFamilyCoverage: 'generated-family audit',
+  astSemanticCoverage: 'AST semantic analysis',
+  previewParityCoverage: 'preview parity',
+};
 
 export interface ReportInputs {
   findings: Finding[];
   scansRun: string[];
   startedAt: string;
   durationMs: number;
+  coverage: CoverageMatrix;
 }
 
 export async function writeReports(outputDir: string, inputs: ReportInputs): Promise<void> {
   await fs.mkdir(outputDir, { recursive: true });
-  const sorted = [...inputs.findings].sort(compareFindings);
+  const sorted = [...inputs.findings].map(materializeConfidence).sort(compareFindings);
 
   await Promise.all([
     fs.writeFile(path.join(outputDir, 'findings.json'), renderJson(sorted, inputs), 'utf8'),
@@ -37,16 +53,13 @@ export async function writeReports(outputDir: string, inputs: ReportInputs): Pro
 // ============================================================
 
 function renderJson(findings: Finding[], inputs: ReportInputs): string {
-  const counts = countBySeverity(findings);
-  const payload = {
-    schemaVersion: 1,
+  const report = buildFindingsReport(findings, {
+    scansRun: inputs.scansRun,
     startedAt: inputs.startedAt,
     durationMs: inputs.durationMs,
-    scansRun: inputs.scansRun,
-    counts,
-    findings,
-  };
-  return JSON.stringify(payload, null, 2) + '\n';
+  });
+  validateFindingsReport(report);
+  return JSON.stringify(report, null, 2) + '\n';
 }
 
 // ============================================================
@@ -61,6 +74,14 @@ function renderMarkdown(findings: Finding[], inputs: ReportInputs): string {
   lines.push('');
   lines.push(renderCountsTable(findings));
   lines.push('');
+  lines.push(renderConfidenceCountsTable(findings));
+  lines.push('');
+
+  // Overall coverage up front — useful context even when no findings exist.
+  lines.push('## Coverage (overall)');
+  lines.push('');
+  lines.push(...renderCoverageTable(inputs.coverage.overall));
+  lines.push('');
 
   if (findings.length === 0) {
     lines.push('_No findings._');
@@ -71,6 +92,13 @@ function renderMarkdown(findings: Finding[], inputs: ReportInputs): string {
   for (const family of [...byFamily.keys()].sort()) {
     lines.push(`## ${family} (${byFamily.get(family)!.length})`);
     lines.push('');
+    const familyCoverage = inputs.coverage.byFamily[family];
+    if (familyCoverage) {
+      lines.push('**Coverage**');
+      lines.push('');
+      lines.push(...renderCoverageTable(familyCoverage));
+      lines.push('');
+    }
     const bySev = groupBy(byFamily.get(family)!, (f) => f.severity);
     for (const sev of SEVERITY_ORDER) {
       const items = bySev.get(sev);
@@ -93,8 +121,35 @@ function renderMarkdown(findings: Finding[], inputs: ReportInputs): string {
 
 function formatFindingRow(f: Finding): string {
   const choice = f.choiceId ? `:${f.choiceId}` : '';
-  const confidence = f.confidence && f.confidence !== 'DETERMINISTIC' ? ` _(${f.confidence})_` : '';
-  return `- \`${f.scanId}\` \`${f.code}\` \`${f.cardId}${choice}\`${confidence} — ${f.message}`;
+  const confidence = f.confidence ?? 'DETERMINISTIC';
+  return `- \`${f.scanId}\` \`${f.code}\` \`${f.cardId}${choice}\` _(${confidence})_ — ${f.message}`;
+}
+
+// ============================================================
+// Coverage matrix rendering — shared between findings.md and
+// the seeded per-family docs/audit/findings/<family>.md files.
+// ============================================================
+
+export function renderCoverageTable(row: CoverageRow): string[] {
+  const lines: string[] = [];
+  lines.push('| Coverage area | Status |');
+  lines.push('|---|---|');
+  for (const dim of COVERAGE_DIMENSIONS) {
+    lines.push(`| ${COVERAGE_LABELS[dim]} | ${coverageStatus(row[dim])} |`);
+  }
+  return lines;
+}
+
+export function coverageStatus(cell: CoverageRow[CoverageDimension]): string {
+  if (cell.total === 0) return 'n/a';
+  if (cell.coveragePct >= 95) return `covered (${formatPct(cell.coveragePct)})`;
+  if (cell.coveragePct > 0) return `partial (${formatPct(cell.coveragePct)})`;
+  return 'not covered (0%)';
+}
+
+function formatPct(pct: number): string {
+  // Render integers without a trailing .0 — otherwise keep one decimal.
+  return Number.isInteger(pct) ? `${pct}%` : `${pct.toFixed(1)}%`;
 }
 
 // ============================================================
@@ -176,6 +231,24 @@ export function countByFamily(findings: Finding[]): Record<Family, number> {
   return out;
 }
 
+const CONFIDENCE_ORDER: FindingConfidence[] = [
+  'DETERMINISTIC',
+  'RUNTIME_GROUNDED',
+  'HEURISTIC',
+  'ENGINE_MISMATCH',
+];
+
+export function countByConfidence(findings: Finding[]): Record<FindingConfidence, number> {
+  const out: Record<FindingConfidence, number> = {
+    DETERMINISTIC: 0,
+    RUNTIME_GROUNDED: 0,
+    HEURISTIC: 0,
+    ENGINE_MISMATCH: 0,
+  };
+  for (const f of findings) out[f.confidence ?? 'DETERMINISTIC']++;
+  return out;
+}
+
 function renderCountsTable(findings: Finding[]): string {
   const counts = countBySeverity(findings);
   return [
@@ -183,6 +256,15 @@ function renderCountsTable(findings: Finding[]): string {
     '|---|---:|',
     ...SEVERITY_ORDER.map((s) => `| ${s} | ${counts[s]} |`),
     `| **total** | **${findings.length}** |`,
+  ].join('\n');
+}
+
+function renderConfidenceCountsTable(findings: Finding[]): string {
+  const counts = countByConfidence(findings);
+  return [
+    '| confidence | count |',
+    '|---|---:|',
+    ...CONFIDENCE_ORDER.map((c) => `| ${c} | ${counts[c]} |`),
   ].join('\n');
 }
 

@@ -1,0 +1,324 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-04-20T09:00:48.251Z",
+  "count": 10,
+  "countsByScan": {
+    "engine.consequence-write-parity": 2,
+    "engine.pressure-prefix-parity": 4,
+    "engine.reader-writer-roundtrip": 4
+  },
+  "findings": [
+    {
+      "severity": "MAJOR",
+      "family": "decree",
+      "scanId": "engine.consequence-write-parity",
+      "code": "CONSEQUENCE_WRITE_SITE_MISSING",
+      "cardId": "apply-action-effects:decree",
+      "filePath": "src/engine/resolution/apply-action-effects.ts",
+      "message": "Expected a `decree:<id>` persistentConsequences assignment in apply-action-effects.ts but none was found — the scanner's tag-producer model is out of sync with the engine.",
+      "confidence": "ENGINE_MISMATCH"
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.pressure-prefix-parity",
+      "code": "PRESSURE_PREFIX_ORPHAN",
+      "cardId": "narrative-pressure:assessment",
+      "filePath": "src/data/narrative-pressure/weights.ts",
+      "message": "PRESSURE_WEIGHTS contains keys with prefix 'assessment:' but no applyPressure() call site uses that source-type.",
+      "confidence": "ENGINE_MISMATCH",
+      "details": {
+        "prefix": "assessment",
+        "actualPrefixes": [
+          "event",
+          "storyline",
+          "decree"
+        ]
+      }
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.reader-writer-roundtrip",
+      "code": "PRESSURE_KEY_NO_WRITER",
+      "cardId": "narrative-pressure:assessment",
+      "filePath": "src/data/narrative-pressure/weights.ts",
+      "message": "Source-type 'assessment' has 36 PRESSURE_WEIGHTS entries but no applyPressure() writer — every key under this prefix is dead weight.",
+      "confidence": "ENGINE_MISMATCH",
+      "details": {
+        "prefix": "assessment",
+        "orphanKeys": [
+          "assessment:assess_border_movement:investigate_border_movement",
+          "assessment:assess_border_movement:reinforce_preemptively",
+          "assessment:assess_border_movement:dismiss_border_reports",
+          "assessment:assess_spy_report_unverified:verify_intelligence",
+          "assessment:assess_spy_report_unverified:act_on_report",
+          "assessment:assess_spy_report_unverified:file_away_report",
+          "assessment:assess_diplomatic_signal:reciprocate_overture",
+          "assessment:assess_diplomatic_signal:investigate_intent",
+          "assessment:assess_diplomatic_signal:ignore_signal",
+          "assessment:assess_internal_unrest_rumor:investigate_unrest_rumor",
+          "assessment:assess_internal_unrest_rumor:preemptive_concession",
+          "assessment:assess_internal_unrest_rumor:monitor_quietly",
+          "assessment:assess_foreign_famine:send_humanitarian_aid",
+          "assessment:assess_foreign_famine:exploit_weakness",
+          "assessment:assess_foreign_famine:observe_from_distance",
+          "assessment:assess_religious_movement:investigate_movement",
+          "assessment:assess_religious_movement:suppress_early",
+          "assessment:assess_religious_movement:allow_to_grow",
+          "assessment:assess_merchant_caravan_disappearance:fund_investigation",
+          "assessment:assess_merchant_caravan_disappearance:increase_road_patrols",
+          "assessment:assess_merchant_caravan_disappearance:accept_losses",
+          "assessment:assess_scholarly_heresy_manuscript:examine_manuscript",
+          "assessment:assess_scholarly_heresy_manuscript:seize_and_suppress",
+          "assessment:assess_scholarly_heresy_manuscript:ignore_the_text",
+          "assessment:assess_crop_blight_reports:dispatch_agronomists",
+          "assessment:assess_crop_blight_reports:preemptive_rationing",
+          "assessment:assess_crop_blight_reports:wait_for_confirmation",
+          "assessment:assess_noble_faction_meeting:infiltrate_meeting",
+          "assessment:assess_noble_faction_meeting:confront_directly",
+          "assessment:assess_noble_faction_meeting:let_them_meet",
+          "assessment:assess_coastal_vessel_sighting:send_naval_scouts",
+          "assessment:assess_coastal_vessel_sighting:fortify_harbor",
+          "assessment:assess_coastal_vessel_sighting:observe_and_log",
+          "assessment:assess_strange_illness_outbreak:quarantine_affected_area",
+          "assessment:assess_strange_illness_outbreak:investigate_cause",
+          "assessment:assess_strange_illness_outbreak:dismiss_as_seasonal"
+        ],
+        "writerPrefixes": [
+          "event",
+          "storyline",
+          "decree"
+        ]
+      }
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.pressure-prefix-parity",
+      "code": "PRESSURE_PREFIX_ORPHAN",
+      "cardId": "narrative-pressure:faction",
+      "filePath": "src/data/narrative-pressure/weights.ts",
+      "message": "PRESSURE_WEIGHTS contains keys with prefix 'faction:' but no applyPressure() call site uses that source-type.",
+      "confidence": "ENGINE_MISMATCH",
+      "details": {
+        "prefix": "faction",
+        "actualPrefixes": [
+          "event",
+          "storyline",
+          "decree"
+        ]
+      }
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.reader-writer-roundtrip",
+      "code": "PRESSURE_KEY_NO_WRITER",
+      "cardId": "narrative-pressure:faction",
+      "filePath": "src/data/narrative-pressure/weights.ts",
+      "message": "Source-type 'faction' has 30 PRESSURE_WEIGHTS entries but no applyPressure() writer — every key under this prefix is dead weight.",
+      "confidence": "ENGINE_MISMATCH",
+      "details": {
+        "prefix": "faction",
+        "orphanKeys": [
+          "faction:faction_req_nobility_tax_exemption:grant_tax_exemption",
+          "faction:faction_req_nobility_tax_exemption:deny_tax_exemption",
+          "faction:faction_req_nobility_court_privileges:expand_court_privileges",
+          "faction:faction_req_nobility_court_privileges:deny_court_privileges",
+          "faction:faction_req_nobility_academy:fund_noble_academy",
+          "faction:faction_req_nobility_academy:decline_academy_proposal",
+          "faction:faction_req_clergy_heresy_crackdown:authorize_crackdown",
+          "faction:faction_req_clergy_heresy_crackdown:refuse_crackdown",
+          "faction:faction_req_clergy_temple_funding:approve_temple_funding",
+          "faction:faction_req_clergy_temple_funding:deny_temple_funding",
+          "faction:faction_req_clergy_religious_festival:sponsor_religious_festival",
+          "faction:faction_req_clergy_religious_festival:decline_festival_request",
+          "faction:faction_req_merchant_trade_protections:grant_trade_protections",
+          "faction:faction_req_merchant_trade_protections:deny_trade_protections",
+          "faction:faction_req_merchant_market_expansion:approve_market_expansion",
+          "faction:faction_req_merchant_market_expansion:deny_market_expansion",
+          "faction:faction_req_merchant_foreign_mission:fund_foreign_mission",
+          "faction:faction_req_merchant_foreign_mission:decline_foreign_mission",
+          "faction:faction_req_commoner_food_relief:distribute_food_relief",
+          "faction:faction_req_commoner_food_relief:deny_food_relief",
+          "faction:faction_req_commoner_labor_reforms:enact_labor_reforms",
+          "faction:faction_req_commoner_labor_reforms:reject_labor_reforms",
+          "faction:faction_req_commoner_public_works:approve_public_works",
+          "faction:faction_req_commoner_public_works:decline_public_works",
+          "faction:faction_req_military_equipment_pay:increase_military_pay",
+          "faction:faction_req_military_equipment_pay:deny_pay_increase",
+          "faction:faction_req_military_training_grounds:build_training_grounds",
+          "faction:faction_req_military_training_grounds:deny_training_grounds",
+          "faction:faction_req_military_border_fortification:approve_border_fortification",
+          "faction:faction_req_military_border_fortification:decline_border_fortification"
+        ],
+        "writerPrefixes": [
+          "event",
+          "storyline",
+          "decree"
+        ]
+      }
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.pressure-prefix-parity",
+      "code": "PRESSURE_PREFIX_ORPHAN",
+      "cardId": "narrative-pressure:negotiation",
+      "filePath": "src/data/narrative-pressure/weights.ts",
+      "message": "PRESSURE_WEIGHTS contains keys with prefix 'negotiation:' but no applyPressure() call site uses that source-type.",
+      "confidence": "ENGINE_MISMATCH",
+      "details": {
+        "prefix": "negotiation",
+        "actualPrefixes": [
+          "event",
+          "storyline",
+          "decree"
+        ]
+      }
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.reader-writer-roundtrip",
+      "code": "PRESSURE_KEY_NO_WRITER",
+      "cardId": "narrative-pressure:negotiation",
+      "filePath": "src/data/narrative-pressure/weights.ts",
+      "message": "Source-type 'negotiation' has 50 PRESSURE_WEIGHTS entries but no applyPressure() writer — every key under this prefix is dead weight.",
+      "confidence": "ENGINE_MISMATCH",
+      "details": {
+        "prefix": "negotiation",
+        "orphanKeys": [
+          "negotiation:neg_trade_deal:exclusive_market_access",
+          "negotiation:neg_trade_deal:bulk_pricing_agreement",
+          "negotiation:neg_trade_deal:port_rights_concession",
+          "negotiation:neg_trade_deal:reject_trade_deal",
+          "negotiation:neg_treaty_terms:mutual_defense_clause",
+          "negotiation:neg_treaty_terms:trade_corridor_rights",
+          "negotiation:neg_treaty_terms:border_access_agreement",
+          "negotiation:neg_treaty_terms:reject_treaty_terms",
+          "negotiation:neg_peace_terms:war_reparations",
+          "negotiation:neg_peace_terms:prisoner_exchange",
+          "negotiation:neg_peace_terms:territorial_concession",
+          "negotiation:neg_peace_terms:trade_normalization",
+          "negotiation:neg_peace_terms:reject_peace_terms",
+          "negotiation:neg_alliance_pact:military_commitment",
+          "negotiation:neg_alliance_pact:shared_intelligence",
+          "negotiation:neg_alliance_pact:trade_exclusivity",
+          "negotiation:neg_alliance_pact:reject_alliance_pact",
+          "negotiation:neg_noble_power_share:council_seats",
+          "negotiation:neg_noble_power_share:tax_authority",
+          "negotiation:neg_noble_power_share:judicial_power",
+          "negotiation:neg_noble_power_share:reject_noble_demands",
+          "negotiation:neg_merchant_guild_charter:monopoly_rights",
+          "negotiation:neg_merchant_guild_charter:tax_reduction",
+          "negotiation:neg_merchant_guild_charter:port_access",
+          "negotiation:neg_merchant_guild_charter:reject_guild_charter",
+          "negotiation:neg_clergy_concordat:education_authority",
+          "negotiation:neg_clergy_concordat:tithe_enforcement",
+          "negotiation:neg_clergy_concordat:heresy_courts",
+          "negotiation:neg_clergy_concordat:reject_concordat",
+          "negotiation:neg_military_reform:merit_promotion",
+          "negotiation:neg_military_reform:veteran_benefits",
+          "negotiation:neg_military_reform:equipment_budget",
+          "negotiation:neg_military_reform:reject_military_reform",
+          "negotiation:neg_commoner_charter:fair_wage_guarantee",
+          "negotiation:neg_commoner_charter:land_tenure_rights",
+          "negotiation:neg_commoner_charter:public_assembly_rights",
+          "negotiation:neg_commoner_charter:reject_commoner_charter",
+          "negotiation:neg_scholarly_patronage:university_funding",
+          "negotiation:neg_scholarly_patronage:secular_curriculum",
+          "negotiation:neg_scholarly_patronage:foreign_scholars",
+          "negotiation:neg_scholarly_patronage:reject_scholarly_patronage",
+          "negotiation:neg_resource_blockade:payment_tribute",
+          "negotiation:neg_resource_blockade:trade_concessions",
+          "negotiation:neg_resource_blockade:military_passage_rights",
+          "negotiation:neg_resource_blockade:hostage_exchange",
+          "negotiation:neg_resource_blockade:reject_blockade_terms",
+          "negotiation:neg_marriage_alliance:royal_dowry",
+          "negotiation:neg_marriage_alliance:land_gift",
+          "negotiation:neg_marriage_alliance:faith_concessions",
+          "negotiation:neg_marriage_alliance:reject_marriage_alliance"
+        ],
+        "writerPrefixes": [
+          "event",
+          "storyline",
+          "decree"
+        ]
+      }
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.pressure-prefix-parity",
+      "code": "PRESSURE_PREFIX_ORPHAN",
+      "cardId": "narrative-pressure:neighbor",
+      "filePath": "src/data/narrative-pressure/weights.ts",
+      "message": "PRESSURE_WEIGHTS contains keys with prefix 'neighbor:' but no applyPressure() call site uses that source-type.",
+      "confidence": "ENGINE_MISMATCH",
+      "details": {
+        "prefix": "neighbor",
+        "actualPrefixes": [
+          "event",
+          "storyline",
+          "decree"
+        ]
+      }
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.reader-writer-roundtrip",
+      "code": "PRESSURE_KEY_NO_WRITER",
+      "cardId": "narrative-pressure:neighbor",
+      "filePath": "src/data/narrative-pressure/weights.ts",
+      "message": "Source-type 'neighbor' has 24 PRESSURE_WEIGHTS entries but no applyPressure() writer — every key under this prefix is dead weight.",
+      "confidence": "ENGINE_MISMATCH",
+      "details": {
+        "prefix": "neighbor",
+        "orphanKeys": [
+          "neighbor:WarDeclaration:mobilize_for_war",
+          "neighbor:WarDeclaration:seek_emergency_diplomacy",
+          "neighbor:WarDeclaration:defensive_posture",
+          "neighbor:Demand:comply_with_demand",
+          "neighbor:Demand:negotiate_terms",
+          "neighbor:Demand:reject_demand",
+          "neighbor:MilitaryBuildup:match_buildup",
+          "neighbor:MilitaryBuildup:diplomatic_inquiry",
+          "neighbor:MilitaryBuildup:monitor_situation",
+          "neighbor:EspionageRetaliation:deny_involvement",
+          "neighbor:EspionageRetaliation:offer_compensation",
+          "neighbor:EspionageRetaliation:escalate_operations",
+          "neighbor:TradeProposal:accept_trade_proposal",
+          "neighbor:TradeProposal:decline_trade_proposal",
+          "neighbor:TradeWithdrawal:seek_reconciliation",
+          "neighbor:TradeWithdrawal:accept_withdrawal",
+          "neighbor:TreatyProposal:accept_treaty",
+          "neighbor:TreatyProposal:decline_treaty",
+          "neighbor:PeaceOffer:accept_peace",
+          "neighbor:PeaceOffer:reject_peace",
+          "neighbor:BorderTension:reinforce_border",
+          "neighbor:BorderTension:ignore_provocation",
+          "neighbor:ReligiousPressure:counter_religious_influence",
+          "neighbor:ReligiousPressure:tolerate_foreign_doctrine"
+        ],
+        "writerPrefixes": [
+          "event",
+          "storyline",
+          "decree"
+        ]
+      }
+    },
+    {
+      "severity": "MAJOR",
+      "family": "unknown",
+      "scanId": "engine.consequence-write-parity",
+      "code": "CONSEQUENCE_WRITE_SITE_MISSING",
+      "cardId": "apply-action-effects:event-choice",
+      "filePath": "src/engine/resolution/apply-action-effects.ts",
+      "message": "Expected a `<eventId>:<choiceId>` persistentConsequences assignment in apply-action-effects.ts but none was found — the scanner's tag-producer model is out of sync with the engine.",
+      "confidence": "ENGINE_MISMATCH"
+    }
+  ]
+}
