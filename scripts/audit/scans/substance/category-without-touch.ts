@@ -5,8 +5,19 @@
 //
 // Severity is MAJOR — these cards usually need recategorization or a real
 // faith/etc. delta added to at least one choice.
+//
+// Phase 6 upgrade: when the IR carries runtime fingerprints for any choice,
+// a runtime-observed touch on one of the category's paths (`treasury.*`,
+// `faithCulture.*`, …) also counts as a substantive touch. This catches
+// cards whose declared delta tables look empty but whose real direct-effect
+// resolution mutates the category state.
 
-import { CATEGORY_TOUCH_FIELDS, deltaTouchesCategory } from '../../category-map';
+import {
+  CATEGORY_TOUCH_FIELDS,
+  deltaTouchesCategory,
+  runtimeTouchesCategory,
+} from '../../category-map';
+import type { AuditCard } from '../../ir';
 import type { Corpus, Finding, Scan } from '../../types';
 import { familyOf, fileOf } from '../shared';
 
@@ -14,6 +25,9 @@ export const SCAN_ID = 'substance.category-without-touch';
 
 export const scan: Scan = (corpus: Corpus): Finding[] => {
   const out: Finding[] = [];
+
+  const auditCardIndex = new Map<string, AuditCard>();
+  for (const card of corpus.auditCards) auditCardIndex.set(card.id, card);
 
   for (const ev of corpus.eventById.values()) {
     if (corpus.familyByCardId.get(ev.id) === 'notification') continue;
@@ -24,19 +38,30 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
     const tempBlock = corpus.tempModifiers[ev.id] ?? {};
     if (!choices) continue;
 
-    let anyTouch = false;
+    const auditCard = auditCardIndex.get(ev.id);
+
+    let anyDeclaredTouch = false;
+    let anyRuntimeTouch = false;
+    let anyFingerprintSeen = false;
+
     for (const c of ev.choices) {
       if (deltaTouchesCategory(choices[c.choiceId], ev.category)) {
-        anyTouch = true;
-        break;
+        anyDeclaredTouch = true;
       }
       if (deltaTouchesCategory(tempBlock[c.choiceId]?.effectPerTurn, ev.category)) {
-        anyTouch = true;
-        break;
+        anyDeclaredTouch = true;
       }
+      const fp = auditCard?.choices.find((p) => p.choiceId === c.choiceId)?.runtimeFingerprint;
+      if (fp) {
+        anyFingerprintSeen = true;
+        if (runtimeTouchesCategory(fp.touches, ev.category)) {
+          anyRuntimeTouch = true;
+        }
+      }
+      if (anyDeclaredTouch || anyRuntimeTouch) break;
     }
 
-    if (!anyTouch) {
+    if (!anyDeclaredTouch && !anyRuntimeTouch) {
       out.push({
         severity: 'MAJOR',
         family: familyOf(corpus, ev.id),
@@ -45,6 +70,7 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
         cardId: ev.id,
         filePath: fileOf(corpus, ev.id),
         message: `${ev.id} is categorized as ${ev.category} but no choice touches any of: ${[...fields].join(', ')}.`,
+        confidence: anyFingerprintSeen ? 'RUNTIME_GROUNDED' : 'HEURISTIC',
         details: { category: ev.category, expectedFields: [...fields] },
       });
     }
