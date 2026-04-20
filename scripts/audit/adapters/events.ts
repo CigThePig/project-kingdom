@@ -51,7 +51,11 @@ export function toAuditCards(corpus: Corpus): AuditCard[] {
         id: ev.id,
         family,
         sourceKind: 'authored',
-        runtimePath: runtimePathFor(family),
+        // Every card in EVENT_POOL ∪ FOLLOW_UP_POOL resolves through
+        // applyEventChoiceEffects, regardless of scanner family-classifier
+        // outcome. `family='unknown'` is a scanner classification gap,
+        // not an engine routing mystery.
+        runtimePath: family === 'unknown' ? 'event-resolution' : runtimePathFor(family),
         filePath: fileFor(corpus, ev.id),
         title: text?.title,
         body: text?.body,

@@ -26,6 +26,8 @@ import { scan as choiceClonesScan } from './scans/substance/choice-clones';
 import { scan as unresolvedTokensScan } from './scans/text/unresolved-tokens';
 import { scan as pressurePrefixParityScan } from './scans/engine/pressure-prefix-parity';
 import { scan as consequenceWriteParityScan } from './scans/engine/consequence-write-parity';
+import { scan as textSourceParityScan } from './scans/engine/text-source-parity';
+import { scan as runtimePathParityScan } from './scans/engine/runtime-path-parity';
 
 const ALL_SCANS = [
   missingTextScan, choiceLabelScan, missingEffectsScan, emptyEffectsScan,
@@ -33,6 +35,7 @@ const ALL_SCANS = [
   surfaceOnlyScan, singleChoiceScan, categoryTouchScan, severityMagScan, choiceClonesScan,
   unresolvedTokensScan,
   pressurePrefixParityScan, consequenceWriteParityScan,
+  textSourceParityScan, runtimePathParityScan,
 ];
 
 const FULL_OPTS: ScanOptions = { includeMinor: true, includePolish: true };

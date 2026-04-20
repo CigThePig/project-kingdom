@@ -1,48 +1,31 @@
-// Engine parity §M1 — PRESSURE_WEIGHTS source-type prefixes vs real
+// Engine parity — PRESSURE_WEIGHTS source-type prefixes vs real
 // applyPressure() call sites in the resolution pipeline.
 //
 // PRESSURE_WEIGHTS keys are `${sourceType}:${sourceId}:${choiceId}`; the
 // engine calls `applyPressure(pressure, sourceType, sourceId, choiceId)` at
-// three sites in turn-resolution.ts (event / storyline / decree). A prefix
-// appearing in the map but never written (or vice versa) is a scanner-model
-// bug, not a content bug — we flag it as ENGINE_MISMATCH so it never blocks
-// card-cleanup work.
-//
-// This scan uses regex against the resolution source file for the foundation
-// commit; M5 (§5a) upgrades it to the AST writer/reader index once M3 lands.
-
-import { readFileSync } from 'node:fs';
-import * as path from 'node:path';
+// every `applyPressure(...)` call site indexed by the M3 AST writer/reader
+// index. A prefix appearing in the map but never written (or vice versa)
+// is a scanner-model bug, not a content bug — we flag it as
+// ENGINE_MISMATCH so it never blocks card-cleanup work.
 
 import { PRESSURE_WEIGHTS } from '../../../../src/data/narrative-pressure/weights';
+import { getWriterReaderIndex } from '../../ast/runtime-writer-reader-index';
 import type { Corpus, Finding, Scan } from '../../types';
 
 export const SCAN_ID = 'engine.pressure-prefix-parity';
 
-const RESOLUTION_SRC = path.resolve(
-  process.cwd(),
-  'src',
-  'engine',
-  'resolution',
-  'turn-resolution.ts',
-);
-
-// applyPressure(pressure, 'event' | 'storyline' | 'decree', ...)
-const APPLY_PRESSURE_RE = /applyPressure\s*\([^,]+,\s*['"]([a-z_]+)['"]/g;
-
 export const scan: Scan = (_corpus: Corpus): Finding[] => {
-  let source: string;
-  try {
-    source = readFileSync(RESOLUTION_SRC, 'utf8');
-  } catch {
-    return [];
-  }
+  const index = getWriterReaderIndex();
 
   const actualPrefixes = new Set<string>();
-  APPLY_PRESSURE_RE.lastIndex = 0;
-  let m: RegExpExecArray | null;
-  while ((m = APPLY_PRESSURE_RE.exec(source)) !== null) {
-    actualPrefixes.add(m[1]);
+  const sampleSiteByPrefix = new Map<string, string>();
+  for (const site of index.pressureWrites) {
+    if (site.sourceType) {
+      actualPrefixes.add(site.sourceType);
+      if (!sampleSiteByPrefix.has(site.sourceType)) {
+        sampleSiteByPrefix.set(site.sourceType, `${site.filePath}:${site.line}`);
+      }
+    }
   }
 
   const mapPrefixes = new Set<string>();
@@ -71,16 +54,17 @@ export const scan: Scan = (_corpus: Corpus): Finding[] => {
 
   for (const prefix of actualPrefixes) {
     if (!mapPrefixes.has(prefix)) {
+      const site = sampleSiteByPrefix.get(prefix);
       out.push({
         severity: 'MAJOR',
         family: 'unknown',
         scanId: SCAN_ID,
         code: 'PRESSURE_PREFIX_UNMAPPED',
         cardId: `narrative-pressure:${prefix}`,
-        filePath: 'src/engine/resolution/turn-resolution.ts',
+        filePath: site,
         message: `applyPressure() is called with source-type '${prefix}' but no PRESSURE_WEIGHTS entry uses that prefix — this source-type produces no pressure at runtime.`,
         confidence: 'ENGINE_MISMATCH',
-        details: { prefix, mapPrefixes: [...mapPrefixes] },
+        details: { prefix, mapPrefixes: [...mapPrefixes], site },
       });
     }
   }
