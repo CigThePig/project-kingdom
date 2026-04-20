@@ -130,9 +130,17 @@ export interface BuildGenericAuditCardInput {
   title?: string;
   body?: string;
   touches?: string[];
+  classes?: string[];
   structuralCount?: number;
   surfaceCount?: number;
   affectsRegion?: boolean;
+  metadata?: Record<string, unknown>;
+  choices?: AuditDecisionPath[];
+  declaredEffects?: Record<string, unknown> | null;
+  sourceKind?: AuditCard['sourceKind'];
+  runtimePath?: AuditCard['runtimePath'];
+  previewText?: string | null;
+  noRuntime?: boolean;
 }
 
 /**
@@ -149,7 +157,7 @@ export function buildGenericAuditCard(input: BuildGenericAuditCardInput = {}): A
     label: 'Default',
     effectSourceKind: 'event-effects',
     textSourceKind: 'event-text',
-    declaredEffects: null,
+    declaredEffects: input.declaredEffects ?? null,
     declaredStructuralMarkers: emptyStructuralMarkerSummary(),
     pressureKey: null,
     consequenceTagsProduced: [],
@@ -157,27 +165,81 @@ export function buildGenericAuditCard(input: BuildGenericAuditCardInput = {}): A
     followUps: [],
     runtimeTouchHints: [],
     contextRequirements: [],
-    previewText: null,
-    runtimeFingerprint: {
-      fixtureId: 'mid-kingdom',
-      touches,
-      classes: [],
-      structuralCount: input.structuralCount ?? 0,
-      surfaceCount: input.surfaceCount ?? touches.length,
-      noOp: touches.length === 0,
-    },
+    previewText: input.previewText ?? null,
+    runtimeFingerprint: input.noRuntime
+      ? null
+      : {
+          fixtureId: 'mid-kingdom',
+          touches,
+          classes: input.classes ?? [],
+          structuralCount: input.structuralCount ?? 0,
+          surfaceCount: input.surfaceCount ?? touches.length,
+          noOp: touches.length === 0,
+        },
     runtimeFingerprintVariants: null,
   };
+  const choices = input.choices ?? [path];
   return {
     id: input.id ?? 'card_generic',
     family: input.family ?? 'petition',
-    sourceKind: 'authored',
-    runtimePath: 'event-resolution',
+    sourceKind: input.sourceKind ?? 'authored',
+    runtimePath: input.runtimePath ?? 'event-resolution',
     title: input.title ?? 'Generic Card',
     body: input.body ?? '',
     severityHint: null,
-    metadata: { affectsRegion: input.affectsRegion ?? false },
-    choices: [path],
-    coverage: { ...emptyCoverageFlags(), textCoverage: true, runtimeDiffCoverage: true },
+    metadata: {
+      affectsRegion: input.affectsRegion ?? false,
+      ...(input.metadata ?? {}),
+    },
+    choices,
+    coverage: {
+      ...emptyCoverageFlags(),
+      textCoverage: true,
+      runtimeDiffCoverage: !input.noRuntime,
+    },
+  };
+}
+
+/** Construct a lone `AuditDecisionPath` for tests that need specific
+ *  runtime fingerprints per choice (term-distinctness, grant-deny parity). */
+export function buildDecisionPath(input: {
+  cardId: string;
+  family: AuditCard['family'];
+  choiceId: string;
+  touches?: string[];
+  classes?: string[];
+  noOp?: boolean;
+  declaredEffects?: Record<string, unknown> | null;
+  previewText?: string | null;
+  label?: string;
+  effectSourceKind?: AuditDecisionPath['effectSourceKind'];
+  textSourceKind?: AuditDecisionPath['textSourceKind'];
+}): AuditDecisionPath {
+  const touches = input.touches ?? [];
+  return {
+    cardId: input.cardId,
+    family: input.family,
+    choiceId: input.choiceId,
+    label: input.label,
+    effectSourceKind: input.effectSourceKind ?? 'event-effects',
+    textSourceKind: input.textSourceKind ?? 'event-text',
+    declaredEffects: input.declaredEffects ?? null,
+    declaredStructuralMarkers: emptyStructuralMarkerSummary(),
+    pressureKey: null,
+    consequenceTagsProduced: [],
+    consequenceTagsConsumed: [],
+    followUps: [],
+    runtimeTouchHints: [],
+    contextRequirements: [],
+    previewText: input.previewText ?? null,
+    runtimeFingerprint: {
+      fixtureId: 'mid-kingdom',
+      touches,
+      classes: input.classes ?? [],
+      structuralCount: 0,
+      surfaceCount: touches.length,
+      noOp: input.noOp ?? touches.length === 0,
+    },
+    runtimeFingerprintVariants: null,
   };
 }

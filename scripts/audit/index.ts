@@ -59,6 +59,32 @@ import { scan as handExpirySanityScan, SCAN_ID as HAND_EXPIRY_SANITY_ID } from '
 import { scan as handTempModifierShapeScan, SCAN_ID as HAND_TEMP_MODIFIER_SHAPE_ID } from './scans/hand/temp-modifier-shape';
 import { scan as handChoiceFallbackRiskScan, SCAN_ID as HAND_CHOICE_FALLBACK_RISK_ID } from './scans/hand/choice-fallback-risk';
 
+// Phase 5A — Assessments
+import { scan as assessmentsTextCoverageScan, SCAN_ID as ASSESSMENTS_TEXT_COVERAGE_ID } from './scans/assessments/text-coverage';
+import { scan as assessmentsRuntimeStructuralDepthScan, SCAN_ID as ASSESSMENTS_RUNTIME_STRUCTURAL_DEPTH_ID } from './scans/assessments/runtime-structural-depth';
+import { scan as assessmentsNeighborResolutionParityScan, SCAN_ID as ASSESSMENTS_NEIGHBOR_RESOLUTION_PARITY_ID } from './scans/assessments/neighbor-resolution-parity';
+import { scan as assessmentsPressureWiringScan, SCAN_ID as ASSESSMENTS_PRESSURE_WIRING_ID } from './scans/assessments/pressure-wiring';
+
+// Phase 5B — Negotiations
+import { scan as negotiationsTextCoverageScan, SCAN_ID as NEGOTIATIONS_TEXT_COVERAGE_ID } from './scans/negotiations/text-coverage';
+import { scan as negotiationsRejectTextCoverageScan, SCAN_ID as NEGOTIATIONS_REJECT_TEXT_COVERAGE_ID } from './scans/negotiations/reject-text-coverage';
+import { scan as negotiationsTermDistinctnessScan, SCAN_ID as NEGOTIATIONS_TERM_DISTINCTNESS_ID } from './scans/negotiations/term-distinctness';
+import { scan as negotiationsBondMaterializationParityScan, SCAN_ID as NEGOTIATIONS_BOND_MATERIALIZATION_PARITY_ID } from './scans/negotiations/bond-materialization-parity';
+import { scan as negotiationsPressureWiringScan, SCAN_ID as NEGOTIATIONS_PRESSURE_WIRING_ID } from './scans/negotiations/pressure-wiring';
+
+// Phase 5C — Overtures
+import { scan as overturesAgendaCoverageScan, SCAN_ID as OVERTURES_AGENDA_COVERAGE_ID } from './scans/overtures/agenda-coverage';
+import { scan as overturesPlaceholderResolutionScan, SCAN_ID as OVERTURES_PLACEHOLDER_RESOLUTION_ID } from './scans/overtures/placeholder-resolution';
+import { scan as overturesSyntheticIdRoundtripScan, SCAN_ID as OVERTURES_SYNTHETIC_ID_ROUNDTRIP_ID } from './scans/overtures/synthetic-id-roundtrip';
+import { scan as overturesGrantDenyRuntimeParityScan, SCAN_ID as OVERTURES_GRANT_DENY_RUNTIME_PARITY_ID } from './scans/overtures/grant-deny-runtime-parity';
+import { scan as overturesEffectHintParityScan, SCAN_ID as OVERTURES_EFFECT_HINT_PARITY_ID } from './scans/overtures/effect-hint-parity';
+
+// Phase 5E — Decrees
+import { scan as decreesPreviewParityScan, SCAN_ID as DECREES_PREVIEW_PARITY_ID } from './scans/decrees/preview-parity';
+import { scan as decreesHandlerFeatureParityScan, SCAN_ID as DECREES_HANDLER_FEATURE_PARITY_ID } from './scans/decrees/handler-feature-parity';
+import { scan as decreesChainTierPolicyScan, SCAN_ID as DECREES_CHAIN_TIER_POLICY_ID } from './scans/decrees/chain-tier-policy';
+import { scan as decreesHighImpactDepthScan, SCAN_ID as DECREES_HIGH_IMPACT_DEPTH_ID } from './scans/decrees/high-impact-depth';
+
 import { scan as triggerReachScan, SCAN_ID as TRIGGER_REACH_ID } from './scans/reach/trigger-attainability';
 
 interface RegisteredScan {
@@ -98,6 +124,28 @@ const SCANS: RegisteredScan[] = [
   { id: HAND_RUNTIME_STRUCTURAL_DEPTH_ID, scan: handRuntimeStructuralDepthScan },
   { id: HAND_NO_OP_APPLY_ID, scan: handNoOpApplyScan },
   { id: HAND_REQUIRES_CHOICE_USED_ID, scan: handRequiresChoiceUsedScan },
+  // Phase 5A — Assessments
+  { id: ASSESSMENTS_TEXT_COVERAGE_ID, scan: assessmentsTextCoverageScan },
+  { id: ASSESSMENTS_RUNTIME_STRUCTURAL_DEPTH_ID, scan: assessmentsRuntimeStructuralDepthScan },
+  { id: ASSESSMENTS_NEIGHBOR_RESOLUTION_PARITY_ID, scan: assessmentsNeighborResolutionParityScan },
+  { id: ASSESSMENTS_PRESSURE_WIRING_ID, scan: assessmentsPressureWiringScan },
+  // Phase 5B — Negotiations
+  { id: NEGOTIATIONS_TEXT_COVERAGE_ID, scan: negotiationsTextCoverageScan },
+  { id: NEGOTIATIONS_REJECT_TEXT_COVERAGE_ID, scan: negotiationsRejectTextCoverageScan },
+  { id: NEGOTIATIONS_TERM_DISTINCTNESS_ID, scan: negotiationsTermDistinctnessScan },
+  { id: NEGOTIATIONS_BOND_MATERIALIZATION_PARITY_ID, scan: negotiationsBondMaterializationParityScan },
+  { id: NEGOTIATIONS_PRESSURE_WIRING_ID, scan: negotiationsPressureWiringScan },
+  // Phase 5C — Overtures
+  { id: OVERTURES_AGENDA_COVERAGE_ID, scan: overturesAgendaCoverageScan },
+  { id: OVERTURES_PLACEHOLDER_RESOLUTION_ID, scan: overturesPlaceholderResolutionScan },
+  { id: OVERTURES_SYNTHETIC_ID_ROUNDTRIP_ID, scan: overturesSyntheticIdRoundtripScan },
+  { id: OVERTURES_GRANT_DENY_RUNTIME_PARITY_ID, scan: overturesGrantDenyRuntimeParityScan },
+  { id: OVERTURES_EFFECT_HINT_PARITY_ID, scan: overturesEffectHintParityScan },
+  // Phase 5E — Decrees
+  { id: DECREES_PREVIEW_PARITY_ID, scan: decreesPreviewParityScan },
+  { id: DECREES_HANDLER_FEATURE_PARITY_ID, scan: decreesHandlerFeatureParityScan },
+  { id: DECREES_CHAIN_TIER_POLICY_ID, scan: decreesChainTierPolicyScan },
+  { id: DECREES_HIGH_IMPACT_DEPTH_ID, scan: decreesHighImpactDepthScan },
   { id: TRIGGER_REACH_ID, scan: triggerReachScan, reachOnly: true },
 ];
 

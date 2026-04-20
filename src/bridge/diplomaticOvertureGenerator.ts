@@ -88,7 +88,7 @@ const INLINE_EFFECTS: Partial<Record<RivalAgenda, Pick<OvertureSpec,
   },
 };
 
-function buildInlineSpec(agenda: RivalAgenda): OvertureSpec | null {
+export function buildInlineSpec(agenda: RivalAgenda): OvertureSpec | null {
   const text = OVERTURE_TEXT[agenda];
   const effects = INLINE_EFFECTS[agenda];
   if (!text || !effects) return null;

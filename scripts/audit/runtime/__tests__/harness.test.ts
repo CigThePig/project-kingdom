@@ -1,7 +1,7 @@
 // Harness smoke tests — prove the dispatch layer routes a hand card through
 // the engine's inline apply and returns a usable { before, after } pair.
-// Non-hand paths should degrade gracefully to `{ supported: false }` until
-// later milestones flesh them out.
+// Phase 5 adds decree / assessment / negotiation / overture dispatch; the
+// broader non-hand coverage lives in harness-nonhand.test.ts.
 
 import { describe, expect, it } from 'vitest';
 
@@ -37,11 +37,11 @@ describe('runtime harness', () => {
     );
   });
 
-  it('returns unsupported for non-hand families for now', async () => {
+  it('returns unsupported for world-event families for now', async () => {
     const corpus = await loadCorpus();
-    const assessmentCard = corpus.auditCards.find((c) => c.family === 'assessment');
-    expect(assessmentCard).toBeDefined();
-    const result = runChoice(assessmentCard!, assessmentCard!.choices[0], mid);
+    const worldCard = corpus.auditCards.find((c) => c.family === 'world');
+    expect(worldCard).toBeDefined();
+    const result = runChoice(worldCard!, worldCard!.choices[0], mid);
     expect(result.supported).toBe(false);
   });
 });
