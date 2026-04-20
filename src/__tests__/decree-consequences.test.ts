@@ -20,15 +20,22 @@ describe('decree persistent consequences', () => {
 
     const result = applyActionEffects(state, [decreeAction]);
 
-    expect(result.persistentConsequences).toHaveLength(1);
+    // Each decree produces two consequences: the specific `decree:${id}` tag
+    // and a generic `recent_decree_issued` tag that events can gate on.
+    expect(result.persistentConsequences).toHaveLength(2);
 
-    const consequence = result.persistentConsequences[0];
-    expect(consequence.tag).toBe('decree:decree_market_charter');
-    expect(consequence.tag.startsWith('decree:')).toBe(true);
-    expect(consequence.sourceId).toBe('decree_market_charter');
-    expect(consequence.sourceType).toBe('event');
-    expect(consequence.choiceMade).toBe('decree_market_charter');
-    expect(consequence.turnApplied).toBe(state.turn.turnNumber);
+    const consequence = result.persistentConsequences.find(
+      (c) => c.tag === 'decree:decree_market_charter',
+    );
+    expect(consequence).toBeDefined();
+    expect(consequence!.sourceId).toBe('decree_market_charter');
+    expect(consequence!.sourceType).toBe('event');
+    expect(consequence!.choiceMade).toBe('decree_market_charter');
+    expect(consequence!.turnApplied).toBe(state.turn.turnNumber);
+
+    expect(
+      result.persistentConsequences.some((c) => c.tag === 'recent_decree_issued'),
+    ).toBe(true);
   });
 
   it('creates both an IssuedDecree record and a PersistentConsequence', () => {
@@ -48,7 +55,8 @@ describe('decree persistent consequences', () => {
     const result = applyActionEffects(state, [decreeAction]);
 
     expect(result.issuedDecrees).toHaveLength(1);
-    expect(result.persistentConsequences).toHaveLength(1);
+    // One `decree:${id}` tag + one `recent_decree_issued` tag per decree.
+    expect(result.persistentConsequences).toHaveLength(2);
   });
 
   it('accumulates consequences for multiple decrees in one turn', () => {
@@ -79,12 +87,16 @@ describe('decree persistent consequences', () => {
 
     const result = applyActionEffects(state, actions);
 
-    expect(result.persistentConsequences).toHaveLength(2);
+    // Two decrees × two tags each (specific + generic recent_decree_issued).
+    expect(result.persistentConsequences).toHaveLength(4);
     expect(
       result.persistentConsequences.some((c) => c.tag === 'decree:decree_market_charter'),
     ).toBe(true);
     expect(
       result.persistentConsequences.some((c) => c.tag === 'decree:decree_trade_subsidies'),
     ).toBe(true);
+    expect(
+      result.persistentConsequences.filter((c) => c.tag === 'recent_decree_issued'),
+    ).toHaveLength(2);
   });
 });

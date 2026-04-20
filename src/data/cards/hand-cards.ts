@@ -127,26 +127,42 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_reserve_forces: {
     id: 'hand_reserve_forces',
     title: 'Reserve Forces',
-    body: 'Hidden garrisons muster on command. Readiness climbs.',
+    body: 'Hidden garrisons step forward on command. Readiness climbs and the standing post steadies the frontier.',
     expiresAfterTurns: 10,
-    apply: (state) =>
-      applyMechanicalEffectDelta(state, { militaryReadinessDelta: 20 }, null),
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(state, { militaryReadinessDelta: 20 }, null);
+      return queueTemporaryModifier(s, {
+        id: `hand_reserve_forces_${state.turn.turnNumber}`,
+        sourceTag: 'hand:reserve_forces',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { militaryReadinessDelta: 2 },
+      });
+    },
   },
 
   hand_master_builder: {
     id: 'hand_master_builder',
     title: 'Master Builder',
-    body: 'A veteran architect accelerates the nearest project by one month.',
+    body: 'A veteran architect accelerates the nearest project by one month. If no project is underway, the master\'s presence stiffens civic confidence for two turns.',
     expiresAfterTurns: 10,
     apply: (state) => {
-      if (state.constructionProjects.length === 0) return state;
-      let shortened = false;
-      const updated = state.constructionProjects.map((p) => {
-        if (shortened) return p;
-        shortened = true;
-        return { ...p, turnsRemaining: Math.max(0, p.turnsRemaining - 1) };
+      if (state.constructionProjects.length > 0) {
+        let shortened = false;
+        const updated = state.constructionProjects.map((p) => {
+          if (shortened) return p;
+          shortened = true;
+          return { ...p, turnsRemaining: Math.max(0, p.turnsRemaining - 1) };
+        });
+        return { ...state, constructionProjects: updated };
+      }
+      return queueTemporaryModifier(state, {
+        id: `hand_master_builder_${state.turn.turnNumber}`,
+        sourceTag: 'hand:master_builder',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { stabilityDelta: 1, merchantSatDelta: 1 },
       });
-      return { ...state, constructionProjects: updated };
     },
   },
 
@@ -166,13 +182,24 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_court_favor: {
     id: 'hand_court_favor',
     title: 'Court Favor',
-    body: 'A public gesture buys goodwill with one class for a month.',
+    body: 'A public gesture buys goodwill with one class — and a quieter afterglow for the crown.',
     expiresAfterTurns: 10,
     requiresChoice: 'class',
     apply: (state, choice) => {
-      if (choice.kind !== 'class') return state;
-      const delta = classSatDeltaFor(choice.class, 10);
-      return applyMechanicalEffectDelta(state, delta, null);
+      // Fallback: if the harness hands us a non-class choice, target the
+      // current least-satisfied class so the card still delivers structurally.
+      const target = choice.kind === 'class'
+        ? choice.class
+        : pickLowestSatClass(state);
+      const delta = classSatDeltaFor(target, 10);
+      const s = applyMechanicalEffectDelta(state, delta, null);
+      return queueTemporaryModifier(s, {
+        id: `hand_court_favor_${state.turn.turnNumber}`,
+        sourceTag: 'hand:court_favor',
+        turnsRemaining: 1,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { stabilityDelta: 1 },
+      });
     },
   },
 
@@ -207,36 +234,60 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_forced_levy: {
     id: 'hand_forced_levy',
     title: 'Forced Levy',
-    body: 'Conscript farmers into a pike block. The field swells; the villages mutter.',
+    body: 'Conscript farmers into a pike block. The field swells; the villages mutter for a season afterwards.',
     expiresAfterTurns: 8,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { militaryForceSizeDelta: 200, commonerSatDelta: -5 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_forced_levy_${state.turn.turnNumber}`,
+        sourceTag: 'hand:forced_levy',
+        turnsRemaining: 3,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { commonerSatDelta: -1 },
+      });
+    },
   },
 
   hand_grain_reserve: {
     id: 'hand_grain_reserve',
     title: 'Grain Reserve',
-    body: 'Untouched stores from last harvest are released to the granaries.',
+    body: 'Untouched stores from last harvest are released to the public stores. Distribution eases bellies for a few turns.',
     expiresAfterTurns: 11,
-    apply: (state) =>
-      applyMechanicalEffectDelta(state, { foodDelta: 300 }, null),
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(state, { foodDelta: 300 }, null);
+      return queueTemporaryModifier(s, {
+        id: `hand_grain_reserve_${state.turn.turnNumber}`,
+        sourceTag: 'hand:grain_reserve',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { commonerSatDelta: 1 },
+      });
+    },
   },
 
   hand_tithe_forgiven: {
     id: 'hand_tithe_forgiven',
     title: 'Tithe Forgiven',
-    body: "A season's church contribution is waived. The altars beam; the treasury groans.",
+    body: "A season's church contribution is waived. The altars beam; the treasury groans; the devotion lingers.",
     expiresAfterTurns: 10,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { treasuryDelta: -30, clergySatDelta: 8 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_tithe_forgiven_${state.turn.turnNumber}`,
+        sourceTag: 'hand:tithe_forgiven',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { faithDelta: 1 },
+      });
+    },
   },
 
   hand_festival_proclaimed: {
@@ -263,14 +314,22 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_disciplined_march: {
     id: 'hand_disciplined_march',
     title: 'Disciplined March',
-    body: 'An extended drill stiffens the line. Readiness rises; morale holds.',
+    body: 'An extended drill stiffens the line. Readiness rises; morale holds and holds over the following weeks.',
     expiresAfterTurns: 9,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { militaryReadinessDelta: 10, militaryMoraleDelta: 5 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_disciplined_march_${state.turn.turnNumber}`,
+        sourceTag: 'hand:disciplined_march',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { militaryMoraleDelta: 1 },
+      });
+    },
   },
 
   hand_diplomatic_courier: {
@@ -289,23 +348,39 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_merchant_guild_favor: {
     id: 'hand_merchant_guild_favor',
     title: 'Merchant Guild Favor',
-    body: 'Guild masters pay forward a trade monopoly. Coin flows; merchants smile.',
+    body: 'Guild masters pay forward a trade monopoly. Coin flows; merchants smile; the guilds remain warm for a season.',
     expiresAfterTurns: 11,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { treasuryDelta: 40, merchantSatDelta: 5 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_merchant_guild_favor_${state.turn.turnNumber}`,
+        sourceTag: 'hand:merchant_guild_favor',
+        turnsRemaining: 3,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { merchantSatDelta: 1 },
+      });
+    },
   },
 
   hand_bookkeepers_audit: {
     id: 'hand_bookkeepers_audit',
     title: "Bookkeeper's Audit",
-    body: 'A sharp-eyed clerk recovers lost tax revenue.',
+    body: 'A sharp-eyed clerk recovers lost tax revenue — and keeps the ledgers honest for a few turns after.',
     expiresAfterTurns: 12,
-    apply: (state) =>
-      applyMechanicalEffectDelta(state, { treasuryDelta: 25 }, null),
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(state, { treasuryDelta: 25 }, null);
+      return queueTemporaryModifier(s, {
+        id: `hand_bookkeepers_audit_${state.turn.turnNumber}`,
+        sourceTag: 'hand:bookkeepers_audit',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { treasuryDelta: 4 },
+      });
+    },
   },
 
   hand_patient_sovereign: {
@@ -326,13 +401,28 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_scholars_insight: {
     id: 'hand_scholars_insight',
     title: "Scholar's Insight",
-    body: 'A visiting scholar breaks an old deadlock. Research on the active branch advances.',
+    body: 'A visiting scholar breaks an old deadlock. Research on the active branch advances — or, if no branch is focused, the clergy gain standing as patrons for two turns.',
     expiresAfterTurns: 10,
     apply: (state) => {
       const branch = state.policies.researchFocus;
-      if (!branch) return state;
-      const branchState = state.knowledge.branches[branch];
-      if (!branchState) return state;
+      const branchState = branch ? state.knowledge.branches[branch] : undefined;
+      if (!branch || !branchState) {
+        // Fallback — immediate faith+clergy bump so the card delivers on the
+        // body's "clergy gain standing" promise even when no research is
+        // currently focused, plus a lingering modifier for continuing flavor.
+        const withFaith = applyMechanicalEffectDelta(
+          state,
+          { faithDelta: 2, clergySatDelta: 3 },
+          null,
+        );
+        return queueTemporaryModifier(withFaith, {
+          id: `hand_scholars_insight_${state.turn.turnNumber}`,
+          sourceTag: 'hand:scholars_insight',
+          turnsRemaining: 2,
+          turnApplied: state.turn.turnNumber,
+          effectPerTurn: { clergySatDelta: 1, faithDelta: 1 },
+        });
+      }
       return {
         ...state,
         knowledge: {
@@ -352,14 +442,22 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_border_patrol: {
     id: 'hand_border_patrol',
     title: 'Border Patrol',
-    body: 'An extra watch at the frontier discourages trouble. Readiness and morale nudge up.',
+    body: 'An extra watch at the frontier discourages trouble. Readiness and morale nudge up — and the standing patrol keeps both climbing for two turns.',
     expiresAfterTurns: 9,
-    apply: (state) =>
-      applyMechanicalEffectDelta(
+    apply: (state) => {
+      const s = applyMechanicalEffectDelta(
         state,
         { militaryReadinessDelta: 5, militaryMoraleDelta: 3 },
         null,
-      ),
+      );
+      return queueTemporaryModifier(s, {
+        id: `hand_border_patrol_${state.turn.turnNumber}`,
+        sourceTag: 'hand:border_patrol',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { militaryReadinessDelta: 1 },
+      });
+    },
   },
 
   hand_sanctioned_raid: {
@@ -379,7 +477,7 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_royal_announcement: {
     id: 'hand_royal_announcement',
     title: 'Royal Announcement',
-    body: 'A carefully worded proclamation takes the edge off building pressure.',
+    body: 'A carefully worded proclamation takes the edge off mounting pressure.',
     expiresAfterTurns: 11,
     apply: (state) => {
       const np = state.narrativePressure;
@@ -420,6 +518,26 @@ function classSatDeltaFor(cls: PopulationClass, amount: number) {
     case PopulationClass.MilitaryCaste:
       return { militaryCasteSatDelta: amount };
   }
+}
+
+function pickLowestSatClass(state: GameState): PopulationClass {
+  const classes: PopulationClass[] = [
+    PopulationClass.Nobility,
+    PopulationClass.Clergy,
+    PopulationClass.Merchants,
+    PopulationClass.Commoners,
+    PopulationClass.MilitaryCaste,
+  ];
+  let best = classes[0];
+  let bestSat = Number.POSITIVE_INFINITY;
+  for (const c of classes) {
+    const sat = state.population[c]?.satisfaction ?? 50;
+    if (sat < bestSat) {
+      bestSat = sat;
+      best = c;
+    }
+  }
+  return best;
 }
 
 // ============================================================

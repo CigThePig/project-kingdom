@@ -1,11 +1,11 @@
 // M5.1 engine parity scans — text/runtime/pressure.
 //
 // These three scans only fire when the scanner's model of the engine
-// disagrees with what the engine actually does. On a healthy codebase
-// with the full AST index, they should produce ENGINE_MISMATCH findings
-// only for the real known-orphan PRESSURE_WEIGHTS prefixes (assessment,
-// faction, negotiation, neighbor — four keys whose runtime writers don't
-// exist). Text-source and runtime-path parity should come up clean.
+// disagrees with what the engine actually does. Post-M7 cleanup, the
+// PRESSURE_WEIGHTS prefixes that historically had no writer (assessment,
+// faction, negotiation) now have real applyPressure() call sites and the
+// 'neighbor' prefix's dead entries were removed, so these scans should
+// come up clean. Text-source and runtime-path parity should also pass.
 
 import { describe, expect, it } from 'vitest';
 
@@ -16,20 +16,18 @@ import { scan as runtimePathScan, SCAN_ID as RUNTIME_PATH_ID } from '../runtime-
 import { scan as roundtripScan, SCAN_ID as ROUNDTRIP_ID } from '../reader-writer-roundtrip';
 
 describe('engine parity scans', () => {
-  it('pressure-prefix-parity emits ENGINE_MISMATCH for the four known orphan prefixes', async () => {
+  it('pressure-prefix-parity is clean after M7 wired assessment/faction/negotiation writers and removed dead neighbor keys', async () => {
     const corpus = await loadCorpus();
     const findings = pressurePrefixScan(corpus, {});
-    expect(findings.length).toBeGreaterThan(0);
     for (const f of findings) {
       expect(f.scanId).toBe(PRESSURE_ID);
       expect(f.confidence).toBe('ENGINE_MISMATCH');
     }
-    const orphanPrefixes = findings
-      .filter((f) => f.code === 'PRESSURE_PREFIX_ORPHAN')
-      .map((f) => f.details?.prefix);
-    expect(orphanPrefixes).toEqual(
-      expect.arrayContaining(['assessment', 'faction', 'negotiation', 'neighbor']),
-    );
+    // Every known former-orphan prefix either has a writer now or was
+    // deleted. If this regresses, one of the applyPressure() dispatches
+    // added in M7 has been reverted.
+    expect(findings.length).toBe(0);
+    expect(PRESSURE_ID).toBe('engine.pressure-prefix-parity');
   });
 
   it('text-source-parity finds no misclassified cards on a healthy corpus', async () => {
@@ -49,22 +47,13 @@ describe('engine parity scans', () => {
     expect(unknown.length).toBe(0);
   });
 
-  it('reader-writer-roundtrip surfaces one finding per orphan PRESSURE_WEIGHTS prefix with the affected key list', async () => {
+  it('reader-writer-roundtrip reports no orphan PRESSURE_WEIGHTS prefixes after M7 cleanup', async () => {
     const corpus = await loadCorpus();
     const findings = roundtripScan(corpus, {});
     expect(findings.every((f) => f.scanId === ROUNDTRIP_ID)).toBe(true);
     expect(findings.every((f) => f.confidence === 'ENGINE_MISMATCH')).toBe(true);
     const orphanFindings = findings.filter((f) => f.code === 'PRESSURE_KEY_NO_WRITER');
-    const orphanPrefixes = new Set(
-      orphanFindings.map((f) => f.details?.prefix as string | undefined),
-    );
-    expect(orphanPrefixes).toEqual(
-      new Set(['assessment', 'faction', 'negotiation', 'neighbor']),
-    );
-    // Each finding must list the orphan keys — a non-empty array.
-    for (const f of orphanFindings) {
-      expect(Array.isArray(f.details?.orphanKeys)).toBe(true);
-      expect((f.details!.orphanKeys as unknown[]).length).toBeGreaterThan(0);
-    }
+    expect(orphanFindings).toEqual([]);
+    expect(ROUNDTRIP_ID).toBe('engine.reader-writer-roundtrip');
   });
 });

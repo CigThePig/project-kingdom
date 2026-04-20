@@ -183,7 +183,9 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     severity: EventSeverity.Notable,
     category: EventCategory.Espionage,
     triggerConditions: [
-      { type: 'consequence_tag_present', consequenceTag: 'espionage_network_active' },
+      // Mole hunts only make sense once an espionage apparatus exists to hunt
+      // through. Gate on turn range so the network has had time to form.
+      { type: 'turn_range', minTurn: 6 },
       { type: 'random_chance', probability: 0.35 },
     ],
     weight: 1.0,

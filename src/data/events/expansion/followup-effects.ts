@@ -33,8 +33,8 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
     tighten_rationing:      { foodDelta: +5, commonerSatDelta: -2, stabilityDelta: -1 },
   },
   evt_exp_fu_food_overfishing: {
-    impose_fishing_limits: { foodDelta: -5, commonerSatDelta: -1, regionConditionDelta: +3 },
-    continue_unrestricted: { foodDelta: +5, regionConditionDelta: -3, commonerSatDelta: +1 },
+    impose_fishing_limits: { foodDelta: -5, commonerSatDelta: -1, regionConditionDelta: +3, stabilityDelta: +1 },
+    continue_unrestricted: { foodDelta: +5, regionConditionDelta: -3, commonerSatDelta: +1, merchantSatDelta: +1 },
   },
   evt_exp_fu_food_feast_aftermath: {
     acknowledge: { commonerSatDelta: +1, stabilityDelta: +1 },
@@ -76,8 +76,8 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
     accept_restoration: { diplomacyDeltas: { neighbor_arenthal: +1 }, stabilityDelta: +1 },
   },
   evt_exp_fu_dip_refugee_integration: {
-    provide_settlement_aid:   { treasuryDelta: -20, commonerSatDelta: +2, regionDevelopmentDelta: +1 },
-    let_refugees_self_organize: { commonerSatDelta: -1, stabilityDelta: -1, regionConditionDelta: -1 },
+    provide_settlement_aid:   { treasuryDelta: -20, commonerSatDelta: +2, regionDevelopmentDelta: +1, diplomacyDeltas: { neighbor_arenthal: +2 } },
+    let_refugees_self_organize: { commonerSatDelta: -1, stabilityDelta: -1, regionConditionDelta: -1, diplomacyDeltas: { neighbor_arenthal: -1 } },
   },
   evt_exp_fu_dip_alliance_first_test: {
     honor_alliance_obligations: { diplomacyDeltas: { neighbor_valdris: +4 }, treasuryDelta: -25, militaryReadinessDelta: -1 },

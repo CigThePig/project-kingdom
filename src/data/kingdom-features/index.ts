@@ -642,63 +642,63 @@ export const KINGDOM_FEATURE_REGISTRY: Record<string, KingdomFeatureDefinition> 
   // ============================================================
   // Event-Sourced Features — Cultural
   // ============================================================
-  'evt_exp_env_medicinal_springs:build_healing_baths': {
+  'event:evt_exp_env_medicinal_springs:build_healing_baths': {
     featureId: 'feature_healing_baths',
     title: 'Public Healing Baths',
     description: 'Natural hot springs developed into public baths. Commoner wellbeing and cultural prestige grow.',
     category: 'cultural',
     ongoingEffect: { commonerSatDelta: 1, culturalCohesionDelta: 1 },
   },
-  'evt_exp_cul_monument_foundation:commission_grand_monument': {
+  'event:evt_exp_cul_monument_foundation:commission_grand_monument': {
     featureId: 'feature_grand_monument',
     title: 'Grand Monument',
     description: 'A monument to the kingdom\'s founding stands as a symbol of pride.',
     category: 'cultural',
     ongoingEffect: { culturalCohesionDelta: 1 },
   },
-  'evt_exp_cul_architectural_ambition:build_great_cathedral': {
+  'event:evt_exp_cul_architectural_ambition:build_great_cathedral': {
     featureId: 'feature_great_cathedral',
     title: 'Great Cathedral',
     description: 'A towering cathedral inspires the faithful and draws pilgrims.',
     category: 'cultural',
     ongoingEffect: { faithDelta: 1, culturalCohesionDelta: 1 },
   },
-  'evt_exp_cul_architectural_ambition:construct_public_amphitheater': {
+  'event:evt_exp_cul_architectural_ambition:construct_public_amphitheater': {
     featureId: 'feature_public_amphitheater',
     title: 'Public Amphitheater',
     description: 'A grand venue for performances and public gatherings.',
     category: 'cultural',
     ongoingEffect: { culturalCohesionDelta: 1, commonerSatDelta: 1 },
   },
-  'evt_exp_cul_architectural_ambition:invest_in_housing': {
+  'event:evt_exp_cul_architectural_ambition:invest_in_housing': {
     featureId: 'feature_housing_district',
     title: 'Housing District',
     description: 'New housing eases overcrowding and improves living conditions.',
     category: 'infrastructure',
     ongoingEffect: { commonerSatDelta: 1, regionDevelopmentDelta: 1 },
   },
-  'evt_exp_cul_preservation_council:establish_preservation_council': {
+  'event:evt_exp_cul_preservation_crisis:establish_preservation_council': {
     featureId: 'feature_preservation_council',
     title: 'Cultural Preservation Council',
     description: 'A council safeguards ancestral traditions for future generations.',
     category: 'cultural',
     ongoingEffect: { culturalCohesionDelta: 1 },
   },
-  'evt_exp_cul_oral_history_keeper:appoint_royal_chronicler': {
+  'event:evt_exp_cul_oral_history_keeper:appoint_royal_chronicler': {
     featureId: 'feature_royal_chronicler',
     title: 'Royal Chronicler Office',
     description: 'An official chronicler records the kingdom\'s history and deeds.',
     category: 'cultural',
     ongoingEffect: { culturalCohesionDelta: 1 },
   },
-  'evt_exp_cul_oral_history_keeper:transcribe_oral_traditions': {
+  'event:evt_exp_cul_oral_history_keeper:transcribe_oral_traditions': {
     featureId: 'feature_written_traditions',
     title: 'Written Traditions Archive',
     description: 'Oral histories preserved in writing for posterity.',
     category: 'cultural',
     ongoingEffect: { culturalCohesionDelta: 1 },
   },
-  'evt_clergy_healing_reputation:establish_permanent_hospice': {
+  'event:evt_clergy_healing_reputation:establish_permanent_hospice': {
     featureId: 'feature_permanent_hospice',
     title: 'Permanent Hospice',
     description: 'Clergy-run hospices provide healing to the sick and injured.',
@@ -709,35 +709,35 @@ export const KINGDOM_FEATURE_REGISTRY: Record<string, KingdomFeatureDefinition> 
   // ============================================================
   // Event-Sourced Features — Infrastructure
   // ============================================================
-  'evt_exp_env_spring_thaw_floods:build_emergency_levees': {
+  'event:evt_exp_env_spring_thaw_floods:build_emergency_levees': {
     featureId: 'feature_river_levees',
     title: 'River Levees',
     description: 'Engineered levees protect lowland settlements from flooding.',
     category: 'infrastructure',
     ongoingEffect: { regionConditionDelta: 1 },
   },
-  'evt_exp_env_coastal_erosion:build_sea_walls': {
+  'event:evt_exp_env_coastal_erosion:build_sea_walls': {
     featureId: 'feature_sea_walls',
     title: 'Coastal Sea Walls',
     description: 'Stone walls hold back the sea, protecting coastal communities.',
     category: 'infrastructure',
     ongoingEffect: { regionConditionDelta: 1 },
   },
-  'evt_exp_env_deforestation_crisis:establish_royal_forest_reserves': {
+  'event:evt_exp_env_deforestation_crisis:establish_royal_forest_reserves': {
     featureId: 'feature_forest_reserves',
     title: 'Royal Forest Reserves',
     description: 'Protected forests replenish timber and prevent erosion.',
     category: 'infrastructure',
     ongoingEffect: { regionConditionDelta: 1 },
   },
-  'evt_treasury_windfall:invest_in_infrastructure': {
+  'event:evt_treasury_windfall:invest_in_infrastructure': {
     featureId: 'feature_infrastructure_investment',
     title: 'Infrastructure Investment',
     description: 'A windfall wisely invested in lasting improvements.',
     category: 'infrastructure',
     ongoingEffect: { regionDevelopmentDelta: 1 },
   },
-  'evt_agricultural_innovation:implement_across_kingdom': {
+  'event:evt_agricultural_innovation:implement_across_kingdom': {
     featureId: 'feature_agricultural_innovation',
     title: 'Kingdom-Wide Agricultural Innovation',
     description: 'New farming techniques adopted across the realm boost yields.',
@@ -748,28 +748,28 @@ export const KINGDOM_FEATURE_REGISTRY: Record<string, KingdomFeatureDefinition> 
   // ============================================================
   // Event-Sourced Features — Economic
   // ============================================================
-  'evt_exp_fod_preservation:build_smoke_houses': {
+  'event:evt_exp_fod_preservation:build_smoke_houses': {
     featureId: 'feature_smoke_houses',
     title: 'Smoke Houses',
     description: 'Food preservation extends the shelf life of harvested goods.',
     category: 'economic',
     ongoingEffect: { foodDelta: 1 },
   },
-  'evt_exp_fod_feast_famine:establish_food_reserves': {
+  'event:evt_exp_fod_feast_famine:establish_food_reserves': {
     featureId: 'feature_food_reserves',
     title: 'Royal Food Reserves',
     description: 'Strategic food reserves buffer against famine.',
     category: 'economic',
     ongoingEffect: { foodDelta: 1 },
   },
-  'evt_resource_boom:establish_workers_rights': {
+  'event:evt_resource_boom:establish_workers_rights': {
     featureId: 'feature_workers_rights',
     title: 'Workers\' Rights Charter',
     description: 'Formal labor protections give workers security and dignity.',
     category: 'economic',
     ongoingEffect: { commonerSatDelta: 1 },
   },
-  'evt_abundant_harvest_surplus:invest_in_granary_expansion': {
+  'event:evt_abundant_harvest_surplus:invest_in_granary_expansion': {
     featureId: 'feature_expanded_granaries',
     title: 'Expanded Granaries',
     description: 'Larger storage facilities preserve surplus harvests.',

@@ -26,6 +26,7 @@ import {
   PersistentConsequence,
   PopulationClass,
   QueuedAction,
+  RivalAgenda,
   TemporaryModifier,
   RationingLevel,
   ReligiousOrder,
@@ -286,7 +287,18 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   // --- Trade Chain ---
   ['trade_subsidies', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_subsidies)],
   ['trade_monopoly', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_monopoly)],
-  ['international_trade_empire', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.international_trade_empire)],
+  // International trade empire draws rival ire. Apply full deltas and then
+  // nudge every peaceful neighbor's relationship score downward — rivals
+  // resent the new commercial hegemony.
+  ['international_trade_empire', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.international_trade_empire);
+    const neighbors = s.diplomacy.neighbors.map((n) =>
+      n.isAtWarWithPlayer
+        ? n
+        : { ...n, relationshipScore: clamp(n.relationshipScore - 5, 0, 100) },
+    );
+    return { ...s, diplomacy: { ...s.diplomacy, neighbors } };
+  }],
   // --- Emergency Levy ---
   ['emergency_levy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.emergency_levy)],
   // --- Fortification Chain ---
@@ -298,10 +310,23 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   ['royal_arsenal', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.royal_arsenal)],
   ['war_machine_industry', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.war_machine_industry)],
   // --- General Mobilization ---
-  ['general_mobilization', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.general_mobilization)],
+  // Defining-tier decree: apply full deltas and also shift the recruitment
+  // stance to WarFooting so the "high impact" label matches a real policy
+  // change (per CARD_AUDIT_RULES §9.1).
+  ['general_mobilization', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.general_mobilization);
+    return {
+      ...s,
+      policies: { ...s.policies, militaryRecruitmentStance: MilitaryRecruitmentStance.WarFooting },
+    };
+  }],
   // --- Roads Chain ---
   ['road_improvement', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.road_improvement)],
-  ['provincial_highway_system', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.provincial_highway_system)],
+  // Preview includes regionDevelopmentDelta so we run through
+  // applyMechanicalEffectDelta to actually bump region development
+  // (applyFullDecreeDeltas doesn't cover that field).
+  ['provincial_highway_system', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_provincial_highway_system, action.targetRegionId)],
   ['kingdom_transit_network', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.kingdom_transit_network)],
   // --- Census ---
   ['census', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.census)],
@@ -385,7 +410,10 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   }],
   // --- Granary Chain ---
   ['public_granary', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.public_granary)],
-  ['regional_food_distribution', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.regional_food_distribution)],
+  // Preview includes foodDelta + stabilityDelta which applyFullDecreeDeltas
+  // doesn't cover; route through applyMechanicalEffectDelta instead.
+  ['regional_food_distribution', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_regional_food_distribution, action.targetRegionId)],
   ['kingdom_breadbasket', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.kingdom_breadbasket)],
   // --- Labor Chain ---
   ['labor_rights', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.labor_rights)],
@@ -406,6 +434,126 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
     applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_blessing_ceremony, action.targetRegionId)],
   ['exp_emergency_grain', (state, action) =>
     applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_emergency_grain, action.targetRegionId)],
+
+  // --- Food Standalone Decrees ---
+  ['military_ration_reform', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_military_ration_reform, action.targetRegionId)],
+  ['seasonal_reserve_mandate', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_seasonal_reserve_mandate, action.targetRegionId)],
+  ['agricultural_trade_compact', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_agricultural_trade_compact, action.targetRegionId)],
+  ['harvest_tithe_exemption', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_harvest_tithe_exemption, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Agricultural ---
+  ['crop_rotation', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_crop_rotation, action.targetRegionId)],
+  ['irrigation_works', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_irrigation_works, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Military ---
+  ['advanced_fortifications', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_advanced_fortifications, action.targetRegionId)],
+  ['elite_training_program', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_elite_training_program, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Civic ---
+  ['tax_code_reform', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_tax_code_reform, action.targetRegionId)],
+  ['provincial_governance', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_provincial_governance, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Maritime/Trade ---
+  ['harbor_expansion', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_harbor_expansion, action.targetRegionId)],
+  ['trade_fleet_commission', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_trade_fleet_commission, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Cultural/Scholarly ---
+  ['university_charter', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_university_charter, action.targetRegionId)],
+  ['diplomatic_academy', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_diplomatic_academy, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Natural Philosophy ---
+  ['engineering_corps', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_engineering_corps, action.targetRegionId)],
+  ['medical_reforms', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_medical_reforms, action.targetRegionId)],
+
+  // --- Expansion (Phase 7 wave 1) ---
+  ['exp_spy_network', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_spy_network, action.targetRegionId)],
+  ['exp_intelligence_bureau', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_intelligence_bureau, action.targetRegionId)],
+  ['exp_shadow_council', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_shadow_council, action.targetRegionId)],
+  ['exp_village_schools', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_village_schools, action.targetRegionId)],
+  ['exp_provincial_academies', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_provincial_academies, action.targetRegionId)],
+  ['exp_university_system', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_university_system, action.targetRegionId)],
+  ['exp_land_reform', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_land_reform, action.targetRegionId)],
+  ['exp_irrigation_authority', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_irrigation_authority, action.targetRegionId)],
+  ['exp_agricultural_modernization', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_agricultural_modernization, action.targetRegionId)],
+  ['exp_circuit_courts', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_circuit_courts, action.targetRegionId)],
+  ['exp_common_law', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_common_law, action.targetRegionId)],
+  ['exp_supreme_tribunal', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_supreme_tribunal, action.targetRegionId)],
+  ['exp_mint_coinage', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_mint_coinage, action.targetRegionId)],
+  ['exp_war_engineers', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_war_engineers, action.targetRegionId)],
+  ['exp_infrastructure_audit', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_infrastructure_audit, action.targetRegionId)],
+  ['exp_anti_corruption_campaign', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_anti_corruption_campaign, action.targetRegionId)],
+  ['exp_interfaith_council', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_interfaith_council, action.targetRegionId)],
+  ['exp_peace_envoy', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_peace_envoy, action.targetRegionId)],
+  ['exp_cultural_exchange_program', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_cultural_exchange_program, action.targetRegionId)],
+  ['exp_public_works', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_public_works, action.targetRegionId)],
+
+  // --- Expansion Wave 2 ---
+  ['w2_weights_and_measures', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_weights_and_measures, action.targetRegionId)],
+  ['w2_university_charter', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_university_charter, action.targetRegionId)],
+  ['w2_codify_the_common_law', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_codify_the_common_law, action.targetRegionId)],
+  ['w2_expand_the_bureaucracy', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_expand_the_bureaucracy, action.targetRegionId)],
+  ['w2_free_cities_charter', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_free_cities_charter, action.targetRegionId)],
+  ['w2_justice_circuits', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_justice_circuits, action.targetRegionId)],
+  ['w2_sumptuary_laws', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_sumptuary_laws, action.targetRegionId)],
+  ['w2_mint_standards', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_mint_standards, action.targetRegionId)],
+  ['w2_road_construction', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_road_construction, action.targetRegionId)],
+  ['w2_bridge_program', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_bridge_program, action.targetRegionId)],
+  ['w2_military_reforms', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_military_reforms, action.targetRegionId)],
+  ['w2_hunting_regulations', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_hunting_regulations, action.targetRegionId)],
+  ['w2_religious_councils', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_religious_councils, action.targetRegionId)],
+  ['w2_calendar_reform', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_calendar_reform, action.targetRegionId)],
+  ['w2_language_standardization', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_language_standardization, action.targetRegionId)],
 ]);
 
 // ============================================================
@@ -431,27 +579,40 @@ function applyDecreeEffect(state: GameState, action: QueuedAction): GameState {
     turnIssued: state.turn.turnNumber,
   };
 
-  // 4. Record a persistent consequence so future conditions can query decree history.
-  const consequence: PersistentConsequence = {
-    sourceId: action.actionDefinitionId,
-    sourceType: 'event',
-    choiceMade: action.actionDefinitionId,
-    turnApplied: state.turn.turnNumber,
-    tag: `decree:${action.actionDefinitionId}`,
-  };
-
+  // 4. Record persistent consequences so future conditions can query decree
+  //    history. Two tags per enactment:
+  //      - `decree:<id>` — specific decree identity, used by feature registry.
+  //      - `recent_decree_issued` — generic "any decree fired" gate for events
+  //        like evt_exp_kgd_decree_dispute that react to policy churn.
+  const decreeTag = `decree:${action.actionDefinitionId}`;
   let finalState = {
     ...stateAfterEffects,
     issuedDecrees: [...stateAfterEffects.issuedDecrees, issuedRecord],
-    persistentConsequences: [...stateAfterEffects.persistentConsequences, consequence],
+    persistentConsequences: [
+      ...stateAfterEffects.persistentConsequences,
+      {
+        sourceId: action.actionDefinitionId,
+        sourceType: 'event',
+        choiceMade: action.actionDefinitionId,
+        turnApplied: state.turn.turnNumber,
+        tag: `decree:${action.actionDefinitionId}`,
+      } satisfies PersistentConsequence,
+      {
+        sourceId: action.actionDefinitionId,
+        sourceType: 'event',
+        choiceMade: action.actionDefinitionId,
+        turnApplied: state.turn.turnNumber,
+        tag: 'recent_decree_issued',
+      } satisfies PersistentConsequence,
+    ],
   };
 
   // 5. Create a kingdom feature if this decree has a registry entry.
-  const featureDef = KINGDOM_FEATURE_REGISTRY[consequence.tag];
+  const featureDef = KINGDOM_FEATURE_REGISTRY[decreeTag];
   if (featureDef) {
     const feature: KingdomFeature = {
       id: `kf-${featureDef.featureId}-t${state.turn.turnNumber}`,
-      sourceTag: consequence.tag,
+      sourceTag: decreeTag,
       turnEstablished: state.turn.turnNumber,
       ongoingEffect: featureDef.ongoingEffect,
       category: featureDef.category,
@@ -768,12 +929,12 @@ function applyOvertureDecision(
 ): GameState {
   const parsed = parseOvertureEventId(choiceId);
   if (!parsed) return state;
-  const { neighborId, grant } = parsed;
+  const { neighborId, agenda, grant } = parsed;
 
   const turn = state.turn.turnNumber;
   const relationshipDelta = grant ? 6 : -6;
 
-  return {
+  let next: GameState = {
     ...state,
     diplomacy: {
       ...state.diplomacy,
@@ -804,6 +965,84 @@ function applyOvertureDecision(
       }),
     },
   };
+
+  // Grant path records a persistent consequence so future events can gate on
+  // the agreement. Deny path nudges narrative pressure axes (authority on the
+  // refusal, isolation as the rival retreats). The two paths thus touch
+  // distinct state slices so overtures.grant-deny-runtime-parity sees a real
+  // mechanical difference.
+  if (grant) {
+    next = {
+      ...next,
+      persistentConsequences: [
+        ...next.persistentConsequences,
+        {
+          sourceId: `overture:${neighborId}:${agenda}`,
+          sourceType: 'event',
+          choiceMade: 'grant',
+          turnApplied: turn,
+          tag: `overture:${agenda}:granted`,
+        },
+      ],
+    };
+  } else {
+    const np = next.narrativePressure;
+    next = {
+      ...next,
+      narrativePressure: {
+        ...np,
+        authority: Math.min(100, np.authority + 2),
+        isolation: Math.min(100, np.isolation + 2),
+      },
+    };
+  }
+
+  // Agenda-thematic side effects so the overture body's mechanical keywords
+  // (faith, treasury) are reflected in the runtime diff even when the grant
+  // path is otherwise diplomatic-only.
+  switch (agenda) {
+    case RivalAgenda.ReligiousHegemony:
+    case RivalAgenda.ConvertThePlayer: {
+      // Granting a rival clergy's mission raises heterodoxy; denying it calms
+      // faith a touch as the local priesthood reasserts itself.
+      const fc = next.faithCulture;
+      next = {
+        ...next,
+        faithCulture: grant
+          ? { ...fc, heterodoxy: Math.min(100, fc.heterodoxy + 3) }
+          : { ...fc, faithLevel: Math.min(100, fc.faithLevel + 1) },
+      };
+      break;
+    }
+    case RivalAgenda.DominateTrade: {
+      // Granting trade concessions yields immediate trade revenue; denying
+      // costs the player a modest opportunity (spoiled negotiations, reroutes).
+      next = {
+        ...next,
+        treasury: {
+          ...next.treasury,
+          balance: Math.max(0, next.treasury.balance + (grant ? 20 : -5)),
+        },
+      };
+      break;
+    }
+    case RivalAgenda.EconomicRecovery: {
+      // Easing tolls costs the player treasury; holding them lightly boosts
+      // treasury via continued duties.
+      next = {
+        ...next,
+        treasury: {
+          ...next.treasury,
+          balance: Math.max(0, next.treasury.balance + (grant ? -15 : +5)),
+        },
+      };
+      break;
+    }
+    default:
+      break;
+  }
+
+  return next;
 }
 
 /**
@@ -974,25 +1213,31 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
     };
   }
 
-  // Record a persistent consequence.
-  const consequence: PersistentConsequence = {
-    sourceId: event.definitionId,
-    sourceType: 'event',
-    choiceMade: choiceId,
-    turnApplied: state.turn.turnNumber,
-    tag: `${event.definitionId}:${choiceId}`,
-  };
+  // Record a persistent consequence. The tag string is inlined into the
+  // persistentConsequences assignment so the audit's AST writer-reader
+  // index can see the `${eventId}:${choiceId}` template-literal shape
+  // without chasing the variable assignment.
+  const eventChoiceTag = `${event.definitionId}:${choiceId}`;
   updatedState = {
     ...updatedState,
-    persistentConsequences: [...updatedState.persistentConsequences, consequence],
+    persistentConsequences: [
+      ...updatedState.persistentConsequences,
+      {
+        sourceId: event.definitionId,
+        sourceType: 'event',
+        choiceMade: choiceId,
+        turnApplied: state.turn.turnNumber,
+        tag: `${event.definitionId}:${choiceId}`,
+      } satisfies PersistentConsequence,
+    ],
   };
 
   // Create a kingdom feature if this event choice has a registry entry.
-  const featureDef = KINGDOM_FEATURE_REGISTRY[consequence.tag];
+  const featureDef = KINGDOM_FEATURE_REGISTRY[eventChoiceTag];
   if (featureDef) {
     const feature: KingdomFeature = {
       id: `kf-${featureDef.featureId}-t${state.turn.turnNumber}`,
-      sourceTag: consequence.tag,
+      sourceTag: eventChoiceTag,
       turnEstablished: state.turn.turnNumber,
       ongoingEffect: featureDef.ongoingEffect,
       category: featureDef.category,
@@ -1008,7 +1253,7 @@ function applyCrisisResponseEffect(state: GameState, action: QueuedAction): Game
   if (modifierSpec) {
     const modifier: TemporaryModifier = {
       id: `tmod-${event.definitionId}-${choiceId}-${rngSuffix(turnRng(state, `tmod:${event.definitionId}:${choiceId}`))}`,
-      sourceTag: consequence.tag,
+      sourceTag: eventChoiceTag,
       turnsRemaining: modifierSpec.durationTurns,
       turnApplied: state.turn.turnNumber,
       effectPerTurn: modifierSpec.effectPerTurn,

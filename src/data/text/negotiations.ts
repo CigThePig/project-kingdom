@@ -236,7 +236,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
 
   neg_resource_blockade: {
     title: 'Blockade Negotiations with {neighbor}',
-    body: "{ruler_full} has imposed a resource blockade on the kingdom, choking vital supply lines. Envoys from {capital} arrive with a list of demands — each term extracts a painful concession, but continued blockade may cost more than compliance. The kingdom's reserves dwindle with each passing day.",
+    body: "{ruler_full} has imposed a resource blockade on the kingdom, choking vital supply lines. Envoys from {capital} arrive with a list of demands — each term extracts a painful concession, but continued blockade may cost more than compliance. The kingdom's supplies dwindle with each passing day.",
     contextLabel: 'DIPLOMATIC NEGOTIATION',
     terms: {
       payment_tribute: {

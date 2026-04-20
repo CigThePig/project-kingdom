@@ -23,9 +23,9 @@ export const EXPANSION_DIPLOMACY_EFFECTS: Record<string, Record<string, Mechanic
     downplay_the_incident:    { diplomacyDeltas: { neighbor_arenthal: -2 }, stabilityDelta: -1 },
   },
   evt_exp_dip_refugee_plea: {
-    welcome_refugees:    { commonerSatDelta: -2, foodDelta: -15, populationDelta: +50, stabilityDelta: -1, culturalCohesionDelta: -2 } as MechanicalEffectDelta,
-    limited_asylum:      { commonerSatDelta: +1, foodDelta: -5, stabilityDelta: +1 },
-    close_the_borders:   { commonerSatDelta: -1, culturalCohesionDelta: +1, faithDelta: -1 },
+    welcome_refugees:    { commonerSatDelta: -2, foodDelta: -15, populationDelta: +50, stabilityDelta: -1, culturalCohesionDelta: -2, diplomacyDeltas: { neighbor_arenthal: +4 } } as MechanicalEffectDelta,
+    limited_asylum:      { commonerSatDelta: +1, foodDelta: -5, stabilityDelta: +1, diplomacyDeltas: { neighbor_arenthal: +1 } },
+    close_the_borders:   { commonerSatDelta: -1, culturalCohesionDelta: +1, faithDelta: -1, diplomacyDeltas: { neighbor_arenthal: -3 } },
   },
   evt_exp_dip_alliance_overture: {
     accept_alliance:      { diplomacyDeltas: { neighbor_valdris: +8 }, militaryReadinessDelta: +3, nobilitySatDelta: +2, treasuryDelta: -20 },

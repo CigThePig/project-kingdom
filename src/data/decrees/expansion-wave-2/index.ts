@@ -300,7 +300,7 @@ export const EXPANSION_WAVE_2_DECREES: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Clergy, PopulationClass.Commoners],
     effectPreview:
-      'Align the civil and liturgical calendars across the realm. Scholars approve; the old provincial saints lose pride of place.',
+      'Align the civil and liturgical calendars under the crown\'s unified reckoning. Scholars approve; the old provincial saints lose pride of place.',
     isHighImpact: false,
     knowledgePrerequisite: null,
     isRepeatable: false,

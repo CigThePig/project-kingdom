@@ -29,6 +29,17 @@ const KNOWN_TOKENS = new Set<string>([
   'prior_decision_clause:tax',
   'inter_rival_note',
   'ruling_style_note',
+  // Advisor-mediated tokens resolved by bridge/smartText.ts substituteSmart-
+  // Placeholders — overtures use these when the narrative hands off to an
+  // advisor voice ("Your spymaster reports…").
+  'chancellor',
+  'marshal',
+  'chamberlain',
+  'spymaster',
+  'chancellor_or_fallback',
+  'marshal_or_fallback',
+  'chamberlain_or_fallback',
+  'spymaster_or_fallback',
 ]);
 
 // Tokens that carry an argument after `:`.

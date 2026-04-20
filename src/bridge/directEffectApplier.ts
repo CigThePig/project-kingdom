@@ -7,6 +7,7 @@
 import { InteractionType } from '../engine/types';
 import type { Bond, BondKind, GameState, MechanicalEffectDelta } from '../engine/types';
 import { applyMechanicalEffectDelta } from '../engine/events/apply-event-effects';
+import { applyPressure } from '../engine/systems/narrative-pressure';
 import { ASSESSMENT_EFFECTS } from '../data/events/assessment-effects';
 import { NEGOTIATION_EFFECTS } from '../data/events/negotiation-effects';
 import type { MonthDecision } from '../ui/types';
@@ -124,6 +125,28 @@ export function applyDirectEffects(
       if (rawDelta) {
         const delta = resolveNeighborPlaceholders(rawDelta, current, d.targetNeighborId);
         current = applyMechanicalEffectDelta(current, delta, null);
+        // Record a persistent consequence so future conditions can gate on
+        // whether a player engaged with this intelligence — parallels the
+        // `${eventId}:${choiceId}` tag recorded for regular event choices.
+        current = {
+          ...current,
+          persistentConsequences: [
+            ...current.persistentConsequences,
+            {
+              sourceId: assessId,
+              sourceType: 'event',
+              choiceMade: bareChoiceId,
+              turnApplied: current.turn.turnNumber,
+              tag: `${assessId}:${bareChoiceId}`,
+            },
+          ],
+          narrativePressure: applyPressure(
+            current.narrativePressure,
+            'assessment',
+            assessId,
+            bareChoiceId,
+          ),
+        };
       }
     }
 
@@ -137,6 +160,15 @@ export function applyDirectEffects(
           const rawDelta = NEGOTIATION_EFFECTS[negotiationId][rejectKey];
           const delta = resolveNeighborPlaceholders(rawDelta, current, d.targetNeighborId);
           current = applyMechanicalEffectDelta(current, delta, null);
+          current = {
+            ...current,
+            narrativePressure: applyPressure(
+              current.narrativePressure,
+              'negotiation',
+              negotiationId,
+              rejectKey,
+            ),
+          };
         }
       } else if (!d.choiceId.startsWith('accept:')) {
         // Term effect — choiceId is the bare termId
@@ -144,6 +176,15 @@ export function applyDirectEffects(
         if (rawDelta) {
           const delta = resolveNeighborPlaceholders(rawDelta, current, d.targetNeighborId);
           current = applyMechanicalEffectDelta(current, delta, null);
+          current = {
+            ...current,
+            narrativePressure: applyPressure(
+              current.narrativePressure,
+              'negotiation',
+              negotiationId,
+              d.choiceId,
+            ),
+          };
         }
         // Phase 13 — if this term maps to a bond kind, materialize it.
         const bondKind = TERM_ID_TO_BOND_KIND[d.choiceId];

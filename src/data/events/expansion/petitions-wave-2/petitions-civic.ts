@@ -176,10 +176,12 @@ export const EXPANSION_WAVE_2_CIVIC_PETITION_EFFECTS: Record<
     grant_the_envoys_audience: {
       nobilitySatDelta: 2,
       culturalCohesionDelta: 1,
+      diplomacyDeltas: { __NEIGHBOR__: +3 },
     },
     make_the_envoy_wait: {
       nobilitySatDelta: -2,
       stabilityDelta: -1,
+      diplomacyDeltas: { __NEIGHBOR__: -3 },
     },
   },
   faction_req_w2_imprisoned_nobles: {

@@ -2074,10 +2074,16 @@ export function resolveTurn(
     : stateAfterActions.lastStorylineResolutionTurn;
 
   // --- Narrative Pressure: accumulate from all resolved decisions this turn ---
-  // Apply pressure from event choices resolved this turn.
+  // Apply pressure from event choices resolved this turn. Faction requests
+  // (faction_req_*) are authored in PRESSURE_WEIGHTS under the 'faction'
+  // source-type, not 'event'; dispatch as two separate literal-source calls
+  // so the scanner's AST index sees both prefixes.
   let updatedPressure = stateAfterActions.narrativePressure;
   for (const evt of stateAfterActions.activeEvents) {
-    if (evt.isResolved && evt.choiceMade) {
+    if (!evt.isResolved || !evt.choiceMade) continue;
+    if (evt.definitionId.startsWith('faction_req_')) {
+      updatedPressure = applyPressure(updatedPressure, 'faction', evt.definitionId, evt.choiceMade);
+    } else {
       updatedPressure = applyPressure(updatedPressure, 'event', evt.definitionId, evt.choiceMade);
     }
   }

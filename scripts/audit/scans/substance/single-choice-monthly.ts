@@ -26,6 +26,10 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
     if (ev.choices.length !== 1) continue;
     const c = ev.choices[0];
     if (!c.isFree) continue;
+    // Per the scan's stated rationale, events explicitly classified as
+    // 'notification' are already flagged as Pattern B / relocation candidates
+    // via the family classifier; don't double-count them here.
+    if (ev.classification === 'notification') continue;
 
     out.push({
       severity: 'MAJOR',
