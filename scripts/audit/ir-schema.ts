@@ -94,6 +94,24 @@ const decisionPathSchema = {
     previewText: {
       oneOf: [{ type: 'null' }, { type: 'string' }],
     },
+    runtimeFingerprint: {
+      oneOf: [
+        { type: 'null' },
+        {
+          type: 'object',
+          additionalProperties: false,
+          required: ['fixtureId', 'touches', 'classes', 'structuralCount', 'surfaceCount', 'noOp'],
+          properties: {
+            fixtureId: { type: 'string', minLength: 1 },
+            touches: { type: 'array', items: { type: 'string' } },
+            classes: { type: 'array', items: { type: 'string' } },
+            structuralCount: { type: 'integer', minimum: 0 },
+            surfaceCount: { type: 'integer', minimum: 0 },
+            noOp: { type: 'boolean' },
+          },
+        },
+      ],
+    },
   },
 } as const;
 

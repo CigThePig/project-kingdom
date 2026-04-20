@@ -83,7 +83,7 @@ async function main(): Promise<void> {
   const startedAt = new Date().toISOString();
   const t0 = Date.now();
 
-  const corpus = await loadCorpus();
+  const corpus = await loadCorpus({ runtimeFingerprint: true });
   const opts: ScanOptions = {
     family: config.family,
     includeMinor: config.includeMinor,

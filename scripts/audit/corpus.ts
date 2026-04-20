@@ -36,13 +36,27 @@ import { KINGDOM_FEATURE_REGISTRY } from '../../src/data/kingdom-features/index'
 import { buildAllAuditCards } from './adapters';
 import { buildCoverageMatrix } from './coverage/matrix';
 import { validateAuditCards } from './ir-schema';
+import { fingerprintChoice } from './runtime/fingerprint';
+import { buildFixtures } from './runtime/fixtures';
 import type { Corpus, Family } from './types';
+
+export interface LoadCorpusOptions {
+  /**
+   * When true, the loader runs every AuditDecisionPath through the runtime
+   * harness and attaches `runtimeFingerprint` to each path. Defaults to
+   * false so unit tests and ad-hoc inspection stay cheap; the CI audit
+   * entrypoint (scripts/audit/index.ts) opts in.
+   */
+  runtimeFingerprint?: boolean;
+}
 
 // ============================================================
 // Public entrypoint
 // ============================================================
 
-export async function loadCorpus(): Promise<Corpus> {
+export async function loadCorpus(
+  options: LoadCorpusOptions = {},
+): Promise<Corpus> {
   const filePathByCardId = await indexFilePaths();
 
   const corpus: Corpus = {
@@ -93,10 +107,29 @@ export async function loadCorpus(): Promise<Corpus> {
   // Run every family adapter, validate the combined IR, then index it.
   const auditCards = buildAllAuditCards(corpus);
   validateAuditCards(auditCards);
+  if (options.runtimeFingerprint) {
+    attachRuntimeFingerprints(auditCards);
+  }
   corpus.auditCards = auditCards;
   corpus.coverage = buildCoverageMatrix(auditCards);
 
   return Object.freeze(corpus);
+}
+
+function attachRuntimeFingerprints(cards: import('./ir').AuditCard[]): void {
+  const fixtures = buildFixtures();
+  for (const card of cards) {
+    for (const choice of card.choices) {
+      const fp = fingerprintChoice(card, choice, fixtures);
+      choice.runtimeFingerprint = fp;
+    }
+    // Flip runtimeDiffCoverage true once at least one path produced a
+    // fingerprint — the family is harness-supported even if a specific
+    // fixture couldn't produce a diff for one of its paths.
+    if (card.choices.some((c) => c.runtimeFingerprint)) {
+      card.coverage = { ...card.coverage, runtimeDiffCoverage: true };
+    }
+  }
 }
 
 // ============================================================

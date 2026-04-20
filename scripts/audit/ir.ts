@@ -82,6 +82,26 @@ export function emptyStructuralMarkerSummary(): StructuralMarkerSummary {
 }
 
 /**
+ * Runtime-diff signal for a single decision path. Populated by the M4
+ * runtime harness — `null` means no fixture was dispatched (coverage
+ * gap). `noOp=true` is a real finding: the harness ran and saw no state
+ * change.
+ */
+export interface RuntimeFingerprint {
+  /** Fixture id the fingerprint was produced against. */
+  fixtureId: string;
+  /** Every dotted path that changed between before/after. */
+  touches: string[];
+  /** Unique touch-classes the paths fall into (surface, structural, …). */
+  classes: string[];
+  /** Counts broken out for quick scanning. */
+  structuralCount: number;
+  surfaceCount: number;
+  /** True when `touches` is empty — the decision mutated nothing. */
+  noOp: boolean;
+}
+
+/**
  * A single decision path on a card — one event choice, one negotiation term,
  * one overture grant/deny, one decree activation, one hand-card play.
  * Decrees and hand cards typically produce one path each; events produce N.
@@ -110,6 +130,11 @@ export interface AuditDecisionPath {
   contextRequirements: string[];
   /** Short preview string shown in UI, if authored. */
   previewText?: string | null;
+  /**
+   * Runtime harness diff signal. `null` when the loader didn't opt in
+   * to the harness or when the path's runtime family isn't harness-supported.
+   */
+  runtimeFingerprint?: RuntimeFingerprint | null;
 }
 
 /**
