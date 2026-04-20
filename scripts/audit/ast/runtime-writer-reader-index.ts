@@ -125,7 +125,9 @@ function toWriteSite(sf: SourceFile, node: Node | { getStart: () => number; getT
   const start = (node as { getStart: (sf?: unknown) => number }).getStart(sf.compilerNode);
   const lc = sf.getLineAndColumnAtPos(start);
   const rawText = (node as { getText: () => string }).getText();
-  const snippet = rawText.length > 160 ? rawText.slice(0, 160) + '…' : rawText;
+  // 640 chars keeps the template-literal tag visible in multi-line
+  // persistentConsequences assignments with inline object literals.
+  const snippet = rawText.length > 640 ? rawText.slice(0, 640) + '…' : rawText;
   return {
     filePath: relativizePath(sf.getFilePath()),
     line: lc.line,

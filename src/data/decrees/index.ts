@@ -725,7 +725,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Merchants],
     effectPreview:
-      'Build a permanent diplomatic mission in a foreign capital. Provides ongoing relationship improvement and intelligence gathering opportunities.',
+      'Establish a permanent diplomatic mission in a foreign capital. Provides ongoing relationship improvement and intelligence gathering opportunities.',
     isHighImpact: false,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -853,7 +853,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Commoners],
     effectPreview:
-      'Build communal grain stores to buffer against food shortages. Commoner satisfaction improves as hunger anxiety recedes.',
+      'Establish communal grain stores to buffer against food shortages. Commoner satisfaction improves as hunger anxiety recedes.',
     isHighImpact: false,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -1279,7 +1279,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: ['Maritime Trade milestone 2'],
     affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
     effectPreview:
-      'Build a royal merchant fleet to secure trade routes and expand commercial reach. A major investment that transforms the kingdom\'s trading capability.',
+      'Commission a royal merchant fleet to secure trade routes and expand commercial reach. A major investment that transforms the kingdom\'s trading capability.',
     isHighImpact: true,
     knowledgePrerequisite: {
       branch: KnowledgeBranch.MaritimeTrade,

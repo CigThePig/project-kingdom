@@ -126,6 +126,8 @@ export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
   decree_census: {
     stabilityDelta: +2,
     nobilitySatDelta: -1,
+    // A census tightens taxation and nets the treasury a modest bump.
+    treasuryDelta: +10,
   },
   // --- Administration Chain ---
   decree_administrative_reform: {
@@ -154,6 +156,8 @@ export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
     faithDelta: +5,
     clergySatDelta: +3,
     commonerSatDelta: +2,
+    // The crown bears the festival's public costs.
+    treasuryDelta: -15,
   },
   // --- Faith Chain ---
   decree_invest_religious_order: {
@@ -389,6 +393,8 @@ export const DECREE_EFFECTS: Record<string, MechanicalEffectDelta> = {
     commonerSatDelta: +5,
     clergySatDelta: +2,
     stabilityDelta: +3,
+    // Clergy-led healing orders lift faith as the reforms spread.
+    faithDelta: +2,
   },
 
   // Expansion Decree Effects

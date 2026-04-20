@@ -1,23 +1,13 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-04-20T21:20:15.866Z",
-  "count": 10,
+  "generatedAt": "2026-04-20T21:31:36.218Z",
+  "count": 9,
   "countsByScan": {
-    "engine.consequence-write-parity": 2,
     "engine.pressure-prefix-parity": 4,
-    "engine.reader-writer-roundtrip": 4
+    "engine.reader-writer-roundtrip": 4,
+    "engine.consequence-write-parity": 1
   },
   "findings": [
-    {
-      "severity": "MAJOR",
-      "family": "decree",
-      "scanId": "engine.consequence-write-parity",
-      "code": "CONSEQUENCE_WRITE_SITE_MISSING",
-      "cardId": "apply-action-effects:decree",
-      "filePath": "src/engine/resolution/apply-action-effects.ts",
-      "message": "Expected a `decree:<id>` persistentConsequences assignment in apply-action-effects.ts but none was found — the scanner's tag-producer model is out of sync with the engine.",
-      "confidence": "ENGINE_MISMATCH"
-    },
     {
       "severity": "MAJOR",
       "family": "unknown",

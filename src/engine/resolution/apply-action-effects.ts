@@ -286,7 +286,18 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   // --- Trade Chain ---
   ['trade_subsidies', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_subsidies)],
   ['trade_monopoly', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_monopoly)],
-  ['international_trade_empire', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.international_trade_empire)],
+  // International trade empire draws rival ire. Apply full deltas and then
+  // nudge every peaceful neighbor's relationship score downward — rivals
+  // resent the new commercial hegemony.
+  ['international_trade_empire', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.international_trade_empire);
+    const neighbors = s.diplomacy.neighbors.map((n) =>
+      n.isAtWarWithPlayer
+        ? n
+        : { ...n, relationshipScore: clamp(n.relationshipScore - 5, 0, 100) },
+    );
+    return { ...s, diplomacy: { ...s.diplomacy, neighbors } };
+  }],
   // --- Emergency Levy ---
   ['emergency_levy', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.emergency_levy)],
   // --- Fortification Chain ---
@@ -298,10 +309,23 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   ['royal_arsenal', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.royal_arsenal)],
   ['war_machine_industry', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.war_machine_industry)],
   // --- General Mobilization ---
-  ['general_mobilization', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.general_mobilization)],
+  // Defining-tier decree: apply full deltas and also shift the recruitment
+  // stance to WarFooting so the "high impact" label matches a real policy
+  // change (per CARD_AUDIT_RULES §9.1).
+  ['general_mobilization', (state, action) => {
+    const s = applyFullDecreeDeltas(state, action, DECREE_EFFECTS.general_mobilization);
+    return {
+      ...s,
+      policies: { ...s.policies, militaryRecruitmentStance: MilitaryRecruitmentStance.WarFooting },
+    };
+  }],
   // --- Roads Chain ---
   ['road_improvement', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.road_improvement)],
-  ['provincial_highway_system', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.provincial_highway_system)],
+  // Preview includes regionDevelopmentDelta so we run through
+  // applyMechanicalEffectDelta to actually bump region development
+  // (applyFullDecreeDeltas doesn't cover that field).
+  ['provincial_highway_system', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_provincial_highway_system, action.targetRegionId)],
   ['kingdom_transit_network', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.kingdom_transit_network)],
   // --- Census ---
   ['census', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.census)],
@@ -385,7 +409,10 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   }],
   // --- Granary Chain ---
   ['public_granary', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.public_granary)],
-  ['regional_food_distribution', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.regional_food_distribution)],
+  // Preview includes foodDelta + stabilityDelta which applyFullDecreeDeltas
+  // doesn't cover; route through applyMechanicalEffectDelta instead.
+  ['regional_food_distribution', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_regional_food_distribution, action.targetRegionId)],
   ['kingdom_breadbasket', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.kingdom_breadbasket)],
   // --- Labor Chain ---
   ['labor_rights', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.labor_rights)],
@@ -551,43 +578,40 @@ function applyDecreeEffect(state: GameState, action: QueuedAction): GameState {
     turnIssued: state.turn.turnNumber,
   };
 
-  // 4. Record a persistent consequence so future conditions can query decree history.
-  const consequence: PersistentConsequence = {
-    sourceId: action.actionDefinitionId,
-    sourceType: 'event',
-    choiceMade: action.actionDefinitionId,
-    turnApplied: state.turn.turnNumber,
-    tag: `decree:${action.actionDefinitionId}`,
-  };
-
-  // Also record a generic "a decree was just issued" tag so events that
-  // want to fire after any decree enactment (e.g. evt_exp_kgd_decree_dispute)
-  // can gate on it. Paired with nobility/class satisfaction thresholds the
-  // trigger still needs external state to match, so we don't risk spamming.
-  const genericRecentTag: PersistentConsequence = {
-    sourceId: action.actionDefinitionId,
-    sourceType: 'event',
-    choiceMade: action.actionDefinitionId,
-    turnApplied: state.turn.turnNumber,
-    tag: 'recent_decree_issued',
-  };
-
+  // 4. Record persistent consequences so future conditions can query decree
+  //    history. Two tags per enactment:
+  //      - `decree:<id>` — specific decree identity, used by feature registry.
+  //      - `recent_decree_issued` — generic "any decree fired" gate for events
+  //        like evt_exp_kgd_decree_dispute that react to policy churn.
+  const decreeTag = `decree:${action.actionDefinitionId}`;
   let finalState = {
     ...stateAfterEffects,
     issuedDecrees: [...stateAfterEffects.issuedDecrees, issuedRecord],
     persistentConsequences: [
       ...stateAfterEffects.persistentConsequences,
-      consequence,
-      genericRecentTag,
+      {
+        sourceId: action.actionDefinitionId,
+        sourceType: 'event',
+        choiceMade: action.actionDefinitionId,
+        turnApplied: state.turn.turnNumber,
+        tag: `decree:${action.actionDefinitionId}`,
+      } satisfies PersistentConsequence,
+      {
+        sourceId: action.actionDefinitionId,
+        sourceType: 'event',
+        choiceMade: action.actionDefinitionId,
+        turnApplied: state.turn.turnNumber,
+        tag: 'recent_decree_issued',
+      } satisfies PersistentConsequence,
     ],
   };
 
   // 5. Create a kingdom feature if this decree has a registry entry.
-  const featureDef = KINGDOM_FEATURE_REGISTRY[consequence.tag];
+  const featureDef = KINGDOM_FEATURE_REGISTRY[decreeTag];
   if (featureDef) {
     const feature: KingdomFeature = {
       id: `kf-${featureDef.featureId}-t${state.turn.turnNumber}`,
-      sourceTag: consequence.tag,
+      sourceTag: decreeTag,
       turnEstablished: state.turn.turnNumber,
       ongoingEffect: featureDef.ongoingEffect,
       category: featureDef.category,

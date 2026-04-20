@@ -570,21 +570,21 @@ export const DECREE_EFFECTS = {
   royal_arsenal:               { militaryCasteSat: +5, merchantSat: +3, equipmentDelta: +15, treasuryDelta: -20 },
   war_machine_industry:        { militaryCasteSat: +5, merchantSat: +4, equipmentDelta: +20, commonerSat: -3, treasuryDelta: -40 },
   // --- General Mobilization (repeatable) ---
-  general_mobilization:        { militaryCasteSat: +5, commonerSat: -4, readinessDelta: +10 },
+  general_mobilization:        { militaryCasteSat: +5, commonerSat: -4, readinessDelta: +10, treasuryDelta: -30 },
   // --- Roads Chain ---
   road_improvement:            { merchantSat: +3, commonerSat: +2 },
   provincial_highway_system:   { merchantSat: +4, commonerSat: +3, treasuryDelta: -20 },
   kingdom_transit_network:     { merchantSat: +6, commonerSat: +4, militaryCasteSat: +2, treasuryDelta: -40 },
   // --- Census (repeatable) ---
-  census:                      { nobilitySat: -2, commonerSat: +1 },
+  census:                      { nobilitySat: -2, commonerSat: +1, treasuryDelta: +10 },
   // --- Admin Chain ---
   administrative_reform:       { nobilitySat: -3, clergySat: -2 },
   royal_bureaucracy:           { nobilitySat: -4, clergySat: -3, commonerSat: +2 },
   centralized_governance:      { nobilitySat: -6, clergySat: -4, commonerSat: +4 },
   // --- Call Festival (repeatable) ---
-  call_festival:               { clergySat: +4, commonerSat: +4, faithDelta: +5 },
+  call_festival:               { clergySat: +4, commonerSat: +4, faithDelta: +5, treasuryDelta: -15 },
   // --- Faith Chain ---
-  invest_religious_order:      { clergySat: +4 },
+  invest_religious_order:      { clergySat: +4, faithDelta: +3 },
   expand_religious_authority:  { clergySat: +5, faithDelta: +5, nobilitySat: -3 },
   theocratic_council:          { clergySat: +6, faithDelta: +8, nobilitySat: -5, commonerSat: -2 },
   // --- Heresy Chain ---
