@@ -35,6 +35,15 @@ export interface HarnessResultUnsupported {
 
 export type HarnessResult = HarnessResultSupported | HarnessResultUnsupported;
 
+export interface VariantRunResultSupported {
+  supported: true;
+  before: GameState;
+  afterA: GameState;
+  afterB: GameState;
+}
+
+export type VariantRunResult = VariantRunResultSupported | HarnessResultUnsupported;
+
 /**
  * Run a single decision path against a fixture and return `{ before, after }`.
  * Dispatch is by runtime path, not family, so future generated families
@@ -63,6 +72,56 @@ export function runChoice(
     default:
       return { supported: false, reason: 'unknown runtime path' };
   }
+}
+
+/**
+ * Run a single decision path against a fixture twice with two distinct
+ * `choice` targets — two classes for `requiresChoice: 'class'`, two
+ * neighbors for `requiresChoice: 'rival'`. Scans use `{ afterA, afterB }` to
+ * detect cards that claim a target-dependent effect but produce identical
+ * output diffs regardless of target.
+ *
+ * Returns `{ supported: false }` when the card does not declare
+ * `requiresChoice`, when the dispatch path is unsupported, or when the
+ * fixture can't supply two distinct targets.
+ */
+export function runChoiceVariants(
+  card: AuditCard,
+  choice: AuditDecisionPath,
+  state: GameState,
+): VariantRunResult {
+  const requiresChoice = card.metadata?.requiresChoice as
+    | 'class'
+    | 'rival'
+    | null
+    | undefined;
+  if (!requiresChoice) {
+    return { supported: false, reason: 'card does not declare requiresChoice' };
+  }
+  if (card.runtimePath !== 'inline-hand-apply') {
+    return {
+      supported: false,
+      reason: `variant run not supported for runtime path ${card.runtimePath}`,
+    };
+  }
+  void choice;
+  const def = lookupHandCard(card.id);
+  if (!def) {
+    return { supported: false, reason: `no HandCardDefinition for ${card.id}` };
+  }
+  const [choiceA, choiceB] = pickSyntheticChoicePair(def, state);
+  if (!choiceA || !choiceB) {
+    return {
+      supported: false,
+      reason: `fixture lacks two distinct ${requiresChoice} targets for ${card.id}`,
+    };
+  }
+  return {
+    supported: true,
+    before: state,
+    afterA: def.apply(state, choiceA),
+    afterB: def.apply(state, choiceB),
+  };
 }
 
 // ============================================================
@@ -113,4 +172,35 @@ function pickSyntheticChoice(
     return { kind: 'rival', neighborId };
   }
   return null;
+}
+
+/**
+ * Pick two distinct synthetic `HandCardChoice` targets so the caller can
+ * compare two apply runs. Returns `[null, null]` when the fixture cannot
+ * supply two distinct targets. For class-driven cards, two different
+ * PopulationClasses are always available (five enum values). For rival-
+ * driven cards we need at least two neighbors in the fixture.
+ */
+function pickSyntheticChoicePair(
+  def: HandCardDefinition,
+  state: GameState,
+): [HandCardChoice | null, HandCardChoice | null] {
+  if (!def.requiresChoice) return [null, null];
+  if (def.requiresChoice === 'class') {
+    return [
+      { kind: 'class', class: PopulationClass.Commoners },
+      { kind: 'class', class: PopulationClass.Nobility },
+    ];
+  }
+  if (def.requiresChoice === 'rival') {
+    const neighbors = state.diplomacy.neighbors;
+    const a = neighbors[0]?.id;
+    const b = neighbors[1]?.id;
+    if (!a || !b || a === b) return [null, null];
+    return [
+      { kind: 'rival', neighborId: a },
+      { kind: 'rival', neighborId: b },
+    ];
+  }
+  return [null, null];
 }

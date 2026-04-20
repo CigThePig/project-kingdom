@@ -57,4 +57,65 @@ describe('hand-card analyzer', () => {
     expect(m).toBeDefined();
     expect(m!.readsChoice).toBe(true);
   });
+
+  // ----------------------------------------------------------------
+  // M5D.A — fine-grained markers: choice usage depth, early-return guards,
+  // and temp-modifier shape inventory.
+  // ----------------------------------------------------------------
+
+  it('hand_royal_pardon uses no choice and has no early-return guards', () => {
+    const m = index.get('hand_royal_pardon');
+    expect(m).toBeDefined();
+    expect(m!.choiceUsageKind).toBe('none');
+    expect(m!.earlyReturnOnMissingId).toBe(false);
+    expect(m!.silentFallbackOnChoiceKind).toBe(false);
+  });
+
+  it('hand_court_favor has a silent fallback on choice.kind and deep choice usage', () => {
+    const m = index.get('hand_court_favor');
+    expect(m).toBeDefined();
+    expect(m!.silentFallbackOnChoiceKind).toBe(true);
+    // `choice.class` is read after the guard — deep usage.
+    expect(m!.choiceUsageKind).toBe('deep');
+  });
+
+  it('hand_spymasters_whisper has an early-return-on-missing-id guard and deep choice usage', () => {
+    const m = index.get('hand_spymasters_whisper');
+    expect(m).toBeDefined();
+    expect(m!.earlyReturnOnMissingId).toBe(true);
+    expect(m!.silentFallbackOnChoiceKind).toBe(false);
+    expect(m!.choiceUsageKind).toBe('deep');
+  });
+
+  it('hand_quiet_word records a fully-shaped queued modifier', () => {
+    const m = index.get('hand_quiet_word');
+    expect(m).toBeDefined();
+    expect(m!.queuedModifiers.length).toBe(1);
+    const mod = m!.queuedModifiers[0];
+    expect(mod.hasId).toBe(true);
+    expect(mod.hasSourceTag).toBe(true);
+    expect(mod.hasTurnApplied).toBe(true);
+    expect(mod.turnsRemaining).toBe('literal');
+    expect(mod.effectKeys).toContain('stabilityDelta');
+  });
+
+  it('hand_festival_proclaimed queues a multi-class satisfaction modifier', () => {
+    const m = index.get('hand_festival_proclaimed');
+    expect(m).toBeDefined();
+    expect(m!.queuedModifiers.length).toBe(1);
+    const mod = m!.queuedModifiers[0];
+    expect(mod.effectKeys.sort()).toEqual([
+      'clergySatDelta',
+      'commonerSatDelta',
+      'merchantSatDelta',
+      'militaryCasteSatDelta',
+      'nobilitySatDelta',
+    ]);
+  });
+
+  it('hand_reserve_forces records no queued modifiers', () => {
+    const m = index.get('hand_reserve_forces');
+    expect(m).toBeDefined();
+    expect(m!.queuedModifiers).toEqual([]);
+  });
 });

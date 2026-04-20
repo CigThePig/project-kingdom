@@ -43,12 +43,21 @@ import { scan as severityMagScan, SCAN_ID as SEVERITY_MAG_ID } from './scans/sub
 import { scan as choiceClonesScan, SCAN_ID as CHOICE_CLONES_ID } from './scans/substance/choice-clones';
 
 import { scan as unresolvedTokensScan, SCAN_ID as UNRESOLVED_TOKENS_ID } from './scans/text/unresolved-tokens';
+import { scan as promiseDeliveryScan, SCAN_ID as PROMISE_DELIVERY_ID } from './scans/text/promise-delivery';
+import { scan as scopeMismatchScan, SCAN_ID as SCOPE_MISMATCH_ID } from './scans/text/scope-mismatch';
 
 import { scan as pressurePrefixParityScan, SCAN_ID as PRESSURE_PREFIX_PARITY_ID } from './scans/engine/pressure-prefix-parity';
 import { scan as consequenceWriteParityScan, SCAN_ID as CONSEQUENCE_WRITE_PARITY_ID } from './scans/engine/consequence-write-parity';
 import { scan as textSourceParityScan, SCAN_ID as TEXT_SOURCE_PARITY_ID } from './scans/engine/text-source-parity';
 import { scan as runtimePathParityScan, SCAN_ID as RUNTIME_PATH_PARITY_ID } from './scans/engine/runtime-path-parity';
 import { scan as readerWriterRoundtripScan, SCAN_ID as READER_WRITER_ROUNDTRIP_ID } from './scans/engine/reader-writer-roundtrip';
+
+import { scan as handRequiresChoiceUsedScan, SCAN_ID as HAND_REQUIRES_CHOICE_USED_ID } from './scans/hand/requires-choice-used';
+import { scan as handNoOpApplyScan, SCAN_ID as HAND_NO_OP_APPLY_ID } from './scans/hand/no-op-apply';
+import { scan as handRuntimeStructuralDepthScan, SCAN_ID as HAND_RUNTIME_STRUCTURAL_DEPTH_ID } from './scans/hand/runtime-structural-depth';
+import { scan as handExpirySanityScan, SCAN_ID as HAND_EXPIRY_SANITY_ID } from './scans/hand/expiry-sanity';
+import { scan as handTempModifierShapeScan, SCAN_ID as HAND_TEMP_MODIFIER_SHAPE_ID } from './scans/hand/temp-modifier-shape';
+import { scan as handChoiceFallbackRiskScan, SCAN_ID as HAND_CHOICE_FALLBACK_RISK_ID } from './scans/hand/choice-fallback-risk';
 
 import { scan as triggerReachScan, SCAN_ID as TRIGGER_REACH_ID } from './scans/reach/trigger-attainability';
 
@@ -76,11 +85,19 @@ const SCANS: RegisteredScan[] = [
   { id: SEVERITY_MAG_ID, scan: severityMagScan },
   { id: CHOICE_CLONES_ID, scan: choiceClonesScan },
   { id: UNRESOLVED_TOKENS_ID, scan: unresolvedTokensScan },
+  { id: PROMISE_DELIVERY_ID, scan: promiseDeliveryScan },
+  { id: SCOPE_MISMATCH_ID, scan: scopeMismatchScan },
   { id: PRESSURE_PREFIX_PARITY_ID, scan: pressurePrefixParityScan },
   { id: CONSEQUENCE_WRITE_PARITY_ID, scan: consequenceWriteParityScan },
   { id: TEXT_SOURCE_PARITY_ID, scan: textSourceParityScan },
   { id: RUNTIME_PATH_PARITY_ID, scan: runtimePathParityScan },
   { id: READER_WRITER_ROUNDTRIP_ID, scan: readerWriterRoundtripScan },
+  { id: HAND_TEMP_MODIFIER_SHAPE_ID, scan: handTempModifierShapeScan },
+  { id: HAND_EXPIRY_SANITY_ID, scan: handExpirySanityScan },
+  { id: HAND_CHOICE_FALLBACK_RISK_ID, scan: handChoiceFallbackRiskScan },
+  { id: HAND_RUNTIME_STRUCTURAL_DEPTH_ID, scan: handRuntimeStructuralDepthScan },
+  { id: HAND_NO_OP_APPLY_ID, scan: handNoOpApplyScan },
+  { id: HAND_REQUIRES_CHOICE_USED_ID, scan: handRequiresChoiceUsedScan },
   { id: TRIGGER_REACH_ID, scan: triggerReachScan, reachOnly: true },
 ];
 

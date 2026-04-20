@@ -12,9 +12,17 @@
 import { describe, expect, it } from 'vitest';
 
 import { loadCorpus } from './corpus';
+import { HAND_CALIBRATION_FIXTURES } from './fixtures/hand-calibration';
+import { buildEmptyCorpus } from './scans/__test_helpers';
 import { scan as surfaceOnlyScan, SCAN_ID as SURFACE_ONLY_ID } from './scans/substance/surface-only';
 import { scan as choiceClonesScan, SCAN_ID as CHOICE_CLONES_ID } from './scans/substance/choice-clones';
-import type { ScanOptions } from './types';
+import { scan as handRequiresChoiceUsedScan } from './scans/hand/requires-choice-used';
+import { scan as handNoOpApplyScan } from './scans/hand/no-op-apply';
+import { scan as handRuntimeStructuralDepthScan } from './scans/hand/runtime-structural-depth';
+import { scan as handExpirySanityScan } from './scans/hand/expiry-sanity';
+import { scan as handTempModifierShapeScan } from './scans/hand/temp-modifier-shape';
+import { scan as handChoiceFallbackRiskScan } from './scans/hand/choice-fallback-risk';
+import type { Scan, ScanOptions } from './types';
 
 const ANCHOR = 'evt_exp_eco_tax_dispute';
 
@@ -70,4 +78,34 @@ describe('calibration: evt_exp_eco_tax_dispute', () => {
     const followUps = ev!.followUpEvents ?? [];
     expect(followUps.some((fu) => fu.triggerChoiceId === 'grant_partial_amnesty')).toBe(true);
   });
+});
+
+// ============================================================
+// Phase 5D hand-card calibration fixtures. Each fixture is a synthetic
+// `AuditCard` with expected finding codes; the scans below must emit
+// exactly the predicted codes against each fixture.
+// ============================================================
+
+const HAND_SCANS: Scan[] = [
+  handRequiresChoiceUsedScan,
+  handNoOpApplyScan,
+  handRuntimeStructuralDepthScan,
+  handExpirySanityScan,
+  handTempModifierShapeScan,
+  handChoiceFallbackRiskScan,
+];
+
+describe('calibration: hand-card Phase 5D fixtures', () => {
+  for (const fixture of HAND_CALIBRATION_FIXTURES) {
+    it(`${fixture.id} — ${fixture.label}`, () => {
+      const corpus = buildEmptyCorpus();
+      corpus.auditCards.push(fixture.card);
+      const codes = HAND_SCANS.flatMap((s) => s(corpus, FULL_OPTS))
+        .filter((f) => f.cardId === fixture.card.id)
+        .map((f) => f.code)
+        .sort();
+      const expected = [...fixture.expectedCodes].sort();
+      expect(codes).toEqual(expected);
+    });
+  }
 });

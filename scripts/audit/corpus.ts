@@ -36,7 +36,7 @@ import { KINGDOM_FEATURE_REGISTRY } from '../../src/data/kingdom-features/index'
 import { buildAllAuditCards } from './adapters';
 import { buildCoverageMatrix } from './coverage/matrix';
 import { validateAuditCards } from './ir-schema';
-import { fingerprintChoice } from './runtime/fingerprint';
+import { fingerprintChoice, fingerprintChoiceVariants } from './runtime/fingerprint';
 import { buildFixtures } from './runtime/fixtures';
 import type { Corpus, Family } from './types';
 
@@ -119,14 +119,23 @@ export async function loadCorpus(
 function attachRuntimeFingerprints(cards: import('./ir').AuditCard[]): void {
   const fixtures = buildFixtures();
   for (const card of cards) {
+    const requiresChoice =
+      (card.metadata as { requiresChoice?: unknown } | undefined)?.requiresChoice ?? null;
     for (const choice of card.choices) {
       const fp = fingerprintChoice(card, choice, fixtures);
       choice.runtimeFingerprint = fp;
+      if (requiresChoice != null) {
+        const variants = fingerprintChoiceVariants(card, choice, fixtures);
+        choice.runtimeFingerprintVariants = variants;
+      }
     }
     // Flip runtimeDiffCoverage true once at least one path produced a
-    // fingerprint — the family is harness-supported even if a specific
-    // fixture couldn't produce a diff for one of its paths.
-    if (card.choices.some((c) => c.runtimeFingerprint)) {
+    // fingerprint (base or variants) — the family is harness-supported even
+    // if a specific fixture couldn't produce a diff for one of its paths.
+    const anyRuntime = card.choices.some(
+      (c) => c.runtimeFingerprint || c.runtimeFingerprintVariants,
+    );
+    if (anyRuntime) {
       card.coverage = { ...card.coverage, runtimeDiffCoverage: true };
     }
   }

@@ -42,6 +42,25 @@ const EFFECT_SOURCE_VALUES = [
 
 const SOURCE_KIND_VALUES = ['authored', 'generated', 'inline'];
 
+const queuedModifierSummarySchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'turnsRemaining',
+    'effectKeys',
+    'hasSourceTag',
+    'hasTurnApplied',
+    'hasId',
+  ],
+  properties: {
+    turnsRemaining: { type: 'string', enum: ['literal', 'dynamic'] },
+    effectKeys: { type: 'array', items: { type: 'string' } },
+    hasSourceTag: { type: 'boolean' },
+    hasTurnApplied: { type: 'boolean' },
+    hasId: { type: 'boolean' },
+  },
+} as const;
+
 const structuralMarkerSummarySchema = {
   type: 'object',
   additionalProperties: false,
@@ -52,6 +71,10 @@ const structuralMarkerSummarySchema = {
     'readsChoice',
     'writesPressure',
     'touchesBond',
+    'choiceUsageKind',
+    'earlyReturnOnMissingId',
+    'silentFallbackOnChoiceKind',
+    'queuedModifiers',
   ],
   properties: {
     touchesPersistentConsequences: { type: 'boolean' },
@@ -60,6 +83,10 @@ const structuralMarkerSummarySchema = {
     readsChoice: { type: 'boolean' },
     writesPressure: { type: 'boolean' },
     touchesBond: { type: 'boolean' },
+    choiceUsageKind: { type: 'string', enum: ['none', 'shallow', 'deep'] },
+    earlyReturnOnMissingId: { type: 'boolean' },
+    silentFallbackOnChoiceKind: { type: 'boolean' },
+    queuedModifiers: { type: 'array', items: queuedModifierSummarySchema },
   },
 } as const;
 
@@ -108,6 +135,44 @@ const decisionPathSchema = {
             structuralCount: { type: 'integer', minimum: 0 },
             surfaceCount: { type: 'integer', minimum: 0 },
             noOp: { type: 'boolean' },
+          },
+        },
+      ],
+    },
+    runtimeFingerprintVariants: {
+      oneOf: [
+        { type: 'null' },
+        {
+          type: 'object',
+          additionalProperties: false,
+          required: ['a', 'b'],
+          properties: {
+            a: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['fixtureId', 'touches', 'classes', 'structuralCount', 'surfaceCount', 'noOp'],
+              properties: {
+                fixtureId: { type: 'string', minLength: 1 },
+                touches: { type: 'array', items: { type: 'string' } },
+                classes: { type: 'array', items: { type: 'string' } },
+                structuralCount: { type: 'integer', minimum: 0 },
+                surfaceCount: { type: 'integer', minimum: 0 },
+                noOp: { type: 'boolean' },
+              },
+            },
+            b: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['fixtureId', 'touches', 'classes', 'structuralCount', 'surfaceCount', 'noOp'],
+              properties: {
+                fixtureId: { type: 'string', minLength: 1 },
+                touches: { type: 'array', items: { type: 'string' } },
+                classes: { type: 'array', items: { type: 'string' } },
+                structuralCount: { type: 'integer', minimum: 0 },
+                surfaceCount: { type: 'integer', minimum: 0 },
+                noOp: { type: 'boolean' },
+              },
+            },
           },
         },
       ],
