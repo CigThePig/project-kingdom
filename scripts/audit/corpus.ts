@@ -18,6 +18,7 @@ import { NEGOTIATION_EFFECTS } from '../../src/data/events/negotiation-effects';
 
 import { DECREE_POOL } from '../../src/data/decrees/index';
 import { DECREE_EFFECTS } from '../../src/data/decrees/effects';
+import { DECREE_EFFECT_REGISTRY } from '../../src/engine/resolution/apply-action-effects';
 
 import { WORLD_EVENT_DEFINITIONS, WORLD_EVENT_CHOICE_EFFECTS } from '../../src/data/world-events/index';
 import { WORLD_EVENT_TEXT } from '../../src/data/text/world-events';
@@ -39,7 +40,11 @@ export async function loadCorpus(): Promise<Corpus> {
 
   const corpus: Corpus = {
     events: { pool: EVENT_POOL, followUpPool: FOLLOW_UP_POOL },
-    decrees: { pool: DECREE_POOL, effects: DECREE_EFFECTS },
+    decrees: {
+      pool: DECREE_POOL,
+      effects: DECREE_EFFECTS,
+      handlerKeys: new Set(DECREE_EFFECT_REGISTRY.keys()),
+    },
     assessments: {
       pool: ASSESSMENT_POOL,
       effects: ASSESSMENT_EFFECTS,

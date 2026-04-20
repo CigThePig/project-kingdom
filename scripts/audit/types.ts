@@ -34,6 +34,8 @@ export interface Corpus {
   decrees: {
     pool: import('../../src/data/decrees/index').DecreeDefinition[];
     effects: Record<string, import('../../src/engine/types').MechanicalEffectDelta>;
+    /** Keys registered in DECREE_EFFECT_REGISTRY (decree_ prefix stripped). */
+    handlerKeys: Set<string>;
   };
   assessments: {
     pool: import('../../src/engine/events/event-engine').EventDefinition[];

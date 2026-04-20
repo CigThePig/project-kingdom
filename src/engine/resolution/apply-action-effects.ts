@@ -60,7 +60,8 @@ import {
   createCulturalExchangeBond,
   createCoalitionBond,
 } from '../systems/bonds';
-import { applyEventChoiceEffects, applyStorylineBranchEffects } from '../events/apply-event-effects';
+import { applyEventChoiceEffects, applyStorylineBranchEffects, applyMechanicalEffectDelta } from '../events/apply-event-effects';
+import { DECREE_EFFECTS as DECREE_PREVIEW_EFFECTS } from '../../data/decrees/effects';
 import { recordBranchDecision } from '../events/storyline-engine';
 import { turnRng, rngSuffix } from './turn-rng';
 import { KINGDOM_FEATURE_REGISTRY } from '../../data/kingdom-features/index';
@@ -277,7 +278,7 @@ function pickSecondMarriageNeighbor(state: GameState, excludeId: string | undefi
   return peaceful[0]?.id;
 }
 
-const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
+export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   // --- Market Chain ---
   ['market_charter', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.market_charter)],
   ['trade_guild_expansion', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.trade_guild_expansion)],
@@ -392,6 +393,19 @@ const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
   ['social_contract', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.social_contract)],
   // --- Land Redistribution ---
   ['land_redistribution', (state, action) => applyFullDecreeDeltas(state, action, DECREE_EFFECTS.land_redistribution)],
+  // --- Phase 6 — Repeatable Expansion Decrees ---
+  // One-shot deltas applied from the authored preview table. Repeatable
+  // decrees don't get a KINGDOM_FEATURE_REGISTRY entry, so without an
+  // explicit handler they'd resolve silently (caught by
+  // wiring.decree-structural-depth).
+  ['exp_trade_caravan', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_trade_caravan, action.targetRegionId)],
+  ['exp_levy_militia', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_levy_militia, action.targetRegionId)],
+  ['exp_blessing_ceremony', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_blessing_ceremony, action.targetRegionId)],
+  ['exp_emergency_grain', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_emergency_grain, action.targetRegionId)],
 ]);
 
 // ============================================================
