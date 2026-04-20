@@ -2,7 +2,7 @@
 family: hand
 totalCards: 40
 status: pending
-lastScan: 2026-04-20T09:00:48.251Z
+lastScan: 2026-04-20T21:20:15.866Z
 ---
 
 # Hand — Audit findings
@@ -29,15 +29,16 @@ in place but write an outcome — the seeder will keep your edits.
 
 | cardId | choiceId | severity | confidence | scanId | message | outcome | notes |
 |---|---|---|---|---|---|---|---|
+| hand_master_builder | play | MAJOR | HEURISTIC | text.promise-delivery | hand_master_builder: body references "construction" but runtime diff shows no matching touch (touches: activeTemporaryModifiers.length, activeTemporaryModifiers[1]). |  |  |
+| hand_master_builder | play | MAJOR | HEURISTIC | text.promise-delivery | hand_master_builder: body references "military readiness" but runtime diff shows no matching touch (touches: activeTemporaryModifiers.length, activeTemporaryModifiers[1]). |  |  |
+| hand_scholars_insight | play | MAJOR | HEURISTIC | text.promise-delivery | hand_scholars_insight: body references "faith" but runtime diff shows no matching touch (touches: activeTemporaryModifiers.length, activeTemporaryModifiers[1]). |  |  |
 | hand_royal_announcement | play | MAJOR | HEURISTIC | text.promise-delivery | hand_royal_announcement: body references "construction" but runtime diff shows no matching touch (touches: narrativePressure.authority, narrativePressure.piety, narrativePressure.commerce). |  |  |
 | hand_seize_contraband | play | MAJOR | HEURISTIC | text.promise-delivery | hand_seize_contraband: body references "agent/operation" but runtime diff shows no matching touch (touches: treasury.balance, population.Merchants.satisfaction). |  |  |
 | hand_emergency_levy | play | MAJOR | HEURISTIC | text.scope-mismatch | hand_emergency_levy: body claims universal class impact ("every class" / "all classes") but runtime diff only touches 0 class path(s). |  |  |
 | hand_papal_blessing | play | MAJOR | HEURISTIC | text.scope-mismatch | hand_papal_blessing: body claims universal class impact ("every class" / "all classes") but runtime diff only touches 1 class path(s). |  |  |
 | hand_grand_assize | play | MAJOR | HEURISTIC | text.scope-mismatch | hand_grand_assize: body claims universal class impact ("every class" / "all classes") but runtime diff only touches 1 class path(s). |  |  |
 | hand_chronicler_summoned | play | MAJOR | HEURISTIC | text.scope-mismatch | hand_chronicler_summoned: body claims universal class impact ("every class" / "all classes") but runtime diff only touches 0 class path(s). |  |  |
-| hand_spymasters_whisper | play | MINOR | HEURISTIC | hand.choice-fallback-risk | hand_spymasters_whisper: apply falls through to neighbors[0] when the player hasn't picked a rival — the target choice is effectively cosmetic when any rival exists. |  |  |
 | hand_court_favor | play | MAJOR | HEURISTIC | hand.choice-fallback-risk | hand_court_favor: apply contains `if (choice.kind !== '…') return state;` — the declared requiresChoice is effectively unenforced inside the body. |  |  |
-| hand_diplomatic_courier | play | MINOR | HEURISTIC | hand.choice-fallback-risk | hand_diplomatic_courier: apply falls through to neighbors[0] when the player hasn't picked a rival — the target choice is effectively cosmetic when any rival exists. |  |  |
 | hand_reserve_forces | play | MAJOR | RUNTIME_GROUNDED | hand.runtime-structural-depth | hand_reserve_forces: runtime diff shows only surface touches (military.readiness) — the card pushes sliders with no structural side effect. |  |  |
 | hand_court_favor | play | MAJOR | RUNTIME_GROUNDED | hand.runtime-structural-depth | hand_court_favor: runtime diff shows only surface touches (population.Commoners.satisfaction) — the card pushes sliders with no structural side effect. |  |  |
 | hand_forced_levy | play | MAJOR | RUNTIME_GROUNDED | hand.runtime-structural-depth | hand_forced_levy: runtime diff shows only surface touches (population.Commoners.satisfaction, military.forceSize) — the card pushes sliders with no structural side effect. |  |  |
@@ -61,7 +62,5 @@ in place but write an outcome — the seeder will keep your edits.
 | hand_grand_assize | play | MAJOR | RUNTIME_GROUNDED | hand.runtime-structural-depth | hand_grand_assize: runtime diff shows only surface touches (treasury.balance, population.Nobility.satisfaction, stability.value) — the card pushes sliders with no structural side effect. |  |  |
 | hand_chronicler_summoned | play | MAJOR | RUNTIME_GROUNDED | hand.runtime-structural-depth | hand_chronicler_summoned: runtime diff shows only surface touches (faithCulture.faithLevel, faithCulture.culturalCohesion) — the card pushes sliders with no structural side effect. |  |  |
 | hand_open_court | play | MAJOR | RUNTIME_GROUNDED | hand.runtime-structural-depth | hand_open_court: runtime diff shows only surface touches (population.Nobility.satisfaction, population.Clergy.satisfaction, population.Merchants.satisfaction, population.Commoners.satisfaction, population.MilitaryCaste.satisfaction, faithCulture.culturalCohesion) — the card pushes sliders with no structural side effect. |  |  |
-| hand_master_builder | play | CRITICAL | RUNTIME_GROUNDED | hand.no-op-apply | hand_master_builder: apply returned an unchanged GameState in the harness and the AST found no structural markers — the card does nothing when played. |  |  |
-| hand_scholars_insight | play | CRITICAL | RUNTIME_GROUNDED | hand.no-op-apply | hand_scholars_insight: apply returned an unchanged GameState in the harness and the AST found no structural markers — the card does nothing when played. |  |  |
 
 <!-- AUTO-GENERATED:END -->

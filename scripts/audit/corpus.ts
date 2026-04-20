@@ -200,7 +200,8 @@ function classifyEvent(ev: EventDefinition): Family {
  *
  * Tag production model (matches engine/resolution/apply-action-effects.ts):
  *   - Every event choice produces `${eventId}:${choiceId}` on resolution.
- *   - Every decree enacted produces `decree:${decreeId}`.
+ *   - Every decree enacted produces `decree:${decreeId}` and the generic
+ *     `recent_decree_issued` tag (runtime writer: applyDecreeEffect).
  *   - Negotiation terms produce `${negotiationId}:${termId}` analogously.
  *   - World events do not produce consequence tags.
  *
@@ -227,7 +228,10 @@ function buildTagProducers(): Map<string, Array<{ kind: 'event' | 'decree'; id: 
     for (const t of n.terms) push(`${n.id}:${t.termId}`, { kind: 'event', id: n.id, choiceId: t.termId });
     push(`${n.id}:${n.rejectChoiceId}`, { kind: 'event', id: n.id, choiceId: n.rejectChoiceId });
   }
-  for (const d of DECREE_POOL) push(`decree:${d.id}`, { kind: 'decree', id: d.id });
+  for (const d of DECREE_POOL) {
+    push(`decree:${d.id}`, { kind: 'decree', id: d.id });
+    push('recent_decree_issued', { kind: 'decree', id: d.id });
+  }
 
   return out;
 }

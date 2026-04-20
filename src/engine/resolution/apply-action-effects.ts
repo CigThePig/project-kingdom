@@ -406,6 +406,126 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
     applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_blessing_ceremony, action.targetRegionId)],
   ['exp_emergency_grain', (state, action) =>
     applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_emergency_grain, action.targetRegionId)],
+
+  // --- Food Standalone Decrees ---
+  ['military_ration_reform', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_military_ration_reform, action.targetRegionId)],
+  ['seasonal_reserve_mandate', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_seasonal_reserve_mandate, action.targetRegionId)],
+  ['agricultural_trade_compact', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_agricultural_trade_compact, action.targetRegionId)],
+  ['harvest_tithe_exemption', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_harvest_tithe_exemption, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Agricultural ---
+  ['crop_rotation', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_crop_rotation, action.targetRegionId)],
+  ['irrigation_works', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_irrigation_works, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Military ---
+  ['advanced_fortifications', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_advanced_fortifications, action.targetRegionId)],
+  ['elite_training_program', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_elite_training_program, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Civic ---
+  ['tax_code_reform', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_tax_code_reform, action.targetRegionId)],
+  ['provincial_governance', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_provincial_governance, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Maritime/Trade ---
+  ['harbor_expansion', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_harbor_expansion, action.targetRegionId)],
+  ['trade_fleet_commission', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_trade_fleet_commission, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Cultural/Scholarly ---
+  ['university_charter', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_university_charter, action.targetRegionId)],
+  ['diplomatic_academy', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_diplomatic_academy, action.targetRegionId)],
+
+  // --- Knowledge-Gated: Natural Philosophy ---
+  ['engineering_corps', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_engineering_corps, action.targetRegionId)],
+  ['medical_reforms', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_medical_reforms, action.targetRegionId)],
+
+  // --- Expansion (Phase 7 wave 1) ---
+  ['exp_spy_network', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_spy_network, action.targetRegionId)],
+  ['exp_intelligence_bureau', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_intelligence_bureau, action.targetRegionId)],
+  ['exp_shadow_council', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_shadow_council, action.targetRegionId)],
+  ['exp_village_schools', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_village_schools, action.targetRegionId)],
+  ['exp_provincial_academies', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_provincial_academies, action.targetRegionId)],
+  ['exp_university_system', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_university_system, action.targetRegionId)],
+  ['exp_land_reform', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_land_reform, action.targetRegionId)],
+  ['exp_irrigation_authority', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_irrigation_authority, action.targetRegionId)],
+  ['exp_agricultural_modernization', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_agricultural_modernization, action.targetRegionId)],
+  ['exp_circuit_courts', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_circuit_courts, action.targetRegionId)],
+  ['exp_common_law', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_common_law, action.targetRegionId)],
+  ['exp_supreme_tribunal', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_supreme_tribunal, action.targetRegionId)],
+  ['exp_mint_coinage', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_mint_coinage, action.targetRegionId)],
+  ['exp_war_engineers', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_war_engineers, action.targetRegionId)],
+  ['exp_infrastructure_audit', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_infrastructure_audit, action.targetRegionId)],
+  ['exp_anti_corruption_campaign', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_anti_corruption_campaign, action.targetRegionId)],
+  ['exp_interfaith_council', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_interfaith_council, action.targetRegionId)],
+  ['exp_peace_envoy', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_peace_envoy, action.targetRegionId)],
+  ['exp_cultural_exchange_program', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_cultural_exchange_program, action.targetRegionId)],
+  ['exp_public_works', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_exp_public_works, action.targetRegionId)],
+
+  // --- Expansion Wave 2 ---
+  ['w2_weights_and_measures', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_weights_and_measures, action.targetRegionId)],
+  ['w2_university_charter', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_university_charter, action.targetRegionId)],
+  ['w2_codify_the_common_law', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_codify_the_common_law, action.targetRegionId)],
+  ['w2_expand_the_bureaucracy', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_expand_the_bureaucracy, action.targetRegionId)],
+  ['w2_free_cities_charter', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_free_cities_charter, action.targetRegionId)],
+  ['w2_justice_circuits', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_justice_circuits, action.targetRegionId)],
+  ['w2_sumptuary_laws', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_sumptuary_laws, action.targetRegionId)],
+  ['w2_mint_standards', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_mint_standards, action.targetRegionId)],
+  ['w2_road_construction', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_road_construction, action.targetRegionId)],
+  ['w2_bridge_program', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_bridge_program, action.targetRegionId)],
+  ['w2_military_reforms', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_military_reforms, action.targetRegionId)],
+  ['w2_hunting_regulations', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_hunting_regulations, action.targetRegionId)],
+  ['w2_religious_councils', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_religious_councils, action.targetRegionId)],
+  ['w2_calendar_reform', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_calendar_reform, action.targetRegionId)],
+  ['w2_language_standardization', (state, action) =>
+    applyMechanicalEffectDelta(state, DECREE_PREVIEW_EFFECTS.decree_w2_language_standardization, action.targetRegionId)],
 ]);
 
 // ============================================================
@@ -440,10 +560,26 @@ function applyDecreeEffect(state: GameState, action: QueuedAction): GameState {
     tag: `decree:${action.actionDefinitionId}`,
   };
 
+  // Also record a generic "a decree was just issued" tag so events that
+  // want to fire after any decree enactment (e.g. evt_exp_kgd_decree_dispute)
+  // can gate on it. Paired with nobility/class satisfaction thresholds the
+  // trigger still needs external state to match, so we don't risk spamming.
+  const genericRecentTag: PersistentConsequence = {
+    sourceId: action.actionDefinitionId,
+    sourceType: 'event',
+    choiceMade: action.actionDefinitionId,
+    turnApplied: state.turn.turnNumber,
+    tag: 'recent_decree_issued',
+  };
+
   let finalState = {
     ...stateAfterEffects,
     issuedDecrees: [...stateAfterEffects.issuedDecrees, issuedRecord],
-    persistentConsequences: [...stateAfterEffects.persistentConsequences, consequence],
+    persistentConsequences: [
+      ...stateAfterEffects.persistentConsequences,
+      consequence,
+      genericRecentTag,
+    ],
   };
 
   // 5. Create a kingdom feature if this decree has a registry entry.

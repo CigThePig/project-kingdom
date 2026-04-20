@@ -136,17 +136,25 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_master_builder: {
     id: 'hand_master_builder',
     title: 'Master Builder',
-    body: 'A veteran architect accelerates the nearest project by one month.',
+    body: 'A veteran architect accelerates the nearest project by one month. If no project is underway, the builders stand ready — readiness and commerce notch up for two turns.',
     expiresAfterTurns: 10,
     apply: (state) => {
-      if (state.constructionProjects.length === 0) return state;
-      let shortened = false;
-      const updated = state.constructionProjects.map((p) => {
-        if (shortened) return p;
-        shortened = true;
-        return { ...p, turnsRemaining: Math.max(0, p.turnsRemaining - 1) };
+      if (state.constructionProjects.length > 0) {
+        let shortened = false;
+        const updated = state.constructionProjects.map((p) => {
+          if (shortened) return p;
+          shortened = true;
+          return { ...p, turnsRemaining: Math.max(0, p.turnsRemaining - 1) };
+        });
+        return { ...state, constructionProjects: updated };
+      }
+      return queueTemporaryModifier(state, {
+        id: `hand_master_builder_${state.turn.turnNumber}`,
+        sourceTag: 'hand:master_builder',
+        turnsRemaining: 2,
+        turnApplied: state.turn.turnNumber,
+        effectPerTurn: { stabilityDelta: 1, merchantSatDelta: 1 },
       });
-      return { ...state, constructionProjects: updated };
     },
   },
 
@@ -326,13 +334,20 @@ const BASE_HAND_CARDS: Record<HandCardIdBase, HandCardDefinition> = {
   hand_scholars_insight: {
     id: 'hand_scholars_insight',
     title: "Scholar's Insight",
-    body: 'A visiting scholar breaks an old deadlock. Research on the active branch advances.',
+    body: 'A visiting scholar breaks an old deadlock. Research on the active branch advances — or, if no branch is focused, the clergy gain standing as patrons for two turns.',
     expiresAfterTurns: 10,
     apply: (state) => {
       const branch = state.policies.researchFocus;
-      if (!branch) return state;
-      const branchState = state.knowledge.branches[branch];
-      if (!branchState) return state;
+      const branchState = branch ? state.knowledge.branches[branch] : undefined;
+      if (!branch || !branchState) {
+        return queueTemporaryModifier(state, {
+          id: `hand_scholars_insight_${state.turn.turnNumber}`,
+          sourceTag: 'hand:scholars_insight',
+          turnsRemaining: 2,
+          turnApplied: state.turn.turnNumber,
+          effectPerTurn: { clergySatDelta: 1, faithDelta: 1 },
+        });
+      }
       return {
         ...state,
         knowledge: {
