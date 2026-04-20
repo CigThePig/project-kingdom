@@ -75,6 +75,31 @@ describe('audit pipeline smoke test', () => {
     }
   });
 
+  it('every family appears in corpus.auditCards after M2 adapters run', async () => {
+    const corpus = await loadCorpus();
+    const familiesInIR = new Set(corpus.auditCards.map((c) => c.family));
+    // Overtures are the only family without native-pool membership — they're
+    // synthetic agenda-keyed cards. All other families must be present.
+    const IR_FAMILIES: Family[] = [
+      'decree', 'crisis', 'petition', 'assessment', 'negotiation',
+      'overture', 'hand', 'world',
+    ];
+    for (const family of IR_FAMILIES) {
+      expect(familiesInIR.has(family), `family '${family}' missing from auditCards`).toBe(true);
+    }
+  });
+
+  it('coverage matrix has a row for every family in the IR', async () => {
+    const corpus = await loadCorpus();
+    const irFamilies = new Set(corpus.auditCards.map((c) => c.family));
+    for (const family of irFamilies) {
+      expect(
+        corpus.coverage.byFamily[family],
+        `coverage.byFamily['${family}'] should be populated`,
+      ).toBeDefined();
+    }
+  });
+
   it('runs every scan against the real corpus without throwing', async () => {
     const corpus = await loadCorpus();
     for (const scan of ALL_SCANS) {

@@ -98,6 +98,14 @@ export interface Corpus {
   tagProducers: Map<string, Array<{ kind: 'event' | 'decree'; id: string; choiceId?: string }>>;
   /** Tags read by triggers/storylines/branches. */
   tagReaders: Map<string, Array<{ where: 'event-trigger' | 'decree-trigger'; id: string }>>;
+
+  // ============================================================
+  // Normalized audit IR — produced by scripts/audit/adapters/*.
+  // Scans should prefer this over the raw pools above. See
+  // docs/AUDIT_SCANNER_OVERHAUL_PLAN.md §"Core data model to introduce".
+  // ============================================================
+  auditCards: import('./ir').AuditCard[];
+  coverage: import('./coverage/matrix').CoverageMatrix;
 }
 
 export interface ScanResult {

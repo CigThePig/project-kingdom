@@ -33,6 +33,9 @@ import { EVENT_TEXT } from '../../src/data/text/events';
 import { EVENT_CHOICE_STYLE_TAGS } from '../../src/data/ruling-style/flavor-tags';
 import { KINGDOM_FEATURE_REGISTRY } from '../../src/data/kingdom-features/index';
 
+import { buildAllAuditCards } from './adapters';
+import { buildCoverageMatrix } from './coverage/matrix';
+import { validateAuditCards } from './ir-schema';
 import type { Corpus, Family } from './types';
 
 // ============================================================
@@ -80,7 +83,18 @@ export async function loadCorpus(): Promise<Corpus> {
     filePathByCardId,
     tagProducers: buildTagProducers(),
     tagReaders: buildTagReaders(),
+
+    // Populated below once the rest of the corpus is built — adapters read
+    // familyByCardId/effects/text tables to shape their AuditCard output.
+    auditCards: [],
+    coverage: { byFamily: {}, overall: {} as never },
   };
+
+  // Run every family adapter, validate the combined IR, then index it.
+  const auditCards = buildAllAuditCards(corpus);
+  validateAuditCards(auditCards);
+  corpus.auditCards = auditCards;
+  corpus.coverage = buildCoverageMatrix(auditCards);
 
   return Object.freeze(corpus);
 }
