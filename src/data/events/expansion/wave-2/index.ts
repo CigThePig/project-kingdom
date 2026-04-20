@@ -88,19 +88,22 @@ const ORIGINAL_WAVE_2_CRISIS_EFFECTS: Record<
 > = {
   evt_exp_w2_comet_sighting: {
     declare_omen_of_renewal: {
-      faithDelta: 4,
-      commonerSatDelta: 3,
-      stabilityDelta: 2,
+      faithDelta: 6,
+      commonerSatDelta: 4,
+      stabilityDelta: 3,
+      regionConditionDelta: 2,
     },
     order_ritual_purification: {
-      clergySatDelta: 5,
-      treasuryDelta: -20,
-      heterodoxyDelta: -2,
+      clergySatDelta: 6,
+      treasuryDelta: -45,
+      heterodoxyDelta: -3,
+      regionConditionDelta: 1,
     },
     forbid_public_speculation: {
       stabilityDelta: -3,
-      heterodoxyDelta: 2,
-      commonerSatDelta: -2,
+      heterodoxyDelta: 3,
+      commonerSatDelta: -3,
+      regionConditionDelta: -1,
     },
   },
   evt_exp_w2_foreign_refugees: {

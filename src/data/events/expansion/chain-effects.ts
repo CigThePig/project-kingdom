@@ -72,7 +72,7 @@ export const EXPANSION_CHAIN_EFFECTS: Record<string, Record<string, MechanicalEf
     side_with_reformers:      { clergySatDelta: -5, commonerSatDelta: +4, heterodoxyDelta: +5, faithDelta: -3 },
   },
   evt_exp_chain_reformation_doctrine: {
-    adopt_new_doctrine:  { faithDelta: +5, heterodoxyDelta: -8, clergySatDelta: -6, commonerSatDelta: +5, culturalCohesionDelta: -3 },
+    adopt_new_doctrine:  { faithDelta: +5, heterodoxyDelta: -8, clergySatDelta: -6, commonerSatDelta: +5, culturalCohesionDelta: -3, treasuryDelta: -40 },
     reaffirm_tradition:  { faithDelta: +3, clergySatDelta: +6, commonerSatDelta: -4, heterodoxyDelta: +3, stabilityDelta: +2 },
     allow_dual_practice: { culturalCohesionDelta: -2, heterodoxyDelta: +4, stabilityDelta: -3, commonerSatDelta: +2, clergySatDelta: -3 },
   },
@@ -92,7 +92,7 @@ export const EXPANSION_CHAIN_EFFECTS: Record<string, Record<string, MechanicalEf
   },
   evt_exp_chain_guild_rev_shift: {
     embrace_new_order:     { merchantSatDelta: +6, commonerSatDelta: +5, nobilitySatDelta: -8, stabilityDelta: +3, culturalCohesionDelta: -2 },
-    crush_the_movement:    { nobilitySatDelta: +5, militaryCasteSatDelta: +2, merchantSatDelta: -7, commonerSatDelta: -6, stabilityDelta: -5 },
+    crush_the_movement:    { nobilitySatDelta: +5, militaryCasteSatDelta: +2, merchantSatDelta: -7, commonerSatDelta: -6, stabilityDelta: -5, treasuryDelta: -40 },
     negotiate_compromise:  { merchantSatDelta: +3, commonerSatDelta: +2, nobilitySatDelta: -3, treasuryDelta: -30, stabilityDelta: +1 },
   },
 

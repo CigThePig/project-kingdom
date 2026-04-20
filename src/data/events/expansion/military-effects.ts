@@ -95,7 +95,7 @@ export const EXPANSION_MILITARY_EFFECTS: Record<string, Record<string, Mechanica
   // 11. Court Martial — Serious
   // ============================================================
   evt_exp_mil_court_martial: {
-    public_tribunal:      { stabilityDelta: +4, militaryMoraleDelta: -3, militaryCasteSatDelta: -2, commonerSatDelta: +2 },
+    public_tribunal:      { stabilityDelta: +4, militaryMoraleDelta: -3, militaryCasteSatDelta: -2, commonerSatDelta: +2, treasuryDelta: -20 },
     quiet_discharge:      { stabilityDelta: +1, militaryMoraleDelta: +2, militaryCasteSatDelta: -1, nobilitySatDelta: -2 },
     pardon_and_reassign:  { militaryCasteSatDelta: +3, stabilityDelta: -3, commonerSatDelta: -2, militaryMoraleDelta: -1 },
   },

@@ -236,7 +236,7 @@ export const EXPANSION_ESPIONAGE_EFFECTS: Record<string, Record<string, Mechanic
   },
   evt_exp_esp_secret_alliance_exposed: {
     publicly_confirm: {
-      diplomacyDeltas: { neighbor_arenthal: +5, neighbor_valdris: -10 },
+      diplomacyDeltas: { neighbor_arenthal: +5, neighbor_valdris: -20 },
       stabilityDelta: +3,
       espionageNetworkDelta: -2,
       militaryReadinessDelta: +3,
