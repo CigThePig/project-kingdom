@@ -17,12 +17,17 @@ describe('runtime fingerprint loader flag', () => {
     expect(pardon!.coverage.runtimeDiffCoverage).toBe(true);
   });
 
-  it('leaves unsupported families with null fingerprint', async () => {
+  it('attaches fingerprints to crisis events once event-resolution is supported', async () => {
     const corpus = await loadCorpus({ runtimeFingerprint: true });
-    const event = corpus.auditCards.find((c) => c.family === 'crisis');
+    const event = corpus.auditCards.find(
+      (c) => c.family === 'crisis' && c.runtimePath === 'event-resolution',
+    );
     expect(event).toBeDefined();
-    expect(event!.choices[0]!.runtimeFingerprint).toBeNull();
-    expect(event!.coverage.runtimeDiffCoverage).toBe(false);
+    const anySupported = event!.choices.some(
+      (p) => p.runtimeFingerprint != null || p.runtimeFingerprintVariants != null,
+    );
+    expect(anySupported).toBe(true);
+    expect(event!.coverage.runtimeDiffCoverage).toBe(true);
   });
 
   it('leaves fingerprint undefined when the flag is off', async () => {

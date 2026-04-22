@@ -46,6 +46,7 @@ import { scan as choiceClonesScan, SCAN_ID as CHOICE_CLONES_ID } from './scans/s
 import { scan as unresolvedTokensScan, SCAN_ID as UNRESOLVED_TOKENS_ID } from './scans/text/unresolved-tokens';
 import { scan as promiseDeliveryScan, SCAN_ID as PROMISE_DELIVERY_ID } from './scans/text/promise-delivery';
 import { scan as scopeMismatchScan, SCAN_ID as SCOPE_MISMATCH_ID } from './scans/text/scope-mismatch';
+import { scan as smartCardCoverageScan, SCAN_ID as SMART_CARD_COVERAGE_ID } from './scans/text/smart-card-coverage';
 
 import { scan as pressurePrefixParityScan, SCAN_ID as PRESSURE_PREFIX_PARITY_ID } from './scans/engine/pressure-prefix-parity';
 import { scan as consequenceWriteParityScan, SCAN_ID as CONSEQUENCE_WRITE_PARITY_ID } from './scans/engine/consequence-write-parity';
@@ -114,6 +115,7 @@ const SCANS: RegisteredScan[] = [
   { id: UNRESOLVED_TOKENS_ID, scan: unresolvedTokensScan },
   { id: PROMISE_DELIVERY_ID, scan: promiseDeliveryScan },
   { id: SCOPE_MISMATCH_ID, scan: scopeMismatchScan },
+  { id: SMART_CARD_COVERAGE_ID, scan: smartCardCoverageScan },
   { id: PRESSURE_PREFIX_PARITY_ID, scan: pressurePrefixParityScan },
   { id: CONSEQUENCE_WRITE_PARITY_ID, scan: consequenceWriteParityScan },
   { id: TEXT_SOURCE_PARITY_ID, scan: textSourceParityScan },

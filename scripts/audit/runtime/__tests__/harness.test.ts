@@ -37,11 +37,21 @@ describe('runtime harness', () => {
     );
   });
 
-  it('returns unsupported for world-event families for now', async () => {
+  it('runs a world event through the applyEventChoiceEffects path', async () => {
     const corpus = await loadCorpus();
     const worldCard = corpus.auditCards.find((c) => c.family === 'world');
     expect(worldCard).toBeDefined();
     const result = runChoice(worldCard!, worldCard!.choices[0], mid);
-    expect(result.supported).toBe(false);
+    expect(result.supported).toBe(true);
+  });
+
+  it('runs a crisis event through event-resolution and returns a before/after pair', async () => {
+    const corpus = await loadCorpus();
+    const crisisCard = corpus.auditCards.find(
+      (c) => c.family === 'crisis' && c.runtimePath === 'event-resolution',
+    );
+    expect(crisisCard).toBeDefined();
+    const result = runChoice(crisisCard!, crisisCard!.choices[0], mid);
+    expect(result.supported).toBe(true);
   });
 });
