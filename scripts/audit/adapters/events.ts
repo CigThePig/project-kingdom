@@ -32,6 +32,14 @@ export function toAuditCards(corpus: Corpus): AuditCard[] {
     const choices = ev.choices.map((c) => {
       const effects = effectsByChoice[c.choiceId] as Record<string, unknown> | undefined;
       const followUp = ev.followUpEvents?.find((f) => f.triggerChoiceId === c.choiceId);
+      // Thread per-choice slotCost / isFree onto declaredEffects using
+      // underscore-prefixed keys so cost-asymmetry can read them without
+      // colliding with real MechanicalEffectDelta fields.
+      const declaredEffects: Record<string, unknown> = {
+        ...(effects ?? {}),
+        _slotCost: c.slotCost,
+        _isFree: c.isFree,
+      };
       return buildDecisionPath({
         cardId: ev.id,
         family,
@@ -39,7 +47,7 @@ export function toAuditCards(corpus: Corpus): AuditCard[] {
         label: text?.choiceLabels[c.choiceId],
         effectSourceKind: effects ? 'event-effects' : 'none',
         textSourceKind: text?.sourceKind ?? 'none',
-        declaredEffects: effects ?? null,
+        declaredEffects,
         pressureKey: pressureKey('event', ev.id, c.choiceId),
         consequenceTagsProduced: [eventConsequenceTag(ev.id, c.choiceId)],
         followUps: followUp ? [followUp.followUpDefinitionId] : [],
@@ -73,6 +81,7 @@ export function toAuditCards(corpus: Corpus): AuditCard[] {
           relatedStorylineId: ev.relatedStorylineId,
           weight: ev.weight,
           repeatable: ev.repeatable ?? false,
+          triggerConditions: ev.triggerConditions,
         },
         choices,
         coverage: defaultCoverage({
