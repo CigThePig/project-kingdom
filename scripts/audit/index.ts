@@ -42,11 +42,16 @@ import { scan as singleChoiceScan, SCAN_ID as SINGLE_CHOICE_ID } from './scans/s
 import { scan as categoryTouchScan, SCAN_ID as CATEGORY_TOUCH_ID } from './scans/substance/category-without-touch';
 import { scan as severityMagScan, SCAN_ID as SEVERITY_MAG_ID } from './scans/substance/severity-magnitude';
 import { scan as choiceClonesScan, SCAN_ID as CHOICE_CLONES_ID } from './scans/substance/choice-clones';
+import { scan as patternClassifierScan, SCAN_ID as PATTERN_CLASSIFIER_ID } from './scans/substance/pattern-classifier';
+import { scan as choiceDistinctnessScan, SCAN_ID as CHOICE_DISTINCTNESS_ID } from './scans/substance/choice-distinctness';
+import { scan as costAsymmetryScan, SCAN_ID as COST_ASYMMETRY_ID } from './scans/substance/cost-asymmetry';
 
 import { scan as unresolvedTokensScan, SCAN_ID as UNRESOLVED_TOKENS_ID } from './scans/text/unresolved-tokens';
 import { scan as promiseDeliveryScan, SCAN_ID as PROMISE_DELIVERY_ID } from './scans/text/promise-delivery';
 import { scan as scopeMismatchScan, SCAN_ID as SCOPE_MISMATCH_ID } from './scans/text/scope-mismatch';
 import { scan as smartCardCoverageScan, SCAN_ID as SMART_CARD_COVERAGE_ID } from './scans/text/smart-card-coverage';
+import { scan as triggerCoherenceScan, SCAN_ID as TRIGGER_COHERENCE_ID } from './scans/text/trigger-coherence';
+import { scan as toneHeuristicScan, SCAN_ID as TONE_HEURISTIC_ID } from './scans/text/tone-heuristic';
 
 import { scan as pressurePrefixParityScan, SCAN_ID as PRESSURE_PREFIX_PARITY_ID } from './scans/engine/pressure-prefix-parity';
 import { scan as consequenceWriteParityScan, SCAN_ID as CONSEQUENCE_WRITE_PARITY_ID } from './scans/engine/consequence-write-parity';
@@ -112,10 +117,15 @@ const SCANS: RegisteredScan[] = [
   { id: CATEGORY_TOUCH_ID, scan: categoryTouchScan },
   { id: SEVERITY_MAG_ID, scan: severityMagScan },
   { id: CHOICE_CLONES_ID, scan: choiceClonesScan },
+  { id: PATTERN_CLASSIFIER_ID, scan: patternClassifierScan },
+  { id: CHOICE_DISTINCTNESS_ID, scan: choiceDistinctnessScan },
+  { id: COST_ASYMMETRY_ID, scan: costAsymmetryScan },
   { id: UNRESOLVED_TOKENS_ID, scan: unresolvedTokensScan },
   { id: PROMISE_DELIVERY_ID, scan: promiseDeliveryScan },
   { id: SCOPE_MISMATCH_ID, scan: scopeMismatchScan },
   { id: SMART_CARD_COVERAGE_ID, scan: smartCardCoverageScan },
+  { id: TRIGGER_COHERENCE_ID, scan: triggerCoherenceScan },
+  { id: TONE_HEURISTIC_ID, scan: toneHeuristicScan },
   { id: PRESSURE_PREFIX_PARITY_ID, scan: pressurePrefixParityScan },
   { id: CONSEQUENCE_WRITE_PARITY_ID, scan: consequenceWriteParityScan },
   { id: TEXT_SOURCE_PARITY_ID, scan: textSourceParityScan },

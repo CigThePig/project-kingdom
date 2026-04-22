@@ -1,0 +1,324 @@
+{
+  "generatedAt": "2026-04-22T16:53:13.275Z",
+  "totals": {
+    "decrees": 97,
+    "events": 408,
+    "followUps": 202,
+    "assessments": 12,
+    "negotiations": 12,
+    "worldEvents": 10,
+    "handCards": 40
+  },
+  "byFamily": {
+    "petition": 231,
+    "unknown": 65,
+    "crisis": 230,
+    "notification": 73,
+    "overture": 11,
+    "assessment": 12,
+    "negotiation": 12,
+    "world": 10,
+    "hand": 40,
+    "decree": 97
+  },
+  "byFile": [
+    {
+      "file": "src/data/events/index.ts",
+      "count": 212
+    },
+    {
+      "file": "src/data/events/expansion/followup-events.ts",
+      "count": 61
+    },
+    {
+      "file": "src/data/decrees/index.ts",
+      "count": 58
+    },
+    {
+      "file": "src/data/text/world-pulse.ts",
+      "count": 53
+    },
+    {
+      "file": "src/data/cards/court-opportunities.ts",
+      "count": 44
+    },
+    {
+      "file": "src/data/world-events/definitions.ts",
+      "count": 40
+    },
+    {
+      "file": "src/data/decrees/expansion-decrees.ts",
+      "count": 24
+    },
+    {
+      "file": "src/data/events/expansion/chain-events.ts",
+      "count": 24
+    },
+    {
+      "file": "src/data/construction/index.ts",
+      "count": 21
+    },
+    {
+      "file": "src/data/events/expansion/military-events.ts",
+      "count": 21
+    },
+    {
+      "file": "src/data/cards/hand-cards-expanded.ts",
+      "count": 20
+    },
+    {
+      "file": "src/data/cards/hand-cards.ts",
+      "count": 20
+    },
+    {
+      "file": "src/data/events/expansion/culture-events.ts",
+      "count": 19
+    },
+    {
+      "file": "src/data/events/expansion/diplomacy-events.ts",
+      "count": 19
+    },
+    {
+      "file": "src/data/events/expansion/economy-events.ts",
+      "count": 18
+    },
+    {
+      "file": "src/data/events/expansion/environment-events.ts",
+      "count": 18
+    },
+    {
+      "file": "src/data/events/expansion/espionage-events.ts",
+      "count": 18
+    },
+    {
+      "file": "src/data/events/expansion/public-order-events.ts",
+      "count": 18
+    },
+    {
+      "file": "src/data/events/expansion/knowledge-events.ts",
+      "count": 16
+    },
+    {
+      "file": "src/data/events/social-condition-events.ts",
+      "count": 16
+    },
+    {
+      "file": "src/data/storylines/expansion-storylines.ts",
+      "count": 16
+    },
+    {
+      "file": "src/data/decrees/expansion-wave-2/index.ts",
+      "count": 15
+    },
+    {
+      "file": "src/data/events/expansion/kingdom-events.ts",
+      "count": 15
+    },
+    {
+      "file": "src/data/events/faction-requests.ts",
+      "count": 15
+    },
+    {
+      "file": "src/data/events/condition-events.ts",
+      "count": 14
+    },
+    {
+      "file": "src/data/events/expansion/class-conflict-events.ts",
+      "count": 14
+    },
+    {
+      "file": "src/data/events/expansion/religion-events.ts",
+      "count": 14
+    },
+    {
+      "file": "src/data/events/expansion/region-events.ts",
+      "count": 13
+    },
+    {
+      "file": "src/data/advisors/candidates-wave-2/index.ts",
+      "count": 12
+    },
+    {
+      "file": "src/data/cards/combos.ts",
+      "count": 12
+    },
+    {
+      "file": "src/data/events/assessments.ts",
+      "count": 12
+    },
+    {
+      "file": "src/data/events/negotiations.ts",
+      "count": 12
+    },
+    {
+      "file": "src/data/storylines/index.ts",
+      "count": 12
+    },
+    {
+      "file": "src/data/events/expansion/food-events.ts",
+      "count": 10
+    },
+    {
+      "file": "src/data/events/population-events.ts",
+      "count": 10
+    },
+    {
+      "file": "src/data/initiatives/index.ts",
+      "count": 10
+    },
+    {
+      "file": "src/data/narrative-pressure/axis-definitions.ts",
+      "count": 8
+    },
+    {
+      "file": "src/data/scenarios/default.ts",
+      "count": 7
+    },
+    {
+      "file": "src/data/events/expansion/petitions-wave-2/petitions-civic.ts",
+      "count": 6
+    },
+    {
+      "file": "src/data/events/expansion/petitions-wave-2/petitions-guilds.ts",
+      "count": 6
+    },
+    {
+      "file": "src/data/advisors/flaws.ts",
+      "count": 5
+    },
+    {
+      "file": "src/data/events/expansion/wave-2/crises-disasters.ts",
+      "count": 5
+    },
+    {
+      "file": "src/data/events/expansion/wave-2/crises-political.ts",
+      "count": 5
+    },
+    {
+      "file": "src/data/events/expansion/wave-2/crises-religious.ts",
+      "count": 5
+    },
+    {
+      "file": "src/data/scenarios/metadata.ts",
+      "count": 5
+    },
+    {
+      "file": "src/data/events/expansion/petitions-wave-2/petitions-religious.ts",
+      "count": 4
+    },
+    {
+      "file": "src/data/events/expansion/wave-2/crises-phenomena.ts",
+      "count": 4
+    },
+    {
+      "file": "src/data/events/expansion/wave-2/crises-social.ts",
+      "count": 4
+    },
+    {
+      "file": "src/data/scenarios/merchants-gambit.ts",
+      "count": 3
+    },
+    {
+      "file": "src/data/events/expansion/petitions-wave-2/index.ts",
+      "count": 2
+    },
+    {
+      "file": "src/data/events/expansion/petitions-wave-2/petitions-military.ts",
+      "count": 2
+    },
+    {
+      "file": "src/data/events/expansion/wave-2/index.ts",
+      "count": 2
+    },
+    {
+      "file": "src/data/scenarios/faithful-kingdom.ts",
+      "count": 2
+    },
+    {
+      "file": "src/data/scenarios/fractured-inheritance.ts",
+      "count": 2
+    },
+    {
+      "file": "src/data/scenarios/frozen-march.ts",
+      "count": 2
+    }
+  ],
+  "eventsBySeverity": {
+    "Informational": 145,
+    "Notable": 247,
+    "Serious": 145,
+    "Critical": 85
+  },
+  "eventsByCategory": {
+    "Economy": 89,
+    "Food": 46,
+    "Military": 56,
+    "Diplomacy": 47,
+    "Environment": 34,
+    "PublicOrder": 58,
+    "Religion": 56,
+    "Culture": 34,
+    "Espionage": 35,
+    "Knowledge": 27,
+    "ClassConflict": 68,
+    "Region": 33,
+    "Kingdom": 39
+  },
+  "decreesByCategory": {
+    "Economic": 21,
+    "Military": 13,
+    "Civic": 24,
+    "Religious": 11,
+    "Diplomatic": 11,
+    "Social": 17
+  },
+  "decreesByRarity": {
+    "repeatable": 13,
+    "oneshot": 84,
+    "chained": 48
+  },
+  "singleChoiceCardCount": 72,
+  "followUpEdgeCount": 159,
+  "topFilesByCardCount": [
+    {
+      "file": "src/data/events/index.ts",
+      "count": 212
+    },
+    {
+      "file": "src/data/events/expansion/followup-events.ts",
+      "count": 61
+    },
+    {
+      "file": "src/data/decrees/index.ts",
+      "count": 58
+    },
+    {
+      "file": "src/data/text/world-pulse.ts",
+      "count": 53
+    },
+    {
+      "file": "src/data/cards/court-opportunities.ts",
+      "count": 44
+    },
+    {
+      "file": "src/data/world-events/definitions.ts",
+      "count": 40
+    },
+    {
+      "file": "src/data/decrees/expansion-decrees.ts",
+      "count": 24
+    },
+    {
+      "file": "src/data/events/expansion/chain-events.ts",
+      "count": 24
+    },
+    {
+      "file": "src/data/construction/index.ts",
+      "count": 21
+    },
+    {
+      "file": "src/data/events/expansion/military-events.ts",
+      "count": 21
+    }
+  ]
+}

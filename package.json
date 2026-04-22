@@ -14,6 +14,7 @@
     "audit": "tsx scripts/audit/index.ts",
     "audit:inventory": "tsx scripts/audit/inventory.ts",
     "audit:seed": "tsx scripts/audit/index.ts --seed-artifacts",
+    "audit:baseline": "tsx scripts/audit/index.ts --include-minor --include-polish --seed-artifacts --output=docs/audit/baseline-2026-04-22",
     "audit:decrees": "tsx scripts/audit/index.ts --family=decree",
     "audit:crises": "tsx scripts/audit/index.ts --family=crisis",
     "audit:petitions": "tsx scripts/audit/index.ts --family=petition",
