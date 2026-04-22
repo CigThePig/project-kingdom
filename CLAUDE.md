@@ -6,6 +6,8 @@ A TypeScript/React kingdom-management strategy game, mobile-first. The player ru
 
 **Current work:** 15-phase Crown & Council expansion. Design spec: `docs/CROWN_AND_COUNCIL_EXPANSION.md`. Task list: `docs/EXPANSION_TASKS.md`.
 
+**Parallel workstream:** Card Audit & Progression. Plan: `docs/CARD_AUDIT_WORKSTREAM.md`. Verification rules: `docs/CARD_AUDIT_RULES.md`. Standing checklist: `docs/CARD_AUDIT_QUESTIONS.md` (created in phase 1). All authored card work must pass the 15 standing questions.
+
 ---
 
 ## Tech Stack
@@ -110,6 +112,14 @@ All neighbor display lookups go through `src/bridge/nameResolver.ts`. Never read
 
 ---
 
+## Card Audit & Progression
+
+The card corpus is being audited family-by-family under `docs/CARD_AUDIT_RULES.md` with the phased plan at `docs/CARD_AUDIT_WORKSTREAM.md`. Every card touched must answer cleanly against the 15 questions in `docs/CARD_AUDIT_QUESTIONS.md` (authored in phase 1 of the workstream). Scanner: `npm run audit` (see `scripts/audit/`). Before merging card changes, run `npm run audit -- --fail-on=major` against the affected family and confirm findings did not regress from the baseline in `docs/audit/`.
+
+When adding a primary card, pair it with at least one follow-up on a consequential branch. When adding a follow-up, register it in the primary card's `followUpEvents`. Surface-only effects (stat nudges with no structural marker) are a MAJOR finding per `CARD_AUDIT_RULES.md` §2.
+
+---
+
 ## Phase Roadmap
 
 | # | Phase | Key new files |
@@ -130,8 +140,9 @@ All neighbor display lookups go through `src/bridge/nameResolver.ts`. Never read
 | 13 | Diplomacy Overhaul | rich bond types in `src/engine/systems/diplomacy.ts` |
 | 14 | Intelligence Network Depth | `src/engine/systems/agents.ts` |
 | 15 | Victory Conditions & Legacy | `src/engine/systems/victory.ts`, `src/engine/systems/legacy.ts` |
+| — | Card Audit & Progression *(parallel workstream)* | `scripts/audit/`, `docs/CARD_AUDIT_WORKSTREAM.md`, `docs/CARD_AUDIT_RULES.md`, `docs/CARD_AUDIT_QUESTIONS.md`, `src/data/events/followup-events.ts` |
 
-**Phase dependencies:** 4 must precede 5, 6, 7. 2 must precede 3 and 11. 2.5 must precede 3, 9, 11, 12, and 14. 15 lands last.
+**Phase dependencies:** 4 must precede 5, 6, 7. 2 must precede 3 and 11. 2.5 must precede 3, 9, 11, 12, and 14. 15 lands last. The Card Audit & Progression workstream runs in parallel and has its own phase sequencing in `docs/CARD_AUDIT_WORKSTREAM.md`.
 
 ---
 
@@ -145,4 +156,5 @@ All neighbor display lookups go through `src/bridge/nameResolver.ts`. Never read
 6. Add bridge generators/compilers in `src/bridge/`.
 7. Add UI only via existing card families or new Codex sections in `src/ui/components/codex/`.
 8. Add tests in `src/__tests__/<system-name>.test.ts`.
-9. Run phase acceptance: `npm test && npm run lint && npm run build`.
+9. For any phase that adds or modifies cards: run `npm run audit -- --fail-on=major` on affected families and confirm no regression before phase acceptance.
+10. Run phase acceptance: `npm test && npm run lint && npm run build`.
