@@ -18,7 +18,16 @@
 // decree, assessment, negotiation, overture), trust the real runtime diff
 // over the table heuristics. A fingerprint with any non-surface touch class
 // passes; a fingerprint with only surface classes fails as RUNTIME_GROUNDED.
+//
+// Recovery upgrade (§2 severity-scaling corollary): the fallback heuristic is
+// now tier-aware. Style tags and the regionConditionDelta gotcha count as
+// "weak" markers — they're pervasive and cheap, so they don't buy a
+// high-severity card structural credit on their own. Critical-severity cards
+// need 2+ strong markers (temp modifier, feature entry, follow-up, tag read
+// elsewhere); Serious need 1+ strong; Notable/Informational keep the legacy
+// "1 of any marker" bar.
 
+import { EventSeverity } from '../../../../src/engine/types';
 import { isEffectDeltaNonEmpty } from '../../category-map';
 import type { AuditCard, AuditDecisionPath } from '../../ir';
 import type { Corpus, Finding, Scan } from '../../types';
@@ -105,15 +114,17 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
         typeof delta.regionConditionDelta === 'number' &&
         delta.regionConditionDelta !== 0;
 
-      const isStructural =
-        hasTempMod ||
-        hasFeatureEntry ||
-        hasStyleTag ||
-        hasFollowUp ||
-        tagReadElsewhere ||
-        regionConditionStructural;
+      const markers = {
+        hasTempMod,
+        hasFeatureEntry,
+        hasStyleTag,
+        hasFollowUp,
+        tagReadElsewhere,
+        regionConditionStructural,
+      };
+      const verdict = structuralVerdict(ev.severity, markers);
 
-      if (!isStructural) {
+      if (!verdict.ok) {
         out.push({
           severity: 'MAJOR',
           family: familyOf(corpus, ev.id),
@@ -122,17 +133,12 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
           cardId: ev.id,
           choiceId: c.choiceId,
           filePath: fileOf(corpus, ev.id),
-          message: `Choice ${ev.id}:${c.choiceId} only nudges sliders — no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader.`,
+          message: `Choice ${ev.id}:${c.choiceId} only nudges sliders — ${verdict.reason}.`,
           confidence: 'HEURISTIC',
           details: {
-            checked: {
-              hasTempMod,
-              hasFeatureEntry,
-              hasStyleTag,
-              hasFollowUp,
-              tagReadElsewhere,
-              regionConditionStructural,
-            },
+            severity: ev.severity,
+            verdictReason: verdict.reason,
+            checked: markers,
           },
         });
       }
@@ -141,6 +147,48 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
 
   return out;
 };
+
+const STRONG_MARKERS = [
+  'hasTempMod',
+  'hasFeatureEntry',
+  'hasFollowUp',
+  'tagReadElsewhere',
+] as const;
+const WEAK_MARKERS = ['hasStyleTag', 'regionConditionStructural'] as const;
+
+type MarkerMap = Record<
+  (typeof STRONG_MARKERS)[number] | (typeof WEAK_MARKERS)[number],
+  boolean
+>;
+
+function structuralVerdict(
+  severity: EventSeverity,
+  markers: MarkerMap,
+): { ok: boolean; reason: string } {
+  const strong = STRONG_MARKERS.filter((m) => markers[m]).length;
+  const weak = WEAK_MARKERS.filter((m) => markers[m]).length;
+
+  if (severity === EventSeverity.Critical) {
+    return strong >= 2
+      ? { ok: true, reason: `Critical card carries ${strong} strong markers` }
+      : {
+          ok: false,
+          reason: `Critical card requires 2+ strong markers (temp mod, feature entry, follow-up, tag read elsewhere); got ${strong} strong and ${weak} weak (style tag / regionConditionStructural do not count at this tier)`,
+        };
+  }
+  if (severity === EventSeverity.Serious) {
+    return strong >= 1
+      ? { ok: true, reason: `Serious card carries ${strong} strong marker(s)` }
+      : {
+          ok: false,
+          reason: `Serious card requires 1+ strong marker (temp mod, feature entry, follow-up, tag read elsewhere); got ${strong} strong and ${weak} weak (style tag / regionConditionStructural do not count at this tier)`,
+        };
+  }
+  // Notable / Informational — legacy rule: 1 of any marker.
+  return strong + weak >= 1
+    ? { ok: true, reason: `has at least one marker (${strong} strong, ${weak} weak)` }
+    : { ok: false, reason: 'no temp modifier, kingdom feature, style tag, follow-up, or downstream tag reader' };
+}
 
 function findChoiceFingerprint(
   card: AuditCard | undefined,

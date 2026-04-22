@@ -2,7 +2,7 @@
 family: overture
 totalCards: 11
 status: pending
-lastScan: 2026-04-20T22:30:13.588Z
+lastScan: 2026-04-22T00:47:10.768Z
 ---
 
 # Overture — Audit findings
@@ -29,6 +29,11 @@ in place but write an outcome — the seeder will keep your edits.
 
 | cardId | choiceId | severity | confidence | scanId | message | outcome | notes |
 |---|---|---|---|---|---|---|---|
-| _(no findings — clean!)_ | | | | | | | |
+| evt_foreign_cultural_influx |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_foreign_cultural_influx: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token). |  |  |
+| evt_exp_dip_cultural_envoy |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_exp_dip_cultural_envoy: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token). |  |  |
+| evt_exp_dip_diplomatic_gift |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_exp_dip_diplomatic_gift: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token). |  |  |
+| evt_exp_esp_double_agent_dilemma |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_exp_esp_double_agent_dilemma: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token). |  |  |
+| evt_exp_esp_intercepted_dispatches |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_exp_esp_intercepted_dispatches: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token). |  |  |
+| evt_border_envoy_terms |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_border_envoy_terms: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token). |  |  |
 
 <!-- AUTO-GENERATED:END -->

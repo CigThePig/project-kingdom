@@ -171,4 +171,146 @@ describe('substance.surface-only', () => {
     corpus.effects.events[ev.id] = { acknowledge: { treasuryDelta: 1 } };
     expect(scan(corpus, FULL_OPTS)).toEqual([]);
   });
+
+  // ============================================================
+  // Tier-aware heuristic (recovery fix 2 — §2 severity-scaling corollary).
+  // ============================================================
+
+  it('flags a Critical-severity card whose only markers are weak (style tag + regionConditionStructural)', () => {
+    const corpus = buildEmptyCorpus();
+    const ev = eventShell({
+      id: 'evt_critical_weak',
+      severity: EventSeverity.Critical,
+      affectsRegion: true,
+      choices: [
+        { choiceId: 'c_weak_only', slotCost: 1, isFree: false },
+        { choiceId: 'c_other', slotCost: 1, isFree: false },
+      ],
+    });
+    corpus.eventById.set(ev.id, ev);
+    corpus.familyByCardId.set(ev.id, 'crisis');
+    corpus.effects.events[ev.id] = {
+      c_weak_only: { treasuryDelta: 5, regionConditionDelta: -1 },
+      c_other: { treasuryDelta: -1 },
+    };
+    corpus.styleTags[ev.id] = { c_weak_only: { merciful: 3 } };
+
+    const findings = scan(corpus, FULL_OPTS);
+    const failed = findings.find((f) => f.choiceId === 'c_weak_only');
+    expect(failed).toBeDefined();
+    expect(failed?.details?.verdictReason).toMatch(/Critical.+requires 2\+ strong/);
+  });
+
+  it('passes a Critical-severity card with 2+ strong markers (follow-up + temp mod)', () => {
+    const corpus = buildEmptyCorpus();
+    const ev = eventShell({
+      id: 'evt_critical_ok',
+      severity: EventSeverity.Critical,
+      choices: [
+        { choiceId: 'c_deep', slotCost: 1, isFree: false },
+        { choiceId: 'c_surface', slotCost: 1, isFree: false },
+      ],
+      followUpEvents: [
+        {
+          triggerChoiceId: 'c_deep',
+          followUpDefinitionId: 'evt_critical_ok_fu',
+          delayTurns: 2,
+          probability: 1,
+        },
+      ],
+    });
+    corpus.eventById.set(ev.id, ev);
+    corpus.familyByCardId.set(ev.id, 'crisis');
+    corpus.effects.events[ev.id] = {
+      c_deep: { treasuryDelta: 1 },
+      c_surface: { treasuryDelta: -1 },
+    };
+    corpus.tempModifiers[ev.id] = {
+      c_deep: {
+        id: 'temp_critical_deep',
+        durationTurns: 3,
+        delta: { treasuryDelta: -2 },
+        label: 'Deep aftermath',
+        description: 'lingering effect',
+      } as never,
+    };
+
+    const findings = scan(corpus, FULL_OPTS);
+    expect(findings.map((f) => f.choiceId)).toEqual(['c_surface']);
+  });
+
+  it('flags a Serious-severity card whose only marker is a style tag', () => {
+    const corpus = buildEmptyCorpus();
+    const ev = eventShell({
+      id: 'evt_serious_weak',
+      severity: EventSeverity.Serious,
+      choices: [
+        { choiceId: 'c_weak', slotCost: 1, isFree: false },
+        { choiceId: 'c_other', slotCost: 1, isFree: false },
+      ],
+    });
+    corpus.eventById.set(ev.id, ev);
+    corpus.familyByCardId.set(ev.id, 'crisis');
+    corpus.effects.events[ev.id] = {
+      c_weak: { treasuryDelta: 5 },
+      c_other: { treasuryDelta: -1 },
+    };
+    corpus.styleTags[ev.id] = { c_weak: { merciful: 3 } };
+
+    const findings = scan(corpus, FULL_OPTS);
+    const failed = findings.find((f) => f.choiceId === 'c_weak');
+    expect(failed).toBeDefined();
+    expect(failed?.details?.verdictReason).toMatch(/Serious.+requires 1\+ strong/);
+  });
+
+  it('passes a Serious-severity card with one strong marker (follow-up)', () => {
+    const corpus = buildEmptyCorpus();
+    const ev = eventShell({
+      id: 'evt_serious_ok',
+      severity: EventSeverity.Serious,
+      choices: [
+        { choiceId: 'c_deep', slotCost: 1, isFree: false },
+        { choiceId: 'c_surface', slotCost: 1, isFree: false },
+      ],
+      followUpEvents: [
+        {
+          triggerChoiceId: 'c_deep',
+          followUpDefinitionId: 'evt_serious_ok_fu',
+          delayTurns: 2,
+          probability: 1,
+        },
+      ],
+    });
+    corpus.eventById.set(ev.id, ev);
+    corpus.familyByCardId.set(ev.id, 'crisis');
+    corpus.effects.events[ev.id] = {
+      c_deep: { treasuryDelta: 1 },
+      c_surface: { treasuryDelta: -1 },
+    };
+
+    const findings = scan(corpus, FULL_OPTS);
+    expect(findings.map((f) => f.choiceId)).toEqual(['c_surface']);
+  });
+
+  it('Notable tier still passes with only a style tag (legacy behavior preserved)', () => {
+    const corpus = buildEmptyCorpus();
+    const ev = eventShell({
+      id: 'evt_notable_weak',
+      severity: EventSeverity.Notable,
+      choices: [
+        { choiceId: 'c_style', slotCost: 1, isFree: false },
+        { choiceId: 'c_other', slotCost: 1, isFree: false },
+      ],
+    });
+    corpus.eventById.set(ev.id, ev);
+    corpus.familyByCardId.set(ev.id, 'crisis');
+    corpus.effects.events[ev.id] = {
+      c_style: { treasuryDelta: 5 },
+      c_other: { treasuryDelta: -1 },
+    };
+    corpus.styleTags[ev.id] = { c_style: { merciful: 3 } };
+
+    const findings = scan(corpus, FULL_OPTS);
+    expect(findings.map((f) => f.choiceId)).toEqual(['c_other']);
+  });
 });

@@ -14,16 +14,24 @@
 //                                (parameters encode a synthesized overture_*
 //                                eventId the engine routes into its inline
 //                                diplomatic-overture path)
+//   - event-resolution        → applyEventChoiceEffects() with EVENT_CHOICE_EFFECTS
+//                                (crises, petitions, notifications)
+//   - world-event-resolution  → applyEventChoiceEffects() with a nested wrapper
+//                                around WORLD_EVENT_CHOICE_EFFECTS (flat by
+//                                effectsKey)
 //
 // Calls are pure: fixtures are cloned-on-mutate by the engine itself, so
 // the harness never hands back a leaked reference.
 
 import {
   ActionType,
+  EventCategory,
   InteractionType,
   PopulationClass,
   RivalAgenda,
+  type ActiveEvent,
   type GameState,
+  type MechanicalEffectDelta,
   type QueuedAction,
 } from '../../../src/engine/types';
 import {
@@ -34,6 +42,13 @@ import {
 } from '../../../src/data/cards/hand-cards';
 import { applyActionEffects } from '../../../src/engine/resolution/apply-action-effects';
 import { applyDirectEffects } from '../../../src/bridge/directEffectApplier';
+import { applyEventChoiceEffects } from '../../../src/engine/events/apply-event-effects';
+import { EVENT_POOL, FOLLOW_UP_POOL } from '../../../src/data/events';
+import { EVENT_CHOICE_EFFECTS } from '../../../src/data/events/effects';
+import {
+  WORLD_EVENT_CHOICE_EFFECTS,
+  WORLD_EVENT_DEFINITIONS,
+} from '../../../src/data/world-events';
 import type { MonthDecision } from '../../../src/ui/types';
 import { SeasonMonth } from '../../../src/engine/types';
 import type { AuditCard, AuditDecisionPath } from '../ir';
@@ -83,11 +98,9 @@ export function runChoice(
     case 'generated-overture':
       return runOverture(card, choice, state);
     case 'event-resolution':
+      return runEvent(card, choice, state, /* isWorldEvent */ false);
     case 'world-event-resolution':
-      return {
-        supported: false,
-        reason: `runtime path ${card.runtimePath} not yet supported by harness`,
-      };
+      return runEvent(card, choice, state, /* isWorldEvent */ true);
     case 'unknown':
     default:
       return { supported: false, reason: 'unknown runtime path' };
@@ -316,4 +329,111 @@ function pickPeacefulNeighbor(state: GameState): string | undefined {
     .filter((n) => !n.isAtWarWithPlayer)
     .sort((a, b) => b.relationshipScore - a.relationshipScore);
   return peaceful[0]?.id ?? neighbors[0]?.id;
+}
+
+// ============================================================
+// Event / World-Event dispatch
+// ============================================================
+
+/**
+ * Runs an event or world event against a fixture by building a transient
+ * ActiveEvent with `isResolved: true`, then calling the same
+ * `applyEventChoiceEffects` path the engine uses at resolve time. A median
+ * rng (`() => 0.5`) keeps outcome variance deterministic so fingerprints
+ * stay stable across runs.
+ *
+ * World events store effects flat by `effectsKey`; we wrap that map into the
+ * nested `[eventId][choiceId]` shape `applyEventChoiceEffects` expects.
+ */
+function runEvent(
+  card: AuditCard,
+  choice: AuditDecisionPath,
+  state: GameState,
+  isWorldEvent: boolean,
+): HarnessResult {
+  if (isWorldEvent) {
+    const def = WORLD_EVENT_DEFINITIONS.find((w) => w.id === card.id);
+    if (!def) {
+      return { supported: false, reason: `world event ${card.id} not in WORLD_EVENT_DEFINITIONS` };
+    }
+    const wrapped: Record<string, Record<string, MechanicalEffectDelta>> = {
+      [card.id]: Object.fromEntries(
+        def.choices.map((c) => [c.id, WORLD_EVENT_CHOICE_EFFECTS[c.effectsKey] ?? {}]),
+      ),
+    };
+    const activeEvent = buildTransientActiveEvent(card, choice, state, {
+      severity: def.severity,
+      category: EventCategory.Kingdom,
+      chainId: null,
+      chainStep: null,
+      relatedStorylineId: null,
+    });
+    const { state: after } = applyEventChoiceEffects(state, activeEvent, wrapped, () => 0.5);
+    return { supported: true, before: state, after };
+  }
+
+  const def =
+    EVENT_POOL.find((e) => e.id === card.id) ??
+    FOLLOW_UP_POOL.find((e) => e.id === card.id);
+  if (!def) {
+    return { supported: false, reason: `event ${card.id} not in EVENT_POOL or FOLLOW_UP_POOL` };
+  }
+  const activeEvent = buildTransientActiveEvent(card, choice, state, {
+    severity: def.severity,
+    category: def.category,
+    chainId: def.chainId,
+    chainStep: def.chainStep,
+    relatedStorylineId: def.relatedStorylineId,
+  });
+  const { state: after } = applyEventChoiceEffects(
+    state,
+    activeEvent,
+    EVENT_CHOICE_EFFECTS,
+    () => 0.5,
+  );
+  return { supported: true, before: state, after };
+}
+
+function buildTransientActiveEvent(
+  card: AuditCard,
+  choice: AuditDecisionPath,
+  state: GameState,
+  fields: {
+    severity: ActiveEvent['severity'];
+    category: ActiveEvent['category'];
+    chainId: string | null;
+    chainStep: number | null;
+    relatedStorylineId: string | null;
+  },
+): ActiveEvent {
+  const meta = card.metadata as
+    | {
+        affectsRegion?: boolean;
+        affectsClass?: PopulationClass | null;
+        affectsNeighbor?: string | null;
+      }
+    | undefined;
+  const affectsRegion = meta?.affectsRegion === true;
+  const affectsNeighborRaw = meta?.affectsNeighbor ?? null;
+  const affectedNeighborId = affectsNeighborRaw
+    ? state.diplomacy.neighbors[0]?.id ?? null
+    : null;
+  return {
+    id: `audit-${card.id}`,
+    definitionId: card.id,
+    severity: fields.severity,
+    category: fields.category,
+    isResolved: true,
+    choiceMade: choice.choiceId,
+    chainId: fields.chainId,
+    chainStep: fields.chainStep,
+    turnSurfaced: state.turn.turnNumber,
+    affectedRegionId: affectsRegion ? state.regions?.[0]?.id ?? null : null,
+    affectedClassId: (meta?.affectsClass as PopulationClass | null) ?? null,
+    affectedNeighborId,
+    relatedStorylineId: fields.relatedStorylineId,
+    outcomeQuality: null,
+    isFollowUp: false,
+    followUpSourceId: null,
+  };
 }
