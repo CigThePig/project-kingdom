@@ -17,9 +17,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     fortify_trade_routes: { treasuryDelta: -50, merchantSatDelta: +4, stabilityDelta: +1 },
   },
   evt_social_banditry_severe: {
-    marshal_campaign: { treasuryDelta: -80, militaryReadinessDelta: -8, stabilityDelta: +5, commonerSatDelta: +3 },
-    offer_amnesty: { stabilityDelta: +2, nobilitySatDelta: -5, commonerSatDelta: +2 },
-    abandon_outer_roads: { merchantSatDelta: -8, commonerSatDelta: -5, stabilityDelta: -3 },
+    marshal_campaign: { treasuryDelta: -80, militaryReadinessDelta: -8, stabilityDelta: +5, commonerSatDelta: +3, regionConditionDelta: +2 },
+    offer_amnesty: { stabilityDelta: +2, nobilitySatDelta: -5, commonerSatDelta: +2, regionConditionDelta: +1 },
+    abandon_outer_roads: { merchantSatDelta: -8, commonerSatDelta: -5, stabilityDelta: -3, regionDevelopmentDelta: -4, regionConditionDelta: -2 },
   },
   evt_social_banditry_resolved: {
     acknowledge: { merchantSatDelta: +2, stabilityDelta: +2 },
@@ -39,9 +39,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     accept_status_quo: { nobilitySatDelta: +2, stabilityDelta: -3, commonerSatDelta: -3 },
   },
   evt_social_corruption_severe: {
-    royal_tribunal: { treasuryDelta: -70, nobilitySatDelta: -10, stabilityDelta: +5, commonerSatDelta: +5 },
-    co_opt_corrupt_lords: { nobilitySatDelta: +3, commonerSatDelta: -5, stabilityDelta: -2, treasuryDelta: +20 },
-    endure_corruption: { stabilityDelta: -5, commonerSatDelta: -5 },
+    royal_tribunal: { treasuryDelta: -70, nobilitySatDelta: -10, stabilityDelta: +5, commonerSatDelta: +5, regionDevelopmentDelta: +2 },
+    co_opt_corrupt_lords: { nobilitySatDelta: +3, commonerSatDelta: -5, stabilityDelta: -2, treasuryDelta: +20, regionConditionDelta: -1 },
+    endure_corruption: { stabilityDelta: -5, commonerSatDelta: -5, regionDevelopmentDelta: -2, regionConditionDelta: -2 },
   },
   evt_social_corruption_resolved: {
     acknowledge: { stabilityDelta: +2, commonerSatDelta: +2 },
@@ -61,9 +61,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     make_concessions: { treasuryDelta: -40, commonerSatDelta: +3, nobilitySatDelta: -3, stabilityDelta: +1 },
   },
   evt_social_unrest_severe: {
-    declare_martial_law: { militaryReadinessDelta: -8, commonerSatDelta: -8, stabilityDelta: +5, nobilitySatDelta: +3 },
-    negotiate_rebel_leaders: { commonerSatDelta: +5, nobilitySatDelta: -5, stabilityDelta: +2 },
-    abdicate_demands: { commonerSatDelta: +8, nobilitySatDelta: -8, stabilityDelta: -2, treasuryDelta: -60 },
+    declare_martial_law: { militaryReadinessDelta: -8, commonerSatDelta: -8, stabilityDelta: +5, nobilitySatDelta: +3, regionConditionDelta: -1 },
+    negotiate_rebel_leaders: { commonerSatDelta: +5, nobilitySatDelta: -5, stabilityDelta: +2, regionConditionDelta: +2 },
+    abdicate_demands: { commonerSatDelta: +8, nobilitySatDelta: -8, stabilityDelta: -2, treasuryDelta: -60, regionDevelopmentDelta: -2 },
   },
   evt_social_unrest_resolved: {
     acknowledge: { commonerSatDelta: +3, stabilityDelta: +3 },
@@ -83,9 +83,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     tolerate_black_market: { merchantSatDelta: +3, stabilityDelta: -3, commonerSatDelta: -2 },
   },
   evt_social_criminal_severe: {
-    martial_purge: { treasuryDelta: -90, militaryReadinessDelta: -6, espionageNetworkDelta: +12, stabilityDelta: +5, commonerSatDelta: -3 },
-    bribe_the_bosses: { treasuryDelta: -60, stabilityDelta: +2, nobilitySatDelta: -4, merchantSatDelta: +2 },
-    cede_the_ports: { merchantSatDelta: +4, treasuryDelta: -40, stabilityDelta: -6, commonerSatDelta: -4 },
+    martial_purge: { treasuryDelta: -90, militaryReadinessDelta: -6, espionageNetworkDelta: +12, stabilityDelta: +5, commonerSatDelta: -3, regionConditionDelta: +2 },
+    bribe_the_bosses: { treasuryDelta: -60, stabilityDelta: +2, nobilitySatDelta: -4, merchantSatDelta: +2, regionConditionDelta: -1 },
+    cede_the_ports: { merchantSatDelta: +4, treasuryDelta: -40, stabilityDelta: -6, commonerSatDelta: -4, regionDevelopmentDelta: -3, regionConditionDelta: -2 },
   },
   evt_social_criminal_resolved: {
     acknowledge: { espionageNetworkDelta: +3, stabilityDelta: +1 },

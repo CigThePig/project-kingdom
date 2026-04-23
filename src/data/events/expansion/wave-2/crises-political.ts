@@ -73,9 +73,13 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISES: EventDefinition[] = [
       { choiceId: 'exile_with_a_pension', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Nobility,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'marry_into_their_line', followUpDefinitionId: 'evt_fu_marriage_dynastic_friction', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'exile_with_a_pension', followUpDefinitionId: 'evt_fu_exiled_pretender_returns', delayTurns: 4, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_w2_foreign_assassination',
@@ -170,16 +174,20 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISIS_EFFECTS: Record<
       militaryForceSizeDelta: -1,
       stabilityDelta: 4,
       nobilitySatDelta: -3,
+      regionConditionDelta: -2,
     },
     marry_into_their_line: {
       nobilitySatDelta: 4,
       stabilityDelta: 3,
       culturalCohesionDelta: -2,
+      diplomacyDeltas: { neighbor_arenthal: +4 },
     },
     exile_with_a_pension: {
       treasuryDelta: -40,
       stabilityDelta: 2,
       nobilitySatDelta: -2,
+      diplomacyDeltas: { neighbor_valdris: +2 },
+      regionConditionDelta: -1,
     },
   },
   evt_exp_w2_foreign_assassination: {

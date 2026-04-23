@@ -16,9 +16,9 @@ export const CONDITION_EVENT_EFFECTS: Record<string, Record<string, MechanicalEf
     pray_for_rain: { faithDelta: +3, commonerSatDelta: -3 },
   },
   evt_cond_drought_severe: {
-    mass_relocation: { treasuryDelta: -60, commonerSatDelta: -5, stabilityDelta: -5, foodDelta: +15 },
-    seize_merchant_water: { merchantSatDelta: -8, commonerSatDelta: +3, foodDelta: +20 },
-    endure_the_drought: { commonerSatDelta: -5, stabilityDelta: -3 },
+    mass_relocation: { treasuryDelta: -60, commonerSatDelta: -5, stabilityDelta: -5, foodDelta: +15, regionDevelopmentDelta: -3, regionConditionDelta: +1 },
+    seize_merchant_water: { merchantSatDelta: -8, commonerSatDelta: +3, foodDelta: +20, regionConditionDelta: +1 },
+    endure_the_drought: { commonerSatDelta: -5, stabilityDelta: -3, regionConditionDelta: -2 },
   },
 
   // ============================================================
@@ -57,27 +57,27 @@ export const CONDITION_EVENT_EFFECTS: Record<string, Record<string, MechanicalEf
     ignore_sickness: { commonerSatDelta: -5, stabilityDelta: -3 },
   },
   evt_cond_plague_moderate: {
-    citywide_quarantine: { treasuryDelta: -80, commonerSatDelta: -5, merchantSatDelta: -5, stabilityDelta: +3 },
-    burn_infected_quarters: { treasuryDelta: -40, commonerSatDelta: -8, stabilityDelta: +1, regionDevelopmentDelta: -5 },
-    pray_for_deliverance: { faithDelta: +5, commonerSatDelta: -3, stabilityDelta: -5 },
+    citywide_quarantine: { treasuryDelta: -80, commonerSatDelta: -5, merchantSatDelta: -5, stabilityDelta: +3, regionConditionDelta: +1 },
+    burn_infected_quarters: { treasuryDelta: -40, commonerSatDelta: -8, stabilityDelta: +1, regionDevelopmentDelta: -5, regionConditionDelta: +2 },
+    pray_for_deliverance: { faithDelta: +5, commonerSatDelta: -3, stabilityDelta: -5, regionConditionDelta: -2 },
   },
   evt_cond_plague_severe: {
-    seal_the_gates: { treasuryDelta: -60, merchantSatDelta: -10, commonerSatDelta: -5, stabilityDelta: +2 },
-    mass_exodus: { commonerSatDelta: -10, stabilityDelta: -8, merchantSatDelta: -5 },
-    accept_fate: { commonerSatDelta: -8, stabilityDelta: -10, faithDelta: +3 },
+    seal_the_gates: { treasuryDelta: -60, merchantSatDelta: -10, commonerSatDelta: -5, stabilityDelta: +2, regionConditionDelta: +1 },
+    mass_exodus: { commonerSatDelta: -10, stabilityDelta: -8, merchantSatDelta: -5, regionDevelopmentDelta: -4 },
+    accept_fate: { commonerSatDelta: -8, stabilityDelta: -10, faithDelta: +3, regionDevelopmentDelta: -3, regionConditionDelta: -3 },
   },
   evt_cond_plague_escalation: {
-    martial_law: { stabilityDelta: -5, commonerSatDelta: -8, militaryMoraleDelta: -3, nobilitySatDelta: +2 },
-    appeal_to_clergy: { faithDelta: +5, clergySatDelta: +3, treasuryDelta: -45 },
+    martial_law: { stabilityDelta: -5, commonerSatDelta: -8, militaryMoraleDelta: -3, nobilitySatDelta: +2, regionConditionDelta: -1 },
+    appeal_to_clergy: { faithDelta: +5, clergySatDelta: +3, treasuryDelta: -45, regionConditionDelta: +2 },
   },
 
   // ============================================================
   // Famine
   // ============================================================
   evt_cond_famine_moderate: {
-    emergency_rationing: { foodDelta: +10, commonerSatDelta: -5, stabilityDelta: -2 },
-    import_foreign_grain: { treasuryDelta: -100, foodDelta: +30, merchantSatDelta: +2 },
-    open_royal_granaries: { foodDelta: +20, commonerSatDelta: +3, nobilitySatDelta: -3 },
+    emergency_rationing: { foodDelta: +10, commonerSatDelta: -5, stabilityDelta: -2, regionConditionDelta: -1 },
+    import_foreign_grain: { treasuryDelta: -100, foodDelta: +30, merchantSatDelta: +2, diplomacyDeltas: { neighbor_arenthal: +2 }, regionConditionDelta: +1 },
+    open_royal_granaries: { foodDelta: +20, commonerSatDelta: +3, nobilitySatDelta: -3, regionConditionDelta: +2 },
   },
 
   // ============================================================

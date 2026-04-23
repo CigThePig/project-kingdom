@@ -45,9 +45,9 @@ export const EXPANSION_KINGDOM_EFFECTS: Record<string, Record<string, Mechanical
 
   // --- 7. Constitutional Crisis (Critical: -120/+80, -6/+8 sat) ---
   evt_exp_kgd_constitutional_crisis: {
-    convene_emergency_council: { stabilityDelta: +8, commonerSatDelta: +5, nobilitySatDelta: +3, treasuryDelta: -80, militaryReadinessDelta: -3 },
-    assert_royal_authority:    { stabilityDelta: -6, commonerSatDelta: -8, nobilitySatDelta: -4, militaryReadinessDelta: +5, militaryCasteSatDelta: +3 },
-    offer_charter_of_rights:   { stabilityDelta: +5, commonerSatDelta: +8, nobilitySatDelta: -7, treasuryDelta: -40, merchantSatDelta: +4 },
+    convene_emergency_council: { stabilityDelta: +8, commonerSatDelta: +5, nobilitySatDelta: +3, treasuryDelta: -80, militaryReadinessDelta: -3, regionDevelopmentDelta: +2 },
+    assert_royal_authority:    { stabilityDelta: -6, commonerSatDelta: -8, nobilitySatDelta: -4, militaryReadinessDelta: +5, militaryCasteSatDelta: +3, regionConditionDelta: -2 },
+    offer_charter_of_rights:   { stabilityDelta: +5, commonerSatDelta: +8, nobilitySatDelta: -7, treasuryDelta: -40, merchantSatDelta: +4, regionDevelopmentDelta: +3 },
   },
 
   // --- 8. Power Consolidation (Serious: -80/+50, -4/+6 sat) ---

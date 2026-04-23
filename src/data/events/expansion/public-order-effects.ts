@@ -131,18 +131,18 @@ export const EXPANSION_PUBLIC_ORDER_EFFECTS: Record<string, Record<string, Mecha
   // 15. Mob Justice — Critical
   // ============================================================
   evt_exp_po_mob_justice: {
-    restore_order_by_force: { stabilityDelta: +6, commonerSatDelta: -6, militaryReadinessDelta: -5, militaryMoraleDelta: -3 },
-    hold_public_trial:      { stabilityDelta: +3, treasuryDelta: -40, commonerSatDelta: +2, nobilitySatDelta: -2 },
-    let_the_mob_decide:     { stabilityDelta: -6, commonerSatDelta: +4, nobilitySatDelta: -6, clergySatDelta: -3 },
+    restore_order_by_force: { stabilityDelta: +6, commonerSatDelta: -6, militaryReadinessDelta: -5, militaryMoraleDelta: -3, regionConditionDelta: -1 },
+    hold_public_trial:      { stabilityDelta: +3, treasuryDelta: -40, commonerSatDelta: +2, nobilitySatDelta: -2, regionDevelopmentDelta: +1 },
+    let_the_mob_decide:     { stabilityDelta: -6, commonerSatDelta: +4, nobilitySatDelta: -6, clergySatDelta: -3, regionDevelopmentDelta: -3, regionConditionDelta: -2 },
   },
 
   // ============================================================
   // 16. Martial Law Debate — Critical
   // ============================================================
   evt_exp_po_martial_law: {
-    declare_martial_law:      { stabilityDelta: +8, commonerSatDelta: -7, merchantSatDelta: -5, militaryReadinessDelta: -6, militaryCasteSatDelta: +4 },
-    limited_military_patrols: { stabilityDelta: +4, commonerSatDelta: -3, militaryReadinessDelta: -3, treasuryDelta: -40 },
-    trust_civilian_authority:  { stabilityDelta: -2, commonerSatDelta: +3, nobilitySatDelta: +2, militaryCasteSatDelta: -3 },
+    declare_martial_law:      { stabilityDelta: +8, commonerSatDelta: -7, merchantSatDelta: -5, militaryReadinessDelta: -6, militaryCasteSatDelta: +4, regionConditionDelta: +1 },
+    limited_military_patrols: { stabilityDelta: +4, commonerSatDelta: -3, militaryReadinessDelta: -3, treasuryDelta: -40, regionConditionDelta: +1 },
+    trust_civilian_authority:  { stabilityDelta: -2, commonerSatDelta: +3, nobilitySatDelta: +2, militaryCasteSatDelta: -3, regionConditionDelta: -2 },
   },
 
   // ============================================================

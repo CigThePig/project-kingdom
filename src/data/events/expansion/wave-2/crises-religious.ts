@@ -29,9 +29,13 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISES: EventDefinition[] = [
       { choiceId: 'call_a_reconciliation_council', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Clergy,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'back_the_orthodox_hierarchy', followUpDefinitionId: 'evt_fu_schism_reformer_revolt', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'recognize_both_confessions', followUpDefinitionId: 'evt_fu_schism_parallel_churches', delayTurns: 4, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_w2_heretical_sermon',
@@ -135,18 +139,21 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISIS_EFFECTS: Record<
       heterodoxyDelta: -3,
       commonerSatDelta: -3,
       stabilityDelta: -2,
+      regionConditionDelta: -1,
     },
     recognize_both_confessions: {
       culturalCohesionDelta: -3,
       heterodoxyDelta: 2,
       stabilityDelta: 3,
       clergySatDelta: -2,
+      regionConditionDelta: +1,
     },
     call_a_reconciliation_council: {
       treasuryDelta: -50,
       clergySatDelta: 3,
       heterodoxyDelta: -2,
       culturalCohesionDelta: 2,
+      regionDevelopmentDelta: +1,
     },
   },
   evt_exp_w2_heretical_sermon: {

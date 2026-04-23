@@ -407,9 +407,13 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
       { choiceId: 'let_the_mob_decide', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'restore_order_by_force', followUpDefinitionId: 'evt_fu_force_crackdown_legacy', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'let_the_mob_decide', followUpDefinitionId: 'evt_fu_mob_rule_spreads', delayTurns: 3, probability: 0.8 },
+    ],
   },
 
   // ============================================================
@@ -433,11 +437,12 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
       { choiceId: 'trust_civilian_authority', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     followUpEvents: [
       { triggerChoiceId: 'declare_martial_law', followUpDefinitionId: 'evt_exp_fu_po_martial_law_tension', delayTurns: 2, probability: 0.7 },
+      { triggerChoiceId: 'trust_civilian_authority', followUpDefinitionId: 'evt_fu_civilian_authority_falters', delayTurns: 3, probability: 0.6 },
     ],
   },
 

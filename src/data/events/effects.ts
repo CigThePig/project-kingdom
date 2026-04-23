@@ -152,9 +152,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     enforce_existing_contracts: { commonerSatDelta: -3, nobilitySatDelta: +2, merchantSatDelta: +2, stabilityDelta: -1 },
   },
   evt_popular_unrest: {
-    address_grievances_publicly: { commonerSatDelta: +5, stabilityDelta: +3, nobilitySatDelta: -2 },
-    deploy_peacekeepers:         { commonerSatDelta: -2, stabilityDelta: +5, militaryReadinessDelta: -3, militaryCasteSatDelta: -1, treasuryDelta: -40 },
-    impose_curfew:               { commonerSatDelta: -4, stabilityDelta: +4, merchantSatDelta: -3 },
+    address_grievances_publicly: { commonerSatDelta: +5, stabilityDelta: +3, nobilitySatDelta: -2, regionConditionDelta: +1 },
+    deploy_peacekeepers:         { commonerSatDelta: -2, stabilityDelta: +5, militaryReadinessDelta: -3, militaryCasteSatDelta: -1, treasuryDelta: -40, regionConditionDelta: +1 },
+    impose_curfew:               { commonerSatDelta: -4, stabilityDelta: +4, merchantSatDelta: -3, regionConditionDelta: -1 },
   },
 
   // ============================================================
@@ -166,9 +166,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     permit_theological_debate:   { clergySatDelta: -2, heterodoxyDelta: +3, culturalCohesionDelta: +2, commonerSatDelta: +1 },
   },
   evt_schism_crisis: {
-    convene_ecclesiastical_council: { treasuryDelta: -80, clergySatDelta: +4, faithDelta: +5, heterodoxyDelta: -8, stabilityDelta: +3 },
-    enforce_state_doctrine:          { clergySatDelta: +2, heterodoxyDelta: -5, commonerSatDelta: -3, stabilityDelta: -2, faithDelta: +3 },
-    allow_coexistence:               { clergySatDelta: -3, heterodoxyDelta: +2, culturalCohesionDelta: -3, commonerSatDelta: +2, faithDelta: -2 },
+    convene_ecclesiastical_council: { treasuryDelta: -80, clergySatDelta: +4, faithDelta: +5, heterodoxyDelta: -8, stabilityDelta: +3, regionDevelopmentDelta: +2 },
+    enforce_state_doctrine:          { clergySatDelta: +2, heterodoxyDelta: -5, commonerSatDelta: -3, stabilityDelta: -2, faithDelta: +3, regionConditionDelta: -1 },
+    allow_coexistence:               { clergySatDelta: -3, heterodoxyDelta: +2, culturalCohesionDelta: -3, commonerSatDelta: +2, faithDelta: -2, regionConditionDelta: +1 },
   },
 
   // ============================================================
@@ -438,34 +438,34 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
   // ESCALATION (6)
   // ============================================================
   evt_escalation_famine_panic: {
-    seize_noble_granaries:       { foodDelta: +45, nobilitySatDelta: -6, commonerSatDelta: +3, stabilityDelta: -2 },
-    enforce_martial_rationing:   { foodDelta: +15, commonerSatDelta: -2, stabilityDelta: +4, militaryReadinessDelta: -3 },
-    appeal_for_calm:             { commonerSatDelta: -1, stabilityDelta: -3 },
+    seize_noble_granaries:       { foodDelta: +45, nobilitySatDelta: -6, commonerSatDelta: +3, stabilityDelta: -2, regionConditionDelta: +1 },
+    enforce_martial_rationing:   { foodDelta: +15, commonerSatDelta: -2, stabilityDelta: +4, militaryReadinessDelta: -3, regionConditionDelta: -1 },
+    appeal_for_calm:             { commonerSatDelta: -1, stabilityDelta: -3, regionConditionDelta: -2 },
   },
   evt_escalation_treasury_crisis: {
     emergency_asset_sales:            { treasuryDelta: +80, regionDevelopmentDelta: -3, merchantSatDelta: -2 },
-    demand_noble_contributions:       { treasuryDelta: +60, nobilitySatDelta: -5, stabilityDelta: -2 },
-    suspend_non_essential_spending:   { treasuryDelta: +30, militaryReadinessDelta: -3, clergySatDelta: -2, faithDelta: -2 },
+    demand_noble_contributions:       { treasuryDelta: +60, nobilitySatDelta: -5, stabilityDelta: -2, regionConditionDelta: -1 },
+    suspend_non_essential_spending:   { treasuryDelta: +30, militaryReadinessDelta: -3, clergySatDelta: -2, faithDelta: -2, regionDevelopmentDelta: -2 },
   },
   evt_escalation_faith_collapse: {
-    call_grand_synod:        { treasuryDelta: -80, faithDelta: +8, clergySatDelta: +4, heterodoxyDelta: -10, stabilityDelta: +3 },
-    impose_state_religion:   { faithDelta: +5, clergySatDelta: +2, commonerSatDelta: -4, heterodoxyDelta: -6, stabilityDelta: -3 },
-    embrace_pluralism:       { faithDelta: -3, heterodoxyDelta: +5, culturalCohesionDelta: -4, commonerSatDelta: +3, merchantSatDelta: +2 },
+    call_grand_synod:        { treasuryDelta: -80, faithDelta: +8, clergySatDelta: +4, heterodoxyDelta: -10, stabilityDelta: +3, regionDevelopmentDelta: +2 },
+    impose_state_religion:   { faithDelta: +5, clergySatDelta: +2, commonerSatDelta: -4, heterodoxyDelta: -6, stabilityDelta: -3, regionConditionDelta: -1 },
+    embrace_pluralism:       { faithDelta: -3, heterodoxyDelta: +5, culturalCohesionDelta: -4, commonerSatDelta: +3, merchantSatDelta: +2, regionConditionDelta: +1 },
   },
   evt_escalation_military_mutiny: {
-    meet_mutiny_demands:      { militaryCasteSatDelta: +6, treasuryDelta: -60, militaryMoraleDelta: +5, nobilitySatDelta: -3 },
-    isolate_ringleaders:      { militaryCasteSatDelta: -4, stabilityDelta: +3, militaryReadinessDelta: -5, espionageNetworkDelta: +3 },
-    negotiate_with_officers:  { militaryCasteSatDelta: +2, treasuryDelta: -30, stabilityDelta: +1, militaryMoraleDelta: +2 },
+    meet_mutiny_demands:      { militaryCasteSatDelta: +6, treasuryDelta: -60, militaryMoraleDelta: +5, nobilitySatDelta: -3, regionConditionDelta: +1 },
+    isolate_ringleaders:      { militaryCasteSatDelta: -4, stabilityDelta: +3, militaryReadinessDelta: -5, espionageNetworkDelta: +3, regionConditionDelta: -1 },
+    negotiate_with_officers:  { militaryCasteSatDelta: +2, treasuryDelta: -30, stabilityDelta: +1, militaryMoraleDelta: +2, regionConditionDelta: +1 },
   },
   evt_escalation_noble_conspiracy: {
-    preemptive_arrests:     { nobilitySatDelta: -6, stabilityDelta: +5, commonerSatDelta: +2, espionageNetworkDelta: +4 },
-    offer_reconciliation:   { nobilitySatDelta: +3, stabilityDelta: +2, treasuryDelta: -40, commonerSatDelta: -2 },
-    plant_double_agents:    { espionageNetworkDelta: +8, nobilitySatDelta: -1, treasuryDelta: -25, stabilityDelta: +1 },
+    preemptive_arrests:     { nobilitySatDelta: -6, stabilityDelta: +5, commonerSatDelta: +2, espionageNetworkDelta: +4, regionConditionDelta: +1 },
+    offer_reconciliation:   { nobilitySatDelta: +3, stabilityDelta: +2, treasuryDelta: -40, commonerSatDelta: -2, regionDevelopmentDelta: +1 },
+    plant_double_agents:    { espionageNetworkDelta: +8, nobilitySatDelta: -1, treasuryDelta: -25, stabilityDelta: +1, regionConditionDelta: -1 },
   },
   evt_escalation_mass_exodus: {
-    promise_sweeping_reforms:  { commonerSatDelta: +5, treasuryDelta: -50, nobilitySatDelta: -3, stabilityDelta: +3 },
-    close_borders:             { commonerSatDelta: -4, stabilityDelta: +2, merchantSatDelta: -3 },
-    let_dissenters_leave:      { commonerSatDelta: -2, stabilityDelta: -4, merchantSatDelta: -1 },
+    promise_sweeping_reforms:  { commonerSatDelta: +5, treasuryDelta: -50, nobilitySatDelta: -3, stabilityDelta: +3, regionDevelopmentDelta: +2 },
+    close_borders:             { commonerSatDelta: -4, stabilityDelta: +2, merchantSatDelta: -3, regionConditionDelta: -1 },
+    let_dissenters_leave:      { commonerSatDelta: -2, stabilityDelta: -4, merchantSatDelta: -1, regionDevelopmentDelta: -3 },
   },
 
   // ============================================================
@@ -565,9 +565,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     mediate_compromise:         { nobilitySatDelta: +2, merchantSatDelta: +1, stabilityDelta: +1, treasuryDelta: -15 },
   },
   evt_commoner_uprising_neglect: {
-    emergency_food_distribution: { foodDelta: -40, commonerSatDelta: +6, stabilityDelta: +3 },
-    deploy_military_patrols:     { commonerSatDelta: -2, militaryCasteSatDelta: +2, stabilityDelta: +4, militaryReadinessDelta: -3 },
-    announce_labor_reforms:      { commonerSatDelta: +4, nobilitySatDelta: -3, merchantSatDelta: -2, stabilityDelta: +2 },
+    emergency_food_distribution: { foodDelta: -40, commonerSatDelta: +6, stabilityDelta: +3, regionConditionDelta: +2 },
+    deploy_military_patrols:     { commonerSatDelta: -2, militaryCasteSatDelta: +2, stabilityDelta: +4, militaryReadinessDelta: -3, regionConditionDelta: -1 },
+    announce_labor_reforms:      { commonerSatDelta: +4, nobilitySatDelta: -3, merchantSatDelta: -2, stabilityDelta: +2, regionDevelopmentDelta: +2 },
   },
   evt_clergy_power_grab: {
     assert_royal_authority:   { clergySatDelta: -6, nobilitySatDelta: +3, stabilityDelta: +2, faithDelta: -3, treasuryDelta: -20 },
@@ -575,9 +575,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     accept_clergy_influence:  { clergySatDelta: +3, nobilitySatDelta: -4, faithDelta: +5, stabilityDelta: -2 },
   },
   evt_military_coup_threat: {
-    purge_conspirators:   { militaryCasteSatDelta: -8, militaryReadinessDelta: -10, stabilityDelta: +5, nobilitySatDelta: +2 },
-    bribe_officer_corps:  { treasuryDelta: -100, militaryCasteSatDelta: +4, stabilityDelta: +2 },
-    address_grievances:   { militaryCasteSatDelta: +6, treasuryDelta: -40, commonerSatDelta: -2 },
+    purge_conspirators:   { militaryCasteSatDelta: -8, militaryReadinessDelta: -10, stabilityDelta: +5, nobilitySatDelta: +2, regionConditionDelta: -1 },
+    bribe_officer_corps:  { treasuryDelta: -100, militaryCasteSatDelta: +4, stabilityDelta: +2, regionConditionDelta: +1 },
+    address_grievances:   { militaryCasteSatDelta: +6, treasuryDelta: -40, commonerSatDelta: -2, regionDevelopmentDelta: +1 },
   },
 
   // ============================================================
@@ -627,9 +627,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     silence_rumors:   { stabilityDelta: -2, nobilitySatDelta: -2 },
   },
   evt_succession_factions: {
-    back_eldest_claim:        { nobilitySatDelta: +4, commonerSatDelta: -2, stabilityDelta: +2 },
-    support_merit_candidate:  { commonerSatDelta: +4, merchantSatDelta: +3, nobilitySatDelta: -5, stabilityDelta: -1, treasuryDelta: -40 },
-    play_factions:            { nobilitySatDelta: -2, stabilityDelta: -3, espionageNetworkDelta: +5 },
+    back_eldest_claim:        { nobilitySatDelta: +4, commonerSatDelta: -2, stabilityDelta: +2, regionConditionDelta: +1 },
+    support_merit_candidate:  { commonerSatDelta: +4, merchantSatDelta: +3, nobilitySatDelta: -5, stabilityDelta: -1, treasuryDelta: -40, regionDevelopmentDelta: +2 },
+    play_factions:            { nobilitySatDelta: -2, stabilityDelta: -3, espionageNetworkDelta: +5, regionConditionDelta: -2 },
   },
   evt_succession_resolution: {
     crown_heir_publicly:      { stabilityDelta: +5, nobilitySatDelta: +3, commonerSatDelta: +2, faithDelta: +3 },
@@ -646,9 +646,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     reduce_military_rations:   { militaryCasteSatDelta: -4, foodDelta: +10, militaryMoraleDelta: -3 },
   },
   evt_famine_crisis: {
-    open_royal_granaries:      { foodDelta: +25, commonerSatDelta: +5, nobilitySatDelta: -3, treasuryDelta: -30 },
-    commandeer_noble_stores:   { foodDelta: +35, nobilitySatDelta: -8, commonerSatDelta: +3, stabilityDelta: -2 },
-    appeal_to_neighbors:       { treasuryDelta: -50, foodDelta: +20, merchantSatDelta: +2 },
+    open_royal_granaries:      { foodDelta: +25, commonerSatDelta: +5, nobilitySatDelta: -3, treasuryDelta: -30, regionConditionDelta: +2 },
+    commandeer_noble_stores:   { foodDelta: +35, nobilitySatDelta: -8, commonerSatDelta: +3, stabilityDelta: -2, regionConditionDelta: +1 },
+    appeal_to_neighbors:       { treasuryDelta: -50, foodDelta: +20, merchantSatDelta: +2, diplomacyDeltas: { neighbor_arenthal: +3 }, regionConditionDelta: +1 },
   },
   evt_famine_recovery: {
     invest_in_agriculture:     { treasuryDelta: -60, regionDevelopmentDelta: +5, foodDelta: +10, commonerSatDelta: +3 },
@@ -689,9 +689,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     double_down_suppression:   { clergySatDelta: +3, commonerSatDelta: -4, stabilityDelta: -3, heterodoxyDelta: -5 },
   },
   evt_equipment_failure_field: {
-    emergency_field_repair:  { treasuryDelta: -80, militaryEquipmentDelta: +8, militaryReadinessDelta: -3 },
-    retreat_and_regroup:     { militaryReadinessDelta: -8, militaryMoraleDelta: -5, militaryCasteSatDelta: -3 },
-    push_through:            { militaryEquipmentDelta: -5, militaryMoraleDelta: +3, militaryCasteSatDelta: +2 },
+    emergency_field_repair:  { treasuryDelta: -80, militaryEquipmentDelta: +8, militaryReadinessDelta: -3, regionDevelopmentDelta: +1 },
+    retreat_and_regroup:     { militaryReadinessDelta: -8, militaryMoraleDelta: -5, militaryCasteSatDelta: -3, regionConditionDelta: -1 },
+    push_through:            { militaryEquipmentDelta: -5, militaryMoraleDelta: +3, militaryCasteSatDelta: +2, regionConditionDelta: -2 },
   },
 
   // ============================================================
@@ -703,9 +703,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     invest_in_education:   { treasuryDelta: -80, commonerSatDelta: +3, merchantSatDelta: +3, culturalCohesionDelta: +5 },
   },
   evt_assassination_attempt: {
-    purge_inner_circle:    { nobilitySatDelta: -6, stabilityDelta: +5, espionageNetworkDelta: +8, treasuryDelta: -40 },
-    increase_royal_guard:  { treasuryDelta: -60, militaryCasteSatDelta: +3, stabilityDelta: +3 },
-    show_mercy:            { nobilitySatDelta: +3, commonerSatDelta: +4, stabilityDelta: -2, espionageNetworkDelta: -5 },
+    purge_inner_circle:    { nobilitySatDelta: -6, stabilityDelta: +5, espionageNetworkDelta: +8, treasuryDelta: -40, regionConditionDelta: -1 },
+    increase_royal_guard:  { treasuryDelta: -60, militaryCasteSatDelta: +3, stabilityDelta: +3, regionConditionDelta: +1 },
+    show_mercy:            { nobilitySatDelta: +3, commonerSatDelta: +4, stabilityDelta: -2, espionageNetworkDelta: -5, regionDevelopmentDelta: +1 },
   },
   evt_foreign_invasion_rumor: {
     mobilize_defenses:   { militaryReadinessDelta: +8, treasuryDelta: -50, militaryCasteSatDelta: +3, commonerSatDelta: -2 },
@@ -730,9 +730,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     cut_scope:                { commonerSatDelta: -2, stabilityDelta: -1 },
   },
   evt_infra_bridge_collapse: {
-    emergency_rebuild:         { treasuryDelta: -80, foodDelta: -20, stabilityDelta: +2 },
-    reroute_supply_lines:      { foodDelta: -30, merchantSatDelta: -3, treasuryDelta: -20 },
-    requisition_noble_estates: { nobilitySatDelta: -4, foodDelta: +10, commonerSatDelta: +2 },
+    emergency_rebuild:         { treasuryDelta: -80, foodDelta: -20, stabilityDelta: +2, regionDevelopmentDelta: +3 },
+    reroute_supply_lines:      { foodDelta: -30, merchantSatDelta: -3, treasuryDelta: -20, regionConditionDelta: -1 },
+    requisition_noble_estates: { nobilitySatDelta: -4, foodDelta: +10, commonerSatDelta: +2, regionDevelopmentDelta: +1 },
   },
   evt_infra_road_decay: {
     acknowledge: { treasuryDelta: -10, merchantSatDelta: -1 },
@@ -769,9 +769,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     acknowledge: { commonerSatDelta: +2, merchantSatDelta: +1 },
   },
   evt_grain_import_spoiled: {
-    demand_replacement:      { treasuryDelta: -20, merchantSatDelta: -2, foodDelta: +10 },
-    emergency_local_harvest: { commonerSatDelta: -2, foodDelta: +15, treasuryDelta: -45 },
-    distribute_what_remains: { foodDelta: -5, commonerSatDelta: -2 },
+    demand_replacement:      { treasuryDelta: -20, merchantSatDelta: -2, foodDelta: +10, diplomacyDeltas: { neighbor_arenthal: -2 } },
+    emergency_local_harvest: { commonerSatDelta: -2, foodDelta: +15, treasuryDelta: -45, regionDevelopmentDelta: -1 },
+    distribute_what_remains: { foodDelta: -5, commonerSatDelta: -2, regionConditionDelta: -2 },
   },
   evt_grain_noble_plot: {
     negotiate_concessions: { nobilitySatDelta: +2, treasuryDelta: -20, stabilityDelta: +1 },
@@ -785,9 +785,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     acknowledge: { nobilitySatDelta: +1, treasuryDelta: -5 },
   },
   evt_grain_noble_uprising: {
-    crush_uprising:       { militaryReadinessDelta: -5, nobilitySatDelta: -5, stabilityDelta: +3 },
-    negotiate_surrender:  { nobilitySatDelta: -1, treasuryDelta: -45, stabilityDelta: +1 },
-    offer_amnesty:        { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1 },
+    crush_uprising:       { militaryReadinessDelta: -5, nobilitySatDelta: -5, stabilityDelta: +3, regionDevelopmentDelta: -2, regionConditionDelta: -1 },
+    negotiate_surrender:  { nobilitySatDelta: -1, treasuryDelta: -45, stabilityDelta: +1, regionConditionDelta: +1 },
+    offer_amnesty:        { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1, regionDevelopmentDelta: +1 },
   },
   evt_grain_noble_cowed: {
     acknowledge: { nobilitySatDelta: -1, stabilityDelta: +2 },
@@ -820,9 +820,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     impose_silence:        { clergySatDelta: -2, commonerSatDelta: -2, stabilityDelta: -1 },
   },
   evt_schism_reform_schism_deep: {
-    recognize_both_authorities: { faithDelta: -3, heterodoxyDelta: +5, stabilityDelta: -2, culturalCohesionDelta: +3 },
-    enforce_single_doctrine:    { faithDelta: +4, heterodoxyDelta: -8, clergySatDelta: +2, commonerSatDelta: -3, treasuryDelta: -40 },
-    secularize_state:           { faithDelta: -5, clergySatDelta: -5, commonerSatDelta: +3, stabilityDelta: +2 },
+    recognize_both_authorities: { faithDelta: -3, heterodoxyDelta: +5, stabilityDelta: -2, culturalCohesionDelta: +3, regionConditionDelta: +1 },
+    enforce_single_doctrine:    { faithDelta: +4, heterodoxyDelta: -8, clergySatDelta: +2, commonerSatDelta: -3, treasuryDelta: -40, regionConditionDelta: -1 },
+    secularize_state:           { faithDelta: -5, clergySatDelta: -5, commonerSatDelta: +3, stabilityDelta: +2, regionDevelopmentDelta: +2 },
   },
   evt_schism_underground_worship: {
     tolerate_quietly: { heterodoxyDelta: +3, stabilityDelta: +1, clergySatDelta: -2 },
@@ -836,33 +836,33 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     acknowledge: { heterodoxyDelta: +1, stabilityDelta: +1 },
   },
   evt_schism_underground_martyr: {
-    honor_martyr:      { commonerSatDelta: +4, clergySatDelta: -4, heterodoxyDelta: +5, faithDelta: -3 },
-    discredit_martyr:  { commonerSatDelta: -3, clergySatDelta: +2, stabilityDelta: -2, treasuryDelta: -40 },
-    ignore_martyr:     { stabilityDelta: -1, heterodoxyDelta: +2 },
+    honor_martyr:      { commonerSatDelta: +4, clergySatDelta: -4, heterodoxyDelta: +5, faithDelta: -3, regionConditionDelta: +1 },
+    discredit_martyr:  { commonerSatDelta: -3, clergySatDelta: +2, stabilityDelta: -2, treasuryDelta: -40, regionConditionDelta: -2 },
+    ignore_martyr:     { stabilityDelta: -1, heterodoxyDelta: +2, regionConditionDelta: -1 },
   },
 
   // --- Chain 5: Plague Outbreak ---
   evt_plague_outbreak_root: {
-    quarantine_districts: { commonerSatDelta: -3, treasuryDelta: -40, stabilityDelta: +1 },
-    prioritize_nobility:  { commonerSatDelta: -6, nobilitySatDelta: +3, stabilityDelta: -2 },
-    open_royal_stores:    { commonerSatDelta: +3, treasuryDelta: -80, nobilitySatDelta: -2 },
+    quarantine_districts: { commonerSatDelta: -3, treasuryDelta: -40, stabilityDelta: +1, regionConditionDelta: +1 },
+    prioritize_nobility:  { commonerSatDelta: -6, nobilitySatDelta: +3, stabilityDelta: -2, regionConditionDelta: -2 },
+    open_royal_stores:    { commonerSatDelta: +3, treasuryDelta: -80, nobilitySatDelta: -2, regionConditionDelta: +2 },
   },
   evt_plague_quarantine_holds: {
     acknowledge: { stabilityDelta: +2, commonerSatDelta: +1 },
   },
   evt_plague_quarantine_breaks: {
-    military_enforcement: { militaryReadinessDelta: -3, commonerSatDelta: -4, stabilityDelta: +1 },
-    expand_treatment:     { treasuryDelta: -50, commonerSatDelta: +2 },
-    abandon_quarantine:   { commonerSatDelta: -2, stabilityDelta: -3 },
+    military_enforcement: { militaryReadinessDelta: -3, commonerSatDelta: -4, stabilityDelta: +1, regionConditionDelta: +1 },
+    expand_treatment:     { treasuryDelta: -50, commonerSatDelta: +2, regionConditionDelta: +2 },
+    abandon_quarantine:   { commonerSatDelta: -2, stabilityDelta: -3, regionConditionDelta: -3, regionDevelopmentDelta: -2 },
   },
   evt_plague_quarantine_unrest: {
     compensate_quarantined: { treasuryDelta: -30, commonerSatDelta: +3 },
     maintain_quarantine:    { commonerSatDelta: -3, stabilityDelta: -1 },
   },
   evt_plague_class_anger: {
-    extend_treatment_to_all: { treasuryDelta: -60, commonerSatDelta: +4, nobilitySatDelta: -3 },
-    suppress_riots:          { commonerSatDelta: -5, stabilityDelta: +2, militaryReadinessDelta: -3 },
-    public_apology:          { commonerSatDelta: +2, nobilitySatDelta: -2, stabilityDelta: -1 },
+    extend_treatment_to_all: { treasuryDelta: -60, commonerSatDelta: +4, nobilitySatDelta: -3, regionConditionDelta: +2 },
+    suppress_riots:          { commonerSatDelta: -5, stabilityDelta: +2, militaryReadinessDelta: -3, regionConditionDelta: -1 },
+    public_apology:          { commonerSatDelta: +2, nobilitySatDelta: -2, stabilityDelta: -1, regionConditionDelta: +1 },
   },
   evt_plague_noble_saved: {
     acknowledge: { nobilitySatDelta: +2, commonerSatDelta: -1 },
@@ -886,9 +886,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
 
   // --- Chain 2: Border Incursion ---
   evt_border_incursion_root: {
-    retaliate_with_force:  { militaryReadinessDelta: -5, stabilityDelta: +2, diplomacyDeltas: { rival_north: -5 }, treasuryDelta: -40 },
-    send_diplomatic_envoy: { treasuryDelta: -30, diplomacyDeltas: { rival_north: +3 } },
-    fortify_and_absorb:    { foodDelta: -20, commonerSatDelta: -2, militaryReadinessDelta: +2 },
+    retaliate_with_force:  { militaryReadinessDelta: -5, stabilityDelta: +2, diplomacyDeltas: { neighbor_valdris: -5 }, treasuryDelta: -40 },
+    send_diplomatic_envoy: { treasuryDelta: -30, diplomacyDeltas: { neighbor_valdris: +3 } },
+    fortify_and_absorb:    { foodDelta: -20, commonerSatDelta: -2, militaryReadinessDelta: +2, regionDevelopmentDelta: +1 },
   },
   evt_border_campaign_victory: {
     acknowledge: { diplomacyDeltas: { rival_north: +10 }, stabilityDelta: +3, militaryCasteSatDelta: +3 },
@@ -898,9 +898,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     withdraw_forces:       { militaryCasteSatDelta: -3, stabilityDelta: -2 },
   },
   evt_border_campaign_defeat: {
-    rally_defense:   { militaryReadinessDelta: -5, treasuryDelta: -60, stabilityDelta: +1 },
-    sue_for_peace:   { diplomacyDeltas: { rival_north: +5 }, nobilitySatDelta: -3, treasuryDelta: -30 },
-    scorched_earth:  { foodDelta: -30, commonerSatDelta: -4, militaryReadinessDelta: +3 },
+    rally_defense:   { militaryReadinessDelta: -5, treasuryDelta: -60, stabilityDelta: +1, regionDevelopmentDelta: -2 },
+    sue_for_peace:   { diplomacyDeltas: { neighbor_valdris: +5 }, nobilitySatDelta: -3, treasuryDelta: -30, regionConditionDelta: -1 },
+    scorched_earth:  { foodDelta: -30, commonerSatDelta: -4, militaryReadinessDelta: +3, regionDevelopmentDelta: -5, regionConditionDelta: -3 },
   },
   evt_border_envoy_success: {
     acknowledge: { diplomacyDeltas: { rival_north: +8 }, stabilityDelta: +2 },
@@ -937,9 +937,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     acknowledge: { merchantSatDelta: +2, treasuryDelta: +10 },
   },
   evt_trade_escort_ambush: {
-    send_reinforcements: { militaryReadinessDelta: -5, treasuryDelta: -40, stabilityDelta: +1 },
-    negotiate_ransom:    { treasuryDelta: -60, merchantSatDelta: -2 },
-    cut_losses:          { merchantSatDelta: -4, militaryCasteSatDelta: -2, treasuryDelta: -20 },
+    send_reinforcements: { militaryReadinessDelta: -5, treasuryDelta: -40, stabilityDelta: +1, regionConditionDelta: +1 },
+    negotiate_ransom:    { treasuryDelta: -60, merchantSatDelta: -2, diplomacyDeltas: { neighbor_valdris: -2 }, regionConditionDelta: -1 },
+    cut_losses:          { merchantSatDelta: -4, militaryCasteSatDelta: -2, treasuryDelta: -20, regionDevelopmentDelta: -2 },
   },
   evt_trade_escort_expensive: {
     subsidize_escorts:   { treasuryDelta: -40, merchantSatDelta: +2 },
@@ -967,9 +967,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
 
   // --- Chain 6: Military Mutiny ---
   evt_military_mutiny_root: {
-    pay_back_wages:      { treasuryDelta: -80, militaryCasteSatDelta: +4, militaryMoraleDelta: +3 },
-    promise_reform:      { militaryReadinessDelta: -3, militaryCasteSatDelta: -1 },
-    execute_ringleaders: { militaryReadinessDelta: -2, stabilityDelta: +2, militaryMoraleDelta: -5 },
+    pay_back_wages:      { treasuryDelta: -80, militaryCasteSatDelta: +4, militaryMoraleDelta: +3, regionConditionDelta: +1 },
+    promise_reform:      { militaryReadinessDelta: -3, militaryCasteSatDelta: -1, regionConditionDelta: -1 },
+    execute_ringleaders: { militaryReadinessDelta: -2, stabilityDelta: +2, militaryMoraleDelta: -5, regionConditionDelta: -2 },
   },
   evt_mutiny_pay_loyalty: {
     acknowledge: { militaryCasteSatDelta: +3, militaryReadinessDelta: +5 },
@@ -983,9 +983,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     acknowledge: { militaryCasteSatDelta: +3, militaryReadinessDelta: +3, stabilityDelta: +1 },
   },
   evt_mutiny_reform_betrayal: {
-    meet_soldiers_personally: { stabilityDelta: +3, militaryCasteSatDelta: +2, treasuryDelta: -40 },
-    call_loyal_units:         { militaryReadinessDelta: -5, stabilityDelta: -3, militaryCasteSatDelta: -2 },
-    flee_capital:             { stabilityDelta: -5, nobilitySatDelta: -3, commonerSatDelta: -3 },
+    meet_soldiers_personally: { stabilityDelta: +3, militaryCasteSatDelta: +2, treasuryDelta: -40, regionConditionDelta: +1 },
+    call_loyal_units:         { militaryReadinessDelta: -5, stabilityDelta: -3, militaryCasteSatDelta: -2, regionConditionDelta: -2 },
+    flee_capital:             { stabilityDelta: -5, nobilitySatDelta: -3, commonerSatDelta: -3, regionDevelopmentDelta: -3, regionConditionDelta: -3 },
   },
   evt_mutiny_reform_desertion: {
     acknowledge: { militaryReadinessDelta: -5, militaryForceSizeDelta: -100 },
@@ -994,9 +994,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     acknowledge: { militaryMoraleDelta: -3, stabilityDelta: +1 },
   },
   evt_mutiny_execute_revenge: {
-    investigate_sabotage:   { espionageNetworkDelta: +3, treasuryDelta: -20, stabilityDelta: +1 },
-    rebuild_fortification:  { treasuryDelta: -60, militaryReadinessDelta: +3 },
-    purge_suspects:         { militaryCasteSatDelta: -4, militaryForceSizeDelta: -100, stabilityDelta: +2 },
+    investigate_sabotage:   { espionageNetworkDelta: +3, treasuryDelta: -20, stabilityDelta: +1, regionConditionDelta: +1 },
+    rebuild_fortification:  { treasuryDelta: -60, militaryReadinessDelta: +3, regionDevelopmentDelta: +2 },
+    purge_suspects:         { militaryCasteSatDelta: -4, militaryForceSizeDelta: -100, stabilityDelta: +2, regionConditionDelta: -2 },
   },
   evt_mutiny_execute_loyalty_split: {
     grant_amnesty_families: { commonerSatDelta: +3, militaryCasteSatDelta: +1, nobilitySatDelta: -1 },
@@ -1043,9 +1043,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
 
   // --- Chain 11: Commoner Uprising ---
   evt_commoner_uprising_root: {
-    meet_demands:        { commonerSatDelta: +5, nobilitySatDelta: -4, treasuryDelta: -40 },
-    suppress_by_force:   { stabilityDelta: +2, commonerSatDelta: -5, faithDelta: -2 },
-    address_root_causes: { treasuryDelta: -50, commonerSatDelta: +2, stabilityDelta: +1 },
+    meet_demands:        { commonerSatDelta: +5, nobilitySatDelta: -4, treasuryDelta: -40, regionConditionDelta: +2 },
+    suppress_by_force:   { stabilityDelta: +2, commonerSatDelta: -5, faithDelta: -2, regionConditionDelta: -2, regionDevelopmentDelta: -2 },
+    address_root_causes: { treasuryDelta: -50, commonerSatDelta: +2, stabilityDelta: +1, regionDevelopmentDelta: +3 },
   },
   evt_uprising_noble_backlash: {
     appease_nobility:    { nobilitySatDelta: +3, commonerSatDelta: -3, treasuryDelta: -20 },
@@ -1056,9 +1056,9 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     acknowledge: { stabilityDelta: +3, commonerSatDelta: +2 },
   },
   evt_uprising_guerrilla: {
-    hunt_insurgents:      { militaryReadinessDelta: -5, stabilityDelta: -2, commonerSatDelta: -4 },
-    offer_amnesty:        { commonerSatDelta: +3, nobilitySatDelta: -2, stabilityDelta: +1 },
-    fortify_key_positions: { treasuryDelta: -40, militaryReadinessDelta: -3, stabilityDelta: +1 },
+    hunt_insurgents:      { militaryReadinessDelta: -5, stabilityDelta: -2, commonerSatDelta: -4, regionConditionDelta: -2 },
+    offer_amnesty:        { commonerSatDelta: +3, nobilitySatDelta: -2, stabilityDelta: +1, regionConditionDelta: +1 },
+    fortify_key_positions: { treasuryDelta: -40, militaryReadinessDelta: -3, stabilityDelta: +1, regionDevelopmentDelta: +2 },
   },
   evt_uprising_crushed: {
     acknowledge: { commonerSatDelta: -3, stabilityDelta: +2 },

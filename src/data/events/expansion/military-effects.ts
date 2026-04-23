@@ -113,9 +113,9 @@ export const EXPANSION_MILITARY_EFFECTS: Record<string, Record<string, Mechanica
   // 13. Supply Chain Disruption — Critical
   // ============================================================
   evt_exp_mil_supply_chain: {
-    emergency_supply_convoy:      { treasuryDelta: -100, foodDelta: +30, militaryReadinessDelta: +5, militaryMoraleDelta: +3, merchantSatDelta: -4 },
-    requisition_from_merchants:   { foodDelta: +20, merchantSatDelta: -6, militaryReadinessDelta: +3, commonerSatDelta: -3 },
-    ration_existing_supplies:     { foodDelta: -10, militaryMoraleDelta: -4, militaryCasteSatDelta: -4, stabilityDelta: -2 },
+    emergency_supply_convoy:      { treasuryDelta: -100, foodDelta: +30, militaryReadinessDelta: +5, militaryMoraleDelta: +3, merchantSatDelta: -4, regionDevelopmentDelta: +1 },
+    requisition_from_merchants:   { foodDelta: +20, merchantSatDelta: -6, militaryReadinessDelta: +3, commonerSatDelta: -3, regionConditionDelta: -1 },
+    ration_existing_supplies:     { foodDelta: -10, militaryMoraleDelta: -4, militaryCasteSatDelta: -4, stabilityDelta: -2, regionConditionDelta: -2 },
   },
 
   // ============================================================

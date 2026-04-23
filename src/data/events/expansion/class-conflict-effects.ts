@@ -40,9 +40,9 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // 5. Guild vs Nobility Power Struggle (Critical: -120/+80, -6/+8 sat)
   // ============================================================
   evt_exp_cc_guild_noble_power_struggle: {
-    curtail_guild_influence:          { nobilitySatDelta: +6, merchantSatDelta: -7, treasuryDelta: -40, stabilityDelta: -3 },
-    formalize_guild_seats:            { merchantSatDelta: +7, nobilitySatDelta: -6, treasuryDelta: +50, stabilityDelta: +2 },
-    play_factions_against_each_other: { nobilitySatDelta: -2, merchantSatDelta: -2, espionageNetworkDelta: +4, stabilityDelta: -4 },
+    curtail_guild_influence:          { nobilitySatDelta: +6, merchantSatDelta: -7, treasuryDelta: -40, stabilityDelta: -3, regionDevelopmentDelta: -2 },
+    formalize_guild_seats:            { merchantSatDelta: +7, nobilitySatDelta: -6, treasuryDelta: +50, stabilityDelta: +2, regionDevelopmentDelta: +3 },
+    play_factions_against_each_other: { nobilitySatDelta: -2, merchantSatDelta: -2, espionageNetworkDelta: +4, stabilityDelta: -4, regionConditionDelta: -1 },
   },
 
   // ============================================================
@@ -76,9 +76,9 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // 9. Social Mobility Demands (Critical: -120/+80, -6/+8 sat)
   // ============================================================
   evt_exp_cc_social_mobility_demands: {
-    open_ranks_to_merit:       { commonerSatDelta: +8, nobilitySatDelta: -6, clergySatDelta: -3, treasuryDelta: -60, stabilityDelta: +4 },
-    create_advancement_paths:  { commonerSatDelta: +5, nobilitySatDelta: -3, treasuryDelta: -40, stabilityDelta: +2 },
-    reaffirm_social_order:     { nobilitySatDelta: +4, clergySatDelta: +2, commonerSatDelta: -7, stabilityDelta: -5 },
+    open_ranks_to_merit:       { commonerSatDelta: +8, nobilitySatDelta: -6, clergySatDelta: -3, treasuryDelta: -60, stabilityDelta: +4, regionDevelopmentDelta: +3 },
+    create_advancement_paths:  { commonerSatDelta: +5, nobilitySatDelta: -3, treasuryDelta: -40, stabilityDelta: +2, regionDevelopmentDelta: +2 },
+    reaffirm_social_order:     { nobilitySatDelta: +4, clergySatDelta: +2, commonerSatDelta: -7, stabilityDelta: -5, regionConditionDelta: -2 },
   },
 
   // ============================================================
@@ -112,9 +112,9 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // 13. Privilege Reform (Critical: -120/+80, -6/+8 sat)
   // ============================================================
   evt_exp_cc_privilege_reform: {
-    enact_sweeping_reforms:    { commonerSatDelta: +8, nobilitySatDelta: -7, clergySatDelta: -4, treasuryDelta: -80, stabilityDelta: +5 },
-    offer_token_concessions:   { commonerSatDelta: +3, nobilitySatDelta: -2, treasuryDelta: -30, stabilityDelta: +1 },
-    suppress_reform_movement:  { nobilitySatDelta: +4, commonerSatDelta: -6, militaryCasteSatDelta: +2, stabilityDelta: -6 },
+    enact_sweeping_reforms:    { commonerSatDelta: +8, nobilitySatDelta: -7, clergySatDelta: -4, treasuryDelta: -80, stabilityDelta: +5, regionDevelopmentDelta: +3 },
+    offer_token_concessions:   { commonerSatDelta: +3, nobilitySatDelta: -2, treasuryDelta: -30, stabilityDelta: +1, regionConditionDelta: -1 },
+    suppress_reform_movement:  { nobilitySatDelta: +4, commonerSatDelta: -6, militaryCasteSatDelta: +2, stabilityDelta: -6, regionConditionDelta: -2 },
   },
 
   // ============================================================

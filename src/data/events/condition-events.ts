@@ -63,10 +63,14 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'endure_the_drought', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'endure_the_drought', followUpDefinitionId: 'evt_fu_drought_wasteland', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'seize_merchant_water', followUpDefinitionId: 'evt_fu_merchant_water_reprisal', delayTurns: 2, probability: 0.6 },
+    ],
   },
 
   // ============================================================
@@ -179,10 +183,14 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'pray_for_deliverance', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'burn_infected_quarters', followUpDefinitionId: 'evt_fu_burned_quarters_rebuild', delayTurns: 3, probability: 0.8 },
+      { triggerChoiceId: 'pray_for_deliverance', followUpDefinitionId: 'evt_fu_plague_worsens', delayTurns: 2, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_cond_plague_severe',
@@ -199,10 +207,14 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'accept_fate', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'accept_fate', followUpDefinitionId: 'evt_fu_plague_wasteland', delayTurns: 3, probability: 0.8 },
+      { triggerChoiceId: 'mass_exodus', followUpDefinitionId: 'evt_fu_exodus_refugee_crisis', delayTurns: 2, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -222,11 +234,14 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'appeal_to_clergy', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
     classification: 'standard',
+    followUpEvents: [
+      { triggerChoiceId: 'martial_law', followUpDefinitionId: 'evt_fu_martial_law_aftermath', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -247,10 +262,14 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'open_royal_granaries', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'emergency_rationing', followUpDefinitionId: 'evt_fu_famine_ration_riot', delayTurns: 2, probability: 0.6 },
+      { triggerChoiceId: 'import_foreign_grain', followUpDefinitionId: 'evt_fu_grain_debt_called', delayTurns: 4, probability: 0.5 },
+    ],
   },
 
   // ============================================================

@@ -182,9 +182,13 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
       { choiceId: 'offer_charter_of_rights', slotCost: 2, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'assert_royal_authority', followUpDefinitionId: 'evt_fu_authority_rebellion', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'offer_charter_of_rights', followUpDefinitionId: 'evt_fu_charter_implementation', delayTurns: 3, probability: 0.8 },
+    ],
   },
 
   // --- 8. Power Consolidation (established) ---
