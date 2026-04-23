@@ -135,7 +135,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_merchant_military_war_costs: {
     title: 'Merchants Protest Military Expenditures',
-    body: 'The merchant guild has submitted a formal grievance that the kingdom\'s military buildup is strangling commerce. Garrison requisitions consume goods that could be traded abroad, and road tolls to fund border patrols are cutting into profit margins. The military caste argues that without a strong army, the merchants would have no roads to trade upon at all.',
+    body: 'The merchant guild has submitted a formal grievance that the kingdom\'s military buildup is strangling commerce. Wartime requisitions consume goods that could be traded abroad, and road tolls to fund border patrols are cutting into profit margins. The military caste argues that without a strong army, the merchants would have no roads to trade upon at all.',
     choices: {
       reduce_military_spending: 'Reduce Military Spending',
       levy_war_commerce_tax: 'Levy a War Commerce Tax',

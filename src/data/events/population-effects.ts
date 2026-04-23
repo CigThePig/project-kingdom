@@ -14,7 +14,7 @@ export const POPULATION_EVENT_EFFECTS: Record<string, Record<string, MechanicalE
   evt_pop_migration_petition: {
     reduce_taxes_briefly: { treasuryDelta: -30, commonerSatDelta: +3, merchantSatDelta: +2 },
     improve_conditions: { treasuryDelta: -40, commonerSatDelta: +4, stabilityDelta: +1 },
-    dismiss_concerns: { commonerSatDelta: -3, stabilityDelta: -2 },
+    dismiss_concerns: { commonerSatDelta: -3, stabilityDelta: -2, treasuryDelta: -5 },
   },
   evt_pop_migration_crisis: {
     seal_borders: { merchantSatDelta: -5, stabilityDelta: +2, commonerSatDelta: -2 },
@@ -41,11 +41,11 @@ export const POPULATION_EVENT_EFFECTS: Record<string, Record<string, MechanicalE
   // ============================================================
   evt_pop_merchant_titles: {
     grant_titles: { merchantSatDelta: +5, nobilitySatDelta: -5, treasuryDelta: +30 },
-    deny_titles: { merchantSatDelta: -3, nobilitySatDelta: +2 },
+    deny_titles: { merchantSatDelta: -3, nobilitySatDelta: +2, treasuryDelta: -5 },
   },
   evt_pop_conscription_harvest: {
     proceed_conscription: { militaryForceSizeDelta: +50, commonerSatDelta: -5, foodDelta: -10 },
-    delay_conscription: { commonerSatDelta: +2, militaryMoraleDelta: -3 },
+    delay_conscription: { commonerSatDelta: +2, militaryMoraleDelta: -3, foodDelta: +3 },
   },
   evt_pop_clergy_exodus: {
     offer_clergy_stipends: { treasuryDelta: -30, clergySatDelta: +5, faithDelta: +3 },

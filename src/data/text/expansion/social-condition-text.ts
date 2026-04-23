@@ -53,7 +53,7 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_social_corruption_moderate: {
     title: 'A Rot in the Court',
-    body: 'Corruption has sunk deep roots into the kingdom\'s administration. Officials sell appointments, judges accept bribes, and entire tax revenues vanish into private estates. The common folk seethe at the injustice, while the guilty nobles grow ever bolder.',
+    body: 'Corruption has sunk deep roots into the kingdom\'s administration. Officials sell appointments, judges accept bribes, and entire ledgers of collected silver vanish into private estates. The common folk seethe at the injustice, while the guilty nobles grow ever bolder.',
     choices: {
       purge_corrupt_officials: 'Purge the Corrupt Officials',
       reform_tax_collection: 'Reform Tax Collection',

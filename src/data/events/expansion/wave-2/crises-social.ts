@@ -116,11 +116,13 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISIS_EFFECTS: Record<
       militaryReadinessDelta: -2,
       stabilityDelta: 1,
       commonerSatDelta: -3,
+      foodDelta: -3,
     },
     hang_the_ringleaders: {
       stabilityDelta: 2,
       commonerSatDelta: -6,
       faithDelta: -2,
+      foodDelta: -5,
     },
   },
   evt_exp_w2_bonded_labor_revolt: {

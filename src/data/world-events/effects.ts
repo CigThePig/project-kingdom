@@ -15,7 +15,7 @@ export const WORLD_EVENT_CHOICE_EFFECTS: Record<string, MechanicalEffectDelta> =
   // --- The Long Winter ---
   we_long_winter__stockpile:           { treasuryDelta: -40, foodDelta: +60, merchantSatDelta: -2 },
   we_long_winter__open_granaries:      { foodDelta: -80, commonerSatDelta: +5, stabilityDelta: +3 },
-  we_long_winter__tax_relief:          { treasuryDelta: -30, commonerSatDelta: +3, nobilitySatDelta: -2 },
+  we_long_winter__tax_relief:          { treasuryDelta: -30, commonerSatDelta: +3, nobilitySatDelta: -2, foodDelta: +3 },
 
   // --- The Great Devaluation ---
   we_great_devaluation__debase_coinage:{ treasuryDelta: +40, merchantSatDelta: -5, stabilityDelta: -2 },

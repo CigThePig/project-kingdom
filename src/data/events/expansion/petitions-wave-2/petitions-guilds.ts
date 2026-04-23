@@ -150,6 +150,7 @@ export const EXPANSION_WAVE_2_GUILD_PETITION_EFFECTS: Record<
     defer_the_petition: {
       merchantSatDelta: -5,
       stabilityDelta: -1,
+      treasuryDelta: +5,
     },
   },
   faction_req_w2_miners_charter: {

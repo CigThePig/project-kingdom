@@ -70,7 +70,7 @@ export const EXPANSION_ECONOMY_EFFECTS: Record<string, Record<string, Mechanical
   evt_exp_eco_luxury_trade: {
     open_luxury_imports:       { treasuryDelta: -15, nobilitySatDelta: +3, merchantSatDelta: +2, commonerSatDelta: -1, diplomacyDeltas: { neighbor_arenthal: +2 } },
     tax_luxury_goods_heavily:  { treasuryDelta: +20, nobilitySatDelta: -2, merchantSatDelta: -1, commonerSatDelta: +1 },
-    decline_the_opportunity:   { merchantSatDelta: -1, diplomacyDeltas: { neighbor_arenthal: -1 } },
+    decline_the_opportunity:   { merchantSatDelta: -1, diplomacyDeltas: { neighbor_arenthal: -1 }, treasuryDelta: -2 },
   },
 
   // ============================================================
@@ -151,7 +151,7 @@ export const EXPANSION_ECONOMY_EFFECTS: Record<string, Record<string, Mechanical
   evt_exp_eco_warehouse_fire: {
     fund_full_reconstruction:        { treasuryDelta: -70, merchantSatDelta: +5, regionConditionDelta: +3, commonerSatDelta: +2, stabilityDelta: +2 },
     compensate_merchants_partially:  { treasuryDelta: -35, merchantSatDelta: +2, commonerSatDelta: +1, stabilityDelta: +1 },
-    leave_to_private_rebuilding:     { merchantSatDelta: -4, regionConditionDelta: -3, stabilityDelta: -2 },
+    leave_to_private_rebuilding:     { merchantSatDelta: -4, regionConditionDelta: -3, stabilityDelta: -2, treasuryDelta: -10 },
   },
 
   // ============================================================

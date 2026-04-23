@@ -37,7 +37,7 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
     continue_unrestricted: { foodDelta: +5, regionConditionDelta: -3, commonerSatDelta: +1, merchantSatDelta: +1 },
   },
   evt_exp_fu_food_feast_aftermath: {
-    acknowledge: { commonerSatDelta: +1, stabilityDelta: +1 },
+    acknowledge: { commonerSatDelta: +1, stabilityDelta: +1, foodDelta: -3 },
   },
   evt_exp_fu_food_quarantine_success: {
     acknowledge: { foodDelta: +5, regionConditionDelta: +2 },
@@ -320,7 +320,7 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
   },
   evt_fu_famine_ration_riot: {
     distribute_reserves: { foodDelta: -15, commonerSatDelta: +4, regionConditionDelta: +1 },
-    clamp_down:          { militaryReadinessDelta: -2, commonerSatDelta: -4, regionConditionDelta: -2 },
+    clamp_down:          { militaryReadinessDelta: -2, commonerSatDelta: -4, regionConditionDelta: -2, foodDelta: -3 },
   },
   evt_fu_grain_debt_called: {
     pay_the_debt:        { treasuryDelta: -80, diplomacyDeltas: { neighbor_arenthal: +3 } },
@@ -522,7 +522,7 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
   },
   evt_fu_seized_granaries_noble_revolt: {
     return_the_stores:  { nobilitySatDelta: +3, foodDelta: -15, regionConditionDelta: +1 },
-    confront_the_lords: { nobilitySatDelta: -5, militaryReadinessDelta: -3, regionConditionDelta: -2 },
+    confront_the_lords: { nobilitySatDelta: -5, militaryReadinessDelta: -3, regionConditionDelta: -2, foodDelta: -3 },
   },
   evt_fu_famine_descends_into_riot: {
     distribute_reserves: { foodDelta: -15, commonerSatDelta: +4, regionConditionDelta: +1 },
@@ -535,8 +535,8 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
     waive_the_demand: { treasuryDelta: -30, nobilitySatDelta: +3, regionConditionDelta: +1 },
   },
   evt_fu_neglected_works_collapse: {
-    emergency_repair_fund:  { treasuryDelta: -50, regionDevelopmentDelta: +3, commonerSatDelta: +2 },
-    let_it_stand_as_warning: { regionDevelopmentDelta: -3, commonerSatDelta: -3, regionConditionDelta: -2 },
+    emergency_repair_fund:  { treasuryDelta: -50, regionDevelopmentDelta: +3, commonerSatDelta: +2, foodDelta: +3 },
+    let_it_stand_as_warning: { regionDevelopmentDelta: -3, commonerSatDelta: -3, regionConditionDelta: -2, foodDelta: -3 },
   },
   evt_fu_arrests_purge_pushback: {
     release_half_the_held: { nobilitySatDelta: +3, stabilityDelta: +1, regionConditionDelta: +1 },
@@ -626,6 +626,6 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
   },
   evt_fu_surrender_terms_harsh: {
     pay_the_indemnity: { treasuryDelta: -80, diplomacyDeltas: { neighbor_valdris: +4 }, regionConditionDelta: +1 },
-    reopen_the_war:    { militaryReadinessDelta: -4, diplomacyDeltas: { neighbor_valdris: -6 }, regionConditionDelta: -2 },
+    reopen_the_war:    { militaryReadinessDelta: -4, diplomacyDeltas: { neighbor_valdris: -6 }, regionConditionDelta: -2, treasuryDelta: -30 },
   },
 };

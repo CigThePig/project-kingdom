@@ -6,7 +6,7 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // ============================================================
   evt_exp_cc_tax_burden_dispute: {
     redistribute_tax_burden:   { treasuryDelta: +40, commonerSatDelta: +5, nobilitySatDelta: -4, stabilityDelta: +2 },
-    maintain_noble_exemptions: { nobilitySatDelta: +4, commonerSatDelta: -5, stabilityDelta: -3 },
+    maintain_noble_exemptions: { nobilitySatDelta: +4, commonerSatDelta: -5, stabilityDelta: -3, treasuryDelta: -10 },
     commission_tax_review:     { treasuryDelta: -30, commonerSatDelta: +2, nobilitySatDelta: -1, stabilityDelta: +1 },
   },
 
@@ -85,9 +85,9 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // 10. Land Ownership Dispute (Serious: -80/+50, -4/+6 sat)
   // ============================================================
   evt_exp_cc_land_ownership_dispute: {
-    redistribute_crown_lands:      { commonerSatDelta: +5, nobilitySatDelta: -5, treasuryDelta: -20, regionDevelopmentDelta: +3 },
-    enforce_existing_deeds:        { nobilitySatDelta: +4, commonerSatDelta: -4, stabilityDelta: -2 },
-    establish_tenant_protections:  { commonerSatDelta: +3, nobilitySatDelta: -2, treasuryDelta: -15, stabilityDelta: +2 },
+    redistribute_crown_lands:      { commonerSatDelta: +5, nobilitySatDelta: -5, treasuryDelta: -20, regionDevelopmentDelta: +3, foodDelta: +5 },
+    enforce_existing_deeds:        { nobilitySatDelta: +4, commonerSatDelta: -4, stabilityDelta: -2, foodDelta: -3 },
+    establish_tenant_protections:  { commonerSatDelta: +3, nobilitySatDelta: -2, treasuryDelta: -15, stabilityDelta: +2, foodDelta: +3 },
   },
 
   // ============================================================
@@ -114,7 +114,7 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   evt_exp_cc_privilege_reform: {
     enact_sweeping_reforms:    { commonerSatDelta: +8, nobilitySatDelta: -7, clergySatDelta: -4, treasuryDelta: -80, stabilityDelta: +5, regionDevelopmentDelta: +3 },
     offer_token_concessions:   { commonerSatDelta: +3, nobilitySatDelta: -2, treasuryDelta: -30, stabilityDelta: +1, regionConditionDelta: -1 },
-    suppress_reform_movement:  { nobilitySatDelta: +4, commonerSatDelta: -6, militaryCasteSatDelta: +2, stabilityDelta: -6, regionConditionDelta: -2 },
+    suppress_reform_movement:  { nobilitySatDelta: +4, commonerSatDelta: -6, militaryCasteSatDelta: +2, stabilityDelta: -6, regionConditionDelta: -2, treasuryDelta: -20 },
   },
 
   // ============================================================
@@ -122,6 +122,6 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // ============================================================
   evt_exp_cc_harvest_tithe_resentment: {
     reduce_harvest_tithe: { commonerSatDelta: +3, clergySatDelta: -2, foodDelta: +10, treasuryDelta: -15 },
-    hold_tithe_steady:    { clergySatDelta: +1, commonerSatDelta: -1 },
+    hold_tithe_steady:    { clergySatDelta: +1, commonerSatDelta: -1, foodDelta: -3 },
   },
 };

@@ -70,6 +70,7 @@ export const EXPANSION_WAVE_2_MILITARY_PETITION_EFFECTS: Record<
       militaryCasteSatDelta: -4,
       regionConditionDelta: -2,
       stabilityDelta: -1,
+      militaryReadinessDelta: -3,
     },
   },
   faction_req_w2_knightly_order_grant: {

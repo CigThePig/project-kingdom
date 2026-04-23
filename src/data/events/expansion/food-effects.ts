@@ -15,8 +15,8 @@ export const EXPANSION_FOOD_EFFECTS: Record<string, Record<string, MechanicalEff
   // ============================================================
   evt_exp_fod_fishing_fleet: {
     fund_new_boats:           { treasuryDelta: -40, foodDelta: +25, commonerSatDelta: +3, regionDevelopmentDelta: +2, merchantSatDelta: -1 },
-    conscript_coastal_labour: { foodDelta: +15, commonerSatDelta: -4, militaryCasteSatDelta: -1, regionConditionDelta: -1 },
-    maintain_current_fleet:   { foodDelta: +5, commonerSatDelta: -1 },
+    conscript_coastal_labour: { foodDelta: +15, commonerSatDelta: -4, militaryCasteSatDelta: -1, regionConditionDelta: -1, treasuryDelta: -5 },
+    maintain_current_fleet:   { foodDelta: +5, commonerSatDelta: -1, treasuryDelta: -5 },
   },
 
   // ============================================================

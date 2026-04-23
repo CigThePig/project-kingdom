@@ -32,6 +32,7 @@ export const EXPANSION_CULTURE_EFFECTS: Record<string, Record<string, Mechanical
     defer_construction: {
       stabilityDelta: +1,
       culturalCohesionDelta: -1,
+      treasuryDelta: +5,
     },
   },
 
@@ -68,6 +69,7 @@ export const EXPANSION_CULTURE_EFFECTS: Record<string, Record<string, Mechanical
     let_folk_celebrate: {
       culturalCohesionDelta: +1,
       commonerSatDelta: +1,
+      foodDelta: -2,
     },
   },
 
