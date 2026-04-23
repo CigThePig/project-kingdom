@@ -153,7 +153,8 @@ one pass; Phase 4 was split:
   `rival_north` → `neighbor_valdris` in `diplomacyDeltas` (dead IDs that
   silently no-op'd in both the audit fixture and live play). Trigger
   conditions using the same dead IDs were **not** swapped — that's a
-  separate scenario-consistency task.
+  separate scenario-consistency task, enumerated at
+  `docs/audit/phase-4-deferred-legacy-ids.md`.
 - Zero new follow-up stubs authored (same as Phase 3).
 
 **Acceptance.** `PROMISE_NOT_DELIVERED` = 0 across all families; zero

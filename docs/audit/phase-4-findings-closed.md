@@ -53,11 +53,12 @@ authored scenario):
 
 Trigger conditions with the same dead IDs (in `index.ts` and
 `culture-events.ts`) were **not** swapped — that's separate (and
-out-of-scope) scenario-consistency work. The deltas in these files now
+out-of-scope) scenario-consistency work. **Five specific sites are
+enumerated in `docs/audit/phase-4-deferred-legacy-ids.md`** as an
+explicit follow-up punch-list. The deltas in these files now
 register touches in both the audit fixture and live play; the trigger
 conditions continue to prevent the cards from firing in the default
-scenario, so those swaps would be visible only after triggers are also
-fixed. That's a follow-up audit task (not PND-scope).
+scenario until those swaps are applied too.
 
 ## Regression check
 
