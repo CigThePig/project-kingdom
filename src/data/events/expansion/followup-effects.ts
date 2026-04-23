@@ -210,7 +210,7 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
   },
   evt_exp_fu_kno_printed_pamphlets: {
     encourage_free_press:   { commonerSatDelta: +2, heterodoxyDelta: +2, clergySatDelta: -2, culturalCohesionDelta: +1 },
-    regulate_publications:  { commonerSatDelta: -1, clergySatDelta: +1, stabilityDelta: +1, treasuryDelta: -10 },
+    regulate_publications:  { commonerSatDelta: -1, clergySatDelta: +1, stabilityDelta: +1, treasuryDelta: -10, heterodoxyDelta: -1 },
   },
   evt_exp_fu_kno_scholar_contributions: {
     acknowledge: { culturalCohesionDelta: +2, diplomacyDeltas: { neighbor_valdris: +1 } },
@@ -383,8 +383,8 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
     stand_by_the_reforms:    { culturalCohesionDelta: -2, commonerSatDelta: +2, regionConditionDelta: -1 },
   },
   evt_fu_suppression_diaspora_unrest: {
-    offer_refuge_terms:         { treasuryDelta: -30, commonerSatDelta: +3, regionConditionDelta: +1 },
-    double_down_on_suppression: { stabilityDelta: -3, culturalCohesionDelta: -2, regionConditionDelta: -2 },
+    offer_refuge_terms:         { treasuryDelta: -30, commonerSatDelta: +3, regionConditionDelta: +1, diplomacyDeltas: { neighbor_arenthal: +2 } },
+    double_down_on_suppression: { stabilityDelta: -3, culturalCohesionDelta: -2, regionConditionDelta: -2, diplomacyDeltas: { neighbor_arenthal: -3 } },
   },
   evt_fu_assimilation_standoff: {
     hold_the_line: { diplomacyDeltas: { neighbor_valdris: -4 }, militaryReadinessDelta: -3, regionConditionDelta: +1 },
@@ -445,8 +445,8 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
     let_them_fracture:  { heterodoxyDelta: +3, culturalCohesionDelta: -3, regionConditionDelta: -1 },
   },
   evt_fu_secularization_backlash: {
-    restore_church_seats: { clergySatDelta: +3, commonerSatDelta: -2, regionConditionDelta: +1 },
-    hold_the_reforms:     { clergySatDelta: -3, commonerSatDelta: +2, regionDevelopmentDelta: +1 },
+    restore_church_seats: { clergySatDelta: +3, commonerSatDelta: -2, regionConditionDelta: +1, faithDelta: +2 },
+    hold_the_reforms:     { clergySatDelta: -3, commonerSatDelta: +2, regionDevelopmentDelta: +1, faithDelta: -2 },
   },
   evt_fu_comet_heresy_spreads: {
     authorize_suppression: { heterodoxyDelta: -4, commonerSatDelta: -3, regionConditionDelta: -1 },

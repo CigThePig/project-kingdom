@@ -26,7 +26,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 3. Royal Court Intrigue ---
   evt_exp_kgd_court_intrigue: {
     title: 'Intrigue at Court',
-    body: 'Your spymaster reports that rival factions within the court have grown bold in their maneuvering. Whispered alliances form and dissolve in the corridors of power, and certain nobles are observed meeting in unusual combinations. The throne\'s authority may be quietly eroding.',
+    body: 'Your spymaster reports that opposing factions within the court have grown bold in their maneuvering. Whispered alliances form and dissolve in the corridors of power, and certain nobles are observed meeting in unusual combinations. The throne\'s authority may be quietly eroding.',
     choices: {
       investigate_factions: 'Launch a Formal Investigation',
       play_factions_against: 'Play Factions Against Each Other',

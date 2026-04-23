@@ -175,7 +175,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_intel_report: {
     title: 'Whispers from the Border',
-    body: "{spymaster_or_fallback} presents a troubling intelligence briefing — the service's current reach on {neighbor} is {intel_tier}. {ruler_full} has been conducting nighttime patrols along disputed territory and stockpiling timber suitable for siege construction. The activity may be routine, or it may signal darker intentions from {capital}.",
+    body: "{spymaster_or_fallback} presents a troubling intelligence briefing — the service's current reach on {neighbor} is {intel_tier}. {ruler_full} has been conducting nighttime patrols along disputed territory and stockpiling timber suitable for siege engines. The activity may be routine, or it may signal darker intentions from {capital}.",
     choices: {
       increase_border_watch: 'Increase the Border Watch',
       deploy_counter_intelligence: 'Deploy Counter-Intelligence',
@@ -253,7 +253,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_naval_operations: {
     title: 'The Question of a Fleet',
-    body: 'Your coastal advisors argue that the kingdom\'s neglected harbors leave vital trade routes undefended. Building warships would protect commerce and project power along the coast, but the expense would be considerable and the army views naval spending as a diversion.',
+    body: 'Your coastal advisors argue that the kingdom\'s neglected harbors leave vital trade routes undefended. Commissioning warships would protect commerce and project power along the coast, but the expense would be considerable and the army views naval spending as a diversion.',
     choices: {
       commission_war_galleys: 'Commission War Galleys',
       refit_merchant_vessels: 'Refit Merchant Vessels',

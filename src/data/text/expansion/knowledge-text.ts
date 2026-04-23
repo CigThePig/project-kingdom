@@ -6,7 +6,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_scholar_dispute: {
     title: 'Scholar Dispute at the Royal Academy',
-    body: 'Two rival factions within the Royal Academy have brought their quarrel before the throne. The traditionalists insist that ancient texts hold all wisdom worth pursuing, while a younger cohort of reformers advocates for empirical methods that challenge established doctrine. Both sides demand the Crown\'s endorsement.',
+    body: 'Two opposing factions within the Royal Academy have brought their quarrel before the throne. The traditionalists insist that ancient texts hold all wisdom worth pursuing, while a younger cohort of reformers advocates for empirical methods that challenge established doctrine. Both sides demand the Crown\'s endorsement.',
     choices: {
       side_with_traditionalists: 'Uphold Tradition',
       side_with_reformers: 'Champion the Reformers',
@@ -31,7 +31,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_alchemist_discovery: {
     title: 'The Alchemist\'s Volatile Discovery',
-    body: 'A court alchemist has produced a compound of terrible potency — a black powder that detonates with devastating force. The military sees an instrument of war; civilian engineers envision quarrying and construction applications. The clergy warns of tampering with forces best left undisturbed.',
+    body: 'A court alchemist has produced a compound of terrible potency — a black powder that detonates with devastating force. The military sees an instrument of war; civilian engineers envision quarrying and mining applications. The clergy warns of tampering with forces best left undisturbed.',
     choices: {
       fund_military_application: 'Develop for Military Use',
       restrict_to_civilian_use: 'Restrict to Civilian Uses',
@@ -161,7 +161,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_observatory_proposal: {
     title: 'Observatory Construction Proposed',
-    body: 'The court astronomer has petitioned for funds to construct a proper observatory upon the kingdom\'s highest hill. She argues that careful study of celestial movements will improve navigation, agricultural timing, and the accuracy of the royal calendar. The cost is modest but the clergy eye the project with suspicion.',
+    body: 'The court astronomer has petitioned for funds to raise a proper observatory upon the kingdom\'s highest hill. She argues that careful study of celestial movements will improve navigation, agricultural timing, and the accuracy of the royal calendar. The cost is modest but the clergy eye the project with suspicion.',
     choices: {
       approve_funding: 'Approve the Funding',
       defer_to_next_season: 'Defer the Decision',
@@ -173,7 +173,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_navigation_charts: {
     title: 'Merchants Demand Navigation Charts',
-    body: 'The merchant guild has formally requested access to the Crown\'s coastal and river navigation charts, arguing that better maps would increase trade revenue and reduce shipwreck losses. However, military advisors caution that these charts reveal strategic waterway positions that rivals could exploit.',
+    body: 'The merchant guild has formally requested access to the Crown\'s coastal and river navigation charts, arguing that better maps would increase trade revenue and reduce shipwreck losses. However, military advisors caution that these charts reveal strategic waterway positions that foreign courts could exploit.',
     choices: {
       share_crown_charts: 'Share Existing Charts',
       commission_new_surveys: 'Commission New Surveys',

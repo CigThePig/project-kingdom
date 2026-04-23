@@ -130,15 +130,43 @@ The 15 standing audit questions are the lens on every card touched in every phas
 
 ---
 
-### Phase 4 — PROMISE_NOT_DELIVERED wave 2 (remaining ~143) + SCOPE_MISMATCH (117)
+### Phase 4 — PROMISE_NOT_DELIVERED wave 2 (remaining 151) *[scoped — 4a only]*
 
-**Why.** Finish the promise/delivery spine. Scope mismatch is the same shape of bug (body says kingdom-wide, effects hit one region — or vice versa), so folding it in now keeps the mental model hot.
+**Why.** Finish the promise/delivery spine.
 
-**Work.**
-- Same triage as Phase 3 for the remaining promise/delivery rows.
-- Scope mismatches: usually retext (shrink the framing) but sometimes the effect is under-scoped and should fan out via `regionConditionDelta` / class deltas. Per-finding judgment.
+**Scope change.** The original plan bundled PND wave 2 with the 117
+`SCOPE_MISMATCH` findings. That combination proved too large to execute in
+one pass; Phase 4 was split:
 
-**Acceptance.** `PROMISE_NOT_DELIVERED` = 0 and `SCOPE_MISMATCH` = 0 across all families. `npm run audit -- --fail-on=major` passes for these two scans.
+- **Phase 4a (completed):** PND wave 2 only — all 151 remaining
+  `PROMISE_NOT_DELIVERED` findings across `faith` (53), `rival/neighbor`
+  (48), `construction` (37), and `bond/diplomacy` (13). Close report:
+  `docs/audit/phase-4-findings-closed.md`.
+- **Phase 4b (deferred):** the 117 `SCOPE_MISMATCH` findings. May be run
+  as a standalone Phase 4b, or absorbed into the family deep-audits in
+  Phases 8–13 (each family audit already covers scope coherence as part
+  of the 15-question checklist).
+
+**Work (4a, completed).**
+- Same triage as Phase 3 for the remaining PND rows.
+- Legacy neighbor-id swaps: `empire_south` → `neighbor_arenthal`,
+  `rival_north` → `neighbor_valdris` in `diplomacyDeltas` (dead IDs that
+  silently no-op'd in both the audit fixture and live play). Trigger
+  conditions using the same dead IDs were **not** swapped — that's a
+  separate scenario-consistency task.
+- Zero new follow-up stubs authored (same as Phase 3).
+
+**Acceptance.** `PROMISE_NOT_DELIVERED` = 0 across all families; zero
+regressions in any other scan category. Phase 3 labels (treasury/gold,
+granaries/food, military readiness, agent/operation) remain at 0.
+
+**Work (4b, deferred).**
+- Scope mismatches: usually retext (shrink the framing) but sometimes the
+  effect is under-scoped and should fan out via `regionConditionDelta` /
+  class deltas. Per-finding judgment.
+
+**Deferred acceptance (4b).** `SCOPE_MISMATCH` = 0 across all families.
+`npm run audit -- --fail-on=major` passes for this scan.
 
 ---
 

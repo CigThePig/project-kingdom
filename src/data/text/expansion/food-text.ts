@@ -19,7 +19,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_fishing_fleet: {
     title: 'The Fishermen Seek New Boats',
-    body: 'A delegation of coastal fishermen petitions the throne for funding to build additional vessels. The {season} sea teems with catch they cannot harvest for want of boats, yet the cost of timber and rope would draw from a treasury in {treasury_tier} condition — with stores only at a {stores_tier} mark, {chancellor_or_fallback} counsels care.',
+    body: 'A delegation of coastal fishermen petitions the throne for funding to commission additional vessels. The {season} sea teems with catch they cannot harvest for want of boats, yet the cost of timber and rope would draw from a treasury in {treasury_tier} condition — with stores only at a {stores_tier} mark, {chancellor_or_fallback} counsels care.',
     choices: {
       fund_new_boats: 'Fund New Boats',
       conscript_coastal_labour: 'Conscript Coastal Labour',

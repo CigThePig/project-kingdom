@@ -34,7 +34,7 @@ export const FACTION_REQUEST_EFFECTS: Record<string, Record<string, MechanicalEf
   },
   faction_req_clergy_religious_festival: {
     sponsor_religious_festival: { clergySatDelta: +3, faithDelta: +2, commonerSatDelta: +1, treasuryDelta: -20 },
-    decline_festival_request:   { clergySatDelta: -3 },
+    decline_festival_request:   { clergySatDelta: -3, faithDelta: -1 },
   },
 
   // ============================================================

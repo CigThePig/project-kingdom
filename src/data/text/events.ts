@@ -429,7 +429,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- CLASS-SPECIFIC: Clergy (3) ---
   evt_clergy_monastic_dispute: {
     title: 'Monastic Jurisdictional Dispute',
-    body: 'Two rival monastic orders have come into conflict over the administration of a prosperous region\'s parishes. Both claim historical authority, and the dispute has disrupted religious services in several communities. The faithful await resolution.',
+    body: 'Two contending monastic orders have come into conflict over the administration of a prosperous region\'s parishes. Both claim historical authority, and the dispute has disrupted religious services in several communities. The faithful await resolution.',
     choices: {
       arbitrate_dispute: 'Arbitrate the Dispute',
       favor_established_order: 'Favor the Established Order',
@@ -742,7 +742,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
 
   evt_practical_innovation_success: {
     title: 'Practical Applications Bear Fruit',
-    body: 'The decision to apply scholarly findings to practical ends has produced tangible results. New methods have improved workshop output in the affected region, and word has spread among artisan communities. Several proposals have arrived at court for how to build on this momentum.',
+    body: 'The decision to apply scholarly findings to practical ends has produced tangible results. New methods have improved workshop output in the affected region, and word has spread among artisan communities. Several proposals have arrived at court for how to extend this momentum.',
     choices: {
       expand_workshops: 'Expand Regional Workshops',
       train_artisans: 'Sponsor Artisan Training',
@@ -966,7 +966,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_succession_factions: {
     title: 'Factions Emerge',
-    body: 'The succession question has fractured the court into rival factions, each rallying behind a different claimant. Noble houses are choosing sides, and the competition for influence has grown fierce. The kingdom\'s stability depends on whether this contest can be managed or whether it will consume the ruling class entirely.',
+    body: 'The succession question has fractured the court into opposing factions, each rallying behind a different claimant. Noble houses are choosing sides, and the competition for influence has grown fierce. The kingdom\'s stability depends on whether this contest can be managed or whether it will consume the ruling class entirely.',
     choices: {
       back_eldest_claim: 'Back the Eldest Claim',
       support_merit_candidate: 'Support a Merit Candidate',
@@ -1527,7 +1527,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_trade_negotiate_betrayal: {
     title: 'Negotiation Was a Ruse',
-    body: 'The negotiation was a trap. While the kingdom\'s envoys discussed terms in good faith, the disrupting party used the ceasefire to seize a major merchant convoy. The goods are gone, the trust is broken, and the kingdom looks foolish for having trusted those who had no intention of honoring a deal.',
+    body: 'The negotiation was a trap. While the kingdom\'s envoys discussed terms in earnest, the disrupting party used the ceasefire to seize a major merchant convoy. The goods are gone, the trust is broken, and the kingdom looks foolish for having trusted those who had no intention of honoring a deal.',
     choices: {
       military_response: 'Launch Military Response',
       demand_compensation: 'Demand Compensation',
@@ -1546,7 +1546,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_trade_redirect_opportunity: {
     title: 'Investment Opportunity on New Route',
-    body: 'A merchant guild proposes investing in the alternate trade route permanently — building proper roads, establishing waypoints, and negotiating with settlements along the new path. The investment is significant, but a successful second route would make the kingdom\'s trade network more resilient.',
+    body: 'A merchant guild proposes investing in the alternate trade route permanently — paving proper roads, establishing waypoints, and negotiating with settlements along the new path. The investment is significant, but a successful second route would make the kingdom\'s trade network more resilient.',
     choices: {
       invest_in_new_route: 'Invest in the New Route',
       decline_investment: 'Decline the Investment',
@@ -1593,7 +1593,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_mutiny_reform_desertion: {
     title: 'Desertion Rates Climb',
-    body: 'Without visible progress on reform, soldiers are voting with their feet. Desertion rates have climbed steadily, with experienced veterans and skilled specialists among those departing. The army shrinks not through policy but through the quiet exodus of those who have lost faith in the crown\'s word.',
+    body: 'Without visible progress on reform, soldiers are voting with their feet. Desertion rates have climbed steadily, with experienced veterans and skilled specialists among those departing. The army shrinks not through policy but through the quiet exodus of those who have lost all confidence in the crown\'s word.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_mutiny_execute_fear: {
@@ -1636,7 +1636,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_succession_heir_challenged: {
     title: 'Rival Claimant Emerges',
-    body: 'A rival claimant to the succession has emerged from within the nobility, backed by a coalition of discontented lords. The challenger presents a credible genealogical claim and has begun gathering military support. The named heir\'s position is suddenly precarious.',
+    body: 'A competing claimant to the succession has emerged from within the nobility, backed by a coalition of discontented lords. The challenger presents a credible genealogical claim and has begun gathering military support. The named heir\'s position is suddenly precarious.',
     choices: {
       discredit_rival: 'Discredit the Rival',
       negotiate_with_rival: 'Negotiate with the Rival',
@@ -1669,7 +1669,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_succession_council_deadlock: {
     title: 'Succession Council Deadlocked',
-    body: 'The council of great lords is hopelessly deadlocked. Rival factions have formed around competing candidates, and each session devolves into accusations and threats. The council that was meant to resolve the succession crisis is becoming one itself.',
+    body: 'The council of great lords is hopelessly deadlocked. Opposing factions have formed around competing candidates, and each session devolves into accusations and threats. The council that was meant to resolve the succession crisis is becoming one itself.',
     choices: {
       force_decision: 'Force a Decision',
       dissolve_council: 'Dissolve the Council',
@@ -1730,7 +1730,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_uprising_reform_too_slow: {
     title: 'Reform Supporters Demand Faster Action',
-    body: 'Those who supported reform over confrontation are growing impatient. The promised changes are proceeding too slowly for those who staked their credibility on the crown\'s good faith. A delegation of reform supporters petitions the crown for accelerated action before the moderates lose control to the radicals.',
+    body: 'Those who supported reform over confrontation are growing impatient. The promised changes are proceeding too slowly for those who staked their credibility on the crown\'s word. A delegation of reform supporters petitions the crown for accelerated action before the moderates lose control to the radicals.',
     choices: {
       accelerate_reforms: 'Accelerate the Reforms',
       urge_patience: 'Urge Patience',

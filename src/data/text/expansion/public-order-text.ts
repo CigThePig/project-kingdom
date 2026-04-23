@@ -110,7 +110,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_gang_warfare: {
     title: 'Gang War in the Streets',
-    body: 'Two rival gangs have turned the lower districts into a battlefield. Bodies appear in alleys each morning, and residents cower behind locked doors. The violence threatens to engulf entire neighborhoods if left unchecked, and the watch alone cannot contain it.',
+    body: 'Two warring gangs have turned the lower districts into a battlefield. Bodies appear in alleys each morning, and residents cower behind locked doors. The violence threatens to engulf entire districts if left unchecked, and the watch alone cannot contain it.',
     choices: {
       military_sweep: 'Order a Military Sweep',
       pit_gangs_against_each_other: 'Play the Gangs Against Each Other',
@@ -175,7 +175,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_labor_strike: {
     title: 'The Workers Lay Down Tools',
-    body: 'Laborers in the quarries and workshops have ceased all work, demanding higher wages and shorter hours. Construction projects grind to a halt and the nobility fumes at the disruption. The strikers have elected spokesmen and refuse to budge until the crown answers.',
+    body: 'Laborers in the quarries and workshops have ceased all work, demanding higher wages and shorter hours. Major works grind to a halt and the nobility fumes at the disruption. The strikers have elected spokesmen and refuse to budge until the crown answers.',
     choices: {
       grant_wage_increase: 'Grant a Wage Increase',
       break_the_strike: 'Break the Strike by Force',

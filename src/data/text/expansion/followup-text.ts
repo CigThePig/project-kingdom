@@ -236,7 +236,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_po_martial_law_tension: {
     title: 'Martial Law Wears Thin',
-    body: 'The martial law imposed after the riots has restored order, but the population grows increasingly restive under military rule. Soldiers patrol the streets, a curfew remains in effect, and resentment builds daily.',
+    body: 'The martial law imposed after the riots has restored order, but the population grows increasingly restive under military rule. Soldiers patrol the streets, a curfew remains in effect, and resentment swells daily.',
     choices: {
       lift_martial_law: 'Lift Martial Law',
       extend_martial_law: 'Extend Martial Law',
@@ -370,7 +370,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fu_kno_academic_breakthrough: {
     title: 'Academic Rivalry Yields Discovery',
-    body: 'The competition between funded academic schools has produced an unexpected breakthrough. Rival scholars, each trying to outdo the other, have jointly advanced understanding of natural philosophy in ways neither could have achieved alone.',
+    body: 'The competition between funded academic schools has produced an unexpected breakthrough. Contending scholars, each trying to outdo the other, have jointly advanced understanding of natural philosophy in ways neither could have achieved alone.',
     choices: {
       acknowledge: 'Acknowledge the Discovery',
     },
@@ -942,7 +942,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_abandoned_convoy_outrage: {
     title: 'Outrage Over the Abandoned Convoy',
-    body: 'Cutting losses cost merchants their goods and their faith in the crown. Reimburse, or decline.',
+    body: 'Cutting losses cost merchants their goods and their trust in the crown. Reimburse, or decline.',
     choices: { reimburse_the_merchants: 'Reimburse the Merchants', decline_responsibility: 'Decline Responsibility' },
   },
   evt_fu_scorched_earth_famine: {

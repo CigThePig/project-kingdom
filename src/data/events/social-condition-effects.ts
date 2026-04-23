@@ -51,9 +51,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
   // Unrest
   // ============================================================
   evt_social_unrest_mild: {
-    address_grievances: { treasuryDelta: -30, commonerSatDelta: +5, stabilityDelta: +2 },
-    increase_guard_presence: { treasuryDelta: -20, stabilityDelta: +1, commonerSatDelta: -2 },
-    ignore_grumbling: { commonerSatDelta: -3, stabilityDelta: -3 },
+    address_grievances: { treasuryDelta: -30, commonerSatDelta: +5, stabilityDelta: +2, faithDelta: +1 },
+    increase_guard_presence: { treasuryDelta: -20, stabilityDelta: +1, commonerSatDelta: -2, faithDelta: -1 },
+    ignore_grumbling: { commonerSatDelta: -3, stabilityDelta: -3, faithDelta: -1 },
   },
   evt_social_unrest_moderate: {
     hold_public_festival: { treasuryDelta: -50, commonerSatDelta: +5, stabilityDelta: +2, faithDelta: +2 },

@@ -149,9 +149,9 @@ export const EXPANSION_MILITARY_EFFECTS: Record<string, Record<string, Mechanica
   // 17. Battlefield Medicine — Notable
   // ============================================================
   evt_exp_mil_battlefield_medicine: {
-    establish_field_hospitals:  { treasuryDelta: -40, militaryMoraleDelta: +4, militaryCasteSatDelta: +3, clergySatDelta: +1, militaryReadinessDelta: -1 },
-    train_combat_medics:        { treasuryDelta: -25, militaryMoraleDelta: +2, militaryReadinessDelta: +2, commonerSatDelta: -1 },
-    rely_on_camp_followers:     { militaryMoraleDelta: -2, militaryCasteSatDelta: -1 },
+    establish_field_hospitals:  { treasuryDelta: -40, militaryMoraleDelta: +4, militaryCasteSatDelta: +3, clergySatDelta: +1, militaryReadinessDelta: -1, faithDelta: +1 },
+    train_combat_medics:        { treasuryDelta: -25, militaryMoraleDelta: +2, militaryReadinessDelta: +2, commonerSatDelta: -1, faithDelta: +1 },
+    rely_on_camp_followers:     { militaryMoraleDelta: -2, militaryCasteSatDelta: -1, faithDelta: -1 },
   },
 
   // ============================================================

@@ -130,7 +130,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_guild_rev_alliance: {
     title: 'Guild Alliance Forms',
-    body: 'An unprecedented alliance has formed between merchant guilds and commoner labor associations. United by shared grievances against noble privileges, they demand a voice in governance. The nobility watches with alarm.',
+    body: 'An unprecedented accord has formed between merchant guilds and commoner labor associations. United by shared grievances against noble privileges, they demand a voice in governance. The nobility watches with alarm.',
     choices: {
       meet_with_guild_leaders: 'Meet with Guild Leaders',
       ban_cross_class_meetings: 'Ban Cross-Class Meetings',
@@ -139,7 +139,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_guild_rev_council: {
     title: 'The Workers\' Council Demands Power',
-    body: 'The guild alliance has organized itself into a formal workers\' council, presenting the crown with a charter of demands. They seek permanent representation in governance — a radical break with tradition that the nobility fiercely opposes.',
+    body: 'The guild coalition has organized itself into a formal workers\' council, presenting the crown with a charter of demands. They seek permanent representation in governance — a radical break with tradition that the nobility fiercely opposes.',
     choices: {
       grant_council_representation: 'Grant Council Representation',
       arrest_ringleaders: 'Arrest the Ringleaders',
@@ -148,7 +148,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_guild_rev_shift: {
     title: 'The Power Struggle Climaxes',
-    body: 'The conflict between the traditional nobility and the rising merchant-commoner alliance has reached its breaking point. Streets are tense, trade has slowed, and both sides look to the crown for a final resolution. The kingdom\'s social order hangs in the balance.',
+    body: 'The conflict between the traditional nobility and the rising merchant-commoner coalition has reached its breaking point. Streets are tense, trade has slowed, and both sides look to the crown for a final resolution. The kingdom\'s social order hangs in the balance.',
     choices: {
       embrace_new_order: 'Embrace the New Order',
       crush_the_movement: 'Crush the Movement',
