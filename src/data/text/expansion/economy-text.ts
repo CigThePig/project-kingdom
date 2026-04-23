@@ -19,7 +19,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_currency_debasement: {
     title: 'The Coin Grows Thin',
-    body: 'The royal mint master presents a grim accounting: with the treasury in {treasury_tier} condition and the realm\'s economy in {economic_phase_lc}, the Crown cannot meet its obligations at the current rate of expenditure. He proposes mixing base metals into the Crown\'s silver coins, a practice that would stretch reserves but risk shattering merchant confidence in the realm\'s currency.',
+    body: 'The royal mint master presents a grim accounting: with the treasury in {treasury_tier} condition and the realm\'s economy in {economic_phase_lc}, the Crown cannot meet its obligations at the current rate of expenditure. He proposes mixing base metals into the Crown\'s silver coins, a practice that would stretch the mint\'s stocks but risk shattering merchant confidence in the realm\'s currency.',
     choices: {
       debase_the_coinage: 'Debase the Coinage',
       raise_emergency_tax: 'Raise an Emergency Tax',

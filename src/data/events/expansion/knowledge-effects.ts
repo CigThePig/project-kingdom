@@ -187,6 +187,7 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
       clergySatDelta: +2,
       commonerSatDelta: -3,
       stabilityDelta: -2,
+      treasuryDelta: -5,
     },
   },
 
@@ -331,6 +332,7 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
       merchantSatDelta: -3,
       espionageNetworkDelta: +1,
       stabilityDelta: +1,
+      treasuryDelta: -3,
     },
   },
 

@@ -184,11 +184,13 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISIS_EFFECTS: Record<
       clergySatDelta: 3,
       commonerSatDelta: -3,
       heterodoxyDelta: 2,
+      treasuryDelta: -5,
     },
     denounce_as_false: {
       clergySatDelta: 2,
       heterodoxyDelta: 4,
       stabilityDelta: -3,
+      treasuryDelta: -5,
     },
   },
   evt_exp_w2_saints_succession: {

@@ -30,7 +30,7 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
   // ============================================================
   evt_social_corruption_mild: {
     launch_investigation: { treasuryDelta: -30, nobilitySatDelta: -3, stabilityDelta: +1 },
-    public_denouncement: { nobilitySatDelta: -5, commonerSatDelta: +3, stabilityDelta: +2, faithDelta: +1 },
+    public_denouncement: { nobilitySatDelta: -5, commonerSatDelta: +3, stabilityDelta: +2, faithDelta: +1, treasuryDelta: +5 },
     tolerate_graft: { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1, treasuryDelta: -5 },
   },
   evt_social_corruption_moderate: {
@@ -41,10 +41,10 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
   evt_social_corruption_severe: {
     royal_tribunal: { treasuryDelta: -70, nobilitySatDelta: -10, stabilityDelta: +5, commonerSatDelta: +5, regionDevelopmentDelta: +2 },
     co_opt_corrupt_lords: { nobilitySatDelta: +3, commonerSatDelta: -5, stabilityDelta: -2, treasuryDelta: +20, regionConditionDelta: -1 },
-    endure_corruption: { stabilityDelta: -5, commonerSatDelta: -5, regionDevelopmentDelta: -2, regionConditionDelta: -2 },
+    endure_corruption: { stabilityDelta: -5, commonerSatDelta: -5, regionDevelopmentDelta: -2, regionConditionDelta: -2, treasuryDelta: -30 },
   },
   evt_social_corruption_resolved: {
-    acknowledge: { stabilityDelta: +2, commonerSatDelta: +2 },
+    acknowledge: { stabilityDelta: +2, commonerSatDelta: +2, treasuryDelta: +10 },
   },
 
   // ============================================================
@@ -75,12 +75,12 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
   evt_social_criminal_mild: {
     fund_undercover_ops: { treasuryDelta: -40, espionageNetworkDelta: +5, stabilityDelta: +1 },
     legalize_and_tax: { treasuryDelta: +20, merchantSatDelta: +3, stabilityDelta: -1, nobilitySatDelta: -2 },
-    look_the_other_way: { merchantSatDelta: +1, stabilityDelta: -2 },
+    look_the_other_way: { merchantSatDelta: +1, stabilityDelta: -2, treasuryDelta: -5 },
   },
   evt_social_criminal_moderate: {
     crack_down_syndicates: { treasuryDelta: -60, espionageNetworkDelta: +8, stabilityDelta: +3, merchantSatDelta: -3 },
     recruit_informants: { treasuryDelta: -30, espionageNetworkDelta: +10, merchantSatDelta: -1 },
-    tolerate_black_market: { merchantSatDelta: +3, stabilityDelta: -3, commonerSatDelta: -2 },
+    tolerate_black_market: { merchantSatDelta: +3, stabilityDelta: -3, commonerSatDelta: -2, treasuryDelta: -10 },
   },
   evt_social_criminal_severe: {
     martial_purge: { treasuryDelta: -90, militaryReadinessDelta: -6, espionageNetworkDelta: +12, stabilityDelta: +5, commonerSatDelta: -3, regionConditionDelta: +2 },
@@ -88,6 +88,6 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     cede_the_ports: { merchantSatDelta: +4, treasuryDelta: -40, stabilityDelta: -6, commonerSatDelta: -4, regionDevelopmentDelta: -3, regionConditionDelta: -2 },
   },
   evt_social_criminal_resolved: {
-    acknowledge: { espionageNetworkDelta: +3, stabilityDelta: +1 },
+    acknowledge: { espionageNetworkDelta: +3, stabilityDelta: +1, treasuryDelta: +5 },
   },
 };

@@ -86,18 +86,18 @@ export const EXPANSION_PUBLIC_ORDER_EFFECTS: Record<string, Record<string, Mecha
   // 10. Arson Attacks — Notable
   // ============================================================
   evt_exp_po_arson_attacks: {
-    form_fire_brigades:   { treasuryDelta: -35, stabilityDelta: +3, commonerSatDelta: +2, regionConditionDelta: +2 },
+    form_fire_brigades:   { treasuryDelta: -35, stabilityDelta: +3, commonerSatDelta: +2, regionConditionDelta: +2, espionageNetworkDelta: -2 },
     investigate_arsonists: { treasuryDelta: -25, stabilityDelta: +2, espionageNetworkDelta: +2, commonerSatDelta: -1 },
-    post_night_sentries:   { stabilityDelta: +1, militaryReadinessDelta: -2, regionConditionDelta: -2 },
+    post_night_sentries:   { stabilityDelta: +1, militaryReadinessDelta: -2, regionConditionDelta: -2, espionageNetworkDelta: +1 },
   },
 
   // ============================================================
   // 11. Public Drunkenness Epidemic — Informational
   // ============================================================
   evt_exp_po_drunkenness: {
-    regulate_taverns:            { treasuryDelta: +15, stabilityDelta: +2, commonerSatDelta: -2, merchantSatDelta: -1 },
-    clergy_temperance_campaign:  { stabilityDelta: +1, faithDelta: +3, commonerSatDelta: -1, clergySatDelta: +2 },
-    leave_it_be:                 { stabilityDelta: -1, commonerSatDelta: +1 },
+    regulate_taverns:            { treasuryDelta: +15, stabilityDelta: +2, commonerSatDelta: -2, merchantSatDelta: -1, foodDelta: +2 },
+    clergy_temperance_campaign:  { stabilityDelta: +1, faithDelta: +3, commonerSatDelta: -1, clergySatDelta: +2, foodDelta: +2 },
+    leave_it_be:                 { stabilityDelta: -1, commonerSatDelta: +1, foodDelta: -3 },
   },
 
   // ============================================================

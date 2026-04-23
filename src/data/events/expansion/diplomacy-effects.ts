@@ -83,7 +83,7 @@ export const EXPANSION_DIPLOMACY_EFFECTS: Record<string, Record<string, Mechanic
     pay_reparations:       { treasuryDelta: -100, diplomacyDeltas: { neighbor_arenthal: +6 }, nobilitySatDelta: -5, commonerSatDelta: -4, stabilityDelta: +2 },
     refuse_and_mobilize:   { militaryReadinessDelta: +6, militaryMoraleDelta: +3, treasuryDelta: -60, diplomacyDeltas: { neighbor_arenthal: -8 }, commonerSatDelta: -3 },
     request_arbitration:   { treasuryDelta: -30, diplomacyDeltas: { neighbor_arenthal: +2, neighbor_valdris: +3 }, stabilityDelta: +1 },
-    stall_negotiations:    { diplomacyDeltas: { neighbor_arenthal: -4 }, stabilityDelta: -3, nobilitySatDelta: -2 },
+    stall_negotiations:    { diplomacyDeltas: { neighbor_arenthal: -4 }, stabilityDelta: -3, nobilitySatDelta: -2, treasuryDelta: -10 },
   },
 
   // --- Any Phase ---
@@ -103,7 +103,7 @@ export const EXPANSION_DIPLOMACY_EFFECTS: Record<string, Record<string, Mechanic
   },
   evt_exp_dip_tribute_request: {
     pay_the_tribute:         { treasuryDelta: -60, diplomacyDeltas: { neighbor_valdris: +6 }, nobilitySatDelta: -4, commonerSatDelta: -2, stabilityDelta: +1 },
-    refuse_defiantly:        { diplomacyDeltas: { neighbor_valdris: -6 }, militaryCasteSatDelta: +3, nobilitySatDelta: +2, militaryMoraleDelta: +2 },
+    refuse_defiantly:        { diplomacyDeltas: { neighbor_valdris: -6 }, militaryCasteSatDelta: +3, nobilitySatDelta: +2, militaryMoraleDelta: +2, treasuryDelta: +10 },
     negotiate_lesser_amount: { treasuryDelta: -25, diplomacyDeltas: { neighbor_valdris: +2 }, nobilitySatDelta: -1 },
   },
   evt_exp_dip_diplomatic_marriage_offer: {

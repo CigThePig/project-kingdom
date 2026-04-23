@@ -144,7 +144,7 @@ export const EXPANSION_CHAIN_EFFECTS: Record<string, Record<string, MechanicalEf
   evt_exp_chain_rebellion_separatist: {
     grant_limited_autonomy: { stabilityDelta: +3, commonerSatDelta: +3, nobilitySatDelta: -4, regionDevelopmentDelta: +3, treasuryDelta: -20 },
     martial_law_in_province: { militaryReadinessDelta: +3, commonerSatDelta: -5, stabilityDelta: -2, regionConditionDelta: -3, treasuryDelta: -40 },
-    promise_reforms:         { commonerSatDelta: +1, stabilityDelta: -1, nobilitySatDelta: -1 },
+    promise_reforms:         { commonerSatDelta: +1, stabilityDelta: -1, nobilitySatDelta: -1, treasuryDelta: -5 },
   },
   evt_exp_chain_rebellion_crisis: {
     military_suppression: { militaryReadinessDelta: -4, commonerSatDelta: -7, stabilityDelta: +4, treasuryDelta: -70, regionConditionDelta: -5, nobilitySatDelta: +3 },

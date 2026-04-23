@@ -122,7 +122,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_math_treatise: {
     title: 'Mathematical Treatise on Taxation',
-    body: 'A mathematician at the academy has published a treatise demonstrating that the kingdom\'s tax calculations contain systematic errors that have long favored the nobility at the expense of the common treasury. The work is rigorous, but adopting its conclusions would antagonize powerful lords.',
+    body: 'A mathematician at the academy has published a treatise demonstrating that the kingdom\'s fiscal calculations contain systematic errors that have long favored the nobility at the expense of the common purse. The work is rigorous, but adopting its conclusions would antagonize powerful lords.',
     choices: {
       adopt_new_methods: 'Reform the Tax Calculations',
       commission_rebuttal: 'Commission a Counter-Treatise',

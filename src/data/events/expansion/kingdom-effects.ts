@@ -19,7 +19,7 @@ export const EXPANSION_KINGDOM_EFFECTS: Record<string, Record<string, Mechanical
   evt_exp_kgd_court_intrigue: {
     investigate_factions:      { treasuryDelta: -30, stabilityDelta: +4, espionageNetworkDelta: +3, nobilitySatDelta: -3 },
     play_factions_against:     { stabilityDelta: -3, nobilitySatDelta: -2, espionageNetworkDelta: +5, treasuryDelta: +20 },
-    ignore_rumors:             { stabilityDelta: -2, nobilitySatDelta: +2 },
+    ignore_rumors:             { stabilityDelta: -2, nobilitySatDelta: +2, espionageNetworkDelta: -3 },
   },
 
   // --- 4. Crown Treasury Audit (Notable: -50/+40, -3/+5 sat) ---
@@ -82,7 +82,7 @@ export const EXPANSION_KINGDOM_EFFECTS: Record<string, Record<string, Mechanical
   evt_exp_kgd_admin_overhaul: {
     comprehensive_restructuring: { treasuryDelta: -50, stabilityDelta: +5, commonerSatDelta: +3, nobilitySatDelta: -3, regionDevelopmentDelta: +3 },
     incremental_improvements:    { treasuryDelta: -25, stabilityDelta: +3, merchantSatDelta: +2, nobilitySatDelta: -1 },
-    preserve_traditions:         { nobilitySatDelta: +3, commonerSatDelta: -2, stabilityDelta: -1 },
+    preserve_traditions:         { nobilitySatDelta: +3, commonerSatDelta: -2, stabilityDelta: -1, treasuryDelta: -5 },
   },
 
   // --- 13. Crown Land Management (Notable: -50/+40, -3/+5 sat) ---
@@ -96,13 +96,13 @@ export const EXPANSION_KINGDOM_EFFECTS: Record<string, Record<string, Mechanical
   evt_exp_kgd_royal_legacy: {
     commission_monument:       { treasuryDelta: -30, stabilityDelta: +3, culturalCohesionDelta: +3, commonerSatDelta: +2, nobilitySatDelta: +1 },
     endow_scholarly_archive:   { treasuryDelta: -20, stabilityDelta: +2, clergySatDelta: +3, culturalCohesionDelta: +2, commonerSatDelta: -1 },
-    let_deeds_speak:           { stabilityDelta: +1 },
+    let_deeds_speak:           { stabilityDelta: +1, treasuryDelta: +5 },
   },
 
   // --- 15. Royal Steward's Ledger (Informational: -15/+30, +1/+3 sat) ---
   evt_exp_kgd_steward_ledger: {
-    prioritize_public_welfare:     { treasuryDelta: -20, commonerSatDelta: +3, stabilityDelta: +2, nobilitySatDelta: -1 },
-    invest_in_royal_authority:     { treasuryDelta: -15, stabilityDelta: +3, nobilitySatDelta: +2, commonerSatDelta: -1 },
-    maintain_current_allocations:  { stabilityDelta: +1 },
+    prioritize_public_welfare:     { treasuryDelta: -20, commonerSatDelta: +3, stabilityDelta: +2, nobilitySatDelta: -1, foodDelta: +3 },
+    invest_in_royal_authority:     { treasuryDelta: -15, stabilityDelta: +3, nobilitySatDelta: +2, commonerSatDelta: -1, foodDelta: -2 },
+    maintain_current_allocations:  { stabilityDelta: +1, treasuryDelta: +5, foodDelta: -1 },
   },
 };

@@ -17,16 +17,16 @@ export const EXPANSION_REGION_EFFECTS: Record<string, Record<string, MechanicalE
 
   // --- 3. Trade Route Disruption (Serious: -80/+50, -4/+6 sat) ---
   evt_exp_reg_trade_disruption: {
-    military_escort:           { treasuryDelta: -60, militaryReadinessDelta: -4, merchantSatDelta: +5, regionDevelopmentDelta: +3, regionConditionDelta: +2 },
-    negotiate_safe_passage:    { treasuryDelta: -30, merchantSatDelta: +3, diplomacyDeltas: { neighbor_valdris: +5 }, regionConditionDelta: +1 },
-    reroute_trade:             { treasuryDelta: -40, merchantSatDelta: -2, regionDevelopmentDelta: +5, regionConditionDelta: -2 },
+    military_escort:           { treasuryDelta: -60, militaryReadinessDelta: -4, merchantSatDelta: +5, regionDevelopmentDelta: +3, regionConditionDelta: +2, espionageNetworkDelta: +1 },
+    negotiate_safe_passage:    { treasuryDelta: -30, merchantSatDelta: +3, diplomacyDeltas: { neighbor_valdris: +5 }, regionConditionDelta: +1, espionageNetworkDelta: -2 },
+    reroute_trade:             { treasuryDelta: -40, merchantSatDelta: -2, regionDevelopmentDelta: +5, regionConditionDelta: -2, espionageNetworkDelta: -3 },
   },
 
   // --- 4. Infrastructure Proposal (Notable: -50/+40, -3/+5 sat) ---
   evt_exp_reg_infrastructure_proposal: {
     fund_road_network:         { treasuryDelta: -50, regionDevelopmentDelta: +6, merchantSatDelta: +3, commonerSatDelta: +2, regionConditionDelta: +3 },
     build_regional_market:     { treasuryDelta: -30, regionDevelopmentDelta: +4, merchantSatDelta: +5, commonerSatDelta: +1, nobilitySatDelta: -2 },
-    defer_construction:        { merchantSatDelta: -2, commonerSatDelta: -1, regionConditionDelta: -1 },
+    defer_construction:        { merchantSatDelta: -2, commonerSatDelta: -1, regionConditionDelta: -1, treasuryDelta: +10 },
   },
 
   // --- 5. Regional Festival (Informational: -15/+30, +1/+3 sat) ---
@@ -40,13 +40,13 @@ export const EXPANSION_REGION_EFFECTS: Record<string, Record<string, MechanicalE
   evt_exp_reg_governor_corruption: {
     remove_governor:           { stabilityDelta: +4, commonerSatDelta: +5, nobilitySatDelta: -6, regionDevelopmentDelta: +3, treasuryDelta: -20, regionConditionDelta: +3 },
     demand_restitution:        { treasuryDelta: +40, nobilitySatDelta: -4, commonerSatDelta: +3, regionConditionDelta: +2, regionDevelopmentDelta: +1 },
-    issue_warning:             { nobilitySatDelta: +2, commonerSatDelta: -4, regionConditionDelta: -3, stabilityDelta: -2 },
+    issue_warning:             { nobilitySatDelta: +2, commonerSatDelta: -4, regionConditionDelta: -3, stabilityDelta: -2, treasuryDelta: -5 },
   },
 
   // --- 7. Border Province Tensions (Serious: -80/+50, -4/+6 sat) ---
   evt_exp_reg_border_tensions: {
     fortify_border:            { treasuryDelta: -70, militaryReadinessDelta: +5, regionDevelopmentDelta: +4, militaryCasteSatDelta: +3, commonerSatDelta: -2, regionConditionDelta: +3 },
-    diplomatic_reassurance:    { treasuryDelta: -20, diplomacyDeltas: { neighbor_arenthal: +5, neighbor_valdris: +5 }, militaryCasteSatDelta: -3, regionConditionDelta: +1 },
+    diplomatic_reassurance:    { treasuryDelta: -20, diplomacyDeltas: { neighbor_arenthal: +5, neighbor_valdris: +5 }, militaryCasteSatDelta: -3, regionConditionDelta: +1, militaryMoraleDelta: +2 },
     increase_patrols:          { militaryReadinessDelta: +3, treasuryDelta: -30, regionConditionDelta: +2, militaryCasteSatDelta: +1, commonerSatDelta: -1 },
   },
 
@@ -75,14 +75,14 @@ export const EXPANSION_REGION_EFFECTS: Record<string, Record<string, MechanicalE
   evt_exp_reg_loyalty_warning: {
     send_envoy:          { treasuryDelta: -20, regionConditionDelta: +3, stabilityDelta: +1, nobilitySatDelta: +1 },
     increase_investment: { treasuryDelta: -45, regionDevelopmentDelta: +3, regionConditionDelta: +4, commonerSatDelta: +2 },
-    ignore_complaints:   { stabilityDelta: -3, regionConditionDelta: -3, commonerSatDelta: -2, nobilitySatDelta: -1 },
+    ignore_complaints:   { stabilityDelta: -3, regionConditionDelta: -3, commonerSatDelta: -2, nobilitySatDelta: -1, treasuryDelta: -10 },
   },
 
   // --- Separatist Threat (surfaced at separatist loyalty threshold) ---
   evt_exp_reg_separatist_threat: {
-    negotiate_concessions: { treasuryDelta: -40, stabilityDelta: +2, regionConditionDelta: +4, nobilitySatDelta: -3 },
+    negotiate_concessions: { treasuryDelta: -40, stabilityDelta: +2, regionConditionDelta: +4, nobilitySatDelta: -3, militaryReadinessDelta: +2 },
     military_presence:     { treasuryDelta: -70, militaryReadinessDelta: -4, stabilityDelta: +3, regionConditionDelta: -2, commonerSatDelta: -3 },
-    grant_autonomy:        { stabilityDelta: -1, nobilitySatDelta: -4, regionConditionDelta: +6, commonerSatDelta: +3 },
+    grant_autonomy:        { stabilityDelta: -1, nobilitySatDelta: -4, regionConditionDelta: +6, commonerSatDelta: +3, militaryReadinessDelta: -3 },
   },
 
   // --- 11. Royal Tour (Informational: -15/+30, +1/+3 sat) ---

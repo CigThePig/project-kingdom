@@ -56,7 +56,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Economy (2) ---
   evt_merchant_capital_flight: {
     title: 'Capital Flight Among the Merchants',
-    body: 'Reports from the merchant quarters indicate a troubling trend: significant wealth is being moved beyond the kingdom\'s borders. Merchant confidence has eroded, and several prominent trading houses are quietly relocating their reserves to foreign vaults.',
+    body: 'Reports from the merchant quarters indicate a troubling trend: significant wealth is being moved beyond the kingdom\'s borders. Merchant confidence has eroded, and several prominent trading houses are quietly relocating their holdings to foreign vaults.',
     choices: {
       offer_tax_relief: 'Offer Tax Relief',
       enforce_capital_controls: 'Enforce Capital Controls',
@@ -363,7 +363,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Region (2) ---
   evt_regional_development_opportunity: {
     title: 'Regional Development Opportunity',
-    body: 'Surveyors have identified an opportunity for significant development in one of the kingdom\'s regions. With targeted investment, local output could be meaningfully improved. The treasury has sufficient reserves to consider the proposal.',
+    body: 'Surveyors have identified an opportunity for significant development in one of the kingdom\'s regions. With targeted investment, local output could be meaningfully improved. The treasury has sufficient funds to consider the proposal.',
     choices: {
       approve_development: 'Approve Development Investment',
       defer_to_local_governance: 'Defer to Local Governance',
@@ -383,7 +383,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Kingdom (2) ---
   evt_annual_state_assessment: {
     title: 'Annual State Assessment',
-    body: 'The annual assessment of the kingdom\'s condition has been compiled by the royal council. The report provides a comprehensive overview of all domains — treasury, food security, military readiness, social stability, and diplomatic standing.',
+    body: 'The annual assessment of the kingdom\'s condition has been compiled by the royal council. The report provides a comprehensive overview of all domains — the royal finances, grain stores, martial strength, social stability, and diplomatic standing.',
     choices: {
       acknowledge: 'Acknowledge',
     },
@@ -752,7 +752,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
 
   evt_merchant_demands_escalate: {
     title: 'Merchants Press for Further Concessions',
-    body: 'The tax relief granted to stem the capital flight has stabilized the merchant class, but they now view the crown as amenable to pressure. A delegation of senior guild masters has arrived with a list of further demands, citing the precedent of the earlier concessions. The nobility watches with barely concealed displeasure.',
+    body: 'The toll relief granted to stem the capital flight has stabilized the merchant class, but they now view the crown as amenable to pressure. A delegation of senior guild masters has arrived with a list of further demands, citing the precedent of the earlier concessions. The nobility watches with barely concealed displeasure.',
     choices: {
       hold_firm_on_terms: 'Hold Firm on Current Terms',
       extend_concessions: 'Grant Further Concessions',
@@ -1114,7 +1114,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Chain 9: Infrastructure Decay ---
   evt_infrastructure_decay_root: {
     title: 'Crumbling Infrastructure',
-    body: 'Roads are rutted, bridges groan under their loads, and public works across the kingdom show the scars of deferred maintenance. Engineers warn that without investment soon, critical failures are inevitable. The treasury is thin, but the cost of inaction may be higher.',
+    body: 'Roads are rutted, bridges groan under their loads, and public works across the kingdom show the scars of deferred maintenance. Engineers warn that without investment soon, critical failures are inevitable. The royal purse is thin, but the cost of inaction may be higher.',
     choices: {
       fund_emergency_repairs: 'Fund Emergency Repairs',
       defer_maintenance: 'Defer Maintenance',
@@ -1203,7 +1203,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_grain_import_gratitude: {
     title: 'Grain Arrives Safely',
-    body: 'The imported grain has arrived in good condition and has been distributed to the kingdom\'s stores. The people are fed, the merchants are paid, and the crisis is averted. The treasury is lighter, but the kingdom\'s food supply is secure for the coming months.',
+    body: 'The imported grain has arrived in good condition and has been distributed to the kingdom\'s stores. The people are fed, the merchants are paid, and the crisis is averted. The cost was steep, but the kingdom\'s food supply is secure for the coming months.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_grain_import_spoiled: {
@@ -1565,12 +1565,12 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_mutiny_pay_loyalty: {
     title: 'Soldiers Return to Duty',
-    body: 'The payment of back wages has restored discipline and morale. The soldiers have returned to their posts, the officers report normal operations, and the mutiny has ended as quickly as it began. The treasury is lighter, but the kingdom\'s defense is intact.',
+    body: 'The payment of back wages has restored discipline and morale. The soldiers have returned to their posts, the officers report normal operations, and the mutiny has ended as quickly as it began. The cost was steep, but the kingdom\'s defense is intact.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_mutiny_pay_bankrupt: {
     title: 'Treasury Emptied by Military Pay',
-    body: 'The soldiers are paid, but the treasury is empty. The crown cannot meet its other obligations — infrastructure projects halt, court salaries go unpaid, and there is no reserve for emergencies. The kingdom has traded one crisis for another.',
+    body: 'The soldiers are paid, but the treasury is empty. The crown cannot meet its other obligations — infrastructure projects halt, court salaries go unpaid, and nothing is set aside for emergencies. The kingdom has traded one crisis for another.',
     choices: {
       emergency_taxation: 'Levy Emergency Taxes',
       seize_noble_assets: 'Seize Noble Assets',
@@ -1725,7 +1725,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_uprising_reform_progress: {
     title: 'Reforms Taking Effect',
-    body: 'The reforms initiated in response to the commoner uprising are beginning to show results. Working conditions have improved, taxation is more equitable, and the crown\'s investment in public works has created visible changes in the townships. Recovery is slow, but the trajectory is positive.',
+    body: 'The reforms initiated in response to the commoner uprising are beginning to show results. Working conditions have improved, burdens are more equitable, and the crown\'s investment in public works has created visible changes in the townships. Recovery is slow, but the trajectory is positive.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_uprising_reform_too_slow: {
@@ -1780,7 +1780,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_merchant_tax_satisfied: {
     title: 'Tax Concessions Accepted',
-    body: 'The merchant guild has accepted the tax concessions and withdrawn their demands for political representation. Trade activity has increased as merchants reinvest their savings, and the guild\'s public complaints have ceased. The concessions have bought peace, at least for now.',
+    body: 'The merchant guild has accepted the trade concessions and withdrawn their demands for political representation. Activity has increased as merchants reinvest their savings, and the guild\'s public complaints have ceased. The concessions have bought peace, at least for now.',
     choices: { acknowledge: 'Acknowledged' },
   },
   evt_merchant_tax_shortfall: {
@@ -1862,7 +1862,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Chain 12: Royal Treasury Audit ---
   evt_treasury_audit_root: {
     title: 'Treasury Irregularities Discovered',
-    body: 'A routine audit of the royal treasury has uncovered discrepancies in the accounts — missing entries, unexplained transfers, and records that do not reconcile. The irregularities could indicate simple incompetence or something far more deliberate. The crown must decide how deeply to probe.',
+    body: 'A routine audit of the royal ledgers has uncovered discrepancies in the accounts — missing entries, unexplained transfers, and records that do not reconcile. The irregularities could indicate simple incompetence or something far more deliberate. The crown must decide how deeply to probe.',
     choices: {
       conduct_full_investigation: 'Conduct Full Investigation',
       accept_report: 'Accept the Report',
@@ -1879,7 +1879,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_audit_clean: {
     title: 'Books Are Clean',
-    body: 'After a thorough review, the investigators have concluded that the treasury\'s accounts are in order. The earlier discrepancies were the result of clerical errors, not malfeasance. The kingdom\'s financial administration, while imperfect, is fundamentally sound.',
+    body: 'After a thorough review, the investigators have concluded that the royal ledgers are in order. The earlier discrepancies were the result of clerical errors, not malfeasance. The kingdom\'s financial administration, while imperfect, is fundamentally sound.',
     choices: {
       acknowledge: 'Acknowledged',
     },

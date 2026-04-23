@@ -196,6 +196,7 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISIS_EFFECTS: Record<
       nobilitySatDelta: 3,
       stabilityDelta: 1,
       diplomacyDeltas: { empire_south: +4 },
+      espionageNetworkDelta: -1,
     },
     offer_the_network_quietly: {
       espionageNetworkDelta: 3,
@@ -207,6 +208,7 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISIS_EFFECTS: Record<
       stabilityDelta: -1,
       nobilitySatDelta: -2,
       diplomacyDeltas: { empire_south: -3 },
+      espionageNetworkDelta: +1,
     },
   },
   evt_exp_w2_bandit_lord_uprising: {

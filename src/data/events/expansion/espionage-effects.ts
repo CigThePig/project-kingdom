@@ -165,6 +165,7 @@ export const EXPANSION_ESPIONAGE_EFFECTS: Record<string, Record<string, Mechanic
       militaryReadinessDelta: -3,
       stabilityDelta: +2,
       militaryCasteSatDelta: +2,
+      espionageNetworkDelta: -2,
     },
     set_counter_trap: {
       espionageNetworkDelta: +6,

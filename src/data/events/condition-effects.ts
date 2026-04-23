@@ -25,8 +25,8 @@ export const CONDITION_EVENT_EFFECTS: Record<string, Record<string, MechanicalEf
   // Flood
   // ============================================================
   evt_cond_flood_moderate: {
-    reinforce_levees: { treasuryDelta: -60, regionDevelopmentDelta: +3, stabilityDelta: +2 },
-    evacuate_lowlands: { treasuryDelta: -30, commonerSatDelta: -3, stabilityDelta: +1 },
+    reinforce_levees: { treasuryDelta: -60, regionDevelopmentDelta: +3, stabilityDelta: +2, foodDelta: +3 },
+    evacuate_lowlands: { treasuryDelta: -30, commonerSatDelta: -3, stabilityDelta: +1, foodDelta: +2 },
     let_floodwaters_pass: { foodDelta: -15, regionDevelopmentDelta: -3 },
   },
 

@@ -16,7 +16,7 @@ export const EXPANSION_MILITARY_EFFECTS: Record<string, Record<string, Mechanica
   evt_exp_mil_weapons_smithing: {
     fund_royal_armory:      { treasuryDelta: -50, militaryEquipmentDelta: +6, militaryCasteSatDelta: +3, merchantSatDelta: -2 },
     contract_guild_smiths:  { treasuryDelta: -35, militaryEquipmentDelta: +4, merchantSatDelta: +3, militaryCasteSatDelta: +1 },
-    postpone_investment:    { militaryEquipmentDelta: -2, militaryCasteSatDelta: -2 },
+    postpone_investment:    { militaryEquipmentDelta: -2, militaryCasteSatDelta: -2, treasuryDelta: +5 },
   },
 
   // ============================================================
@@ -42,8 +42,8 @@ export const EXPANSION_MILITARY_EFFECTS: Record<string, Record<string, Mechanica
   // ============================================================
   evt_exp_mil_veteran_pensions: {
     establish_pension_fund:    { treasuryDelta: -40, militaryCasteSatDelta: +5, militaryMoraleDelta: +3, merchantSatDelta: -2 },
-    grant_farmland_plots:      { foodDelta: -10, militaryCasteSatDelta: +4, commonerSatDelta: -3, regionDevelopmentDelta: +2 },
-    honor_with_ceremony_only:  { militaryCasteSatDelta: +1, militaryMoraleDelta: -2 },
+    grant_farmland_plots:      { foodDelta: -10, militaryCasteSatDelta: +4, commonerSatDelta: -3, regionDevelopmentDelta: +2, treasuryDelta: -10 },
+    honor_with_ceremony_only:  { militaryCasteSatDelta: +1, militaryMoraleDelta: -2, treasuryDelta: -3 },
   },
 
   // ============================================================
@@ -61,7 +61,7 @@ export const EXPANSION_MILITARY_EFFECTS: Record<string, Record<string, Mechanica
   evt_exp_mil_mercenary_offer: {
     hire_full_company:    { treasuryDelta: -50, militaryForceSizeDelta: +200, militaryReadinessDelta: +4, militaryCasteSatDelta: -3, stabilityDelta: -2 },
     hire_scouts_only:     { treasuryDelta: -25, militaryReadinessDelta: +2, espionageNetworkDelta: +2, militaryCasteSatDelta: -1 },
-    decline_mercenaries:  { militaryCasteSatDelta: +1 },
+    decline_mercenaries:  { militaryCasteSatDelta: +1, treasuryDelta: +5 },
   },
 
   // ============================================================
@@ -88,7 +88,7 @@ export const EXPANSION_MILITARY_EFFECTS: Record<string, Record<string, Mechanica
   evt_exp_mil_war_hero: {
     public_ceremony:          { treasuryDelta: -15, militaryMoraleDelta: +3, militaryCasteSatDelta: +2, commonerSatDelta: +1 },
     promote_to_officer:       { militaryMoraleDelta: +2, militaryReadinessDelta: +1, nobilitySatDelta: -1 },
-    note_service_in_records:  { militaryCasteSatDelta: +1 },
+    note_service_in_records:  { militaryCasteSatDelta: +1, militaryMoraleDelta: -1 },
   },
 
   // ============================================================

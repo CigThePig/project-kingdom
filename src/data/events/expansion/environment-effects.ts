@@ -18,7 +18,7 @@ export const EXPANSION_ENVIRONMENT_EFFECTS: Record<string, Record<string, Mechan
 
   // --- Developing Phase ---
   evt_exp_env_forest_fire: {
-    mobilize_firefighting_brigades: { treasuryDelta: -50, regionConditionDelta: -2, commonerSatDelta: +3, stabilityDelta: +2 },
+    mobilize_firefighting_brigades: { treasuryDelta: -50, regionConditionDelta: -2, commonerSatDelta: +3, stabilityDelta: +2, foodDelta: -3 },
     create_firebreaks:              { treasuryDelta: -30, regionConditionDelta: -4, foodDelta: -5 },
     evacuate_and_wait:              { regionConditionDelta: -6, commonerSatDelta: -3, foodDelta: -15 },
   },
@@ -42,7 +42,7 @@ export const EXPANSION_ENVIRONMENT_EFFECTS: Record<string, Record<string, Mechan
   evt_exp_env_earthquake: {
     launch_rescue_operations:  { treasuryDelta: -100, commonerSatDelta: +5, stabilityDelta: +3, regionConditionDelta: -5 },
     prioritize_infrastructure: { treasuryDelta: -70, regionConditionDelta: -3, regionDevelopmentDelta: -2, stabilityDelta: +1 },
-    call_for_prayer_and_calm:  { regionConditionDelta: -8, commonerSatDelta: -4, faithDelta: +3, stabilityDelta: -3 },
+    call_for_prayer_and_calm:  { regionConditionDelta: -8, commonerSatDelta: -4, faithDelta: +3, stabilityDelta: -3, treasuryDelta: -5 },
   },
   evt_exp_env_volcanic_ash_cloud: {
     seal_granaries_and_ration: { foodDelta: -15, commonerSatDelta: -3, stabilityDelta: +2, treasuryDelta: -20 },
@@ -57,12 +57,12 @@ export const EXPANSION_ENVIRONMENT_EFFECTS: Record<string, Record<string, Mechan
   evt_exp_env_coastal_erosion: {
     build_sea_walls:             { treasuryDelta: -50, regionConditionDelta: +3, regionDevelopmentDelta: +2, commonerSatDelta: +1 },
     relocate_coastal_villages:   { treasuryDelta: -35, commonerSatDelta: -3, regionDevelopmentDelta: -2, stabilityDelta: +1 },
-    accept_gradual_loss:         { regionConditionDelta: -4, commonerSatDelta: -2, merchantSatDelta: -1 },
+    accept_gradual_loss:         { regionConditionDelta: -4, commonerSatDelta: -2, merchantSatDelta: -1, treasuryDelta: -5 },
   },
   evt_exp_env_great_storm: {
     emergency_fortification:       { treasuryDelta: -80, regionConditionDelta: -3, stabilityDelta: +3, commonerSatDelta: +2 },
     distribute_emergency_supplies: { treasuryDelta: -50, foodDelta: -15, commonerSatDelta: +4, regionConditionDelta: -5 },
-    shelter_in_place:              { regionConditionDelta: -8, commonerSatDelta: -5, foodDelta: -10, stabilityDelta: -4 },
+    shelter_in_place:              { regionConditionDelta: -8, commonerSatDelta: -5, foodDelta: -10, stabilityDelta: -4, treasuryDelta: -10 },
   },
   evt_exp_env_mine_contamination: {
     shut_down_mine:        { treasuryDelta: -40, commonerSatDelta: +3, regionConditionDelta: +4, merchantSatDelta: -3 },

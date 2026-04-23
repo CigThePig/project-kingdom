@@ -26,7 +26,7 @@ export const EXPANSION_RELIGION_EFFECTS: Record<string, Record<string, Mechanica
   evt_exp_rel_temple_construction: {
     fund_grand_temple:         { treasuryDelta: -50, faithDelta: +5, clergySatDelta: +5, commonerSatDelta: +2, regionDevelopmentDelta: +4, heterodoxyDelta: -3 },
     modest_chapel:             { treasuryDelta: -20, faithDelta: +3, clergySatDelta: +2, regionDevelopmentDelta: +2 },
-    decline_construction:      { clergySatDelta: -4, faithDelta: -2, commonerSatDelta: -1 },
+    decline_construction:      { clergySatDelta: -4, faithDelta: -2, commonerSatDelta: -1, treasuryDelta: +5 },
   },
 
   // --- 5. Interfaith Dialogue (Notable: -50/+40, -3/+5 sat) ---
@@ -60,7 +60,7 @@ export const EXPANSION_RELIGION_EFFECTS: Record<string, Record<string, Mechanica
   // --- 9. Religious Holiday Observance (Informational: -15/+30, +1/+3 sat) ---
   evt_exp_rel_holiday_observance: {
     crown_sponsored_rites:     { treasuryDelta: -20, faithDelta: +3, clergySatDelta: +2, commonerSatDelta: +2, heterodoxyDelta: -1 },
-    permit_observance:         { faithDelta: +1, clergySatDelta: +1, commonerSatDelta: +1 },
+    permit_observance:         { faithDelta: +1, clergySatDelta: +1, commonerSatDelta: +1, treasuryDelta: -2 },
     curtail_festivities:       { faithDelta: -2, clergySatDelta: -2, commonerSatDelta: -2, treasuryDelta: +10, heterodoxyDelta: +2 },
   },
 
@@ -68,7 +68,7 @@ export const EXPANSION_RELIGION_EFFECTS: Record<string, Record<string, Mechanica
   evt_exp_rel_monastery_funding: {
     generous_endowment:        { treasuryDelta: -40, faithDelta: +5, clergySatDelta: +5, heterodoxyDelta: -3, regionDevelopmentDelta: +3 },
     conditional_funding:       { treasuryDelta: -20, faithDelta: +3, clergySatDelta: +2, heterodoxyDelta: -1, nobilitySatDelta: +1 },
-    deny_funding:              { clergySatDelta: -4, faithDelta: -3, heterodoxyDelta: +3, commonerSatDelta: -1 },
+    deny_funding:              { clergySatDelta: -4, faithDelta: -3, heterodoxyDelta: +3, commonerSatDelta: -1, treasuryDelta: +5 },
   },
 
   // --- 11. Sacred Site Desecration (Critical: -120/+80, -6/+8 sat) ---
