@@ -6,7 +6,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_border_patrol_gaps: {
     title: 'Gaps in the Border Watch',
-    body: '{marshal_or_fallback} reports that patrol routes along the frontier have grown dangerously thin this {season}. With the force\'s morale {morale_tier} and equipment {equipment_condition_tier}, several outposts have gone unmanned for weeks, and local villages report unfamiliar riders passing unchallenged through Crown lands.',
+    body: '{marshal_or_fallback} reports that patrol routes along the frontier of {region} have grown dangerously thin this {season}. With the force\'s morale {morale_tier} and equipment {equipment_condition_tier}, several outposts have gone unmanned for weeks, and local villages report unfamiliar riders passing unchallenged through Crown lands.',
     choices: {
       increase_patrol_frequency: 'Increase Patrol Frequency',
       recruit_local_militia: 'Recruit Local Militia',
@@ -32,7 +32,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_cavalry_training: {
     title: 'Proposal for a Cavalry Academy',
-    body: "{marshal_or_fallback} argues that with the force's equipment only {equipment_condition_tier}, the kingdom's mounted forces lag badly behind those of {ruler_full}. The proposal: convert fertile pastureland into dedicated training grounds — a plan that would strengthen the cavalry but displease those who farm the land.",
+    body: "{marshal_or_fallback} argues that with the force's equipment only {equipment_condition_tier}, the kingdom's mounted forces lag badly behind those of {ruler_full} of {neighbor_short}. The proposal: convert the fertile pastureland of {region} into dedicated training grounds — a plan that would strengthen the cavalry but displease those who farm the land.",
     choices: {
       build_cavalry_academy: 'Build a Cavalry Academy',
       expand_existing_stables: 'Expand Existing Stables',
@@ -45,7 +45,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_siege_preparations: {
     title: '{neighbor} Masses Near the Border',
-    body: "{marshal_or_fallback} confirms that {ruler_full} has assembled siege engines and supply trains within striking distance of your southern fortifications this {season}, with the mood in {capital} reported as {rival_mood}. The generals urge immediate preparations, but full mobilization would strain a treasury in {treasury_tier} condition and alarm the populace.",
+    body: "{marshal_or_fallback} confirms that {ruler_full} of {neighbor_short} has assembled siege engines and supply trains within striking distance of the southern fortifications in {region} this {season}, with the mood in {capital} reported as {rival_mood}. The generals urge immediate preparations, but full mobilization would strain a treasury in {treasury_tier} condition and alarm the populace.",
     choices: {
       full_siege_mobilization: 'Order Full Mobilization',
       reinforce_key_fortifications: 'Reinforce Key Fortifications',
@@ -97,7 +97,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_arms_deal: {
     title: '{neighbor} Offers Arms',
-    body: 'Envoys of {ruler_full} propose a shipment of crossbows and plate armor at favorable terms — welcome news with the royal force\'s equipment only {equipment_condition_tier}. The deal would strengthen your forces and deepen ties with {dynasty}, though rivals may view such an arrangement as a provocation.',
+    body: 'Envoys of {ruler_full} of {neighbor_short} propose a shipment of crossbows and plate armor at favorable terms — welcome news with the royal force\'s equipment only {equipment_condition_tier}. The deal would strengthen your forces and deepen ties with {dynasty}, though rivals may view such an arrangement as a provocation.',
     choices: {
       accept_arms_shipment: 'Accept the Shipment',
       negotiate_mutual_pact: 'Negotiate a Mutual Pact',
@@ -110,7 +110,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_fortification_decay: {
     title: 'Crumbling Walls',
-    body: 'Engineers report that several border fortifications have deteriorated beyond safe use. Mortar crumbles between the stones, and one watchtower has already partially collapsed — much like the force\'s own equipment, which {marshal_or_fallback} grades {equipment_condition_tier}. Without repairs, the defensive line is compromised.',
+    body: 'Engineers report that several border fortifications along {region} have deteriorated beyond safe use. Mortar crumbles between the stones, and one watchtower has already partially collapsed — much like the force\'s own equipment, which {marshal_or_fallback} grades {equipment_condition_tier}. Without repairs, the defensive line is compromised.',
     choices: {
       full_restoration: 'Order Full Restoration',
       patch_critical_sections: 'Patch Critical Sections',
@@ -162,7 +162,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_supply_chain: {
     title: 'The Army Goes Hungry',
-    body: 'Supply wagons bound for the frontier garrisons have failed to arrive for the second consecutive week of {season}. Granaries at forward outposts are nearly empty — kingdom stores stand at a {stores_tier} mark — and soldiers report subsisting on foraged roots. Without resupply, desertions will begin in earnest and morale, already {morale_tier}, will rot through the ranks.',
+    body: 'Supply wagons bound for the frontier garrisons in {region} have failed to arrive for the second consecutive week of {season}. Granaries at forward outposts are nearly empty — kingdom stores stand at a {stores_tier} mark — and soldiers report subsisting on foraged roots. Without resupply, desertions will begin in earnest and morale, already {morale_tier}, will rot through the ranks.',
     choices: {
       emergency_supply_convoy: 'Dispatch Emergency Convoy',
       requisition_from_merchants: 'Requisition from Merchants',
@@ -201,7 +201,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_war_preparations: {
     title: 'The Drums of War',
-    body: "Relations with {neighbor} have deteriorated beyond recovery. {marshal_or_fallback}'s war council convenes in grim assembly, laying out the costs and consequences of full mobilization against {ruler_full}. With the force's morale {morale_tier}, its equipment {equipment_condition_tier}, and the treasury in {treasury_tier} condition, every path forward demands sacrifice; the only question is what kind.",
+    body: "Relations with {neighbor} have deteriorated beyond recovery. {marshal_or_fallback}'s war council convenes in grim assembly, laying out the costs and consequences of full mobilization against {ruler_full} — with {region} most exposed along the shared frontier. With the force's morale {morale_tier}, its equipment {equipment_condition_tier}, and the treasury in {treasury_tier} condition, every path forward demands sacrifice; the only question is what kind.",
     choices: {
       full_war_mobilization: 'Order Full War Mobilization',
       defensive_preparations_only: 'Prepare Defenses Only',
@@ -227,7 +227,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_strategic_alliance: {
     title: '{neighbor} Proposes a Military Pact',
-    body: "{ruler_full}'s ambassador arrives from {capital} with a formal proposal for a mutual defense treaty. The alliance would present a united front against common threats, but binding your armies to {dynasty}'s wars is a commitment the nobility views with alarm.",
+    body: "{ruler_full}'s ambassador arrives from {capital} in {neighbor_short} with a formal proposal for a mutual defense treaty. The alliance would present a united front against common threats, but binding your armies to {dynasty}'s wars is a commitment the nobility views with alarm.",
     choices: {
       formal_military_pact: 'Sign a Formal Pact',
       limited_cooperation: 'Agree to Limited Cooperation',

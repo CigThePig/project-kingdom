@@ -13,7 +13,7 @@ export const EXPANSION_WAVE_2_PETITIONS_GUILD_TEXT: Record<string, EventTextEntr
   },
   faction_req_w2_miners_charter: {
     title: 'The Miners Beg a Charter',
-    body: 'The free miners of the uplands, tired of the local lord\'s tolls, petition for a royal charter that would put their works directly under the Crown. The local lord has already sent his own objection.',
+    body: 'The free miners of the uplands in {region}, tired of the local lord\'s tolls, petition for a royal charter that would put their works directly under the Crown. The local lord has already sent his own objection.',
     choices: {
       grant_the_miners_charter: 'Grant the Charter',
       refuse_the_charter: 'Refuse the Charter',
@@ -21,7 +21,7 @@ export const EXPANSION_WAVE_2_PETITIONS_GUILD_TEXT: Record<string, EventTextEntr
   },
   faction_req_w2_fishermens_protection: {
     title: 'The Fishermen Beg for Coastal Patrols',
-    body: '{marshal_or_fallback} brings a petition from the coastal fishermen: pirates from the inland sea have twice taken their catches this month. They ask the Crown for sailing patrols; the treasurer points out that patrols cost silver every week.',
+    body: '{marshal_or_fallback} brings a petition from the coastal fishermen of {region}: pirates from the inland sea have twice taken their catches this month. They ask the Crown for sailing patrols; the treasurer points out that patrols cost silver every week.',
     choices: {
       fund_coastal_patrols: 'Fund Coastal Patrols',
       decline_patrol_request: 'Decline the Request',

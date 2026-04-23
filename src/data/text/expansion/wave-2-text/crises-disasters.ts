@@ -5,7 +5,7 @@ import type { EventTextEntry } from '../../events';
 export const EXPANSION_WAVE_2_CRISES_DISASTER_TEXT: Record<string, EventTextEntry> = {
   evt_exp_w2_plague_variant: {
     title: 'A New Pestilence Stalks the Quarters',
-    body: 'A pox unlike the familiar ones has broken out in the poorer districts. Physicians argue over its origin; the monks speak of old prayers. Whatever its cause, the sickness will not wait for the court to deliberate.',
+    body: 'A pox unlike the familiar ones has broken out in the poorer districts of {region}. Physicians argue over its origin; the monks speak of old prayers. Whatever its cause, the sickness will not wait for the court to deliberate.',
     choices: {
       quarantine_afflicted_quarters: 'Quarantine the Afflicted Quarters',
       open_hospitals_for_all: 'Open Hospitals to All',
@@ -14,7 +14,7 @@ export const EXPANSION_WAVE_2_CRISES_DISASTER_TEXT: Record<string, EventTextEntr
   },
   evt_exp_w2_naval_disaster: {
     title: 'The Fleet Broken on the Shoal',
-    body: 'A sudden storm has smashed a third of the royal fleet against the reefs. The admiral blames the cartographers; the cartographers blame the admiral. Either way, vessels and cargo lie in the shallows and the coast is open to opportunists.',
+    body: 'A sudden storm has smashed a third of the royal fleet against the reefs off {region}. The admiral blames the cartographers; the cartographers blame the admiral. Either way, vessels and cargo lie in the shallows and the coast is open to opportunists.',
     choices: {
       fund_emergency_shipyard: 'Fund an Emergency Shipyard',
       recall_merchant_vessels: 'Recall Merchant Vessels',
@@ -32,7 +32,7 @@ export const EXPANSION_WAVE_2_CRISES_DISASTER_TEXT: Record<string, EventTextEntr
   },
   evt_exp_w2_well_poisoning: {
     title: 'Poison in the Public Wells',
-    body: 'Three wells in the lower city have been found fouled with something that is not the slop of common waste. A handful have already sickened. Fear is spreading faster than the sickness; the people want someone named.',
+    body: 'Three wells in the lower city of {region} have been found fouled with something that is not the slop of common waste. A handful have already sickened. Fear is spreading faster than the sickness; the people want someone named.',
     choices: {
       hunt_the_saboteurs: 'Hunt the Saboteurs',
       quietly_replace_the_wells: 'Quietly Replace the Wells',

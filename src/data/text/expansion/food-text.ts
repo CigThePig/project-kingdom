@@ -6,7 +6,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_granary_rats: {
     title: 'Vermin in the Royal Granaries',
-    body: 'Your granary keeper reports with dismay that rats have infiltrated the Crown\'s principal grain stores — a catastrophe at any time, but grim indeed with reserves already at a {stores_tier} mark this {season}. Sacks gnawed open line the cellar floors, and the stench of spoilage hangs heavy in the vaults where the kingdom\'s reserves should stand secure.',
+    body: 'Your granary keeper reports with dismay that rats have infiltrated the Crown\'s principal grain stores in {region} — a catastrophe at any time, but grim indeed with reserves already at a {stores_tier} mark this {season}. Sacks gnawed open line the cellar floors, and the stench of spoilage hangs heavy in the vaults where the kingdom\'s reserves should stand secure.',
     choices: {
       hire_ratcatchers: 'Hire Professional Ratcatchers',
       distribute_before_spoilage: 'Distribute Before Further Spoilage',
@@ -19,7 +19,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_fishing_fleet: {
     title: 'The Fishermen Seek New Boats',
-    body: 'A delegation of coastal fishermen petitions the throne for funding to commission additional vessels. The {season} sea teems with catch they cannot harvest for want of boats, yet the cost of timber and rope would draw from a treasury in {treasury_tier} condition — with stores only at a {stores_tier} mark, {chancellor_or_fallback} counsels care.',
+    body: 'A delegation of coastal fishermen from {region} petitions the throne for funding to commission additional vessels. The {season} sea teems with catch they cannot harvest for want of boats, yet the cost of timber and rope would draw from a treasury in {treasury_tier} condition — with stores only at a {stores_tier} mark, {chancellor_or_fallback} counsels care.',
     choices: {
       fund_new_boats: 'Fund New Boats',
       conscript_coastal_labour: 'Conscript Coastal Labour',
@@ -32,7 +32,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_preservation: {
     title: 'New Methods of Preservation',
-    body: 'A travelling scholar arrives this {season} with techniques for preserving meat and fish through the lean winter months. Salt-curing and smoke-houses, he claims, could reduce spoilage by half — a welcome prospect with stores at a {stores_tier} mark. The methods require modest investment but would alter how your people prepare for the cold.',
+    body: 'A travelling scholar arrives in {region} this {season} with techniques for preserving meat and fish through the lean winter months. Salt-curing and smoke-houses, he claims, could reduce spoilage by half — a welcome prospect with stores at a {stores_tier} mark. The methods require modest investment but would alter how your people prepare for the cold.',
     choices: {
       invest_in_salt_curing: 'Invest in Salt-Curing',
       build_smoke_houses: 'Build Smoke-Houses',
@@ -58,7 +58,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_livestock_plague: {
     title: 'Plague Sweeps the Herds',
-    body: 'A terrible sickness has fallen upon the kingdom\'s cattle and sheep. Animals collapse in the pastures this {season}, and the disease passes from herd to herd faster than quarantine lines can be drawn. Your people — with stores already at a {stores_tier} mark — face not only the loss of meat and milk but the draught animals upon which ploughing depends.',
+    body: 'A terrible sickness has fallen upon the cattle and sheep of {region}. Animals collapse in the pastures this {season}, and the disease passes from herd to herd faster than quarantine lines can be drawn. Your people — with stores already at a {stores_tier} mark — face not only the loss of meat and milk but the draught animals upon which ploughing depends.',
     choices: {
       cull_all_sick_animals: 'Cull All Sick Animals',
       import_healthy_stock: 'Import Healthy Stock',
@@ -84,7 +84,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_feast_famine: {
     title: 'The Pendulum of Plenty',
-    body: 'Your kingdom swings between abundance and scarcity with alarming regularity — this {season} the stores stand at a {stores_tier} mark, and none can say where they will stand the next. When harvests are good, the people feast without thought for tomorrow; when they fail, famine follows swiftly. {chancellor_or_fallback} argues that only deliberate planning can break this destructive cycle.',
+    body: 'Your kingdom swings between abundance and scarcity with alarming regularity — this {season} the stores across {region} stand at a {stores_tier} mark, and none can say where they will stand the next. When harvests are good, the people feast without thought for tomorrow; when they fail, famine follows swiftly. {chancellor_or_fallback} argues that only deliberate planning can break this destructive cycle.',
     choices: {
       establish_food_reserves: 'Establish Food Reserves',
       sell_surplus_abroad: 'Sell Surplus Abroad',

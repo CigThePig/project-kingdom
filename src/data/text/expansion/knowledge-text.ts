@@ -44,7 +44,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_library_fire: {
     title: 'Fire Engulfs the Royal Archives',
-    body: 'Flames have broken out in the kingdom\'s great library, threatening centuries of accumulated knowledge. The fire spreads with alarming speed through the dry summer air, and the archivists plead for immediate action. Much of what burns can never be recovered.',
+    body: 'Flames have broken out in the great library of {region}, threatening centuries of accumulated knowledge. The fire spreads with alarming speed through the dry summer air, and the archivists plead for immediate action. Much of what burns can never be recovered.',
     choices: {
       emergency_salvage_operation: 'Mount Full Salvage Effort',
       protect_rarest_volumes: 'Save Only the Rarest Works',
@@ -83,7 +83,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_aqueduct_design: {
     title: 'Aqueduct Engineering Breakthrough',
-    body: 'The kingdom\'s master engineers have completed designs for a system of stone aqueducts capable of channeling fresh water from highland springs to the lowland settlements. The project would dramatically improve sanitation and agricultural yields, but the construction costs are considerable.',
+    body: 'The kingdom\'s master engineers have completed designs for a system of stone aqueducts capable of channeling fresh water from highland springs to the lowland settlements of {region}. The project would dramatically improve sanitation and agricultural yields, but the construction costs are considerable.',
     choices: {
       fund_construction: 'Fund Full Construction',
       limited_trial: 'Build a Trial Section',
@@ -135,7 +135,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_printing_press: {
     title: 'The Printing Press Prototype',
-    body: 'A brilliant artificer has constructed a device capable of pressing inked type onto parchment with extraordinary speed, producing identical copies of any text in hours rather than months. The implications are profound — knowledge could spread beyond the control of scribe and clergy alike, reshaping the balance of power in the realm.',
+    body: 'A brilliant artificer in {region} has constructed a device capable of pressing inked type onto parchment with extraordinary speed, producing identical copies of any text in hours rather than months. The implications are profound — knowledge could spread beyond the control of scribe and clergy alike, reshaping the balance of power in the realm.',
     choices: {
       fund_mass_production: 'Fund Public Production',
       restrict_to_crown: 'Restrict to Crown Use',
@@ -161,7 +161,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_observatory_proposal: {
     title: 'Observatory Construction Proposed',
-    body: 'The court astronomer has petitioned for funds to raise a proper observatory upon the kingdom\'s highest hill. She argues that careful study of celestial movements will improve navigation, agricultural timing, and the accuracy of the royal calendar. The cost is modest but the clergy eye the project with suspicion.',
+    body: 'The court astronomer has petitioned for funds to raise a proper observatory upon the highest hill of {region}. She argues that careful study of celestial movements will improve navigation, agricultural timing, and the accuracy of the royal calendar. The cost is modest but the clergy eye the project with suspicion.',
     choices: {
       approve_funding: 'Approve the Funding',
       defer_to_next_season: 'Defer the Decision',

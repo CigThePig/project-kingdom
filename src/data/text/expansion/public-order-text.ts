@@ -6,7 +6,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_market_riots: {
     title: 'Riots in the Market District',
-    body: 'A dispute over grain prices has erupted into full violence in the central market. Stalls are overturned, goods looted, and the watch has retreated behind barricades. The disorder spreads with each passing hour, and merchants fear for their livelihoods.',
+    body: 'A dispute over grain prices has erupted into full violence in the central market of {region}. Stalls are overturned, goods looted, and the watch has retreated behind barricades. The disorder spreads with each passing hour, and merchants fear for their livelihoods.',
     choices: {
       deploy_garrison: 'Deploy the Garrison',
       negotiate_with_ringleaders: 'Negotiate with Ringleaders',
@@ -19,7 +19,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_highway_banditry: {
     title: 'Highway Banditry Surge',
-    body: 'Trade caravans along the kingdom\'s main roads report a sharp increase in ambushes. Bandits operate with alarming coordination, striking at dawn and vanishing into the forests. Merchant guilds demand protection or threaten to reroute their traffic entirely.',
+    body: 'Trade caravans along the main roads through {region} report a sharp increase in ambushes. Bandits operate with alarming coordination, striking at dawn and vanishing into the forests. Merchant guilds demand protection or threaten to reroute their traffic entirely.',
     choices: {
       fund_bounty_hunters: 'Fund Bounty Hunters',
       establish_road_garrisons: 'Establish Road Garrisons',
@@ -45,7 +45,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_crime_wave: {
     title: 'A Wave of Lawlessness',
-    body: 'Thefts, burglaries, and assaults have surged across the kingdom\'s towns. The city watch is overwhelmed and citizens bolt their doors at nightfall. Your constable warns that without decisive action, lawlessness will become the norm rather than the exception.',
+    body: 'Thefts, burglaries, and assaults have surged across the towns of {region}. The city watch is overwhelmed and citizens bolt their doors at nightfall. Your constable warns that without decisive action, lawlessness will become the norm rather than the exception.',
     choices: {
       hire_additional_watchmen: 'Hire Additional Watchmen',
       public_executions: 'Order Public Executions',
@@ -84,7 +84,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_tax_resistance: {
     title: 'Tax Resistance Spreads',
-    body: 'Entire villages have barred their gates to the royal tax collectors. Petitions bearing hundreds of marks arrive at court, alleging unjust levies and corrupt assessors. The movement grows bolder each week, and other regions watch to see how the crown responds.',
+    body: 'Entire villages across {region} have barred their gates to the royal tax collectors. Petitions bearing hundreds of marks arrive at court, alleging unjust levies and corrupt assessors. The movement grows bolder each week, and other regions watch to see how the crown responds.',
     choices: {
       send_tax_collectors_with_guards: 'Send Collectors with Guards',
       temporarily_reduce_taxes: 'Temporarily Reduce Taxes',
@@ -110,7 +110,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_gang_warfare: {
     title: 'Gang War in the Streets',
-    body: 'Two warring gangs have turned the lower districts into a battlefield. Bodies appear in alleys each morning, and residents cower behind locked doors. The violence threatens to engulf entire districts if left unchecked, and the watch alone cannot contain it.',
+    body: 'Two warring gangs have turned the lower districts of {region} into a battlefield. Bodies appear in alleys each morning, and residents cower behind locked doors. The violence threatens to engulf entire districts if left unchecked, and the watch alone cannot contain it.',
     choices: {
       military_sweep: 'Order a Military Sweep',
       pit_gangs_against_each_other: 'Play the Gangs Against Each Other',
@@ -123,7 +123,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_arson_attacks: {
     title: 'Fires in the Night',
-    body: 'Several buildings have been set ablaze under cover of darkness in recent weeks. Whether the work of disgruntled citizens, foreign agents, or simple madness, the fires have destroyed homes and workshops alike. The people demand the crown act before more is lost.',
+    body: 'Several buildings across {region} have been set ablaze under cover of darkness in recent weeks. Whether the work of disgruntled citizens, foreign agents, or simple madness, the fires have destroyed homes and workshops alike. The people demand the crown act before more is lost.',
     choices: {
       form_fire_brigades: 'Form Fire Brigades',
       investigate_arsonists: 'Investigate the Arsonists',
@@ -149,7 +149,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_refugee_influx: {
     title: 'Refugees at the Gates',
-    body: 'Columns of displaced families arrive at the kingdom\'s borders, fleeing conflict in neighboring lands. They bring little more than the clothes on their backs, and their numbers strain the capacity of border towns. Your people are divided between compassion and fear.',
+    body: 'Columns of displaced families arrive at the borders of {region}, fleeing conflict in neighboring lands. They bring little more than the clothes on their backs, and their numbers strain the capacity of border towns. Your people are divided between compassion and fear.',
     choices: {
       welcome_and_settle: 'Welcome and Settle Them',
       temporary_camps: 'Establish Temporary Camps',
@@ -188,7 +188,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_mob_justice: {
     title: 'The Mob Passes Judgment',
-    body: 'An angry crowd has seized a suspected murderer from the custody of the watch and threatens to hang him from the city gates. The rule of law teeters on a knife\'s edge. If the crown does not act swiftly, the mob may decide that royal justice is no longer needed.',
+    body: 'An angry crowd in {region} has seized a suspected murderer from the custody of the watch and threatens to hang him from the city gates. The rule of law teeters on a knife\'s edge. If the crown does not act swiftly, the mob may decide that royal justice is no longer needed.',
     choices: {
       restore_order_by_force: 'Restore Order by Force',
       hold_public_trial: 'Hold a Public Trial',
@@ -201,7 +201,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_martial_law: {
     title: 'The Question of Martial Law',
-    body: 'With civil order collapsing and the watch powerless to contain the unrest, your generals urge you to declare martial law. Soldiers would patrol every street and curfew would be absolute. The merchants warn it will kill trade; the commoners fear tyranny.',
+    body: 'With civil order collapsing across {region} and the watch powerless to contain the unrest, your generals urge you to declare martial law. Soldiers would patrol every street and curfew would be absolute. The merchants warn it will kill trade; the commoners fear tyranny.',
     choices: {
       declare_martial_law: 'Declare Martial Law',
       limited_military_patrols: 'Limited Military Patrols',

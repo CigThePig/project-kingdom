@@ -24,7 +24,7 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_social_banditry_severe: {
     title: 'The Brigand Kingdom',
-    body: 'The bandits have grown so bold they\'ve established their own courts and territories in the wilds. Entire regions have been cut off from the crown\'s protection. Some desperate commoners have joined the outlaws, seeing more safety in lawlessness than in the king\'s peace.',
+    body: 'The bandits have grown so bold they\'ve established their own courts and territories in the wilds of {region}. Entire stretches of countryside have been cut off from the crown\'s protection. Some desperate commoners have joined the outlaws, seeing more safety in lawlessness than in the king\'s peace.',
     choices: {
       marshal_campaign: 'Marshal a Punitive Campaign',
       offer_amnesty: 'Offer General Amnesty',
@@ -62,7 +62,7 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_social_corruption_severe: {
     title: 'Entrenched Corruption',
-    body: 'The corruption is no longer a disease — it is the system itself. Every office is bought and sold, every law has a price, and the treasury hemorrhages gold into noble coffers. The people have lost all hope that the crown can or will act. Only the most drastic measures can root out what has become entrenched.',
+    body: 'The corruption is no longer a disease — it is the system itself across {region}. Every office is bought and sold, every law has a price, and the treasury hemorrhages gold into noble coffers. The people have lost all hope that the crown can or will act. Only the most drastic measures can root out what has become entrenched.',
     choices: {
       royal_tribunal: 'Convene a Royal Tribunal',
       co_opt_corrupt_lords: 'Co-opt the Corrupt Lords',
@@ -100,7 +100,7 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_social_unrest_severe: {
     title: 'Rebellion Brewing',
-    body: 'What began as scattered protests has crystallized into organized resistance. Self-proclaimed leaders rally the disaffected under banners of their own, demanding the overthrow of the current order. Barricades block city streets, and parts of the countryside have declared themselves beyond the crown\'s authority.',
+    body: 'What began as scattered protests has crystallized into organized resistance. Self-proclaimed leaders rally the disaffected under banners of their own, demanding the overthrow of the current order. Barricades block the streets of {region}, and parts of the countryside have declared themselves beyond the crown\'s authority.',
     choices: {
       declare_martial_law: 'Declare Martial Law',
       negotiate_rebel_leaders: 'Negotiate with Rebel Leaders',
@@ -138,7 +138,7 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_social_criminal_severe: {
     title: 'A Kingdom Beneath the Kingdom',
-    body: 'The syndicates no longer skulk in shadow — they parade through the docks with their own sigils. Customs officers answer to their paymasters before the crown, judges find silver pressed into their palms before verdicts are rendered, and whole harbors run on smuggled tonnage. The kingdom has, in all but name, a second sovereign.',
+    body: 'The syndicates no longer skulk in shadow — they parade through the docks of {region} with their own sigils. Customs officers answer to their paymasters before the crown, judges find silver pressed into their palms before verdicts are rendered, and whole harbors run on smuggled tonnage. The kingdom has, in all but name, a second sovereign.',
     choices: {
       martial_purge: 'Order a Martial Purge',
       bribe_the_bosses: 'Buy the Bosses\' Cooperation',

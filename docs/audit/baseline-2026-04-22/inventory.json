@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-04-22T16:53:13.275Z",
+  "generatedAt": "2026-04-23T10:38:13.054Z",
   "totals": {
     "decrees": 97,
     "events": 408,
-    "followUps": 202,
+    "followUps": 283,
     "assessments": 12,
     "negotiations": 12,
     "worldEvents": 10,
@@ -12,7 +12,7 @@
   "byFamily": {
     "petition": 231,
     "unknown": 65,
-    "crisis": 230,
+    "crisis": 311,
     "notification": 73,
     "overture": 11,
     "assessment": 12,
@@ -28,7 +28,7 @@
     },
     {
       "file": "src/data/events/expansion/followup-events.ts",
-      "count": 61
+      "count": 142
     },
     {
       "file": "src/data/decrees/index.ts",
@@ -246,23 +246,23 @@
   "eventsBySeverity": {
     "Informational": 145,
     "Notable": 247,
-    "Serious": 145,
+    "Serious": 226,
     "Critical": 85
   },
   "eventsByCategory": {
-    "Economy": 89,
-    "Food": 46,
-    "Military": 56,
-    "Diplomacy": 47,
-    "Environment": 34,
-    "PublicOrder": 58,
-    "Religion": 56,
-    "Culture": 34,
-    "Espionage": 35,
-    "Knowledge": 27,
-    "ClassConflict": 68,
+    "Economy": 100,
+    "Food": 47,
+    "Military": 62,
+    "Diplomacy": 49,
+    "Environment": 35,
+    "PublicOrder": 77,
+    "Religion": 67,
+    "Culture": 37,
+    "Espionage": 41,
+    "Knowledge": 28,
+    "ClassConflict": 80,
     "Region": 33,
-    "Kingdom": 39
+    "Kingdom": 47
   },
   "decreesByCategory": {
     "Economic": 21,
@@ -278,7 +278,7 @@
     "chained": 48
   },
   "singleChoiceCardCount": 72,
-  "followUpEdgeCount": 159,
+  "followUpEdgeCount": 240,
   "topFilesByCardCount": [
     {
       "file": "src/data/events/index.ts",
@@ -286,7 +286,7 @@
     },
     {
       "file": "src/data/events/expansion/followup-events.ts",
-      "count": 61
+      "count": 142
     },
     {
       "file": "src/data/decrees/index.ts",

@@ -34,7 +34,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_double_agent_dilemma: {
     title: 'The Double Agent\'s Dilemma',
-    body: "{spymaster_or_fallback} presents a delicate situation: one of your agents embedded in {ruler}'s court has been approached to serve as a double agent. The opportunity could yield extraordinary intelligence, but the risks of exposure and disinformation are considerable.",
+    body: "{spymaster_or_fallback} presents a delicate situation: one of your agents embedded in {ruler}'s court at {capital} in {neighbor_short} has been approached to serve as a double agent. The opportunity could yield extraordinary intelligence, but the risks of exposure and disinformation are considerable.",
     choices: {
       turn_agent_double: 'Accept the Double Role',
       extract_and_debrief: 'Extract and Debrief',
@@ -52,7 +52,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_blackmail_discovery: {
     title: 'Compromising Documents Uncovered',
-    body: "{spymaster_or_fallback}'s agents have discovered documents revealing that a prominent noble has been secretly corresponding with {ruler_full}, promising favors in exchange for personal enrichment. The evidence is damning, and how you wield it will shape the balance of power at court.",
+    body: "{spymaster_or_fallback}'s agents have discovered documents revealing that a prominent noble has been secretly corresponding with {ruler_full} of {neighbor_short}, promising favors in exchange for personal enrichment. The evidence is damning, and how you wield it will shape the balance of power at court.",
     choices: {
       confront_noble_privately: 'Confront Privately',
       use_leverage_quietly: 'Use as Leverage',
@@ -61,7 +61,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_intercepted_dispatches: {
     title: 'Intercepted Diplomatic Dispatches',
-    body: "{spymaster_or_fallback}'s agents have intercepted sealed dispatches from {capital} to a minor border principality, detailing plans by {ruler_full} that could threaten regional trade routes. The contents are valuable to multiple parties, and how you share — or withhold — this intelligence will have diplomatic consequences.",
+    body: "{spymaster_or_fallback}'s agents have intercepted sealed dispatches from {capital} in {neighbor_short} to a minor border principality, detailing plans by {ruler_full} that could threaten regional trade routes. The contents are valuable to multiple parties, and how you share — or withhold — this intelligence will have diplomatic consequences.",
     choices: {
       share_with_arenthal: 'Share with Arenthal',
       confront_valdris: 'Confront Valdris Directly',
@@ -92,7 +92,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_assassination_plot: {
     title: 'Assassination Plot Uncovered',
-    body: "{spymaster_or_fallback} has uncovered a plot against the royal person — a conspiracy involving disaffected nobles and possibly agents of {ruler_full}. The plotters have already procured poison and suborned members of the household guard. Swift action is required, though the scope of the conspiracy remains unclear.",
+    body: "{spymaster_or_fallback} has uncovered a plot against the royal person — a conspiracy involving disaffected nobles and possibly agents of {ruler_full} of {neighbor_short}. The plotters have already procured poison and suborned members of the household guard. Swift action is required, though the scope of the conspiracy remains unclear.",
     choices: {
       preemptive_arrests: 'Order Preemptive Arrests',
       double_royal_guard: 'Double the Royal Guard',
@@ -101,7 +101,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_counter_espionage_raid: {
     title: 'Counter-Espionage Operation',
-    body: "{spymaster_or_fallback} has pinpointed a safe house operated by {ruler_full} within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation's scale and diplomatic fallout require careful consideration.",
+    body: "{spymaster_or_fallback} has pinpointed a safe house operated by {ruler_full} of {neighbor_short} within the border reaches of {region}, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation's scale and diplomatic fallout require careful consideration.",
     choices: {
       full_scale_raid: 'Launch Full Raid',
       surgical_strike: 'Conduct Surgical Strike',
@@ -119,7 +119,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_intelligence_failure: {
     title: 'A Catastrophic Intelligence Failure',
-    body: 'A major operation has ended in disaster — your agents abroad have been exposed and captured, safe houses compromised, and a year\'s worth of carefully cultivated intelligence networks dismantled. The kingdom\'s eyes and ears beyond its borders have gone dark at the worst possible time.',
+    body: 'A major operation has ended in disaster — your agents in {neighbor_short} have been exposed and captured, safe houses compromised, and a year\'s worth of carefully cultivated intelligence networks dismantled. The kingdom\'s eyes and ears beyond its borders have gone dark at the worst possible time.',
     choices: {
       rebuild_network: 'Rebuild from Scratch',
       scapegoat_spymaster: 'Replace the Spymaster',
@@ -141,7 +141,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_enemy_infiltration: {
     title: 'Deep Enemy Infiltration',
-    body: "The unthinkable has been confirmed: operatives loyal to {ruler_full} have penetrated the highest levels of the kingdom's administration. Critical military plans, treasury figures, and diplomatic correspondence have been flowing to {capital} for months. The rot runs deep, and excising it will be painful.",
+    body: "The unthinkable has been confirmed: operatives loyal to {ruler_full} of {neighbor_short} have penetrated the highest levels of the kingdom's administration — even the regional councils in {region}. Critical military plans, treasury figures, and diplomatic correspondence have been flowing to {capital} for months. The rot runs deep, and excising it will be painful.",
     choices: {
       martial_law_purge: 'Declare Martial Law and Purge',
       targeted_counter_ops: 'Targeted Counter-Operations',
@@ -150,7 +150,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_underground_resistance: {
     title: 'Underground Resistance Movement',
-    body: '{spymaster_or_fallback} warns of an organized resistance movement that has taken root among the common folk, operating through hidden cells and secret meeting places. Their grievances are real, but their methods — sabotage, intimidation, and covert recruitment — pose a grave threat to order, and the movement is growing rapidly.',
+    body: '{spymaster_or_fallback} warns of an organized resistance movement that has taken root among the common folk of {region}, operating through hidden cells and secret meeting places. Their grievances are real, but their methods — sabotage, intimidation, and covert recruitment — pose a grave threat to order, and the movement is growing rapidly.',
     choices: {
       infiltrate_resistance: 'Infiltrate the Movement',
       address_grievances: 'Address Their Grievances',
@@ -159,7 +159,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_military_secrets_stolen: {
     title: 'Military Secrets Stolen',
-    body: "A breach of devastating proportions has occurred: detailed plans for the kingdom's frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {capital}. Winter's cover aided the thieves, and by now the intelligence may already be in {ruler}'s hands.",
+    body: "A breach of devastating proportions has occurred: detailed plans for the kingdom's frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {capital} in {neighbor_short}. Winter's cover aided the thieves, and by now the intelligence may already be in {ruler}'s hands.",
     choices: {
       change_all_plans: 'Overhaul All Defenses',
       hunt_the_thief: 'Hunt Down the Thief',

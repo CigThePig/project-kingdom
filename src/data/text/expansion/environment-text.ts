@@ -46,7 +46,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_river_pollution: {
     title: 'River Fouled by Industry',
-    body: 'The kingdom\'s main river has become visibly tainted. Tanneries, dye works, and slaughterhouses upstream have turned the water dark and foul-smelling. Downstream communities report illness among those who drink from it.',
+    body: 'The main river running through {region} has become visibly tainted. Tanneries, dye works, and slaughterhouses upstream have turned the water dark and foul-smelling. Downstream communities report illness among those who drink from it.',
     choices: {
       regulate_tanneries: 'Regulate the Tanneries',
       relocate_workshops: 'Relocate Workshops Downstream',
@@ -64,7 +64,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_earthquake: {
     title: 'Earthquake Strikes the Kingdom',
-    body: 'The earth itself has turned against the crown this {season}. A powerful tremor has shaken the kingdom, collapsing walls, cracking foundations, and sending citizens fleeing into the streets. Reports of casualties and structural damage pour in from every quarter — with the treasury in {treasury_tier} condition, the reconstruction will test the Crown.',
+    body: 'The earth itself has turned against the crown this {season}. A powerful tremor has shaken {region}, collapsing walls, cracking foundations, and sending citizens fleeing into the streets. Reports of casualties and structural damage pour in from every quarter — with the treasury in {treasury_tier} condition, the reconstruction will test the Crown.',
     choices: {
       launch_rescue_operations: 'Launch Rescue Operations',
       prioritize_infrastructure: 'Prioritize Infrastructure Repair',
@@ -73,7 +73,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_volcanic_ash_cloud: {
     title: 'Ash Cloud Darkens the Skies',
-    body: 'A distant volcanic eruption has sent a vast cloud of ash drifting over the kingdom this {season}. The sun is dimmed, crops wilt under the grey pall, and citizens cough in the acrid air. Scholars warn the effects may persist for weeks, and with stores already at a {stores_tier} mark {chancellor_or_fallback} counsels quick action.',
+    body: 'A distant volcanic eruption has sent a vast cloud of ash drifting over {region} this {season}. The sun is dimmed, crops wilt under the grey pall, and citizens cough in the acrid air. Scholars warn the effects may persist for weeks, and with stores already at a {stores_tier} mark {chancellor_or_fallback} counsels quick action.',
     choices: {
       seal_granaries_and_ration: 'Seal Granaries and Ration Food',
       organize_mass_shelter: 'Organize Mass Shelter',
@@ -100,7 +100,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_great_storm: {
     title: 'The Great Storm',
-    body: 'A storm of unprecedented fury has struck the kingdom in the midst of {season}. Howling winds tear roofs from buildings, torrential rain floods valleys, and lightning ignites fires across the countryside. This is no ordinary tempest — with stores at a {stores_tier} mark and the treasury in {treasury_tier} condition, it threatens the very fabric of our commonwealth.',
+    body: 'A storm of unprecedented fury has struck {region} in the midst of {season}. Howling winds tear roofs from buildings, torrential rain floods valleys, and lightning ignites fires across the countryside. This is no ordinary tempest — with stores at a {stores_tier} mark and the treasury in {treasury_tier} condition, it threatens the very fabric of our commonwealth.',
     choices: {
       emergency_fortification: 'Emergency Fortification',
       distribute_emergency_supplies: 'Distribute Emergency Supplies',
@@ -109,7 +109,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_mine_contamination: {
     title: 'Mining Waste Poisons the Land',
-    body: 'Runoff from the kingdom\'s mining operations has seeped into the surrounding soil and waterways. Livestock sicken, crops wither, and the communities downhill from the mines report a growing toll of illness among their children.',
+    body: 'Runoff from the mining operations in {region} has seeped into the surrounding soil and waterways. Livestock sicken, crops wither, and the communities downhill from the mines report a growing toll of illness among their children.',
     choices: {
       shut_down_mine: 'Shut Down the Mine',
       invest_in_drainage: 'Invest in Drainage Systems',
@@ -135,7 +135,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_medicinal_springs: {
     title: 'Medicinal Hot Springs Discovered',
-    body: 'Shepherds in a remote valley have discovered natural hot springs with remarkable healing properties. Word has spread quickly, and already the sick and lame make pilgrimages to the site. The question is who should control this gift of the earth.',
+    body: 'Shepherds in a remote valley of {region} have discovered natural hot springs with remarkable healing properties. Word has spread quickly, and already the sick and lame make pilgrimages to the site. The question is who should control this gift of the earth.',
     choices: {
       build_healing_baths: 'Build Public Healing Baths',
       grant_to_clergy: 'Grant Stewardship to the Clergy',

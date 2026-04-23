@@ -70,7 +70,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 7. Constitutional Crisis ---
   evt_exp_kgd_constitutional_crisis: {
     title: 'A Crisis of Authority',
-    body: 'The kingdom stands upon a precipice. Multiple factions claim legitimacy for their competing visions of governance, and the streets grow restless with uncertainty. Without decisive action, the very foundations of royal authority may fracture beyond repair.',
+    body: 'The kingdom stands upon a precipice. Multiple factions claim legitimacy for their competing visions of governance, and the streets of {region} grow restless with uncertainty. Without decisive action, the very foundations of royal authority may fracture beyond repair.',
     choices: {
       convene_emergency_council: 'Convene an Emergency Grand Council',
       assert_royal_authority: 'Assert Royal Authority by Force',
@@ -136,7 +136,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 13. Crown Land Management ---
   evt_exp_kgd_crown_land: {
     title: 'The Question of Crown Lands',
-    body: 'With food stores dwindling as spring arrives, attention turns to the vast tracts of royal demesne that lie fallow. The commons petition to work these lands, while the nobility see opportunity for profitable leases. The crown must decide the fate of its own domain.',
+    body: 'With food stores dwindling as spring arrives, attention turns to the vast tracts of royal demesne across {region} that lie fallow. The commons petition to work these lands, while the nobility see opportunity for profitable leases. The crown must decide the fate of its own domain.',
     choices: {
       open_crown_lands: 'Open Crown Lands to the Commons',
       lease_to_nobility: 'Lease Lands to the Nobility',

@@ -5,7 +5,7 @@ import type { EventTextEntry } from '../../events';
 export const EXPANSION_WAVE_2_PETITIONS_MILITARY_TEXT: Record<string, EventTextEntry> = {
   faction_req_w2_border_captains_garrison: {
     title: 'The Border Captains Beg Reinforcement',
-    body: '{marshal_or_fallback} brings word from the captains of the frontier march: their garrison has been thinned by two seasons of levy, and raiders press the passes each week. They ask for coin, men, and fresh equipment, or they will withdraw to the fallback line.',
+    body: '{marshal_or_fallback} brings word from the captains of the frontier march in {region}: their garrison has been thinned by two seasons of levy, and raiders press the passes each week. They ask for coin, men, and fresh equipment, or they will withdraw to the fallback line.',
     choices: {
       reinforce_the_border_garrison: 'Reinforce the Garrison',
       leave_the_garrison_thin: 'Leave the Garrison Thin',

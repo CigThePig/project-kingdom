@@ -32,7 +32,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_tax_dispute: {
     title: 'Tax Collectors Turned Away',
-    body: 'Crown tax collectors have been met with barred doors and angry crowds in the outlying villages. The common folk claim the assessments are unjust — unreasonable in a year of {economic_phase_lc} — and demand relief, while {chancellor_or_fallback} insists the levies are lawful and a treasury in {treasury_tier} condition cannot afford leniency.',
+    body: 'Crown tax collectors have been met with barred doors and angry crowds across {region}. The common folk claim the assessments are unjust — unreasonable in a year of {economic_phase_lc} — and demand relief, while {chancellor_or_fallback} insists the levies are lawful and a treasury in {treasury_tier} condition cannot afford leniency.',
     choices: {
       enforce_full_collection: 'Enforce Full Collection',
       grant_partial_amnesty: 'Grant Partial Amnesty',
@@ -84,7 +84,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_inflation_crisis: {
     title: 'The Price of Everything Rises',
-    body: 'A loaf of bread now costs what a chicken did last {season}. The kingdom\'s currency buys less with each passing week — the economy has tipped into {economic_phase_lc} — and panic buying has emptied market stalls across every province. {chancellor_or_fallback} warns that without decisive action, trade will collapse entirely.',
+    body: 'A loaf of bread now costs what a chicken did last {season}. The kingdom\'s currency buys less with each passing week — the economy has tipped into {economic_phase_lc} — and panic buying has emptied market stalls across {region}. {chancellor_or_fallback} warns that without decisive action, trade will collapse entirely.',
     choices: {
       mint_new_currency: 'Mint an Entirely New Currency',
       freeze_all_prices: 'Freeze All Prices by Decree',
@@ -110,7 +110,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_mining_revenue: {
     title: 'Silver Veins Discovered',
-    body: 'Prospectors in the highland regions report the discovery of rich silver deposits beneath Crown lands. With the treasury in {treasury_tier} condition, the find could fill your coffers handsomely, though mining expansion would require labourers drawn from the fields — and with stores at a {stores_tier} mark, displacing farming communities is no small decision.',
+    body: 'Prospectors in the highlands of {region} report the discovery of rich silver deposits beneath Crown lands. With the treasury in {treasury_tier} condition, the find could fill your coffers handsomely, though mining expansion would require labourers drawn from the fields — and with stores at a {stores_tier} mark, displacing farming communities is no small decision.',
     choices: {
       expand_mining_operations: 'Expand Mining Operations',
       claim_royal_share: 'Claim the Royal Share',
@@ -123,7 +123,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_black_market: {
     title: 'Shadow Markets Flourish',
-    body: '{spymaster_or_fallback} confirms that an extensive black market has taken root in the capital, trading in untaxed goods, stolen wares, and forbidden imports — the usual blossoming where the legal economy sits in {economic_phase_lc}. The shadow merchants grow bolder by the week, and the legitimate trading houses demand the Crown restore order.',
+    body: '{spymaster_or_fallback} confirms that an extensive black market has taken root in {region}, trading in untaxed goods, stolen wares, and forbidden imports — the usual blossoming where the legal economy sits in {economic_phase_lc}. The shadow merchants grow bolder by the week, and the legitimate trading houses demand the Crown restore order.',
     choices: {
       crack_down_harshly: 'Crack Down with Full Force',
       infiltrate_and_tax: 'Infiltrate and Tax Quietly',
@@ -162,7 +162,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_trade_fair: {
     title: 'Summer Trade Fair',
-    body: 'The warmth of {season} presents an opportunity to host a trade fair in the capital. Merchants from across our lands and beyond would converge upon your gates, bringing goods, coin, and news. The occasion would please the people, though provisioning such a gathering from stores at a {stores_tier} mark is no small matter.',
+    body: 'The warmth of {season} presents an opportunity to host a trade fair in {region}. Merchants from across our lands and beyond would converge upon your gates, bringing goods, coin, and news. The occasion would please the people, though provisioning such a gathering from stores at a {stores_tier} mark is no small matter.',
     choices: {
       host_grand_fair: 'Host a Grand Fair',
       modest_market_day: 'Hold a Modest Market Day',
@@ -175,7 +175,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_toll_road_dispute: {
     title: 'Nobles Block the King\'s Road',
-    body: 'Several noble houses have erected toll gates on roads that merchants must use to reach market. The merchants protest that these private levies strangle trade at a time when the country can least afford it — a year of {economic_phase_lc} — while the nobility insists that road maintenance falls upon those whose lands the routes cross.',
+    body: 'Several noble houses have erected toll gates on roads through {region} that merchants must use to reach market. The merchants protest that these private levies strangle trade at a time when the country can least afford it — a year of {economic_phase_lc} — while the nobility insists that road maintenance falls upon those whose lands the routes cross.',
     choices: {
       abolish_noble_tolls: 'Abolish Noble Tolls',
       regulate_toll_rates: 'Regulate Toll Rates',
@@ -188,7 +188,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_smuggling: {
     title: 'Contraband on the Border',
-    body: '{spymaster_or_fallback} brings reports of organized smuggling rings operating along the Valdris border, moving untaxed goods in both directions while the treasury sits in {treasury_tier} condition. The smugglers bribe local officials and employ armed escorts, making them as much a security concern as a fiscal one.',
+    body: '{spymaster_or_fallback} brings reports of organized smuggling rings operating along the Valdris border in {region}, moving untaxed goods in both directions while the treasury sits in {treasury_tier} condition. The smugglers bribe local officials and employ armed escorts, making them as much a security concern as a fiscal one.',
     choices: {
       deploy_border_patrols: 'Deploy Border Patrols',
       bribe_smuggler_captains: 'Bribe the Smuggler Captains',
@@ -214,7 +214,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_warehouse_fire: {
     title: 'Fire in the Trading Quarter',
-    body: 'A devastating {season} blaze has consumed three warehouses along the harbour, destroying stockpiles of grain, timber, and imported cloth. The merchants affected plead for royal compensation, warning that without it — and with the treasury only in {treasury_tier} condition — they cannot fulfil contracts that keep the capital supplied.',
+    body: 'A devastating {season} blaze has consumed three warehouses along the harbour in {region}, destroying stockpiles of grain, timber, and imported cloth. The merchants affected plead for royal compensation, warning that without it — and with the treasury only in {treasury_tier} condition — they cannot fulfil contracts that keep the capital supplied.',
     choices: {
       fund_full_reconstruction: 'Fund Full Reconstruction',
       compensate_merchants_partially: 'Compensate Partially',
@@ -227,7 +227,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_counterfeit_coins: {
     title: 'False Coin Floods the Realm',
-    body: 'Merchants across the kingdom report a surge of counterfeit silver coins so skillfully forged that only an assayer can tell them from true currency. Trust in the Crown\'s coinage erodes daily — the kind of rot that turns {economic_phase_lc} into collapse — and trade has slowed to a crawl as sellers demand to weigh every coin by hand.',
+    body: 'Merchants across {region} report a surge of counterfeit silver coins so skillfully forged that only an assayer can tell them from true currency. Trust in the Crown\'s coinage erodes daily — the kind of rot that turns {economic_phase_lc} into collapse — and trade has slowed to a crawl as sellers demand to weigh every coin by hand.',
     choices: {
       execute_counterfeiters: 'Execute the Counterfeiters',
       recall_all_coinage: 'Recall All Coinage for Reissue',

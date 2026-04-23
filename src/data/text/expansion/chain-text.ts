@@ -24,7 +24,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_corruption_scandal: {
     title: 'The Great Corruption Scandal',
-    body: 'The full scale of the corruption is now undeniable. Fortunes have been stolen from the crown, trust has been shattered, and the people demand justice. How the crown resolves this will define its legacy.',
+    body: 'The full scale of the corruption is now undeniable. Fortunes have been stolen from the crown, trust has been shattered, and the people demand justice across {region}. How the crown resolves this will define its legacy.',
     choices: {
       public_trial_and_punishment: 'Public Trial and Punishment',
       quiet_exile_of_guilty: 'Quiet Exile of the Guilty',
@@ -37,7 +37,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_drought_spring: {
     title: 'Spring Rains Fail to Come',
-    body: 'The spring rains have not arrived. Wells are drawing low, streams thin to trickles, and farmers eye the cloudless sky with growing dread. If moisture does not come soon, the planting season will be compromised.',
+    body: 'The spring rains have not arrived across {region}. Wells are drawing low, streams thin to trickles, and farmers eye the cloudless sky with growing dread. If moisture does not come soon, the planting season will be compromised.',
     choices: {
       dig_emergency_wells: 'Dig Emergency Wells',
       pray_for_rain: 'Pray for Rain',
@@ -46,7 +46,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_drought_summer: {
     title: 'The Drought Worsens',
-    body: 'Summer has brought no relief. The drought has deepened into crisis as crops wither in the fields and livestock perish at dried-up watering holes. The kingdom faces a stark choice between costly intervention and devastating loss.',
+    body: 'Summer has brought no relief. The drought has deepened into crisis as crops wither in the fields of {region} and livestock perish at dried-up watering holes. The kingdom faces a stark choice between costly intervention and devastating loss.',
     choices: {
       import_water_by_caravan: 'Import Water by Caravan',
       abandon_worst_fields: 'Abandon the Worst Fields',
@@ -55,7 +55,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_drought_autumn: {
     title: 'Famine Looms After the Drought',
-    body: 'The harvest has failed catastrophically. Granaries stand nearly empty, and the spectre of famine haunts the land. Without dramatic action, the coming winter will claim lives on a scale not seen in generations.',
+    body: 'The harvest has failed catastrophically. Granaries across {region} stand nearly empty, and the spectre of famine haunts the land. Without dramatic action, the coming winter will claim lives on a scale not seen in generations.',
     choices: {
       emergency_food_imports: 'Emergency Food Imports',
       strict_rationing: 'Impose Strict Rationing',
@@ -68,7 +68,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_border_war_skirmish: {
     title: 'Border Skirmish with Arenthal',
-    body: 'Armed clashes have erupted along the Arenthal border. Our soldiers report casualties, and the enemy appears to be probing our defenses. This may be a test of our resolve — or the opening move of something larger.',
+    body: 'Armed clashes have erupted along the Arenthal border in {region}. Our soldiers report casualties, and the enemy appears to be probing our defenses. This may be a test of our resolve — or the opening move of something larger.',
     choices: {
       send_diplomats_immediately: 'Send Diplomats Immediately',
       reinforce_border_garrisons: 'Reinforce Border Garrisons',
@@ -86,7 +86,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_border_war_resolution: {
     title: 'The Border Conflict Reaches Its End',
-    body: 'After weeks of tension and bloodshed, the border conflict has reached a decisive moment. Both kingdoms are exhausted, and the outcome now hangs on the crown\'s final decision. Peace or further war — the choice is yours.',
+    body: 'After weeks of tension and bloodshed, the border conflict over {region} has reached a decisive moment. Both kingdoms are exhausted, and the outcome now hangs on the crown\'s final decision. Peace or further war — the choice is yours.',
     choices: {
       negotiate_ceasefire: 'Negotiate a Ceasefire',
       press_advantage: 'Press Our Advantage',
@@ -117,7 +117,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_reformation_doctrine: {
     title: 'The Doctrine Question',
-    body: 'The religious crisis has come to a head. A formal council of clergy and scholars has convened, and they demand the crown\'s endorsement of a doctrinal position. The decision will reshape the kingdom\'s spiritual identity for generations.',
+    body: 'The religious crisis has come to a head in {region}. A formal council of clergy and scholars has convened, and they demand the crown\'s endorsement of a doctrinal position. The decision will reshape the kingdom\'s spiritual identity for generations.',
     choices: {
       adopt_new_doctrine: 'Adopt the New Doctrine',
       reaffirm_tradition: 'Reaffirm Traditional Doctrine',
@@ -148,7 +148,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_guild_rev_shift: {
     title: 'The Power Struggle Climaxes',
-    body: 'The conflict between the traditional nobility and the rising merchant-commoner coalition has reached its breaking point. Streets are tense, trade has slowed, and both sides look to the crown for a final resolution. The kingdom\'s social order hangs in the balance.',
+    body: 'The conflict between the traditional nobility and the rising merchant-commoner coalition has reached its breaking point across {region}. Streets are tense, trade has slowed, and both sides look to the crown for a final resolution. The kingdom\'s social order hangs in the balance.',
     choices: {
       embrace_new_order: 'Embrace the New Order',
       crush_the_movement: 'Crush the Movement',
@@ -222,7 +222,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_rebellion_unrest: {
     title: 'Provincial Unrest Grows',
-    body: 'Reports from the provinces indicate growing discontent. Local leaders complain of neglect, overtaxation, and the capital\'s indifference to regional concerns. The unrest has not yet turned violent, but the trajectory is troubling.',
+    body: 'Reports from {region} indicate growing discontent. Local leaders complain of neglect, overtaxation, and the capital\'s indifference to regional concerns. The unrest has not yet turned violent, but the trajectory is troubling.',
     choices: {
       send_governor_to_negotiate: 'Send a Governor to Negotiate',
       deploy_peacekeeping_force: 'Deploy a Peacekeeping Force',
@@ -231,7 +231,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_rebellion_separatist: {
     title: 'Separatist Movement Emerges',
-    body: 'Provincial discontent has crystallized into an organized separatist movement. Local leaders have formed a council of their own and are collecting taxes independently. If the crown does not act decisively, the movement will only grow stronger.',
+    body: 'Discontent in {region} has crystallized into an organized separatist movement. Local leaders have formed a council of their own and are collecting taxes independently. If the crown does not act decisively, the movement will only grow stronger.',
     choices: {
       grant_limited_autonomy: 'Grant Limited Autonomy',
       martial_law_in_province: 'Impose Martial Law',
@@ -240,7 +240,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_rebellion_crisis: {
     title: 'The Provincial Crisis',
-    body: 'The separatist province has declared itself autonomous and is raising its own militia. Trade with the rest of the kingdom has been severed, and neighboring provinces watch to see whether rebellion will be rewarded or crushed. The crown must act now.',
+    body: 'The separatist province of {region} has declared itself autonomous and is raising its own militia. Trade with the rest of the kingdom has been severed, and neighboring provinces watch to see whether rebellion will be rewarded or crushed. The crown must act now.',
     choices: {
       military_suppression: 'Military Suppression',
       federal_compromise: 'Offer a Federal Compromise',

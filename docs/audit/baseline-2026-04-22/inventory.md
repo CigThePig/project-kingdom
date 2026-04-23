@@ -1,6 +1,6 @@
 # Card Audit — Inventory
 
-Generated 2026-04-22T16:53:13.275Z.
+Generated 2026-04-23T10:38:13.054Z.
 
 ## Totals
 
@@ -8,7 +8,7 @@ Generated 2026-04-22T16:53:13.275Z.
 |---|---:|
 | decrees | 97 |
 | events | 408 |
-| followUps | 202 |
+| followUps | 283 |
 | assessments | 12 |
 | negotiations | 12 |
 | worldEvents | 10 |
@@ -18,8 +18,8 @@ Generated 2026-04-22T16:53:13.275Z.
 
 | family | count |
 |---|---:|
+| crisis | 311 |
 | petition | 231 |
-| crisis | 230 |
 | decree | 97 |
 | notification | 73 |
 | unknown | 65 |
@@ -35,26 +35,26 @@ Generated 2026-04-22T16:53:13.275Z.
 |---|---:|
 | Informational | 145 |
 | Notable | 247 |
-| Serious | 145 |
+| Serious | 226 |
 | Critical | 85 |
 
 ## Events by category
 
 | category | count |
 |---|---:|
-| Economy | 89 |
-| ClassConflict | 68 |
-| PublicOrder | 58 |
-| Military | 56 |
-| Religion | 56 |
-| Diplomacy | 47 |
-| Food | 46 |
-| Kingdom | 39 |
-| Espionage | 35 |
-| Environment | 34 |
-| Culture | 34 |
+| Economy | 100 |
+| ClassConflict | 80 |
+| PublicOrder | 77 |
+| Religion | 67 |
+| Military | 62 |
+| Diplomacy | 49 |
+| Food | 47 |
+| Kingdom | 47 |
+| Espionage | 41 |
+| Culture | 37 |
+| Environment | 35 |
 | Region | 33 |
-| Knowledge | 27 |
+| Knowledge | 28 |
 
 ## Decrees by category
 
@@ -78,14 +78,14 @@ Generated 2026-04-22T16:53:13.275Z.
 ## Pattern C preview
 
 Single-choice cards across all event pools: **72**.
-Total follow-up graph edges: **159**.
+Total follow-up graph edges: **240**.
 
 ## Top 10 files by card count
 
 | file | count |
 |---|---:|
 | src/data/events/index.ts | 212 |
-| src/data/events/expansion/followup-events.ts | 61 |
+| src/data/events/expansion/followup-events.ts | 142 |
 | src/data/decrees/index.ts | 58 |
 | src/data/text/world-pulse.ts | 53 |
 | src/data/cards/court-opportunities.ts | 44 |

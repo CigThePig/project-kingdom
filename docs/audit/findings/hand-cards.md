@@ -2,7 +2,7 @@
 family: hand
 totalCards: 40
 status: pending
-lastScan: 2026-04-23T09:38:56.053Z
+lastScan: 2026-04-23T10:38:09.051Z
 ---
 
 # Hand — Audit findings
@@ -29,6 +29,7 @@ in place but write an outcome — the seeder will keep your edits.
 
 | cardId | choiceId | severity | confidence | scanId | message | outcome | notes |
 |---|---|---|---|---|---|---|---|
-| _(no findings — clean!)_ | | | | | | | |
+| hand_spymasters_whisper | play | MINOR | HEURISTIC | hand.choice-fallback-risk | hand_spymasters_whisper: apply falls through to neighbors[0] when the player hasn't picked a rival — the target choice is effectively cosmetic when any rival exists. |  |  |
+| hand_diplomatic_courier | play | MINOR | HEURISTIC | hand.choice-fallback-risk | hand_diplomatic_courier: apply falls through to neighbors[0] when the player hasn't picked a rival — the target choice is effectively cosmetic when any rival exists. |  |  |
 
 <!-- AUTO-GENERATED:END -->
