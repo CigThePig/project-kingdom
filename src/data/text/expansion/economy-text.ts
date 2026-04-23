@@ -19,7 +19,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_currency_debasement: {
     title: 'The Coin Grows Thin',
-    body: 'The royal mint master presents a grim accounting: with the treasury in {treasury_tier} condition and the realm\'s economy in {economic_phase_lc}, the Crown cannot meet its obligations at the current rate of expenditure. He proposes mixing base metals into the Crown\'s silver coins, a practice that would stretch the mint\'s stocks but risk shattering merchant confidence in the realm\'s currency.',
+    body: 'The royal mint master presents a grim accounting: with the treasury in {treasury_tier} condition and our economy in {economic_phase_lc}, the Crown cannot meet its obligations at the current rate of expenditure. He proposes mixing base metals into the Crown\'s silver coins, a practice that would stretch the mint\'s stocks but risk shattering merchant confidence in our currency.',
     choices: {
       debase_the_coinage: 'Debase the Coinage',
       raise_emergency_tax: 'Raise an Emergency Tax',
@@ -84,7 +84,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_inflation_crisis: {
     title: 'The Price of Everything Rises',
-    body: 'A loaf of bread now costs what a chicken did last {season}. The kingdom\'s currency buys less with each passing week — the economy has tipped into {economic_phase_lc} — and panic buying has emptied market stalls across the realm. {chancellor_or_fallback} warns that without decisive action, trade will collapse entirely.',
+    body: 'A loaf of bread now costs what a chicken did last {season}. The kingdom\'s currency buys less with each passing week — the economy has tipped into {economic_phase_lc} — and panic buying has emptied market stalls across every province. {chancellor_or_fallback} warns that without decisive action, trade will collapse entirely.',
     choices: {
       mint_new_currency: 'Mint an Entirely New Currency',
       freeze_all_prices: 'Freeze All Prices by Decree',
@@ -149,7 +149,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_debt_crisis: {
     title: 'The Crown Cannot Pay',
-    body: '{chancellor_or_fallback} kneels before the throne with an admission that chills the court: with the treasury in {treasury_tier} condition and the realm mired in {economic_phase_lc}, the Crown\'s debts exceed its capacity to repay. Foreign creditors grow impatient, domestic lenders withhold further coin, and the realm teeters on the edge of financial ruin.',
+    body: '{chancellor_or_fallback} kneels before the throne with an admission that chills the court: with the treasury in {treasury_tier} condition and the country mired in {economic_phase_lc}, the Crown\'s debts exceed its capacity to repay. Foreign creditors grow impatient, domestic lenders withhold further coin, and the Crown teeters on the edge of financial ruin.',
     choices: {
       default_on_debts: 'Default on All Debts',
       negotiate_with_creditors: 'Negotiate with Creditors',
@@ -162,7 +162,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_trade_fair: {
     title: 'Summer Trade Fair',
-    body: 'The warmth of {season} presents an opportunity to host a trade fair in the capital. Merchants from across the realm and beyond would converge upon your gates, bringing goods, coin, and news. The occasion would please the people, though provisioning such a gathering from stores at a {stores_tier} mark is no small matter.',
+    body: 'The warmth of {season} presents an opportunity to host a trade fair in the capital. Merchants from across our lands and beyond would converge upon your gates, bringing goods, coin, and news. The occasion would please the people, though provisioning such a gathering from stores at a {stores_tier} mark is no small matter.',
     choices: {
       host_grand_fair: 'Host a Grand Fair',
       modest_market_day: 'Hold a Modest Market Day',
@@ -175,7 +175,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_toll_road_dispute: {
     title: 'Nobles Block the King\'s Road',
-    body: 'Several noble houses have erected toll gates on roads that merchants must use to reach market. The merchants protest that these private levies strangle trade at a time when the realm can least afford it — a year of {economic_phase_lc} — while the nobility insists that road maintenance falls upon those whose lands the routes cross.',
+    body: 'Several noble houses have erected toll gates on roads that merchants must use to reach market. The merchants protest that these private levies strangle trade at a time when the country can least afford it — a year of {economic_phase_lc} — while the nobility insists that road maintenance falls upon those whose lands the routes cross.',
     choices: {
       abolish_noble_tolls: 'Abolish Noble Tolls',
       regulate_toll_rates: 'Regulate Toll Rates',
@@ -201,7 +201,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_artisan_demands: {
     title: 'The Artisans Demand Recognition',
-    body: 'Master craftsmen — weavers, tanners, potters, and carpenters — have united to petition the throne for a formal charter granting them collective rights. They seek fair wages and protection from merchant exploitation, arguing that in this {economic_phase_lc} their labour holds the realm together, but the trading houses warn that guild power will inflate costs for all.',
+    body: 'Master craftsmen — weavers, tanners, potters, and carpenters — have united to petition the throne for a formal charter granting them collective rights. They seek fair wages and protection from merchant exploitation, arguing that in this {economic_phase_lc} their labour holds the country together, but the trading houses warn that guild power will inflate costs for all.',
     choices: {
       grant_guild_charter: 'Grant a Guild Charter',
       offer_tax_relief: 'Offer Tax Relief Instead',

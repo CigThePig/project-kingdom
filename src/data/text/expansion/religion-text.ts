@@ -70,7 +70,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 7. Divine Portent Interpretation ---
   evt_exp_rel_divine_portent: {
     title: 'A Portent in the Heavens',
-    body: 'An unusual celestial event — a comet, an eclipse, or an alignment of stars — has seized the attention of clergy and commoners alike. The faithful demand interpretation, and competing voices within the temple offer starkly different readings of its meaning for the realm.',
+    body: 'An unusual celestial event — a comet, an eclipse, or an alignment of stars — has seized the attention of clergy and commoners alike. The faithful demand interpretation, and competing voices within the temple offer starkly different readings of its meaning for the crown and its people.',
     choices: {
       declare_divine_favor: 'Declare It a Sign of Divine Favor',
       call_for_penance: 'Call for a Season of Penance',
@@ -114,7 +114,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 11. Sacred Site Desecration ---
   evt_exp_rel_sacred_desecration: {
     title: 'Desecration of a Sacred Site',
-    body: 'A holy site of the {faith_tradition}, of great significance to the realm, has been desecrated — its altars defaced, its relics scattered, its sanctity violated. The clergy cry for vengeance, the faithful weep with outrage, and the perpetrators remain unknown. The kingdom\'s response will echo through generations of worship.',
+    body: 'A holy site of the {faith_tradition}, of great significance to our people, has been desecrated — its altars defaced, its relics scattered, its sanctity violated. The clergy cry for vengeance, the faithful weep with outrage, and the perpetrators remain unknown. The kingdom\'s response will echo through generations of worship.',
     choices: {
       hunt_perpetrators: 'Hunt Down the Perpetrators',
       consecrate_and_restore: 'Consecrate and Restore the Site',

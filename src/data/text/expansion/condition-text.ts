@@ -93,7 +93,7 @@ export const CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_cond_plague_severe: {
     title: 'The Great Plague',
-    body: 'Death stalks every corner of the realm. Entire villages have been wiped out, trade has ground to a halt, and the living struggle to bury the dead. Panic and despair threaten to tear apart what the plague does not claim.',
+    body: 'Death stalks every corner of our lands. Entire villages have been wiped out, trade has ground to a halt, and the living struggle to bury the dead. Panic and despair threaten to tear apart what the plague does not claim.',
     choices: {
       seal_the_gates: 'Seal the City Gates',
       mass_exodus: 'Order Mass Exodus to Clean Lands',

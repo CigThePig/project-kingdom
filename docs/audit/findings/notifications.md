@@ -2,7 +2,7 @@
 family: notification
 totalCards: 73
 status: pending
-lastScan: 2026-04-23T01:32:38.216Z
+lastScan: 2026-04-23T09:38:56.053Z
 ---
 
 # Notification — Audit findings
@@ -29,25 +29,6 @@ in place but write an outcome — the seeder will keep your edits.
 
 | cardId | choiceId | severity | confidence | scanId | message | outcome | notes |
 |---|---|---|---|---|---|---|---|
-| evt_commoner_harvest_festival | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_commoner_harvest_festival: body references "granaries/food" but runtime diff shows no matching touch (touches: population.Commoners.satisfaction, faithCulture.faithLevel). |  |  |
-| evt_annual_state_assessment | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_annual_state_assessment: body references "treasury/gold" but runtime diff shows no matching touch (touches: stability.value). |  |  |
-| evt_annual_state_assessment | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_annual_state_assessment: body references "military readiness" but runtime diff shows no matching touch (touches: stability.value). |  |  |
-| evt_grain_import_gratitude | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_grain_import_gratitude: body references "treasury/gold" but runtime diff shows no matching touch (touches: population.Merchants.satisfaction, population.Commoners.satisfaction). |  |  |
-| evt_grain_noble_acceptance | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_grain_noble_acceptance: body references "granaries/food" but runtime diff shows no matching touch (touches: population.Nobility.satisfaction, stability.value). |  |  |
-| evt_border_envoy_success | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_border_envoy_success: body references "rival/neighbor" but runtime diff shows no matching touch (touches: stability.value). |  |  |
-| evt_mutiny_pay_loyalty | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_mutiny_pay_loyalty: body references "treasury/gold" but runtime diff shows no matching touch (touches: population.MilitaryCaste.satisfaction, military.readiness). |  |  |
-| evt_mutiny_reform_desertion | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_mutiny_reform_desertion: body references "faith" but runtime diff shows no matching touch (touches: military.forceSize, military.readiness). |  |  |
-| evt_uprising_reform_progress | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_uprising_reform_progress: body references "treasury/gold" but runtime diff shows no matching touch (touches: population.Commoners.satisfaction, stability.value). |  |  |
-| evt_merchant_tax_satisfied | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_merchant_tax_satisfied: body references "treasury/gold" but runtime diff shows no matching touch (touches: population.Merchants.satisfaction). |  |  |
-| evt_ambassador_alliance_benefit | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_ambassador_alliance_benefit: body references "bond/diplomacy" but runtime diff shows no matching touch (touches: treasury.balance, population.Merchants.satisfaction). |  |  |
-| evt_ambassador_respect | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_ambassador_respect: body references "rival/neighbor" but runtime diff shows no matching touch (touches: population.Nobility.satisfaction, stability.value). |  |  |
-| evt_audit_clean | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_audit_clean: body references "treasury/gold" but runtime diff shows no matching touch (touches: stability.value). |  |  |
-| evt_exp_fu_food_feast_aftermath | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_exp_fu_food_feast_aftermath: body references "granaries/food" but runtime diff shows no matching touch (touches: population.Commoners.satisfaction, stability.value). |  |  |
-| evt_exp_fu_kno_academic_breakthrough | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_exp_fu_kno_academic_breakthrough: body references "rival/neighbor" but runtime diff shows no matching touch (touches: population.Commoners.satisfaction, faithCulture.culturalCohesion). |  |  |
-| evt_social_corruption_resolved | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_social_corruption_resolved: body references "treasury/gold" but runtime diff shows no matching touch (touches: population.Commoners.satisfaction, stability.value). |  |  |
-| evt_social_criminal_resolved | acknowledge | MAJOR | HEURISTIC | text.promise-delivery | evt_social_criminal_resolved: body references "treasury/gold" but runtime diff shows no matching touch (touches: stability.value, espionage.networkStrength). |  |  |
-| evt_infra_road_decay | acknowledge | MAJOR | HEURISTIC | text.scope-mismatch | evt_infra_road_decay: body claims universal class impact ("every class" / "all classes") but runtime diff only touches 1 class path(s). |  |  |
-| evt_plague_recovery | acknowledge | MAJOR | HEURISTIC | text.scope-mismatch | evt_plague_recovery: body claims universal class impact ("every class" / "all classes") but runtime diff only touches 1 class path(s). |  |  |
 | evt_commoner_harvest_festival |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_commoner_harvest_festival: `affectsClass: Commoners` but body does not name the class (no {class} token and no literal "Commonfolk"/"Commoners"). |  |  |
 | evt_grain_ration_compliance |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_grain_ration_compliance: `affectsClass: Commoners` but body does not name the class (no {class} token and no literal "Commonfolk"/"Commoners"). |  |  |
 | evt_schism_orthodox_peace |  | MAJOR | DETERMINISTIC | text.smart-card-coverage | evt_schism_orthodox_peace: `affectsClass: Clergy` but body does not name the class (no {class} token and no literal "Clergy"/"Clergy Members"). |  |  |

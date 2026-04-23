@@ -156,7 +156,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Food Follow-up Text ---
   evt_granary_expansion_complete: {
     title: 'New Granaries Stand Ready',
-    body: 'The granary expansion project has been completed. Sturdy new storage facilities now stand across the kingdom\'s agricultural heartland, greatly increasing the realm\'s capacity to preserve grain through the difficult months ahead.',
+    body: 'The granary expansion project has been completed. Sturdy new storage facilities now stand across the kingdom\'s agricultural heartland, greatly increasing our capacity to preserve grain through the difficult months ahead.',
     choices: {
       stockpile_for_winter: 'Stockpile for Winter',
       share_with_needy_regions: 'Share with Needy Regions',
@@ -252,7 +252,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_popular_unrest: {
     title: 'Popular Unrest Threatens Order',
-    body: 'Deep dissatisfaction among the common population has erupted into open unrest. Crowds gather in marketplaces demanding relief, and several districts report organized resistance to royal authority. The stability of the realm is at stake.',
+    body: 'Deep dissatisfaction among the common population has erupted into open disorder. Crowds gather in marketplaces demanding relief, and several districts report organized resistance to royal authority. Stability itself is at stake.',
     choices: {
       address_grievances_publicly: 'Address Grievances Publicly',
       deploy_peacekeepers: 'Deploy Peacekeepers',
@@ -272,7 +272,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_schism_crisis: {
     title: 'Schism Divides the Faithful',
-    body: 'The growing divide within the kingdom\'s religious community has reached a breaking point. Two factions of the clergy now preach competing doctrines, and the faithful are forced to choose sides. The schism threatens to fracture the spiritual unity that binds the realm.',
+    body: 'The growing divide within the kingdom\'s religious community has reached a breaking point. Two factions of the clergy now preach competing doctrines, and the faithful are forced to choose sides. The schism threatens to fracture the spiritual unity that binds our people.',
     choices: {
       convene_ecclesiastical_council: 'Convene an Ecclesiastical Council',
       enforce_state_doctrine: 'Enforce State Doctrine',
@@ -323,7 +323,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Knowledge (2) ---
   evt_scholarly_breakthrough: {
     title: 'Scholarly Breakthrough Reported',
-    body: 'Scholars in the kingdom\'s institutions report a significant advancement in their field of study. The discovery has practical implications that could benefit the realm, though further investment would be needed to realize its full potential.',
+    body: 'Scholars in the kingdom\'s institutions report a significant advancement in their field of study. The discovery has practical implications that could benefit the crown, though further investment would be needed to realize its full potential.',
     choices: {
       fund_further_research: 'Fund Further Research',
       apply_practical_findings: 'Apply Practical Findings',
@@ -332,7 +332,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_library_fire: {
     title: 'Fire Damages the Royal Library',
-    body: 'A devastating fire has swept through a section of the kingdom\'s principal library. Irreplaceable manuscripts and scholarly works have been lost. The cause remains under investigation, but the damage to the realm\'s accumulated knowledge is severe.',
+    body: 'A devastating fire has swept through a section of the kingdom\'s principal library. Irreplaceable manuscripts and scholarly works have been lost. The cause remains under investigation, but the damage to our accumulated knowledge is severe.',
     choices: {
       launch_restoration_effort: 'Launch Restoration Effort',
       investigate_cause: 'Investigate the Cause',
@@ -390,7 +390,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_kingdom_milestone_celebrated: {
     title: 'Kingdom Milestone Celebrated',
-    body: 'The realm has achieved a period of notable prosperity and stability. The court recommends marking the occasion with a formal recognition, which would reinforce the crown\'s legitimacy and lift the spirits of the populace.',
+    body: 'Our lands have achieved a period of notable prosperity and stability. The court recommends marking the occasion with a formal recognition, which would reinforce the crown\'s legitimacy and lift the spirits of the populace.',
     choices: {
       host_state_celebration: 'Host State Celebration',
       issue_commemorative_decree: 'Issue Commemorative Decree',
@@ -644,7 +644,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // evt_region_local_festival — removed, reclassified as World Pulse (see tension-audit.ts)
   evt_region_resource_discovery: {
     title: 'New Resource Deposit Discovered',
-    body: 'Surveyors have identified a promising new resource deposit in one of the kingdom\'s regions. Preliminary assessment suggests significant extractable wealth, but development will require investment. Several parties express interest in the discovery.',
+    body: 'Surveyors have identified a promising new resource deposit in one of our outlying provinces. Preliminary assessment suggests significant extractable wealth, but development will require investment. Several parties express interest in the discovery.',
     choices: {
       fund_extraction: 'Fund Royal Extraction',
       auction_rights: 'Auction Extraction Rights',
@@ -812,7 +812,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
 
   evt_foreign_grain_dependency: {
     title: 'Kingdom Grows Reliant on Foreign Grain',
-    body: "The emergency grain purchases that averted famine have created an uncomfortable dependency. Merchants from {neighbor} now supply a significant portion of the kingdom's food, and they have begun raising prices at {ruler}'s quiet encouragement. {chancellor_or_fallback} warns that this reliance leaves the realm vulnerable to supply disruptions, trade disputes, or deliberate economic pressure.",
+    body: "The emergency grain purchases that averted the food shortage have created an uncomfortable dependency. Merchants from {neighbor} now supply a significant portion of the kingdom's food, and they have begun raising prices at {ruler}'s quiet encouragement. {chancellor_or_fallback} warns that this reliance leaves the crown vulnerable to supply disruptions, trade disputes, or deliberate economic pressure.",
     choices: {
       invest_in_domestic_agriculture: 'Invest in Domestic Agriculture',
       negotiate_long_term_supply: 'Negotiate a Long-Term Supply Agreement',
@@ -913,7 +913,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_plague_aftermath: {
     title: 'Plague\'s End',
-    body: 'The worst has passed. The contagion has burned through the population and finally subsided, leaving behind empty homes, grieving communities, and a kingdom forever changed. Recovery will be long, but the survivors look to the crown for direction. How the realm rebuilds will define its character for a generation.',
+    body: 'The worst has passed. The contagion has burned through the population and finally subsided, leaving behind empty homes, grieving communities, and a kingdom forever changed. Recovery will be long, but the survivors look to the crown for direction. How the country rebuilds will define its character for a generation.',
     choices: {
       rebuild_and_memorialize: 'Rebuild and Memorialize',
       impose_sanitation_laws: 'Impose Sanitation Laws',
@@ -957,7 +957,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_succession_question: {
     title: 'The Succession Question',
-    body: 'Whispers about the line of succession have begun circulating through the court and beyond. The matter of who will inherit the crown — long considered settled — is now the subject of quiet debate among the nobility. Left unaddressed, the uncertainty will erode confidence in the stability of the realm.',
+    body: 'Whispers about the line of succession have begun circulating through the court and beyond. The matter of who will inherit the crown — long considered settled — is now the subject of quiet debate among the nobility. Left unaddressed, the uncertainty will erode confidence in the crown itself.',
     choices: {
       declare_heir: 'Declare the Heir Publicly',
       convene_council: 'Convene a Royal Council',
@@ -975,7 +975,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_succession_resolution: {
     title: 'Succession Decided',
-    body: 'The matter of the succession can no longer be deferred. The factions have hardened, alliances have been struck, and the kingdom demands certainty. The crown must render a final judgment that will either unite the realm behind a recognized heir or leave wounds that fester for a generation.',
+    body: 'The matter of the succession can no longer be deferred. The factions have hardened, alliances have been struck, and the kingdom demands certainty. The crown must render a final judgment that will either unite our people behind a recognized heir or leave wounds that fester for a generation.',
     choices: {
       crown_heir_publicly: 'Crown the Heir Publicly',
       exile_rivals: 'Exile Rival Claimants',
@@ -1006,7 +1006,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_famine_recovery: {
     title: 'The Lean Season Ends',
-    body: 'Food has returned to the markets, and the specter of starvation recedes. The kingdom survived, but at great cost — weakened bodies, depleted reserves, and a populace that will not soon forget. The decisions made now will determine whether the realm emerges stronger or merely staggers into the next crisis.',
+    body: 'Food has returned to the markets, and the lean season recedes. The kingdom survived, but at great cost — weakened bodies, depleted reserves, and a populace that will not soon forget. The decisions made now will determine whether our people emerge stronger or merely stagger into the next crisis.',
     choices: {
       invest_in_agriculture: 'Invest in Agriculture',
       establish_grain_reserves: 'Establish Grain Reserves',
@@ -1037,7 +1037,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_schism_resolution: {
     title: 'Religious Settlement',
-    body: 'The religious divide has reached a point where resolution — or at least management — is no longer optional. Both factions have entrenched positions, but the strain on the kingdom\'s spiritual cohesion is unsustainable. A path forward exists, though every option carries consequence for the realm\'s faith and unity.',
+    body: 'The religious divide has reached a point where resolution — or at least management — is no longer optional. Both factions have entrenched positions, but the strain on the kingdom\'s spiritual cohesion is unsustainable. A path forward exists, though every option carries consequence for our faith and unity.',
     choices: {
       declare_unified_doctrine: 'Declare Unified Doctrine',
       formalize_tolerance: 'Formalize Religious Tolerance',
@@ -1081,7 +1081,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_golden_age_opportunity: {
     title: 'A Golden Opportunity',
-    body: 'A rare alignment of prosperity and stability has presented the kingdom with an extraordinary opportunity. The treasury is healthy, the people are content, and the realm is at peace. Advisors counsel that this moment — fleeting by nature — should be seized to invest in the kingdom\'s lasting greatness.',
+    body: 'A rare alignment of prosperity and stability has presented the kingdom with an extraordinary opportunity. The treasury is healthy, the people are content, and the country is at peace. Advisors counsel that this moment — fleeting by nature — should be seized to invest in the kingdom\'s lasting greatness.',
     choices: {
       patron_arts_sciences: 'Patronize Arts and Sciences',
       host_grand_festival: 'Host a Grand Festival',
@@ -1099,7 +1099,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_foreign_invasion_rumor: {
     title: 'Armies on the Horizon',
-    body: "{marshal_or_fallback} reports unusual troop movements from {neighbor}. The scale and direction of {ruler}'s mobilization suggest preparations for an incursion into the realm's territory. Whether this is genuine preparation for war or a calculated display of force remains uncertain, but the threat cannot be ignored.",
+    body: "{marshal_or_fallback} reports unusual troop movements from {neighbor}. The scale and direction of {ruler}'s mobilization suggest preparations for an incursion into our territory. Whether this is genuine preparation for war or a calculated display of force remains uncertain, but the threat cannot be ignored.",
     choices: {
       mobilize_defenses: 'Mobilize the Defenses',
       dispatch_scouts: 'Dispatch Forward Scouts',
@@ -1146,7 +1146,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_infra_road_decay: {
     title: 'Roads Deteriorate Further',
-    body: 'Without maintenance funds, the kingdom\'s roads have continued their steady decline. Merchant caravans report longer journey times, broken axles, and increased losses to spoilage. Trade revenue has begun to slip as commerce flows more slowly through the realm.',
+    body: 'Without maintenance funds, the kingdom\'s roads have continued their steady decline. Merchant caravans report longer journey times, broken axles, and increased losses to spoilage. Trade revenue has begun to slip as commerce flows more slowly through the provinces.',
     choices: {
       acknowledge: 'Acknowledged',
     },
@@ -1306,7 +1306,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_schism_underground_worship: {
     title: 'Underground Worship Cells Discovered',
-    body: 'The suppression of all religious factions has driven worship underground. Secret gatherings have been discovered in cellars, barns, and forest clearings. The worshippers come from all classes — commoners, merchants, even minor nobles — united by their refusal to abandon their faith simply because the crown demanded it.',
+    body: 'The suppression of every religious faction has driven worship underground. Secret gatherings have been discovered in cellars, barns, and forest clearings. The worshippers come from every station — commoners, merchants, even minor nobles — united by their refusal to abandon their faith simply because the crown demanded it.',
     choices: {
       tolerate_quietly: 'Tolerate Quietly',
       crack_down: 'Crack Down',
@@ -1395,7 +1395,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_plague_bankruptcy: {
     title: 'Treasury Depleted by Plague Response',
-    body: 'The cost of treating the entire kingdom has emptied the treasury. The plague is receding, but the financial crisis is just beginning. The crown cannot pay its soldiers, maintain its roads, or fund any of the kingdom\'s essential services. Saving lives has bankrupted the realm.',
+    body: 'The cost of treating the entire kingdom has emptied the treasury. The plague is receding, but the financial crisis is just beginning. The crown cannot pay its soldiers, maintain its roads, or fund any of the kingdom\'s essential services. Saving lives has bankrupted the crown.',
     choices: {
       emergency_loans: 'Seek Emergency Loans',
       slash_all_spending: 'Slash All Spending',

@@ -138,7 +138,7 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_social_criminal_severe: {
     title: 'A Kingdom Beneath the Kingdom',
-    body: 'The syndicates no longer skulk in shadow — they parade through the docks with their own sigils. Customs officers answer to their paymasters before the crown, judges find silver pressed into their palms before verdicts are rendered, and whole harbors run on smuggled tonnage. The realm has, in all but name, a second sovereign.',
+    body: 'The syndicates no longer skulk in shadow — they parade through the docks with their own sigils. Customs officers answer to their paymasters before the crown, judges find silver pressed into their palms before verdicts are rendered, and whole harbors run on smuggled tonnage. The kingdom has, in all but name, a second sovereign.',
     choices: {
       martial_purge: 'Order a Martial Purge',
       bribe_the_bosses: 'Buy the Bosses\' Cooperation',

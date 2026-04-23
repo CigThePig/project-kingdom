@@ -64,7 +64,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_earthquake: {
     title: 'Earthquake Strikes the Kingdom',
-    body: 'The earth itself has turned against the crown this {season}. A powerful tremor has shaken the kingdom, collapsing walls, cracking foundations, and sending citizens fleeing into the streets. Reports of casualties and structural damage pour in from every quarter — with the treasury in {treasury_tier} condition, the reconstruction will test the realm.',
+    body: 'The earth itself has turned against the crown this {season}. A powerful tremor has shaken the kingdom, collapsing walls, cracking foundations, and sending citizens fleeing into the streets. Reports of casualties and structural damage pour in from every quarter — with the treasury in {treasury_tier} condition, the reconstruction will test the Crown.',
     choices: {
       launch_rescue_operations: 'Launch Rescue Operations',
       prioritize_infrastructure: 'Prioritize Infrastructure Repair',
@@ -100,7 +100,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_great_storm: {
     title: 'The Great Storm',
-    body: 'A storm of unprecedented fury has struck the kingdom in the midst of {season}. Howling winds tear roofs from buildings, torrential rain floods valleys, and lightning ignites fires across the countryside. This is no ordinary tempest — with stores at a {stores_tier} mark and the treasury in {treasury_tier} condition, it threatens the very fabric of the realm.',
+    body: 'A storm of unprecedented fury has struck the kingdom in the midst of {season}. Howling winds tear roofs from buildings, torrential rain floods valleys, and lightning ignites fires across the countryside. This is no ordinary tempest — with stores at a {stores_tier} mark and the treasury in {treasury_tier} condition, it threatens the very fabric of our commonwealth.',
     choices: {
       emergency_fortification: 'Emergency Fortification',
       distribute_emergency_supplies: 'Distribute Emergency Supplies',
