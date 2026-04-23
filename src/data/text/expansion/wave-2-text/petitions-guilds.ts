@@ -37,7 +37,7 @@ export const EXPANSION_WAVE_2_PETITIONS_GUILD_TEXT: Record<string, EventTextEntr
   },
   faction_req_w2_millers_tax_relief: {
     title: 'The Millers Beg Tax Relief',
-    body: "The millers' league petitions {chancellor_or_fallback} for relief from the mill tax, arguing that with the weight of the levy they cannot afford to keep the stones turning. Villagers are already carrying grain to rival mills across the border.",
+    body: "The millers' league petitions {chancellor_or_fallback} for relief from the mill tax, arguing that with the weight of the levy they cannot afford to keep the stones turning. Villagers are already carrying grain to competing mills across the border.",
     choices: {
       grant_millers_relief: 'Grant the Relief',
       maintain_the_mill_tax: 'Maintain the Mill Tax',
@@ -45,7 +45,7 @@ export const EXPANSION_WAVE_2_PETITIONS_GUILD_TEXT: Record<string, EventTextEntr
   },
   faction_req_w2_goldsmiths_seal: {
     title: 'The Goldsmiths Ask for a Royal Seal',
-    body: "The goldsmiths' guild has presented {chancellor_or_fallback} a request for a royal seal — effectively a monopoly on assay — in exchange for an annual tribute. Rival smiths in lesser cities will be ruined; the Crown's purse will fatten.",
+    body: "The goldsmiths' guild has presented {chancellor_or_fallback} a request for a royal seal — effectively a monopoly on assay — in exchange for an annual tribute. Lesser smiths in outlying cities will be ruined; the Crown's purse will fatten.",
     choices: {
       grant_the_goldsmith_seal: 'Grant the Seal',
       refuse_monopoly: 'Refuse the Monopoly',

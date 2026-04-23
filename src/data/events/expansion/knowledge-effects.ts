@@ -48,12 +48,14 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
       militaryReadinessDelta: +4,
       commonerSatDelta: -3,
       stabilityDelta: -2,
+      faithDelta: -2,
     },
     restrict_to_civilian_use: {
       treasuryDelta: -40,
       regionDevelopmentDelta: +4,
       commonerSatDelta: +3,
       militaryCasteSatDelta: -2,
+      faithDelta: -1,
     },
     suppress_findings: {
       stabilityDelta: +2,
@@ -163,6 +165,7 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
     shelve_plans: {
       commonerSatDelta: -1,
       clergySatDelta: +1,
+      regionConditionDelta: -1,
     },
   },
 
@@ -176,18 +179,21 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
       commonerSatDelta: +5,
       stabilityDelta: +3,
       clergySatDelta: -2,
+      heterodoxyDelta: +2,
     },
     test_on_volunteers: {
       treasuryDelta: -25,
       commonerSatDelta: +2,
       stabilityDelta: +1,
       foodDelta: +5,
+      heterodoxyDelta: +1,
     },
     dismiss_as_quackery: {
       clergySatDelta: +2,
       commonerSatDelta: -3,
       stabilityDelta: -2,
       treasuryDelta: -5,
+      faithDelta: +1,
     },
   },
 
@@ -309,6 +315,7 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
     defer_to_next_season: {
       clergySatDelta: -1,
       stabilityDelta: +1,
+      faithDelta: -1,
     },
   },
 
@@ -365,6 +372,7 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
       nobilitySatDelta: +3,
       clergySatDelta: -2,
       stabilityDelta: +1,
+      faithDelta: -1,
     },
     place_in_public_archive: {
       commonerSatDelta: +2,

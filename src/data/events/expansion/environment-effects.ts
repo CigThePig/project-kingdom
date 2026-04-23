@@ -51,7 +51,7 @@ export const EXPANSION_ENVIRONMENT_EFFECTS: Record<string, Record<string, Mechan
   },
   evt_exp_env_deforestation_crisis: {
     establish_royal_forest_reserves: { treasuryDelta: -30, commonerSatDelta: -2, regionConditionDelta: +5, culturalCohesionDelta: +2 },
-    tax_lumber_operations:           { treasuryDelta: +30, merchantSatDelta: -3, commonerSatDelta: -2 },
+    tax_lumber_operations:           { treasuryDelta: +30, merchantSatDelta: -3, commonerSatDelta: -2, regionConditionDelta: +1 },
     allow_continued_clearing:        { regionConditionDelta: -5, foodDelta: +10, commonerSatDelta: -1 },
   },
   evt_exp_env_coastal_erosion: {

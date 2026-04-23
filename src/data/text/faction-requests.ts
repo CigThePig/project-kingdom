@@ -45,7 +45,7 @@ export const FACTION_REQUEST_TEXT: Record<string, EventTextEntry> = {
   },
   faction_req_clergy_temple_funding: {
     title: 'Request for Temple Restoration',
-    body: 'The clergy requests crown funding for the restoration of aging temples and the construction of new shrines in underserved regions. The investment would strengthen the faith\'s presence and improve clerical morale, though the treasury would bear the cost.',
+    body: 'The clergy requests crown funding for the restoration of aging temples and the raising of new shrines in underserved regions. The investment would strengthen the faith\'s presence and improve clerical morale, though the treasury would bear the cost.',
     choices: {
       approve_temple_funding: 'Approve Temple Funding',
       deny_temple_funding: 'Deny the Request',

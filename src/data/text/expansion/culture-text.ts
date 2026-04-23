@@ -14,7 +14,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 2. Monument Foundation (Notable, developing) ---
   evt_exp_cul_monument_foundation: {
     title: 'Proposal for a Great Monument',
-    body: 'The master builders have presented plans for a monument to commemorate the kingdom\'s founding lineage. The design ranges from a towering granite obelisk to a modest stone memorial, each carrying different implications for the treasury and the realm\'s cultural standing.',
+    body: 'The master masons have presented plans for a monument to commemorate the kingdom\'s founding lineage. The design ranges from a towering granite obelisk to a modest stone memorial, each carrying different implications for the treasury and the realm\'s cultural standing.',
     choices: {
       commission_grand_monument: 'Commission a Grand Monument',
       build_modest_memorial: 'Build a Modest Memorial',

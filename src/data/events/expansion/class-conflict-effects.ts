@@ -15,8 +15,8 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // ============================================================
   evt_exp_cc_usury_accusation: {
     enforce_usury_laws:        { clergySatDelta: +4, merchantSatDelta: -3, treasuryDelta: -20, faithDelta: +2 },
-    protect_lending_practices: { merchantSatDelta: +4, clergySatDelta: -3, treasuryDelta: +25 },
-    appoint_arbitration_panel: { clergySatDelta: +1, merchantSatDelta: +1, treasuryDelta: -15, stabilityDelta: +2 },
+    protect_lending_practices: { merchantSatDelta: +4, clergySatDelta: -3, treasuryDelta: +25, heterodoxyDelta: +2 },
+    appoint_arbitration_panel: { clergySatDelta: +1, merchantSatDelta: +1, treasuryDelta: -15, stabilityDelta: +2, faithDelta: -1 },
   },
 
   // ============================================================
@@ -60,7 +60,7 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   evt_exp_cc_clerical_overreach: {
     limit_church_holdings:    { clergySatDelta: -5, commonerSatDelta: +4, nobilitySatDelta: +2, faithDelta: -3 },
     sanction_expanded_tithes: { clergySatDelta: +5, commonerSatDelta: -4, faithDelta: +3, treasuryDelta: -30 },
-    negotiate_boundaries:     { clergySatDelta: +1, commonerSatDelta: +1, treasuryDelta: -15, stabilityDelta: +2 },
+    negotiate_boundaries:     { clergySatDelta: +1, commonerSatDelta: +1, treasuryDelta: -15, stabilityDelta: +2, faithDelta: -1 },
   },
 
   // ============================================================
@@ -76,9 +76,9 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // 9. Social Mobility Demands (Critical: -120/+80, -6/+8 sat)
   // ============================================================
   evt_exp_cc_social_mobility_demands: {
-    open_ranks_to_merit:       { commonerSatDelta: +8, nobilitySatDelta: -6, clergySatDelta: -3, treasuryDelta: -60, stabilityDelta: +4, regionDevelopmentDelta: +3 },
-    create_advancement_paths:  { commonerSatDelta: +5, nobilitySatDelta: -3, treasuryDelta: -40, stabilityDelta: +2, regionDevelopmentDelta: +2 },
-    reaffirm_social_order:     { nobilitySatDelta: +4, clergySatDelta: +2, commonerSatDelta: -7, stabilityDelta: -5, regionConditionDelta: -2 },
+    open_ranks_to_merit:       { commonerSatDelta: +8, nobilitySatDelta: -6, clergySatDelta: -3, treasuryDelta: -60, stabilityDelta: +4, regionDevelopmentDelta: +3, heterodoxyDelta: +3 },
+    create_advancement_paths:  { commonerSatDelta: +5, nobilitySatDelta: -3, treasuryDelta: -40, stabilityDelta: +2, regionDevelopmentDelta: +2, heterodoxyDelta: +1 },
+    reaffirm_social_order:     { nobilitySatDelta: +4, clergySatDelta: +2, commonerSatDelta: -7, stabilityDelta: -5, regionConditionDelta: -2, faithDelta: +2 },
   },
 
   // ============================================================
@@ -103,9 +103,9 @@ export const EXPANSION_CLASS_CONFLICT_EFFECTS: Record<string, Record<string, Mec
   // 12. Labor Rights (Notable: -50/+40, -3/+5 sat)
   // ============================================================
   evt_exp_cc_labor_rights: {
-    grant_labor_protections:  { commonerSatDelta: +5, merchantSatDelta: -3, nobilitySatDelta: -2, treasuryDelta: -25 },
-    enforce_work_obligations: { nobilitySatDelta: +3, merchantSatDelta: +2, commonerSatDelta: -4, stabilityDelta: -2 },
-    defer_to_local_lords:     { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1 },
+    grant_labor_protections:  { commonerSatDelta: +5, merchantSatDelta: -3, nobilitySatDelta: -2, treasuryDelta: -25, faithDelta: +1 },
+    enforce_work_obligations: { nobilitySatDelta: +3, merchantSatDelta: +2, commonerSatDelta: -4, stabilityDelta: -2, faithDelta: -2 },
+    defer_to_local_lords:     { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1, faithDelta: -1 },
   },
 
   // ============================================================

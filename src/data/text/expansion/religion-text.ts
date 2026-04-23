@@ -92,7 +92,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 9. Religious Holiday Observance ---
   evt_exp_rel_holiday_observance: {
     title: 'The Great Winter Observance',
-    body: 'The principal holiday of the {faith_tradition} approaches with the deep of {season}. The clergy petition for crown sponsorship of the sacred rites, arguing that visible royal piety strengthens the bond between throne and altar. Others suggest a treasury in {treasury_tier} condition can ill afford elaborate ceremony.',
+    body: 'The principal holiday of the {faith_tradition} approaches with the deep of {season}. The clergy petition for crown sponsorship of the sacred rites, arguing that visible royal piety strengthens the tie between throne and altar. Others suggest a treasury in {treasury_tier} condition can ill afford elaborate ceremony.',
     choices: {
       crown_sponsored_rites: 'Sponsor the Sacred Rites',
       permit_observance: 'Permit Simple Observance',
@@ -103,7 +103,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 10. Monastery Funding ---
   evt_exp_rel_monastery_funding: {
     title: 'A Monastery Seeks the Crown\'s Aid',
-    body: 'The abbot of an ancient and respected monastery of the {faith_tradition} has appealed to the crown for financial support. The monastery\'s scriptorium preserves invaluable texts, and its monks provide charity to the surrounding province, yet its coffers have run dry and its walls crumble — much like a treasury now in {treasury_tier} condition.',
+    body: 'The abbot of an ancient and respected monastery of the {faith_tradition} has appealed to the crown for financial support. The monastery\'s scriptorium preserves invaluable texts, and its monks provide charity to the surrounding province, yet its coffers have run dry and its stonework erodes — much like a treasury now in {treasury_tier} condition.',
     choices: {
       generous_endowment: 'Grant a Generous Endowment',
       conditional_funding: 'Provide Conditional Funding',

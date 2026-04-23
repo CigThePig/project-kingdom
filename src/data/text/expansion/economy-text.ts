@@ -97,7 +97,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_luxury_trade: {
     title: 'Silks and Spices from Arenthal',
-    body: 'Arenthal\'s envoy presents a catalogue of fine goods available for import: Tyrian silks, exotic spices, and master-crafted jewelry. The nobility clamors for such refinements, though {chancellor_or_fallback} warns that with the treasury only in {treasury_tier} condition, coin spent on luxuries does not return as bread.',
+    body: 'A merchant delegation from Arenthal presents a catalogue of fine goods available for import: Tyrian silks, exotic spices, and master-crafted jewelry. The nobility clamors for such refinements, though {chancellor_or_fallback} warns that with the treasury only in {treasury_tier} condition, coin spent on luxuries does not return as bread.',
     choices: {
       open_luxury_imports: 'Open Luxury Imports',
       tax_luxury_goods_heavily: 'Tax Luxury Goods Heavily',

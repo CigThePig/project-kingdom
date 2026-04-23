@@ -95,9 +95,9 @@ export const EXPANSION_PUBLIC_ORDER_EFFECTS: Record<string, Record<string, Mecha
   // 11. Public Drunkenness Epidemic — Informational
   // ============================================================
   evt_exp_po_drunkenness: {
-    regulate_taverns:            { treasuryDelta: +15, stabilityDelta: +2, commonerSatDelta: -2, merchantSatDelta: -1, foodDelta: +2 },
+    regulate_taverns:            { treasuryDelta: +15, stabilityDelta: +2, commonerSatDelta: -2, merchantSatDelta: -1, foodDelta: +2, faithDelta: +1 },
     clergy_temperance_campaign:  { stabilityDelta: +1, faithDelta: +3, commonerSatDelta: -1, clergySatDelta: +2, foodDelta: +2 },
-    leave_it_be:                 { stabilityDelta: -1, commonerSatDelta: +1, foodDelta: -3 },
+    leave_it_be:                 { stabilityDelta: -1, commonerSatDelta: +1, foodDelta: -3, faithDelta: -1 },
   },
 
   // ============================================================
@@ -114,8 +114,8 @@ export const EXPANSION_PUBLIC_ORDER_EFFECTS: Record<string, Record<string, Mecha
   // ============================================================
   evt_exp_po_vagrancy: {
     establish_poorhouses:  { treasuryDelta: -15, stabilityDelta: +2, commonerSatDelta: +3, faithDelta: +1 },
-    conscript_vagrants:    { stabilityDelta: +1, militaryForceSizeDelta: +2, commonerSatDelta: -2, clergySatDelta: -1 },
-    ignore_the_problem:    { stabilityDelta: -1, commonerSatDelta: -1 },
+    conscript_vagrants:    { stabilityDelta: +1, militaryForceSizeDelta: +2, commonerSatDelta: -2, clergySatDelta: -1, faithDelta: -1 },
+    ignore_the_problem:    { stabilityDelta: -1, commonerSatDelta: -1, faithDelta: -1 },
   },
 
   // ============================================================

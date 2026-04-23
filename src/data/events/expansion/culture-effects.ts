@@ -161,7 +161,7 @@ export const EXPANSION_CULTURE_EFFECTS: Record<string, Record<string, Mechanical
     send_cultural_delegation: {
       culturalCohesionDelta: +3,
       treasuryDelta: -35,
-      diplomacyDeltas: { empire_south: +8 },
+      diplomacyDeltas: { neighbor_arenthal: +8 },
       nobilitySatDelta: +2,
     },
     invite_foreign_scholars: {
@@ -172,7 +172,7 @@ export const EXPANSION_CULTURE_EFFECTS: Record<string, Record<string, Mechanical
     },
     politely_postpone: {
       culturalCohesionDelta: -1,
-      diplomacyDeltas: { empire_south: -3 },
+      diplomacyDeltas: { neighbor_arenthal: -3 },
     },
   },
 
@@ -321,7 +321,7 @@ export const EXPANSION_CULTURE_EFFECTS: Record<string, Record<string, Mechanical
       stabilityDelta: +4,
       commonerSatDelta: +4,
       merchantSatDelta: -5,
-      diplomacyDeltas: { rival_north: -10 },
+      diplomacyDeltas: { neighbor_valdris: -10 },
     },
     forge_new_cultural_synthesis: {
       culturalCohesionDelta: +3,
@@ -329,7 +329,7 @@ export const EXPANSION_CULTURE_EFFECTS: Record<string, Record<string, Mechanical
       merchantSatDelta: +4,
       commonerSatDelta: -3,
       stabilityDelta: +2,
-      diplomacyDeltas: { rival_north: +5 },
+      diplomacyDeltas: { neighbor_valdris: +5 },
     },
     allow_regional_autonomy: {
       culturalCohesionDelta: -4,

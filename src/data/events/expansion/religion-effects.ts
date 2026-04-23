@@ -26,7 +26,7 @@ export const EXPANSION_RELIGION_EFFECTS: Record<string, Record<string, Mechanica
   evt_exp_rel_temple_construction: {
     fund_grand_temple:         { treasuryDelta: -50, faithDelta: +5, clergySatDelta: +5, commonerSatDelta: +2, regionDevelopmentDelta: +4, heterodoxyDelta: -3 },
     modest_chapel:             { treasuryDelta: -20, faithDelta: +3, clergySatDelta: +2, regionDevelopmentDelta: +2 },
-    decline_construction:      { clergySatDelta: -4, faithDelta: -2, commonerSatDelta: -1, treasuryDelta: +5 },
+    decline_construction:      { clergySatDelta: -4, faithDelta: -2, commonerSatDelta: -1, treasuryDelta: +5, regionConditionDelta: -1 },
   },
 
   // --- 5. Interfaith Dialogue (Notable: -50/+40, -3/+5 sat) ---

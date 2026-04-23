@@ -95,9 +95,9 @@ export const EXPANSION_ECONOMY_EFFECTS: Record<string, Record<string, Mechanical
   // 11. Banking Innovation — Notable
   // ============================================================
   evt_exp_eco_banking_innovation: {
-    charter_royal_bank:     { treasuryDelta: -50, merchantSatDelta: +4, stabilityDelta: +3, nobilitySatDelta: -3, commonerSatDelta: +1 },
-    license_private_banks:  { treasuryDelta: +20, merchantSatDelta: +5, nobilitySatDelta: -2, clergySatDelta: -2, stabilityDelta: +1 },
-    forbid_lending_houses:  { clergySatDelta: +2, merchantSatDelta: -4, treasuryDelta: -10, stabilityDelta: -1 },
+    charter_royal_bank:     { treasuryDelta: -50, merchantSatDelta: +4, stabilityDelta: +3, nobilitySatDelta: -3, commonerSatDelta: +1, faithDelta: -1 },
+    license_private_banks:  { treasuryDelta: +20, merchantSatDelta: +5, nobilitySatDelta: -2, clergySatDelta: -2, stabilityDelta: +1, faithDelta: -2 },
+    forbid_lending_houses:  { clergySatDelta: +2, merchantSatDelta: -4, treasuryDelta: -10, stabilityDelta: -1, faithDelta: +2 },
   },
 
   // ============================================================
