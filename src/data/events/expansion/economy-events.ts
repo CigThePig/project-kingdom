@@ -201,9 +201,13 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
       { choiceId: 'allow_free_market_correction', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'freeze_all_prices', followUpDefinitionId: 'evt_fu_price_freeze_shortages', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'allow_free_market_correction', followUpDefinitionId: 'evt_fu_market_crash_bread_riots', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -505,8 +509,12 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
       { choiceId: 'issue_royal_stamps', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Merchants,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'opening',
+    followUpEvents: [
+      { triggerChoiceId: 'execute_counterfeiters', followUpDefinitionId: 'evt_fu_counterfeit_underground_revenge', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'issue_royal_stamps', followUpDefinitionId: 'evt_fu_royal_stamp_fraud', delayTurns: 4, probability: 0.6 },
+    ],
   },
 ];

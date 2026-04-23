@@ -247,6 +247,7 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
       clergySatDelta: -4,
       heterodoxyDelta: +5,
       stabilityDelta: -3,
+      regionDevelopmentDelta: +3,
     },
     restrict_to_crown: {
       treasuryDelta: -60,
@@ -255,6 +256,7 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
       clergySatDelta: +2,
       commonerSatDelta: -3,
       culturalCohesionDelta: +2,
+      regionDevelopmentDelta: +1,
     },
     ban_device: {
       faithDelta: +3,
@@ -262,6 +264,7 @@ export const EXPANSION_KNOWLEDGE_EFFECTS: Record<string, Record<string, Mechanic
       commonerSatDelta: -5,
       merchantSatDelta: -4,
       culturalCohesionDelta: -4,
+      regionConditionDelta: -1,
       stabilityDelta: +2,
     },
   },

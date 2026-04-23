@@ -484,9 +484,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'impose_curfew', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'deploy_peacekeepers', followUpDefinitionId: 'evt_fu_peacekeeper_overreach', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'impose_curfew', followUpDefinitionId: 'evt_fu_curfew_mass_defiance', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -533,9 +537,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'allow_coexistence', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Clergy,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'enforce_state_doctrine', followUpDefinitionId: 'evt_fu_doctrine_enforcement_blowback', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'allow_coexistence', followUpDefinitionId: 'evt_fu_coexistence_fractures', delayTurns: 4, probability: 0.6 },
+    ],
   },
 
   // ============================================================
@@ -1499,9 +1507,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'appeal_for_calm', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'seize_noble_granaries', followUpDefinitionId: 'evt_fu_seized_granaries_noble_revolt', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'appeal_for_calm', followUpDefinitionId: 'evt_fu_famine_descends_into_riot', delayTurns: 2, probability: 0.8 },
+    ],
   },
   {
     id: 'evt_escalation_treasury_crisis',
@@ -1521,9 +1533,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'suspend_non_essential_spending', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'demand_noble_contributions', followUpDefinitionId: 'evt_fu_noble_contribution_resistance', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'suspend_non_essential_spending', followUpDefinitionId: 'evt_fu_neglected_works_collapse', delayTurns: 4, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_escalation_faith_collapse',
@@ -1543,9 +1559,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'embrace_pluralism', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Clergy,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'impose_state_religion', followUpDefinitionId: 'evt_fu_state_religion_persecution', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'embrace_pluralism', followUpDefinitionId: 'evt_fu_pluralism_splinter_sects', delayTurns: 4, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_escalation_military_mutiny',
@@ -1565,9 +1585,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'negotiate_with_officers', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.MilitaryCaste,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'isolate_ringleaders', followUpDefinitionId: 'evt_fu_ringleader_martyrs', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'negotiate_with_officers', followUpDefinitionId: 'evt_fu_officer_cabal', delayTurns: 4, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_escalation_noble_conspiracy',
@@ -1587,9 +1611,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'plant_double_agents', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Nobility,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'preemptive_arrests', followUpDefinitionId: 'evt_fu_arrests_purge_pushback', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'plant_double_agents', followUpDefinitionId: 'evt_fu_double_agent_compromised', delayTurns: 4, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_escalation_mass_exodus',
@@ -1609,9 +1637,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'let_dissenters_leave', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'close_borders', followUpDefinitionId: 'evt_fu_closed_border_smuggling', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'let_dissenters_leave', followUpDefinitionId: 'evt_fu_exodus_brain_drain', delayTurns: 4, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -1976,9 +2008,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'announce_labor_reforms', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'deploy_military_patrols', followUpDefinitionId: 'evt_fu_patrol_brutality_complaint', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'announce_labor_reforms', followUpDefinitionId: 'evt_fu_labor_reform_backlash', delayTurns: 4, probability: 0.5 },
+    ],
   },
   {
     id: 'evt_clergy_power_grab',
@@ -2020,9 +2056,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'address_grievances', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.MilitaryCaste,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'purge_conspirators', followUpDefinitionId: 'evt_fu_purge_officer_shortage', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'bribe_officer_corps', followUpDefinitionId: 'evt_fu_bribed_officers_ask_more', delayTurns: 4, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -2205,9 +2245,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'play_factions', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'play_factions', followUpDefinitionId: 'evt_fu_succession_factions_war', delayTurns: 3, probability: 0.8 },
+      { triggerChoiceId: 'support_merit_candidate', followUpDefinitionId: 'evt_fu_merit_heir_noble_backlash', delayTurns: 3, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_succession_resolution',
@@ -2273,9 +2317,12 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'appeal_to_neighbors', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'commandeer_noble_stores', followUpDefinitionId: 'evt_fu_commandeered_stores_noble_strike', delayTurns: 3, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_famine_recovery',
@@ -2420,9 +2467,13 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'show_mercy', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'purge_inner_circle', followUpDefinitionId: 'evt_fu_purge_court_paralysis', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'show_mercy', followUpDefinitionId: 'evt_fu_mercy_emboldens_plot', delayTurns: 4, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_foreign_invasion_rumor',
@@ -2569,7 +2620,7 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'open_royal_stores', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     followUpEvents: [
@@ -2668,7 +2719,7 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'execute_ringleaders', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.MilitaryCaste,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     followUpEvents: [
@@ -2732,7 +2783,7 @@ export const EVENT_POOL: EventDefinition[] = [
       { choiceId: 'address_root_causes', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     followUpEvents: [
@@ -2996,9 +3047,12 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'push_through', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.MilitaryCaste,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'push_through', followUpDefinitionId: 'evt_fu_field_equipment_catastrophe', delayTurns: 2, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -3055,9 +3109,12 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'requisition_noble_estates', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'requisition_noble_estates', followUpDefinitionId: 'evt_fu_estate_seizure_lawsuit', delayTurns: 3, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_infra_road_decay',
@@ -3175,8 +3232,11 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'emergency_local_harvest', slotCost: 1, isFree: false },
       { choiceId: 'distribute_what_remains', slotCost: 0, isFree: true },
     ],
-    affectsClass: PopulationClass.Commoners, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.Commoners, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'distribute_what_remains', followUpDefinitionId: 'evt_fu_spoiled_grain_sickness', delayTurns: 2, probability: 0.8 },
+    ],
   },
   {
     // Intermediate: has sub-follow-ups (depth 3 → 4)
@@ -3236,8 +3296,12 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'negotiate_surrender', slotCost: 1, isFree: false },
       { choiceId: 'offer_amnesty', slotCost: 1, isFree: false },
     ],
-    affectsClass: PopulationClass.Nobility, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.Nobility, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'crush_uprising', followUpDefinitionId: 'evt_fu_noble_estate_razed', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'offer_amnesty', followUpDefinitionId: 'evt_fu_amnesty_cabal_reforms', delayTurns: 4, probability: 0.6 },
+    ],
   },
   {
     id: 'evt_grain_noble_cowed',
@@ -3333,8 +3397,11 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'enforce_single_doctrine', slotCost: 1, isFree: false },
       { choiceId: 'secularize_state', slotCost: 1, isFree: false },
     ],
-    affectsClass: PopulationClass.Clergy, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.Clergy, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'secularize_state', followUpDefinitionId: 'evt_fu_secularization_backlash', delayTurns: 3, probability: 0.7 },
+    ],
   },
   {
     // Intermediate follow-up with sub-follow-ups (depth 3 → 4)
@@ -3393,7 +3460,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'discredit_martyr', slotCost: 1, isFree: false },
       { choiceId: 'ignore_martyr', slotCost: 0, isFree: true },
     ],
-    affectsClass: PopulationClass.Commoners, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.Commoners, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
   },
 
@@ -3422,7 +3489,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'expand_treatment', slotCost: 1, isFree: false },
       { choiceId: 'abandon_quarantine', slotCost: 0, isFree: true },
     ],
-    affectsClass: PopulationClass.Commoners, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.Commoners, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
   },
   {
@@ -3451,7 +3518,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'suppress_riots', slotCost: 1, isFree: false },
       { choiceId: 'public_apology', slotCost: 1, isFree: false },
     ],
-    affectsClass: PopulationClass.Commoners, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.Commoners, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
   },
   {
@@ -3560,8 +3627,12 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'sue_for_peace', slotCost: 1, isFree: false },
       { choiceId: 'scorched_earth', slotCost: 1, isFree: false },
     ],
-    affectsClass: null, affectsRegion: false, affectsNeighbor: '__HOSTILE__', relatedStorylineId: null,
+    affectsClass: null, affectsRegion: true, affectsNeighbor: '__HOSTILE__', relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'scorched_earth', followUpDefinitionId: 'evt_fu_scorched_earth_famine', delayTurns: 2, probability: 0.8 },
+      { triggerChoiceId: 'sue_for_peace', followUpDefinitionId: 'evt_fu_surrender_terms_harsh', delayTurns: 2, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_border_envoy_success',
@@ -3671,8 +3742,11 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'negotiate_ransom', slotCost: 1, isFree: false },
       { choiceId: 'cut_losses', slotCost: 0, isFree: true },
     ],
-    affectsClass: PopulationClass.MilitaryCaste, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.MilitaryCaste, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'cut_losses', followUpDefinitionId: 'evt_fu_abandoned_convoy_outrage', delayTurns: 2, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_trade_escort_expensive',
@@ -3808,7 +3882,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'call_loyal_units', slotCost: 1, isFree: false },
       { choiceId: 'flee_capital', slotCost: 1, isFree: false },
     ],
-    affectsClass: PopulationClass.MilitaryCaste, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.MilitaryCaste, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
   },
   {
@@ -3847,7 +3921,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'rebuild_fortification', slotCost: 1, isFree: false },
       { choiceId: 'purge_suspects', slotCost: 1, isFree: false },
     ],
-    affectsClass: PopulationClass.MilitaryCaste, affectsRegion: false, relatedStorylineId: null,
+    affectsClass: PopulationClass.MilitaryCaste, affectsRegion: true, relatedStorylineId: null,
     phase: 'any',
   },
   {
@@ -4019,7 +4093,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
       { choiceId: 'fortify_key_positions', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
   },

@@ -54,9 +54,12 @@ const ORIGINAL_WAVE_2_CRISES: EventDefinition[] = [
       { choiceId: 'forbid_public_speculation', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'forbid_public_speculation', followUpDefinitionId: 'evt_fu_comet_heresy_spreads', delayTurns: 3, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_exp_w2_foreign_refugees',

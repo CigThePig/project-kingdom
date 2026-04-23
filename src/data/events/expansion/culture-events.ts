@@ -132,9 +132,13 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
       { choiceId: 'suppress_foreign_influence', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'embrace_cultural_change', followUpDefinitionId: 'evt_fu_cultural_drift_backlash', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'suppress_foreign_influence', followUpDefinitionId: 'evt_fu_suppression_diaspora_unrest', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // --- 6. Arts Patronage Request (Notable, developing) ---
@@ -295,7 +299,7 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     severity: EventSeverity.Critical,
     category: EventCategory.Culture,
     triggerConditions: [
-      { type: 'neighbor_relationship_below', neighborId: 'empire_south', threshold: 30 },
+      { type: 'neighbor_relationship_below', neighborId: 'neighbor_valdris', threshold: 30 },
       { type: 'turn_range', minTurn: 11 },
     ],
     weight: 1.4,
@@ -308,9 +312,14 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
       { choiceId: 'accept_partial_integration', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
+    affectsNeighbor: 'neighbor_valdris',
     relatedStorylineId: null,
     phase: 'established',
+    followUpEvents: [
+      { triggerChoiceId: 'resist_cultural_pressure', followUpDefinitionId: 'evt_fu_assimilation_standoff', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'accept_partial_integration', followUpDefinitionId: 'evt_fu_integration_fifth_column', delayTurns: 4, probability: 0.6 },
+    ],
   },
 
   // --- 13. Architectural Ambition (Serious, developing) ---

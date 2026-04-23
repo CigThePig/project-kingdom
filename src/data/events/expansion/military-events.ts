@@ -377,9 +377,13 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
       { choiceId: 'ration_existing_supplies', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.MilitaryCaste,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'requisition_from_merchants', followUpDefinitionId: 'evt_fu_merchant_boycott', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'ration_existing_supplies', followUpDefinitionId: 'evt_fu_starving_garrison', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================

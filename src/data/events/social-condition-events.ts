@@ -64,10 +64,14 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'abandon_outer_roads', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'offer_amnesty', followUpDefinitionId: 'evt_fu_amnesty_banditry_return', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'abandon_outer_roads', followUpDefinitionId: 'evt_fu_lawless_outer_region', delayTurns: 3, probability: 0.8 },
+    ],
   },
   {
     id: 'evt_social_banditry_resolved',
@@ -145,10 +149,14 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'endure_corruption', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'co_opt_corrupt_lords', followUpDefinitionId: 'evt_fu_coopted_lords_demand_more', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'endure_corruption', followUpDefinitionId: 'evt_fu_corruption_entrenched', delayTurns: 4, probability: 0.8 },
+    ],
   },
   {
     id: 'evt_social_corruption_resolved',
@@ -226,10 +234,14 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'abdicate_demands', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'declare_martial_law', followUpDefinitionId: 'evt_fu_martial_law_backlash', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'abdicate_demands', followUpDefinitionId: 'evt_fu_rebel_accord_unravels', delayTurns: 4, probability: 0.7 },
+    ],
   },
   {
     id: 'evt_social_unrest_resolved',
@@ -307,10 +319,14 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'cede_the_ports', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'bribe_the_bosses', followUpDefinitionId: 'evt_fu_syndicate_protection_fees', delayTurns: 3, probability: 0.8 },
+      { triggerChoiceId: 'cede_the_ports', followUpDefinitionId: 'evt_fu_criminal_shadow_state', delayTurns: 4, probability: 0.8 },
+    ],
   },
   {
     id: 'evt_social_criminal_resolved',

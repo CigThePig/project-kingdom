@@ -68,11 +68,12 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
       { choiceId: 'pardon_in_exchange_for_restitution', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Nobility,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     followUpEvents: [
       { triggerChoiceId: 'public_trial_and_punishment', followUpDefinitionId: 'evt_exp_fu_chain_corruption_aftermath', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'pardon_in_exchange_for_restitution', followUpDefinitionId: 'evt_fu_pardon_emboldens_graft', delayTurns: 3, probability: 0.7 },
     ],
   },
 
@@ -272,9 +273,13 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
       { choiceId: 'allow_dual_practice', slotCost: 0, isFree: true },
     ],
     affectsClass: PopulationClass.Clergy,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'allow_dual_practice', followUpDefinitionId: 'evt_fu_dual_practice_schism', delayTurns: 4, probability: 0.7 },
+      { triggerChoiceId: 'reaffirm_tradition', followUpDefinitionId: 'evt_fu_underground_reformers', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
@@ -338,9 +343,13 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
       { choiceId: 'negotiate_compromise', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'crush_the_movement', followUpDefinitionId: 'evt_fu_crushed_movement_underground', delayTurns: 4, probability: 0.7 },
+      { triggerChoiceId: 'negotiate_compromise', followUpDefinitionId: 'evt_fu_guild_compromise_drift', delayTurns: 3, probability: 0.6 },
+    ],
   },
 
   // ============================================================

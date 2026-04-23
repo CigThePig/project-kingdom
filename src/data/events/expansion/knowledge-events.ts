@@ -305,11 +305,12 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
       { choiceId: 'ban_device', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'fund_mass_production', followUpDefinitionId: 'evt_exp_fu_kno_printed_pamphlets', delayTurns: 3, probability: 0.6 },
+      { triggerChoiceId: 'ban_device', followUpDefinitionId: 'evt_fu_press_smuggled_in', delayTurns: 4, probability: 0.6 },
     ],
   },
 

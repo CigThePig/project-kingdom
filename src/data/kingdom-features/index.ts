@@ -899,4 +899,73 @@ export const KINGDOM_FEATURE_REGISTRY: Record<string, KingdomFeatureDefinition> 
     category: 'cultural',
     ongoingEffect: { culturalCohesionDelta: 1, clergySatDelta: 1 },
   },
+
+  // ============================================================
+  // Phase 2 Card Audit — Critical-tier terminal branches
+  // High-leverage Critical events whose decisive branch leaves a
+  // permanent structural mark on the kingdom.
+  // ============================================================
+  'event:evt_exp_kgd_constitutional_crisis:offer_charter_of_rights': {
+    featureId: 'feature_charter_of_rights',
+    title: 'Charter of Rights',
+    description: 'A signed royal charter defines crown and commons in writing. Political legitimacy endures.',
+    category: 'infrastructure',
+    ongoingEffect: { stabilityDelta: 1, commonerSatDelta: 1 },
+  },
+  'event:evt_exp_chain_reformation_doctrine:adopt_new_doctrine': {
+    featureId: 'feature_reformed_doctrine',
+    title: 'Reformed Royal Doctrine',
+    description: 'The crown has adopted the reformer canon. Cathedrals across the realm recast their liturgy.',
+    category: 'cultural',
+    ongoingEffect: { faithDelta: 1, heterodoxyDelta: -1 },
+  },
+  'event:evt_exp_cc_social_mobility_demands:open_ranks_to_merit': {
+    featureId: 'feature_meritocratic_ranks',
+    title: 'Meritocratic Ranks',
+    description: 'Offices open to talent regardless of birth. Ambition rises from every quarter.',
+    category: 'infrastructure',
+    ongoingEffect: { commonerSatDelta: 1, nobilitySatDelta: -1 },
+  },
+  'event:evt_exp_cc_privilege_reform:enact_sweeping_reforms': {
+    featureId: 'feature_privilege_reform',
+    title: 'Reformed Privileges',
+    description: 'Sweeping reform has pared back the old orders. The ledger of rights reads differently now.',
+    category: 'infrastructure',
+    ongoingEffect: { commonerSatDelta: 1, nobilitySatDelta: -1 },
+  },
+  'event:evt_exp_eco_inflation_crisis:mint_new_currency': {
+    featureId: 'feature_new_currency',
+    title: 'New Royal Currency',
+    description: 'A new coin with a clean weight restores faith in the royal mint.',
+    category: 'economic',
+    ongoingEffect: { merchantSatDelta: 1, treasuryDelta: 1 },
+  },
+  'event:evt_exp_w2_religious_schism:call_a_reconciliation_council': {
+    featureId: 'feature_reconciliation_council',
+    title: 'Standing Reconciliation Council',
+    description: 'A permanent ecclesiastical forum arbitrates doctrinal disputes without a schism.',
+    category: 'cultural',
+    ongoingEffect: { culturalCohesionDelta: 1, clergySatDelta: 1 },
+  },
+  'event:evt_exp_chain_guild_rev_shift:embrace_new_order': {
+    featureId: 'feature_guild_order',
+    title: 'Guild-Chartered Order',
+    description: 'Guild seats in council rewrite how commerce and commoners are heard.',
+    category: 'economic',
+    ongoingEffect: { merchantSatDelta: 1, commonerSatDelta: 1 },
+  },
+  'event:evt_escalation_faith_collapse:call_grand_synod': {
+    featureId: 'feature_grand_synod_accord',
+    title: 'Grand Synod Accord',
+    description: 'The synod bound clergy and crown to a reconciled rite, beating back the worst heterodoxy.',
+    category: 'cultural',
+    ongoingEffect: { faithDelta: 1, heterodoxyDelta: -1 },
+  },
+  'event:evt_exp_kno_printing_press:fund_mass_production': {
+    featureId: 'feature_printing_press',
+    title: 'Royal Printing Press',
+    description: 'Cheap, uniform print spreads the royal word and with it every word beside.',
+    category: 'cultural',
+    ongoingEffect: { culturalCohesionDelta: 1 },
+  },
 };

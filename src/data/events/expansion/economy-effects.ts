@@ -59,9 +59,9 @@ export const EXPANSION_ECONOMY_EFFECTS: Record<string, Record<string, Mechanical
   // 7. Inflation Crisis — Critical
   // ============================================================
   evt_exp_eco_inflation_crisis: {
-    mint_new_currency:             { treasuryDelta: -100, stabilityDelta: +6, merchantSatDelta: +4, commonerSatDelta: +2, nobilitySatDelta: -3 },
-    freeze_all_prices:             { treasuryDelta: -40, merchantSatDelta: -6, commonerSatDelta: +5, stabilityDelta: +3, nobilitySatDelta: -2 },
-    allow_free_market_correction:  { merchantSatDelta: -2, commonerSatDelta: -6, stabilityDelta: -4, treasuryDelta: +20 },
+    mint_new_currency:             { treasuryDelta: -100, stabilityDelta: +6, merchantSatDelta: +4, commonerSatDelta: +2, nobilitySatDelta: -3, regionDevelopmentDelta: +2 },
+    freeze_all_prices:             { treasuryDelta: -40, merchantSatDelta: -6, commonerSatDelta: +5, stabilityDelta: +3, nobilitySatDelta: -2, regionConditionDelta: -1 },
+    allow_free_market_correction:  { merchantSatDelta: -2, commonerSatDelta: -6, stabilityDelta: -4, treasuryDelta: +20, regionConditionDelta: -2 },
   },
 
   // ============================================================
@@ -158,8 +158,8 @@ export const EXPANSION_ECONOMY_EFFECTS: Record<string, Record<string, Mechanical
   // 18. Counterfeit Coins — Critical
   // ============================================================
   evt_exp_eco_counterfeit_coins: {
-    execute_counterfeiters:  { treasuryDelta: -20, stabilityDelta: +5, merchantSatDelta: +3, commonerSatDelta: -6, militaryReadinessDelta: +2 },
-    recall_all_coinage:      { treasuryDelta: -120, merchantSatDelta: -4, stabilityDelta: +8, commonerSatDelta: +3, nobilitySatDelta: -2 },
-    issue_royal_stamps:      { treasuryDelta: -50, merchantSatDelta: +2, stabilityDelta: +3, commonerSatDelta: +1, nobilitySatDelta: -3 },
+    execute_counterfeiters:  { treasuryDelta: -20, stabilityDelta: +5, merchantSatDelta: +3, commonerSatDelta: -6, militaryReadinessDelta: +2, regionConditionDelta: +1 },
+    recall_all_coinage:      { treasuryDelta: -120, merchantSatDelta: -4, stabilityDelta: +8, commonerSatDelta: +3, nobilitySatDelta: -2, regionDevelopmentDelta: +2 },
+    issue_royal_stamps:      { treasuryDelta: -50, merchantSatDelta: +2, stabilityDelta: +3, commonerSatDelta: +1, nobilitySatDelta: -3, regionConditionDelta: -1 },
   },
 };

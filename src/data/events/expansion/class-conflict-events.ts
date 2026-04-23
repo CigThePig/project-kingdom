@@ -138,11 +138,12 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
       { choiceId: 'play_factions_against_each_other', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'curtail_guild_influence', followUpDefinitionId: 'evt_exp_fu_cc_noble_retaliation', delayTurns: 3, probability: 0.5 },
+      { triggerChoiceId: 'play_factions_against_each_other', followUpDefinitionId: 'evt_fu_factions_see_through', delayTurns: 3, probability: 0.7 },
     ],
   },
 
@@ -247,11 +248,12 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
       { choiceId: 'reaffirm_social_order', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Commoners,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'open_ranks_to_merit', followUpDefinitionId: 'evt_exp_fu_cc_new_merchant_class', delayTurns: 4, probability: 0.5 },
+      { triggerChoiceId: 'reaffirm_social_order', followUpDefinitionId: 'evt_fu_social_order_revolt', delayTurns: 3, probability: 0.7 },
     ],
   },
 
@@ -358,9 +360,13 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
       { choiceId: 'suppress_reform_movement', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
+    followUpEvents: [
+      { triggerChoiceId: 'offer_token_concessions', followUpDefinitionId: 'evt_fu_token_concessions_backfire', delayTurns: 3, probability: 0.7 },
+      { triggerChoiceId: 'suppress_reform_movement', followUpDefinitionId: 'evt_fu_reform_martyrs', delayTurns: 3, probability: 0.7 },
+    ],
   },
 
   // ============================================================
