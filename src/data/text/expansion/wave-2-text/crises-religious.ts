@@ -5,7 +5,7 @@ import type { EventTextEntry } from '../../events';
 export const EXPANSION_WAVE_2_CRISES_RELIGIOUS_TEXT: Record<string, EventTextEntry> = {
   evt_exp_w2_religious_schism: {
     title: 'The Church Splits in Two',
-    body: 'Bishops of the northern sees have declared themselves no longer in communion with the primate, citing unreformed abuses. A dozen churches have changed the wording of the liturgy; a dozen more still wait to see which way the Crown falls.',
+    body: 'Bishops of the sees across {region} have declared themselves no longer in communion with the primate, citing unreformed abuses. A dozen churches have changed the wording of the liturgy; a dozen more still wait to see which way the Crown falls.',
     choices: {
       back_the_orthodox_hierarchy: 'Back the Orthodox Hierarchy',
       recognize_both_confessions: 'Recognize Both Confessions',
@@ -41,7 +41,7 @@ export const EXPANSION_WAVE_2_CRISES_RELIGIOUS_TEXT: Record<string, EventTextEnt
   },
   evt_exp_w2_witch_trial: {
     title: 'A Witch Trial Demanded',
-    body: 'Three women in a border village have been accused of consorting with evil. The local magistrate has called for a formal trial; the commons want a bonfire by tomorrow; the clergy want it handled by diocesan court. You are asked to rule.',
+    body: 'Three women in a border village of {region} have been accused of consorting with evil. The local magistrate has called for a formal trial; the commons want a bonfire by tomorrow; the clergy want it handled by diocesan court. You are asked to rule.',
     choices: {
       allow_the_trial: 'Allow the Trial',
       dismiss_the_accusations: 'Dismiss the Accusations',

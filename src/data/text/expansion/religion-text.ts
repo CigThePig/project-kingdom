@@ -26,7 +26,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 3. Religious Order Expansion ---
   evt_exp_rel_order_expansion: {
     title: 'A Religious Order Seeks to Grow',
-    body: 'The leaders of a prominent order of the {faith_tradition} have petitioned the crown for permission to establish new chapters throughout the provinces. Their monasteries bring learning and charity, but also considerable influence that does not always align with royal interests.',
+    body: 'The leaders of a prominent order of the {faith_tradition} have petitioned the crown for permission to establish new chapters throughout {region}. Their monasteries bring learning and charity, but also considerable influence that does not always align with royal interests.',
     choices: {
       grant_charter: 'Grant an Expansion Charter',
       limit_expansion: 'Limit Their Expansion',
@@ -37,7 +37,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 4. Temple Construction Demands ---
   evt_exp_rel_temple_construction: {
     title: 'The Clergy Demand a New Temple',
-    body: 'The high clergy of the {faith_tradition} have formally requested that the crown fund the construction of a grand temple to demonstrate the kingdom\'s devotion. They argue that the current places of worship are insufficient for the faithful, and that piety demands visible commitment — though with the treasury in {treasury_tier} condition, {chancellor_or_fallback} urges measured ambition.',
+    body: 'The high clergy of the {faith_tradition} have formally requested that the crown fund the construction of a grand temple in {region} to demonstrate the kingdom\'s devotion. They argue that the current places of worship are insufficient for the faithful, and that piety demands visible commitment — though with the treasury in {treasury_tier} condition, {chancellor_or_fallback} urges measured ambition.',
     choices: {
       fund_grand_temple: 'Fund a Grand Temple',
       modest_chapel: 'Build a Modest Chapel',
@@ -103,7 +103,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 10. Monastery Funding ---
   evt_exp_rel_monastery_funding: {
     title: 'A Monastery Seeks the Crown\'s Aid',
-    body: 'The abbot of an ancient and respected monastery of the {faith_tradition} has appealed to the crown for financial support. The monastery\'s scriptorium preserves invaluable texts, and its monks provide charity to the surrounding province, yet its coffers have run dry and its stonework erodes — much like a treasury now in {treasury_tier} condition.',
+    body: 'The abbot of an ancient and respected monastery of the {faith_tradition} in {region} has appealed to the crown for financial support. The monastery\'s scriptorium preserves invaluable texts, and its monks provide charity to the surrounding province, yet its coffers have run dry and its stonework erodes — much like a treasury now in {treasury_tier} condition.',
     choices: {
       generous_endowment: 'Grant a Generous Endowment',
       conditional_funding: 'Provide Conditional Funding',
@@ -114,7 +114,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 11. Sacred Site Desecration ---
   evt_exp_rel_sacred_desecration: {
     title: 'Desecration of a Sacred Site',
-    body: 'A holy site of the {faith_tradition}, of great significance to our people, has been desecrated — its altars defaced, its relics scattered, its sanctity violated. The clergy cry for vengeance, the faithful weep with outrage, and the perpetrators remain unknown. The kingdom\'s response will echo through generations of worship.',
+    body: 'A holy site of the {faith_tradition} in {region}, of great significance to our people, has been desecrated — its altars defaced, its relics scattered, its sanctity violated. The clergy cry for vengeance, the faithful weep with outrage, and the perpetrators remain unknown. The kingdom\'s response will echo through generations of worship.',
     choices: {
       hunt_perpetrators: 'Hunt Down the Perpetrators',
       consecrate_and_restore: 'Consecrate and Restore the Site',

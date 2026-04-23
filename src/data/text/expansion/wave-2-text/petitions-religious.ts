@@ -21,7 +21,7 @@ export const EXPANSION_WAVE_2_PETITIONS_RELIGIOUS_TEXT: Record<string, EventText
   },
   faction_req_w2_pilgrim_road_petition: {
     title: 'The Pilgrim Road Awaits Consecration',
-    body: 'The abbots of the southern houses propose a new pilgrim road linking three great shrines. The route would need royal protection and a modest grant; in return, they promise a flow of foreign coin and piety.',
+    body: 'The abbots of the southern houses propose a new pilgrim road through {region} linking three great shrines. The route would need royal protection and a modest grant; in return, they promise a flow of foreign coin and piety.',
     choices: {
       found_the_pilgrim_road: 'Found the Pilgrim Road',
       reject_pilgrim_road: 'Reject the Proposal',

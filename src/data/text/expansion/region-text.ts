@@ -103,7 +103,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 10. Provincial Development Rivalry ---
   evt_exp_reg_development_rivalry: {
     title: 'Rivalry Between the Provinces',
-    body: 'Two provinces have submitted competing petitions for crown investment, each claiming greater strategic importance and more pressing need. The rivalry has taken on a bitter edge, with provincial lords publicly disparaging their counterparts. Favoritism risks deepening the divide.',
+    body: 'Two provinces, led by {region}, have submitted competing petitions for crown investment, each claiming greater strategic importance and more pressing need. The rivalry has taken on a bitter edge, with provincial lords publicly disparaging their counterparts. Favoritism risks deepening the divide.',
     choices: {
       favor_petitioning_province: 'Favor the Petitioning Province',
       distribute_equally: 'Distribute Resources Equally',
@@ -136,7 +136,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 11. Royal Tour ---
   evt_exp_reg_royal_tour: {
     title: 'A Tour of the Realm',
-    body: 'Your advisors suggest that a newly crowned sovereign should be seen by the people. A procession through the provinces would let you observe conditions firsthand \u2014 the state of roads and bridges, the health of the fields, the mood of the common folk. The local lords prepare their finest hospitality, but the people themselves watch with a harder question in their eyes: what manner of ruler have they gained?',
+    body: 'Your advisors suggest that a newly crowned sovereign should be seen by the people. A procession through {region} would let you observe conditions firsthand \u2014 the state of roads and bridges, the health of the fields, the mood of the common folk. The local lords prepare their finest hospitality, but the people themselves watch with a harder question in their eyes: what manner of ruler have they gained?',
     choices: {
       invest_in_local_projects: 'Invest in Local Projects',
       hold_open_audience: 'Hold an Open Audience',
