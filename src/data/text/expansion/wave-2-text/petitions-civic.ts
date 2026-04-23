@@ -45,7 +45,7 @@ export const EXPANSION_WAVE_2_PETITIONS_CIVIC_TEXT: Record<string, EventTextEntr
   },
   faction_req_w2_bridge_petition: {
     title: 'A Village Begs a New Bridge',
-    body: 'A delegation from a river-crossing village reports the old bridge is failing and the ferry has drowned two men this year. They ask for royal coin to fund a stone bridge. The treasurer asks whether there are not more pressing stones in the realm.',
+    body: 'A delegation from a river-crossing village reports the old bridge is failing and the ferry has drowned two men this year. They ask for royal coin to fund a stone bridge. The treasurer asks whether there are not more pressing stones in the country.',
     choices: {
       authorize_the_bridge: 'Authorize the Bridge',
       wait_for_better_weather: 'Wait for Better Weather',

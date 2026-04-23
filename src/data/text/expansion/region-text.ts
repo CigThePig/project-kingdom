@@ -48,7 +48,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 5. Regional Festival ---
   evt_exp_reg_festival: {
     title: 'A Provincial Harvest Festival',
-    body: 'The folk of {region} have organized an elaborate {season} celebration that has drawn attention across the realm. The local population — presently {loyalty_tier} under a posture of {posture} — looks to the crown for recognition, and your response will be taken as a measure of royal regard for the provinces.',
+    body: 'The folk of {region} have organized an elaborate {season} celebration that has drawn attention across our lands. The local population — presently {loyalty_tier} under a posture of {posture} — looks to the crown for recognition, and your response will be taken as a measure of royal regard for the provinces.',
     choices: {
       royal_patronage: 'Extend Royal Patronage',
       attend_personally: 'Attend in Person',

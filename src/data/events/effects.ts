@@ -873,7 +873,7 @@ export const EVENT_CHOICE_EFFECTS: Record<string, Record<string, MechanicalEffec
     isolate_and_wait:      { commonerSatDelta: -3, stabilityDelta: -2 },
   },
   evt_plague_recovery: {
-    acknowledge: { stabilityDelta: +2, commonerSatDelta: +2 },
+    acknowledge: { stabilityDelta: +2, commonerSatDelta: +2, clergySatDelta: +1, merchantSatDelta: +1 },
   },
   evt_plague_bankruptcy: {
     emergency_loans:    { treasuryDelta: +40, stabilityDelta: -1 },

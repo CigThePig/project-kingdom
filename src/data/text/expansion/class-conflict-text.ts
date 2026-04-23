@@ -32,7 +32,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_military_privilege_demand: {
     title: 'Military Caste Demands Landed Privileges',
-    body: 'Officers of the military caste have presented a formal petition demanding estates and hereditary privileges comparable to those held by the nobility. They argue that those who shed blood for the realm deserve standing equal to those who merely inherited it. The nobility views this as a brazen assault on the ancient order of precedence.',
+    body: 'Officers of the military caste have presented a formal petition demanding estates and hereditary privileges comparable to those held by the nobility. They argue that those who shed blood for the crown deserve standing equal to those who merely inherited it. The nobility views this as a brazen assault on the ancient order of precedence.',
     choices: {
       grant_military_estates: 'Grant Military Estates',
       offer_honorary_titles: 'Offer Honorary Titles',
@@ -57,7 +57,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_guild_noble_power_struggle: {
     title: 'Guild Masters Challenge Noble Authority',
-    body: 'The wealthiest guild masters have begun openly defying noble prerogatives, refusing to pay traditional levies and demanding seats on the royal council. They command enough coin to hire their own guards and enough trade influence to cripple entire provinces. The nobility warns that yielding to merchants will unravel the very fabric of the realm\'s governance.',
+    body: 'The wealthiest guild masters have begun openly defying noble prerogatives, refusing to pay traditional levies and demanding seats on the royal council. They command enough coin to hire their own guards and enough trade influence to cripple entire provinces. The nobility warns that yielding to merchants will unravel the very fabric of our governance.',
     choices: {
       curtail_guild_influence: 'Curtail Guild Influence',
       formalize_guild_seats: 'Formalize Guild Council Seats',
@@ -83,7 +83,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_clerical_overreach: {
     title: 'Church Claims Expanded Tithe Rights',
-    body: 'Emboldened by rising piety across the realm, the high clergy have announced that church tithes will henceforth apply to lands previously held exempt by secular tradition. Commoner farmers and lesser nobles alike protest that the church already holds vast estates and should not be permitted to extract yet more from those who work the soil.',
+    body: 'Emboldened by rising piety across our lands, the high clergy have announced that church tithes will henceforth apply to lands previously held exempt by secular tradition. Commoner farmers and lesser nobles alike protest that the church already holds vast estates and should not be permitted to extract yet more from those who work the soil.',
     choices: {
       limit_church_holdings: 'Limit Church Holdings',
       sanction_expanded_tithes: 'Sanction Expanded Tithes',
@@ -109,7 +109,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_social_mobility_demands: {
     title: 'Demands for Social Advancement Escalate',
-    body: 'A coalition of commoner leaders, guild apprentices, and low-ranking soldiers has presented a manifesto demanding that birth no longer determine one\'s station in the realm. They call for merit-based appointments to all offices of consequence. The nobility and senior clergy have closed ranks, warning that such upheaval would plunge the kingdom into chaos.',
+    body: 'A coalition of commoner leaders, guild apprentices, and low-ranking soldiers has presented a manifesto demanding that birth no longer determine one\'s station. They call for merit-based appointments to all offices of consequence. The nobility and senior clergy have closed ranks, warning that such upheaval would throw our ancient order into chaos.',
     choices: {
       open_ranks_to_merit: 'Open All Ranks to Merit',
       create_advancement_paths: 'Create Advancement Paths',
@@ -161,7 +161,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_privilege_reform: {
     title: 'Mass Petition Demands Privilege Reform',
-    body: 'Thousands of commoners have signed a petition delivered to the throne, demanding the abolition of hereditary exemptions from taxation, military service, and judicial accountability. The document names specific noble and clerical privileges it considers unjust. The realm holds its breath, for the crown\'s response will define a generation.',
+    body: 'Thousands of commoners have signed a petition delivered to the throne, demanding the abolition of hereditary exemptions from taxation, military service, and judicial accountability. The document names specific noble and clerical privileges it considers unjust. The country holds its breath, for the crown\'s response will define a generation.',
     choices: {
       enact_sweeping_reforms: 'Enact Sweeping Reforms',
       offer_token_concessions: 'Offer Token Concessions',
