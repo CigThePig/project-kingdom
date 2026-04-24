@@ -4,8 +4,8 @@ import type { EventTextEntry } from '../../events';
 
 export const EXPANSION_WAVE_2_CRISES_RELIGIOUS_TEXT: Record<string, EventTextEntry> = {
   evt_exp_w2_religious_schism: {
-    title: 'The Church Splits in Two',
-    body: 'Bishops of the northern sees have declared themselves no longer in communion with the primate, citing unreformed abuses. A dozen churches have changed the wording of the liturgy; a dozen more still wait to see which way the Crown falls. The {class_plural} are watching every move of the court.',
+    title: 'The Church Splits in {region}',
+    body: 'Bishops of the sees around {settlement} in {region} have declared themselves no longer in communion with the primate, citing unreformed abuses. A dozen churches have changed the wording of the liturgy; a dozen more still wait to see which way the Crown falls. The {class_plural} are watching every move of the court.',
     choices: {
       back_the_orthodox_hierarchy: 'Back the Orthodox Hierarchy',
       recognize_both_confessions: 'Recognize Both Confessions',
@@ -22,8 +22,8 @@ export const EXPANSION_WAVE_2_CRISES_RELIGIOUS_TEXT: Record<string, EventTextEnt
     },
   },
   evt_exp_w2_prophet_appears: {
-    title: 'A Prophet at the Gates',
-    body: 'A dust-stained figure has arrived at the capital gates, claiming visions of the kingdom\'s fate. The commons whisper of miracles; the bishops demand the matter be examined; the tax-collectors watch the crowds grow each day. The {class_plural} are watching every move of the court.',
+    title: 'A Prophet at the Gates of {settlement}',
+    body: 'A dust-stained figure has arrived at the gates of {settlement} in {region}, claiming visions of the kingdom\'s fate. The commons whisper of miracles; the bishops demand the matter be examined; the tax-collectors watch the crowds grow each day. The {class_plural} are watching every move of the court.',
     choices: {
       invite_to_the_cathedral: 'Invite to the Cathedral',
       confine_to_a_monastery: 'Confine to a Monastery',

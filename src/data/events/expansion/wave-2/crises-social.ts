@@ -74,6 +74,8 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISES: EventDefinition[] = [
     ],
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
+    // Foreign wages binding — the defection pulls toward a named rival.
+    affectsNeighbor: 'neighbor_valdris',
     relatedStorylineId: null,
     phase: 'any',
   },
@@ -96,6 +98,8 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISES: EventDefinition[] = [
     ],
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
+    // Foreign credit / coinage — trade partners watch every move.
+    affectsNeighbor: 'neighbor_arenthal',
     relatedStorylineId: null,
     phase: 'any',
   },
@@ -111,18 +115,21 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISIS_EFFECTS: Record<
       commonerSatDelta: 5,
       stabilityDelta: 3,
       nobilitySatDelta: -2,
+      regionConditionDelta: +2,
     },
     post_guards_at_the_markets: {
       militaryReadinessDelta: -2,
       stabilityDelta: 1,
       commonerSatDelta: -3,
       foodDelta: -3,
+      regionConditionDelta: +1,
     },
     hang_the_ringleaders: {
       stabilityDelta: 2,
       commonerSatDelta: -6,
       faithDelta: -2,
       foodDelta: -5,
+      regionConditionDelta: -1,
     },
   },
   evt_exp_w2_bonded_labor_revolt: {
@@ -131,16 +138,19 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISIS_EFFECTS: Record<
       militaryReadinessDelta: -3,
       commonerSatDelta: -5,
       nobilitySatDelta: 3,
+      regionConditionDelta: -1,
     },
     grant_limited_emancipation: {
       commonerSatDelta: 5,
       nobilitySatDelta: -5,
       culturalCohesionDelta: -2,
+      regionDevelopmentDelta: +1,
     },
     negotiate_better_terms: {
       treasuryDelta: -30,
       commonerSatDelta: 3,
       nobilitySatDelta: -2,
+      regionConditionDelta: +1,
     },
   },
   evt_exp_w2_mercenary_defection: {
@@ -148,17 +158,20 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISIS_EFFECTS: Record<
       treasuryDelta: -60,
       militaryCasteSatDelta: 5,
       militaryMoraleDelta: 3,
+      diplomacyDeltas: { neighbor_valdris: -2 },
     },
     brand_them_as_deserters: {
       militaryCasteSatDelta: -4,
       militaryForceSizeDelta: -1,
       stabilityDelta: -1,
+      diplomacyDeltas: { neighbor_valdris: -1 },
     },
     recruit_local_replacements: {
       treasuryDelta: -30,
       militaryCasteSatDelta: -1,
       militaryForceSizeDelta: 1,
       militaryEquipmentDelta: -1,
+      diplomacyDeltas: { neighbor_valdris: +1 },
     },
   },
   evt_exp_w2_monetary_crisis: {
@@ -167,16 +180,19 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISIS_EFFECTS: Record<
       merchantSatDelta: -5,
       commonerSatDelta: -3,
       stabilityDelta: -2,
+      diplomacyDeltas: { neighbor_arenthal: -2 },
     },
     borrow_from_the_merchants: {
       treasuryDelta: 70,
       merchantSatDelta: 3,
       nobilitySatDelta: -2,
+      diplomacyDeltas: { neighbor_arenthal: +1 },
     },
     seize_the_old_hoards: {
       treasuryDelta: 90,
       nobilitySatDelta: -5,
       stabilityDelta: -3,
+      diplomacyDeltas: { neighbor_arenthal: -1 },
     },
   },
 };

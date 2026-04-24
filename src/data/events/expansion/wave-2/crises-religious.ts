@@ -78,7 +78,9 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISES: EventDefinition[] = [
       { choiceId: 'denounce_as_false', slotCost: 1, isFree: false },
     ],
     affectsClass: PopulationClass.Clergy,
-    affectsRegion: false,
+    // The prophet appears at a specific gate — bind to a region so the
+    // regional condition reflects the spiritual turn in that province.
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
   },
@@ -179,18 +181,21 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISIS_EFFECTS: Record<
       heterodoxyDelta: 1,
       clergySatDelta: -2,
       treasuryDelta: -20,
+      regionConditionDelta: +1,
     },
     confine_to_a_monastery: {
       clergySatDelta: 3,
       commonerSatDelta: -3,
       heterodoxyDelta: 2,
       treasuryDelta: -5,
+      regionConditionDelta: -1,
     },
     denounce_as_false: {
       clergySatDelta: 2,
       heterodoxyDelta: 4,
       stabilityDelta: -3,
       treasuryDelta: -5,
+      regionConditionDelta: -2,
     },
   },
   evt_exp_w2_saints_succession: {

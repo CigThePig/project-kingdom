@@ -142,12 +142,14 @@ export const EXPANSION_WAVE_2_DISASTER_CRISIS_EFFECTS: Record<
       commonerSatDelta: 4,
       clergySatDelta: 3,
       faithDelta: 2,
+      regionConditionDelta: +1,
     },
     pray_and_wait: {
       stabilityDelta: -5,
       commonerSatDelta: -6,
       faithDelta: 3,
       heterodoxyDelta: 2,
+      regionConditionDelta: -2,
     },
   },
   evt_exp_w2_naval_disaster: {
@@ -155,16 +157,19 @@ export const EXPANSION_WAVE_2_DISASTER_CRISIS_EFFECTS: Record<
       treasuryDelta: -70,
       militaryEquipmentDelta: 4,
       merchantSatDelta: 3,
+      regionDevelopmentDelta: +1,
     },
     recall_merchant_vessels: {
       treasuryDelta: -20,
       merchantSatDelta: -4,
       stabilityDelta: 1,
+      regionConditionDelta: +1,
     },
     blame_the_captain: {
       militaryMoraleDelta: -4,
       nobilitySatDelta: 2,
       stabilityDelta: -1,
+      regionConditionDelta: -1,
     },
   },
   evt_exp_w2_library_fire: {
@@ -188,16 +193,19 @@ export const EXPANSION_WAVE_2_DISASTER_CRISIS_EFFECTS: Record<
       stabilityDelta: 2,
       commonerSatDelta: -2,
       militaryCasteSatDelta: 2,
+      regionConditionDelta: +1,
     },
     quietly_replace_the_wells: {
       treasuryDelta: -50,
       commonerSatDelta: 3,
       stabilityDelta: 1,
+      regionConditionDelta: +2,
     },
     blame_a_rival: {
       stabilityDelta: 1,
       commonerSatDelta: 2,
       heterodoxyDelta: 1,
+      regionConditionDelta: -1,
     },
   },
   evt_exp_w2_salt_shortage: {

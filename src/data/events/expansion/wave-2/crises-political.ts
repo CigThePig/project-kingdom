@@ -157,15 +157,18 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISIS_EFFECTS: Record<
       nobilitySatDelta: 2,
       clergySatDelta: -2,
       stabilityDelta: 1,
+      diplomacyDeltas: { neighbor_arenthal: +2 },
     },
     trust_the_cathedral_healers: {
       faithDelta: 3,
       clergySatDelta: 4,
       stabilityDelta: -1,
+      diplomacyDeltas: { neighbor_arenthal: +1 },
     },
     govern_through_the_sickness: {
       stabilityDelta: -3,
       nobilitySatDelta: -2,
+      diplomacyDeltas: { neighbor_arenthal: -1 },
     },
   },
   evt_exp_w2_dynastic_challenge: {
@@ -222,11 +225,13 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISIS_EFFECTS: Record<
       nobilitySatDelta: -3,
       stabilityDelta: 2,
       commonerSatDelta: -2,
+      regionConditionDelta: +1,
     },
     pay_his_silence: {
       treasuryDelta: -60,
       stabilityDelta: 1,
       commonerSatDelta: -2,
+      regionConditionDelta: -1,
     },
   },
 };
