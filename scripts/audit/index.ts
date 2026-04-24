@@ -36,6 +36,7 @@ import { scan as featureRegistryScan, SCAN_ID as FEATURE_REGISTRY_ID } from './s
 import { scan as decreeStructuralDepthScan, SCAN_ID as DECREE_STRUCTURAL_DEPTH_ID } from './scans/wiring/decree-structural-depth';
 import { scan as tagProducersScan, SCAN_ID as TAG_PRODUCERS_ID } from './scans/wiring/tag-producers';
 import { scan as tagConsumersScan, SCAN_ID as TAG_CONSUMERS_ID } from './scans/wiring/tag-consumers';
+import { scan as crossFamilyOverlapScan, SCAN_ID as CROSS_FAMILY_OVERLAP_ID } from './scans/wiring/cross-family-overlap';
 
 import { scan as surfaceOnlyScan, SCAN_ID as SURFACE_ONLY_ID } from './scans/substance/surface-only';
 import { scan as singleChoiceScan, SCAN_ID as SINGLE_CHOICE_ID } from './scans/substance/single-choice-monthly';
@@ -112,6 +113,7 @@ const SCANS: RegisteredScan[] = [
   { id: DECREE_STRUCTURAL_DEPTH_ID, scan: decreeStructuralDepthScan },
   { id: TAG_PRODUCERS_ID, scan: tagProducersScan },
   { id: TAG_CONSUMERS_ID, scan: tagConsumersScan },
+  { id: CROSS_FAMILY_OVERLAP_ID, scan: crossFamilyOverlapScan },
   { id: SURFACE_ONLY_ID, scan: surfaceOnlyScan },
   { id: SINGLE_CHOICE_ID, scan: singleChoiceScan },
   { id: CATEGORY_TOUCH_ID, scan: categoryTouchScan },
