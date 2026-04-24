@@ -1,4 +1,4 @@
-<!-- lastScan: 2026-04-24T19:35:41.174Z -->
+<!-- lastScan: 2026-04-24T20:08:21.436Z -->
 
 # Card Audit — Migration List
 

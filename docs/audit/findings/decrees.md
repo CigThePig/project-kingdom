@@ -2,7 +2,7 @@
 family: decree
 totalCards: 97
 status: green
-lastScan: 2026-04-24T19:35:41.174Z
+lastScan: 2026-04-24T20:08:21.436Z
 ---
 
 # Decree — Audit findings

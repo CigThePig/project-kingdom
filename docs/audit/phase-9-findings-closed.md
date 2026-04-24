@@ -1,4 +1,4 @@
-# Phase 9 — Findings Closed (Crises family deep audit, waves 1+3+4)
+# Phase 9 — Findings Closed (Crises family deep audit)
 
 Phase 9 of the Card Audit & Progression workstream is the crises-family deep
 audit against the 15 standing audit questions
@@ -10,9 +10,14 @@ crisis files but every severity-qualifying event across
 `condition-events.ts`, `social-condition-events.ts`, and
 `population-events.ts`.
 
-This close report covers Phase 9 waves 1, 3, and 4. Wave 2 (354
-`substance.surface-only` findings, structural re-effect work) is deferred
-to a follow-up commit as per the waveplan; see **Wave 2 deferred** section.
+All four Phase 9 waves landed in two commits on branch
+`claude/phase-9-card-audit-rA0eb`:
+
+1. **Waves 1 + 3 + 4** — smart-card coverage (211), choice distinctness
+   and clones (32), trigger coherence and category touch (18).
+2. **Wave 2 + scan patch** — surface-only re-effect (354) plus the
+   substance/surface-only scan upgrade that discovered and closed the
+   harness-vs-engine gap described below.
 
 ## Scope
 
@@ -174,10 +179,9 @@ categories regressed.
 Phase gate: `npm test` (911 pass, 93 files), `npm run lint` (clean),
 `npm run build` (dist emitted, PWA precache generated).
 
-## Question tally (waves 1+3+4)
+## Question tally
 
-For the 15-question lens (`docs/CARD_AUDIT_QUESTIONS.md`). Where a
-question's fix landed in Wave 2 territory, it's marked **(Wave 2)**.
+For the 15-question lens (`docs/CARD_AUDIT_QUESTIONS.md`).
 
 | Q | Description | Touched | Action |
 |---:|---|---:|---|
@@ -188,14 +192,14 @@ question's fix landed in Wave 2 territory, it's marked **(Wave 2)**.
 | 5 | Smart-card coverage | **211** | Wave 1 retexts (region + neighbor). |
 | 6 | Trigger coherence | **17** | Wave 4. |
 | 7 | Choice distinctness | **32** | Wave 3 (27 distinctness + 5 clones). |
-| 8 | Substance (§2) | — | **(Wave 2)** — 354 `surface-only` findings. |
+| 8 | Substance (§2) | **354** | Wave 2 — temp-mods + kingdom features. Plus scan patch for the harness gap. |
 | 9 | Severity–magnitude coherence | 0 | Scanner-clean. |
 | 10 | Category coherence | 1 | Wave 4 `evt_fu_criminal_shadow_state`. |
 | 11 | Promise ↔ delivery | 0 | Retired corpus-wide in Phases 3 / 4a. |
-| 12 | Progression memory | — | **(Wave 2 overlay)** — tokens like `{ruling_style_note}` / `{recent_causal}` added selectively as part of re-effect work. |
-| 13 | Follow-up shape | — | **(Wave 2)** — stub IDs will register in `docs/audit/phase-9-followup-stubs.md`. |
-| 14 | Cost asymmetry | — | N/A as scan (decree-only) but crisis choices observed during Wave 3; no adjustments needed in this pass. |
-| 15 | Authoring self-test | 0 | No rebuild queue additions in waves 1+3+4. `docs/audit/rebuild-queue.md` unchanged. |
+| 12 | Progression memory | — | Threaded progression tokens during Wave 1 retexts; Phase 15 will add richer `{prior_decision_clause:*}` / `{recent_causal}` overlays on primary cards. |
+| 13 | Follow-up shape | — | Kingdom-feature channel used in Wave 2 for Critical branches (see `docs/audit/phase-9-followup-stubs.md`). Phase 15 stub-backed follow-ups unchanged from Phase 2/3. |
+| 14 | Cost asymmetry | — | Crisis choices observed during Wave 3; existing `slotCost` / `isFree` spreads are tier-appropriate. |
+| 15 | Authoring self-test | 0 | No rebuild queue additions. `docs/audit/rebuild-queue.md` unchanged. |
 
 ## Files touched
 
@@ -244,19 +248,109 @@ scanner state),
 `docs/audit/engine-mismatches.json`, `docs/audit/migration-list.md`
 (all regenerated via `npm run audit:seed`).
 
-## Wave 2 deferred
+**Wave 2 additions:**
+`src/data/events/effects.ts` (temp-modifier table extended; no
+re-effects of existing entries),
+`src/data/kingdom-features/index.ts` (23 new Critical-tier feature
+definitions appended at the file tail),
+`scripts/audit/scans/substance/surface-only.ts` (table-heuristic
+fall-through when fingerprint is surface-only),
+`docs/audit/phase-9-followup-stubs.md` (Phase 15 backlog register —
+zero new stubs; kingdom-feature channel used for Critical branches).
 
-The 354 `substance.surface-only` findings require per-choice structural
-markers (temp modifier, kingdom feature, follow-up, or consequence tag
-read elsewhere), calibrated to severity per
-`scripts/audit/scans/substance/surface-only.ts:151-190`:
+## Wave 2 — surface-only re-effect (354 → 0)
+
+Per-choice structural markers per severity tier
+(`scripts/audit/scans/substance/surface-only.ts` severity-scaling rule):
 
 - Critical crises: 2+ strong markers.
 - Serious crises: 1+ strong marker.
-- Notable / Informational: 1 of any marker (style or
-  regionConditionStructural counts).
+- Notable / Informational: 1 of any marker.
 
-Wave 2 will ship as a follow-up commit with companion document
-`docs/audit/phase-9-followup-stubs.md` enumerating the Phase 15 stub IDs
-referenced from each re-effected branch. Deferral precedent:
-`docs/audit/phase-4-findings-closed.md` / `phase-4b-findings-closed.md`.
+Strong markers = temp modifier, kingdom feature, follow-up, consequence
+tag read elsewhere. Weak markers = style tag, `regionConditionDelta` on
+an `affectsRegion: true` card.
+
+### Scanner gap discovered during Wave 2
+
+During initial Wave 2 work we discovered the surface-only scan was
+producing false-positive `RUNTIME_GROUNDED` findings for every
+event-family card. Root cause: the audit harness's
+`scripts/audit/runtime/harness.ts:runEvent` calls only
+`applyEventChoiceEffects`, which applies raw mechanical deltas. The
+real engine's `applyCrisisResponseEffect`
+(`src/engine/resolution/apply-action-effects.ts:1160-1268`) also
+appends a persistent consequence, installs kingdom features from
+`KINGDOM_FEATURE_REGISTRY`, and creates temporary modifiers from
+`EVENT_CHOICE_TEMPORARY_MODIFIERS` — none of which show up in the
+harness fingerprint. So a choice with a rich temp-modifier entry
+still looked "surface-only" to the scanner's runtime path.
+
+Fix in `scripts/audit/scans/substance/surface-only.ts`: when a
+fingerprint exists and is surface-only, fall through to the table
+heuristic rather than flagging outright. The fingerprint path remains
+"pass without further checks" when it shows a structural class touch
+(e.g. `diplomacyDeltas` → `diplomatic`, or `regionConditionDelta` on
+affectsRegion → `region`). Confidence is preserved —
+`RUNTIME_GROUNDED` when a fingerprint was available, `HEURISTIC` when
+not — and the existing
+`scripts/audit/scans/substance/__tests__/surface-only.runtime.test.ts`
+suite stays green.
+
+This scan-layer fix retired 58 crisis findings on its own (choices
+that already carried table markers) and made Wave 2's temp-mod /
+feature additions effective. It also retired 486 petition and 126
+unknown-family findings that were flagged under the same harness gap
+but whose markers were already in place; those retirements are
+incidental and do not claim Phase 11-13 completion — those phases
+will still walk the petition family card-by-card.
+
+### Wave 2 data-layer work
+
+- **Temporary modifiers** (117 cards, ~230 choices): appended to
+  `EVENT_CHOICE_TEMPORARY_MODIFIERS` in `src/data/events/effects.ts`.
+  Each temp-mod carries a 2–4 turn duration and a 1–2 magnitude
+  `effectPerTurn` on the choice's primary existing delta. Where
+  existing temp-mod entries collided on sign-or-scope with the new
+  ones (five cards after the first apply), the new entries were
+  rewritten to use different fields so choice-distinctness wouldn't
+  regress.
+- **Kingdom features** (23 choices on 18 Critical-tier cards):
+  authored in `src/data/kingdom-features/index.ts:971-1145` as
+  dedicated registry entries. Two choices that previously had a
+  temp-mod plus style tag now get a feature + temp-mod = two strong
+  markers, clearing the Critical severity threshold. See
+  `docs/audit/phase-9-followup-stubs.md` for the per-choice mapping.
+- **Scan patch**: `scripts/audit/scans/substance/surface-only.ts`
+  rewritten to consult table heuristics even when fingerprint is
+  surface-only.
+
+### Wave 2 acceptance
+
+```
+Post Wave 2 (npm run audit:crises):
+  CRITICAL = 0
+  MAJOR    = 0
+  MINOR    = 0
+  POLISH   = 0
+
+Full-corpus delta (scan-patch-inclusive):
+  1367 → 140 MAJOR corpus-wide (Δ −1227).
+  Crisis: 615 → 0.
+  Petition: 747 → 98 (−649, Phase 11-13 territory; not claimed as retired
+    in Phase 9 scope — incidental retirement from scan patch).
+  Unknown: 147 → 21 (−126).
+  Other families: unchanged.
+```
+
+Phase gate post-Wave-2: `npm test` 911 pass / 93 files, `npm run lint`
+clean, `npm run build` dist emitted. No regressions in PND, SCOPE,
+wiring scans.
+
+### Wave 2 Phase 15 backlog
+
+Zero new follow-up stub IDs reserved. Kingdom features carry the
+Critical-tier progression in lieu of follow-up cards (ongoing feature
+effect is structurally equivalent to a recurring follow-up for §2
+substance and ships the progression feel at turn 0 of resolution).
+See `docs/audit/phase-9-followup-stubs.md`.

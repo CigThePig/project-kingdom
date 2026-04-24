@@ -1227,10 +1227,12 @@ export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, Tem
     // Enforcing contracts breeds resentment among workers
     enforce_existing_contracts: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1, merchantSatDelta: +1 } },
   },
-  evt_military_desertion_crisis: {
-    // Higher pay is an ongoing expense
+    evt_military_desertion_crisis: {
     increase_military_pay: { durationTurns: 4, effectPerTurn: { treasuryDelta: -10 } },
+    appeal_to_honor: { durationTurns: 3, effectPerTurn: { militaryMoraleDelta: +1 } },
+    enforce_harsh_discipline: { durationTurns: 3, effectPerTurn: { militaryMoraleDelta: -1 } },
   },
+
   evt_heresy_emergence: {
     // Open debate allows heterodox ideas to spread
     permit_theological_debate: { durationTurns: 3, effectPerTurn: { heterodoxyDelta: +1 } },
@@ -1247,36 +1249,62 @@ export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, Tem
     // Patronage yields cultural dividends but sustained expense
     patron_arts_sciences: { durationTurns: 5, effectPerTurn: { culturalCohesionDelta: +1, treasuryDelta: -5 } },
   },
-  evt_uprising_noble_backlash: {
+    evt_uprising_noble_backlash: {
     find_compromise: { durationTurns: 3, effectPerTurn: { nobilitySatDelta: +1, commonerSatDelta: +1 } },
+    appease_nobility: { durationTurns: 3, effectPerTurn: { nobilitySatDelta: +1 } },
+    stand_with_commoners: { durationTurns: 3, effectPerTurn: { commonerSatDelta: +1 } },
   },
-  evt_trade_negotiate_betrayal: {
+
+    evt_trade_negotiate_betrayal: {
     demand_compensation: { durationTurns: 3, effectPerTurn: { treasuryDelta: +2 } },
+    military_response: { durationTurns: 3, effectPerTurn: { militaryReadinessDelta: -1 } },
+    write_off_losses: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1 } },
   },
-  evt_schism_inquisition: {
+
+    evt_schism_inquisition: {
     limit_scope: { durationTurns: 3, effectPerTurn: { heterodoxyDelta: -1 } },
+    authorize_inquisition: { durationTurns: 4, effectPerTurn: { faithDelta: +1, culturalCohesionDelta: -1 } },
+    refuse_inquisition: { durationTurns: 3, effectPerTurn: { clergySatDelta: -1 } },
   },
+
   evt_merchant_underground_economy: {
     legitimize_shadow_trade: { durationTurns: 3, effectPerTurn: { treasuryDelta: +4, heterodoxyDelta: +1 } },
   },
-  evt_merchant_permanent_concessions: {
+    evt_merchant_permanent_concessions: {
     offer_limited_concession: { durationTurns: 4, effectPerTurn: { treasuryDelta: -3, merchantSatDelta: +1 } },
+    grant_permanent_charter: { durationTurns: 4, effectPerTurn: { nobilitySatDelta: -1 } },
+    reject_demands: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1 } },
   },
-  evt_merchant_boycott: {
-    wait_out_boycott: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1 } },
+
+    evt_merchant_boycott: {
+    wait_out_boycott: { durationTurns: 3, effectPerTurn: { stabilityDelta: -1 } },
+    break_boycott_by_force: { durationTurns: 3, effectPerTurn: { militaryMoraleDelta: -1 } },
+    negotiate_end: { durationTurns: 4, effectPerTurn: { merchantSatDelta: +1 } },
   },
-  evt_library_fire: {
+
+    evt_library_fire: {
     launch_restoration_effort: { durationTurns: 4, effectPerTurn: { treasuryDelta: -5, culturalCohesionDelta: +1 } },
+    accept_and_rebuild: { durationTurns: 4, effectPerTurn: { culturalCohesionDelta: +1 } },
+    investigate_cause: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
   },
-  evt_clergy_prophecy_claim: {
+
+    evt_clergy_prophecy_claim: {
     investigate_prophecy: { durationTurns: 3, effectPerTurn: { clergySatDelta: -1 } },
+    dismiss_as_superstition: { durationTurns: 3, effectPerTurn: { clergySatDelta: -1 } },
+    endorse_as_divine_sign: { durationTurns: 4, effectPerTurn: { faithDelta: +1 } },
   },
-  evt_audit_embezzlement: {
+
+    evt_audit_embezzlement: {
     reform_treasury_oversight: { durationTurns: 4, effectPerTurn: { treasuryDelta: -4 } },
+    ignore_and_absorb: { durationTurns: 3, effectPerTurn: { stabilityDelta: -1 } },
+    launch_crackdown: { durationTurns: 3, effectPerTurn: { nobilitySatDelta: -1 } },
   },
-  evt_ambassador_trade_embargo: {
+
+    evt_ambassador_trade_embargo: {
     retaliate_economically: { durationTurns: 3, effectPerTurn: { treasuryDelta: -6, merchantSatDelta: -1 } },
+    accept_embargo: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1 } },
   },
+
   evt_exp_reg_trade_disruption: {
     military_escort: { durationTurns: 3, effectPerTurn: { treasuryDelta: -4 } },
     reroute_trade: { durationTurns: 4, effectPerTurn: { merchantSatDelta: -1 } },
@@ -1293,12 +1321,18 @@ export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, Tem
     fortify_border: { durationTurns: 4, effectPerTurn: { treasuryDelta: -4 } },
     increase_patrols: { durationTurns: 3, effectPerTurn: { militaryMoraleDelta: +1 } },
   },
-  evt_exp_po_tax_resistance: {
+    evt_exp_po_tax_resistance: {
     temporarily_reduce_taxes: { durationTurns: 3, effectPerTurn: { treasuryDelta: -8 } },
+    address_grievances_at_court: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    send_tax_collectors_with_guards: { durationTurns: 2, effectPerTurn: { treasuryDelta: +13 } },
   },
-  evt_exp_kgd_governance_reform: {
+
+    evt_exp_kgd_governance_reform: {
     partial_concessions: { durationTurns: 4, effectPerTurn: { stabilityDelta: +1, treasuryDelta: -2 } },
+    accept_reforms: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    reject_reforms: { durationTurns: 2, effectPerTurn: { treasuryDelta: +6 } },
   },
+
   evt_fu_state_religion_persecution: {
     deepen_the_inquiry: { durationTurns: 4, effectPerTurn: { heterodoxyDelta: -1, culturalCohesionDelta: -1 } },
   },
@@ -1314,9 +1348,11 @@ export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, Tem
   evt_fu_factions_see_through: {
     publicly_reconcile: { durationTurns: 3, effectPerTurn: { stabilityDelta: +1 } },
   },
-  evt_exp_esp_military_secrets_stolen: {
+    evt_exp_esp_military_secrets_stolen: {
     feed_false_plans: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+    change_all_plans: { durationTurns: 2, effectPerTurn: { treasuryDelta: -40 } },
   },
+
   evt_exp_env_mine_contamination: {
     invest_in_drainage: { durationTurns: 4, effectPerTurn: { treasuryDelta: -6 } },
     continue_operations: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1, treasuryDelta: +4 } },
@@ -1329,26 +1365,582 @@ export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, Tem
     launch_rescue_operations: { durationTurns: 3, effectPerTurn: { treasuryDelta: -6 } },
     prioritize_infrastructure: { durationTurns: 4, effectPerTurn: { regionDevelopmentDelta: +1 } },
   },
-  evt_exp_eco_black_market: {
+    evt_exp_eco_black_market: {
     infiltrate_and_tax: { durationTurns: 3, effectPerTurn: { treasuryDelta: +6, espionageNetworkDelta: -1 } },
+    crack_down_harshly: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    tolerate_for_now: { durationTurns: 2, effectPerTurn: { treasuryDelta: +3 } },
   },
-  evt_exp_dip_trade_embargo_threat: {
+
+    evt_exp_dip_trade_embargo_threat: {
     seek_alternative_markets: { durationTurns: 4, effectPerTurn: { treasuryDelta: +4, merchantSatDelta: +1 } },
+    accept_the_embargo: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
   },
+
   evt_exp_dip_spy_scandal: {
     offer_intelligence_sharing: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: -1 } },
   },
   evt_exp_cul_identity_crisis: {
     forge_new_cultural_synthesis: { durationTurns: 4, effectPerTurn: { culturalCohesionDelta: +1, treasuryDelta: -3 } },
   },
-  evt_exp_cc_tax_burden_dispute: {
+    evt_exp_cc_tax_burden_dispute: {
     commission_tax_review: { durationTurns: 3, effectPerTurn: { treasuryDelta: -4 } },
+    maintain_noble_exemptions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -3 } },
+    redistribute_tax_burden: { durationTurns: 2, effectPerTurn: { commonerSatDelta: +1, nobilitySatDelta: -1 } },
   },
-  evt_exp_chain_guild_rev_council: {
+
+    evt_exp_chain_guild_rev_council: {
     grant_council_representation: { durationTurns: 4, effectPerTurn: { nobilitySatDelta: -1, merchantSatDelta: +1 } },
+    arrest_ringleaders: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    offer_economic_concessions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
   },
-  evt_cond_plague_mild: {
+
+    evt_cond_plague_mild: {
     quarantine_district: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1, treasuryDelta: -5 } },
     hire_healers: { durationTurns: 2, effectPerTurn: { treasuryDelta: -8 } },
+    ignore_sickness: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+
+  evt_social_unrest_moderate: {
+    hold_public_festival: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    make_concessions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    suppress_riots: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_social_criminal_moderate: {
+    crack_down_syndicates: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    recruit_informants: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    tolerate_black_market: { durationTurns: 2, effectPerTurn: { treasuryDelta: -3 } },
+  },
+  evt_social_corruption_moderate: {
+    accept_status_quo: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    purge_corrupt_officials: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    reform_tax_collection: { durationTurns: 2, effectPerTurn: { treasuryDelta: +10 } },
+  },
+  evt_social_banditry_moderate: {
+    fortify_trade_routes: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    military_sweep: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    negotiate_brigands: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+  },
+  evt_pop_overcrowding_crisis: {
+    emergency_construction: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+    endure_squalor: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    forced_relocation: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_pop_migration_crisis: {
+    emergency_relief: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    let_them_leave: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    seal_borders: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_pop_decline: {
+    accept_decline: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    attract_immigrants: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    encourage_families: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_winter_food_shortage: {
+    impose_strict_rationing: { durationTurns: 2, effectPerTurn: { foodDelta: +5 } },
+    purchase_emergency_grain: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    request_neighbor_aid: { durationTurns: 2, effectPerTurn: { foodDelta: +6 } },
+  },
+  evt_winter_blizzard: {
+    distribute_fuel_and_blankets: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_uprising_reform_resistance: {
+    abandon_reforms: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    compromise_on_reforms: { durationTurns: 2, effectPerTurn: { commonerSatDelta: -1 } },
+    override_nobility: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_underground_heretical_movement: {
+    double_down_suppression: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    infiltrate_movement: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    public_amnesty: { durationTurns: 2, effectPerTurn: { faithDelta: -1 } },
+  },
+  evt_trade_war_escalation: {
+    capitulate: { durationTurns: 2, effectPerTurn: { treasuryDelta: +5 } },
+    embargo_neighbor: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    seek_alternative_markets: { durationTurns: 2, effectPerTurn: { treasuryDelta: -8 } },
+  },
+  evt_trade_route_disruption_root: {
+    negotiate_with_disruptors: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    redirect_to_alternate: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+    send_military_escorts: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_theological_schism_brewing: {
+    embrace_new_thought: { durationTurns: 2, effectPerTurn: { faithDelta: -1 } },
+    host_grand_debate: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    quietly_suppress: { durationTurns: 2, effectPerTurn: { heterodoxyDelta: -1 } },
+  },
+  evt_summer_drought: {
+    pray_for_rain: { durationTurns: 2, effectPerTurn: { foodDelta: -10 } },
+    ration_water_supplies: { durationTurns: 2, effectPerTurn: { foodDelta: -6 } },
+  },
+  evt_succession_whispers: {
+    address_publicly: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    crack_down_harder: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    redirect_attention: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_succession_resolution: {
+    crown_heir_publicly: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    exile_rivals: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    grant_rival_concessions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+  },
+  evt_succession_question: {
+    convene_council: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    declare_heir: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    silence_rumors: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_succession_heir_challenged: {
+    discredit_rival: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    imprison_rival: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    negotiate_with_rival: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_succession_council_deadlock: {
+    dissolve_council: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    extend_deliberations: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    force_decision: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_succession_anxiety_root: {
+    convene_great_lords: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    name_heir_publicly: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    suppress_rumors: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_schism_underground_worship: {
+    crack_down: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    infiltrate_cells: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    tolerate_quietly: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_schism_reform_backlash: {
+    appease_clergy: { durationTurns: 2, effectPerTurn: { heterodoxyDelta: -1 } },
+    impose_silence: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    stand_with_reformists: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_schism_factions: {
+    back_traditionalists: { durationTurns: 2, effectPerTurn: { faithDelta: +1 } },
+    remain_neutral: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    support_reformers: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_regional_unrest: {
+    summon_local_leaders: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_region_separatist_sentiment: {
+    dispatch_royal_governor: { durationTurns: 2, effectPerTurn: { treasuryDelta: -8 } },
+    show_of_force: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_plague_noble_spread: {
+    emergency_measures: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    isolate_and_wait: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_plague_bankruptcy: {
+    emergency_loans: { durationTurns: 2, effectPerTurn: { treasuryDelta: +13 } },
+    levy_crisis_tax: { durationTurns: 2, effectPerTurn: { treasuryDelta: +10 } },
+    slash_all_spending: { durationTurns: 2, effectPerTurn: { treasuryDelta: +6 } },
+  },
+  evt_plague_aftermath: {
+    exploit_cheap_labor: { durationTurns: 2, effectPerTurn: { treasuryDelta: +13 } },
+  },
+  evt_noble_succession_dispute: {
+    let_nobles_settle_it: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    mediate_succession: { durationTurns: 2, effectPerTurn: { treasuryDelta: -8 } },
+    support_senior_claimant: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_noble_resentment_merchant_favor: {
+    appease_nobility: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    maintain_merchant_policies: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    mediate_compromise: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_noble_land_seizure: {
+    impose_compensation: { durationTurns: 2, effectPerTurn: { treasuryDelta: +5 } },
+    reverse_seizures: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    uphold_noble_claims: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_noble_intrigue_discovered: {
+    confront_directly: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    ignore_for_now: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    launch_counter_intelligence: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_mutiny_pay_bankrupt: {
+    emergency_taxation: { durationTurns: 2, effectPerTurn: { treasuryDelta: +13 } },
+    reduce_military_size: { durationTurns: 2, effectPerTurn: { treasuryDelta: +6 } },
+    seize_noble_assets: { durationTurns: 2, effectPerTurn: { treasuryDelta: +16 } },
+  },
+  evt_military_equipment_shortage_2: {
+    full_rearmament_program: { durationTurns: 2, effectPerTurn: { treasuryDelta: -40 } },
+    reduce_force_size: { durationTurns: 2, effectPerTurn: { militaryEquipmentDelta: +1 } },
+    request_allied_supplies: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_merchant_tax_shortfall: {
+    cut_spending: { durationTurns: 2, effectPerTurn: { treasuryDelta: +3 } },
+    raise_taxes_elsewhere: { durationTurns: 2, effectPerTurn: { treasuryDelta: +6 } },
+    reverse_concessions: { durationTurns: 2, effectPerTurn: { treasuryDelta: +8 } },
+  },
+  evt_merchant_smuggling_ring: {
+    infiltrate_network: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+    levy_fines_and_warn: { durationTurns: 2, effectPerTurn: { treasuryDelta: +8 } },
+    raid_smuggling_operation: { durationTurns: 2, effectPerTurn: { treasuryDelta: +13 } },
+  },
+  evt_merchant_guild_demands_root: {
+    grant_council_seat: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    offer_tax_concessions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    refuse_reassert_authority: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_merchant_council_overreach: {
+    dissolve_council: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    limit_council_powers: { durationTurns: 2, effectPerTurn: { nobilitySatDelta: +1 } },
+    side_with_merchants: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_harvest_blight: {
+    purchase_foreign_grain: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+    redirect_labor_to_salvage: { durationTurns: 2, effectPerTurn: { foodDelta: -3 } },
+  },
+  evt_grain_ration_riots: {
+    distribute_reserves: { durationTurns: 2, effectPerTurn: { foodDelta: -3 } },
+    negotiate_with_rioters: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+    suppress_market_riots: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_grain_noble_plot: {
+    arrest_ringleaders: { durationTurns: 2, effectPerTurn: { foodDelta: -1 } },
+    negotiate_concessions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    show_of_force: { durationTurns: 2, effectPerTurn: { foodDelta: -3 } },
+  },
+  evt_grain_import_merchant_leverage: {
+    grant_tariff_exemptions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    partial_concessions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+    refuse_merchant_demands: { durationTurns: 2, effectPerTurn: { treasuryDelta: +1 } },
+  },
+  evt_grain_crisis_root: {
+    import_grain: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    ration_strictly: { durationTurns: 2, effectPerTurn: { foodDelta: +3 } },
+    seize_noble_reserves: { durationTurns: 2, effectPerTurn: { foodDelta: +6 } },
+  },
+  evt_foreign_invasion_rumor: {
+    dismiss_as_rumor: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    dispatch_scouts: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    mobilize_defenses: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+  },
+  evt_faith_schism_root: {
+    back_orthodox: { durationTurns: 2, effectPerTurn: { heterodoxyDelta: -1 } },
+    support_reformists: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    suppress_all_factions: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_commoner_plague_outbreak: {
+    distribute_herbal_remedies: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    mobilize_clergy_healers: { durationTurns: 2, effectPerTurn: { treasuryDelta: -15 } },
+  },
+  evt_clergy_power_grab: {
+    accept_clergy_influence: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    assert_royal_authority: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    negotiate_boundaries: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_border_incursion_root: {
+    fortify_and_absorb: { durationTurns: 2, effectPerTurn: { foodDelta: -6 } },
+  },
+  evt_border_fortify_famine: {
+    emergency_food_imports: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    enforce_rationing: { durationTurns: 2, effectPerTurn: { foodDelta: +1 } },
+    redistribute_reserves: { durationTurns: 2, effectPerTurn: { foodDelta: +3 } },
+  },
+  evt_audit_corruption_found: {
+    cover_up_findings: { durationTurns: 2, effectPerTurn: { treasuryDelta: -3 } },
+    demand_restitution: { durationTurns: 2, effectPerTurn: { treasuryDelta: +13 } },
+    prosecute_officials: { durationTurns: 2, effectPerTurn: { treasuryDelta: +6 } },
+  },
+  evt_exp_rel_sacred_desecration: {
+    call_for_reconciliation: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    hunt_perpetrators: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+  },
+  evt_exp_rel_divine_portent: {
+    call_for_penance: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    declare_divine_favor: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    dismiss_superstition: { durationTurns: 2, effectPerTurn: { faithDelta: -1 } },
+  },
+  evt_exp_rel_clerical_corruption: {
+    internal_reform: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    look_the_other_way: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    royal_inquisition: { durationTurns: 2, effectPerTurn: { treasuryDelta: +10 } },
+  },
+  evt_exp_po_refugee_influx: {
+    close_the_borders: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_po_prison_overcrowding: {
+    build_new_prison: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+    forced_labor_gangs: { durationTurns: 2, effectPerTurn: { treasuryDelta: +10 } },
+    release_minor_offenders: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_exp_po_market_riots: {
+    deploy_garrison: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    negotiate_with_ringleaders: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+  },
+  evt_exp_po_gang_warfare: {
+    offer_gang_leaders_positions: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    pit_gangs_against_each_other: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_exp_po_crime_wave: {
+    empower_neighborhood_watches: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    public_executions: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_mil_war_preparations: {
+    full_war_mobilization: { durationTurns: 2, effectPerTurn: { treasuryDelta: -40 } },
+  },
+  evt_exp_mil_siege_preparations: {
+    full_siege_mobilization: { durationTurns: 2, effectPerTurn: { treasuryDelta: -40 } },
+  },
+  evt_exp_mil_naval_operations: {
+    commission_war_galleys: { durationTurns: 2, effectPerTurn: { treasuryDelta: -23 } },
+    focus_on_land_forces: { durationTurns: 2, effectPerTurn: { militaryReadinessDelta: -1 } },
+    refit_merchant_vessels: { durationTurns: 2, effectPerTurn: { treasuryDelta: -11 } },
+  },
+  evt_exp_mil_discipline_crisis: {
+    address_grievances: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    enforce_strict_discipline: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    rotate_troublesome_units: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_mil_court_martial: {
+    pardon_and_reassign: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    public_tribunal: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    quiet_discharge: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_mil_cavalry_training: {
+    expand_existing_stables: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    maintain_infantry_focus: { durationTurns: 2, effectPerTurn: { militaryReadinessDelta: -1 } },
+  },
+  evt_exp_mil_academy_proposal: {
+    defer_to_peacetime: { durationTurns: 2, effectPerTurn: { militaryMoraleDelta: -1 } },
+    expand_officer_training: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    found_royal_academy: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+  },
+  evt_exp_kno_student_uprising: {
+    close_academy_temporarily: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    disperse_by_force: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    negotiate_with_students: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+    evt_exp_kno_rival_hoards: {
+    develop_independently: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    propose_knowledge_exchange: { durationTurns: 3, effectPerTurn: { culturalCohesionDelta: +1 } },
+    send_spies_to_copy: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+  },
+
+  evt_exp_kno_plague_remedy: {
+    dismiss_as_quackery: { durationTurns: 2, effectPerTurn: { treasuryDelta: -1 } },
+    mass_produce_remedy: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    test_on_volunteers: { durationTurns: 2, effectPerTurn: { treasuryDelta: -8 } },
+  },
+  evt_exp_kno_library_fire: {
+    let_it_burn: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_exp_kno_censorship_demand: {
+    create_review_board: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    enforce_censorship: { durationTurns: 2, effectPerTurn: { faithDelta: +1 } },
+    protect_free_inquiry: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_exp_kno_alchemist_discovery: {
+    fund_military_application: { durationTurns: 2, effectPerTurn: { treasuryDelta: -23 } },
+    restrict_to_civilian_use: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    suppress_findings: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_kgd_power_consolidation: {
+    centralize_authority: { durationTurns: 2, effectPerTurn: { treasuryDelta: +10 } },
+    delegate_to_governors: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    maintain_balance: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_kgd_corruption_investigation: {
+    offer_amnesty: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    private_purge: { durationTurns: 2, effectPerTurn: { treasuryDelta: +10 } },
+    public_tribunal: { durationTurns: 2, effectPerTurn: { treasuryDelta: +16 } },
+  },
+  evt_exp_fod_labour_shortage: {
+    accept_reduced_harvest: { durationTurns: 2, effectPerTurn: { foodDelta: -6 } },
+  },
+  evt_exp_fod_imports_blocked: {
+    enforce_strict_rationing: { durationTurns: 2, effectPerTurn: { foodDelta: +3 } },
+  },
+  evt_exp_fod_distribution_inequity: {
+    maintain_current_distribution: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    mandate_equal_rationing: { durationTurns: 2, effectPerTurn: { foodDelta: -3 } },
+    open_royal_granaries: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_exp_fod_crop_disease: {
+    pray_for_divine_intervention: { durationTurns: 2, effectPerTurn: { foodDelta: -16 } },
+  },
+  evt_exp_esp_underground_resistance: {
+    address_grievances: { durationTurns: 2, effectPerTurn: { treasuryDelta: -23 } },
+  },
+  evt_exp_esp_poisoning_attempt: {
+    hire_royal_taster: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    purge_kitchen_staff: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+    trace_poison_source: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+  },
+  evt_exp_esp_intelligence_failure: {
+    accept_losses: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    rebuild_network: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+    scapegoat_spymaster: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_esp_enemy_infiltration: {
+    martial_law_purge: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+    targeted_counter_ops: { durationTurns: 2, effectPerTurn: { treasuryDelta: -33 } },
+  },
+  evt_exp_esp_assassination_plot: {
+    double_royal_guard: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    preemptive_arrests: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    set_counter_trap: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_exp_env_volcanic_ash_cloud: {
+    seal_granaries_and_ration: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_exp_env_locust_swarm: {
+    organize_pest_drives: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    pray_for_deliverance: { durationTurns: 2, effectPerTurn: { foodDelta: -6 } },
+  },
+  evt_exp_env_harsh_winter_early: {
+    accelerate_harvest: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    open_emergency_stores: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    trust_preparations: { durationTurns: 2, effectPerTurn: { foodDelta: -1 } },
+  },
+  evt_exp_eco_warehouse_fire: {
+    compensate_merchants_partially: { durationTurns: 2, effectPerTurn: { treasuryDelta: -11 } },
+  },
+  evt_exp_eco_smuggling: {
+    bribe_smuggler_captains: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    ignore_the_smuggling: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_exp_eco_foreign_trade_disruption: {
+    endure_the_shortfall: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    invest_in_domestic_production: { durationTurns: 2, effectPerTurn: { treasuryDelta: -23 } },
+  },
+  evt_exp_eco_debt_crisis: {
+    impose_austerity_measures: { durationTurns: 2, effectPerTurn: { treasuryDelta: +20 } },
+    negotiate_with_creditors: { durationTurns: 2, effectPerTurn: { treasuryDelta: +10 } },
+  },
+  evt_exp_eco_currency_debasement: {
+    debase_the_coinage: { durationTurns: 2, effectPerTurn: { treasuryDelta: +16 } },
+    raise_emergency_tax: { durationTurns: 2, effectPerTurn: { treasuryDelta: +13 } },
+  },
+  evt_exp_cul_oral_history_keeper: {
+    appoint_royal_chronicler: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    let_traditions_fade: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    transcribe_oral_traditions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_exp_cul_military_ceremony: {
+    grand_military_parade: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+    skip_ceremony: { durationTurns: 2, effectPerTurn: { militaryMoraleDelta: -1 } },
+    solemn_remembrance: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+  },
+  evt_exp_cul_heretical_art: {
+    convene_clergy_tribunal: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    defend_artistic_freedom: { durationTurns: 2, effectPerTurn: { faithDelta: -1 } },
+    destroy_offensive_works: { durationTurns: 2, effectPerTurn: { faithDelta: +1 } },
+  },
+  evt_exp_cul_dialect_tensions: {
+    promote_bilingual_policy: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+  },
+  evt_exp_cc_military_privilege_demand: {
+    grant_military_estates: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    offer_honorary_titles: { durationTurns: 2, effectPerTurn: { treasuryDelta: -6 } },
+    refuse_special_treatment: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_exp_cc_land_ownership_dispute: {
+    enforce_existing_deeds: { durationTurns: 2, effectPerTurn: { foodDelta: -1 } },
+    establish_tenant_protections: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_exp_cc_clerical_overreach: {
+    limit_church_holdings: { durationTurns: 2, effectPerTurn: { faithDelta: -1 } },
+    negotiate_boundaries: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+    sanction_expanded_tithes: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+  },
+  evt_exp_chain_spy_war_resolution: {
+    cut_losses_and_rebuild: { durationTurns: 2, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_exp_chain_renaissance_golden: {
+    channel_into_practical_arts: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    declare_golden_age: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+    maintain_current_course: { durationTurns: 2, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_chain_reformation_split: {
+    mediate_between_factions: { durationTurns: 2, effectPerTurn: { treasuryDelta: -8 } },
+    side_with_orthodox: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+    side_with_reformers: { durationTurns: 2, effectPerTurn: { faithDelta: -1 } },
+  },
+  evt_exp_chain_rebellion_separatist: {
+    promise_reforms: { durationTurns: 2, effectPerTurn: { treasuryDelta: -1 } },
+  },
+  evt_exp_chain_drought_summer: {
+    endure_and_hope: { durationTurns: 2, effectPerTurn: { foodDelta: -5 } },
+    import_water_by_caravan: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+  },
+  evt_exp_chain_drought_autumn: {
+    emergency_food_imports: { durationTurns: 2, effectPerTurn: { treasuryDelta: -33 } },
+    strict_rationing: { durationTurns: 2, effectPerTurn: { foodDelta: +1 } },
+  },
+  evt_exp_chain_corruption_investigation: {
+    expand_investigation: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    offer_amnesty_for_testimony: { durationTurns: 2, effectPerTurn: { treasuryDelta: +10 } },
+    suppress_findings: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_exp_chain_border_war_mobilization: {
+    defensive_posture: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    full_mobilization: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+  },
+  evt_cond_harshwinter_moderate: {
+    distribute_firewood: { durationTurns: 2, effectPerTurn: { treasuryDelta: -13 } },
+    open_shelters: { durationTurns: 2, effectPerTurn: { treasuryDelta: -8 } },
+    wait_for_thaw: { durationTurns: 2, effectPerTurn: { militaryMoraleDelta: -1 } },
+  },
+  evt_cond_flood_moderate: {
+    evacuate_lowlands: { durationTurns: 2, effectPerTurn: { treasuryDelta: -10 } },
+    let_floodwaters_pass: { durationTurns: 2, effectPerTurn: { foodDelta: -5 } },
+    reinforce_levees: { durationTurns: 2, effectPerTurn: { treasuryDelta: -20 } },
+  },
+  evt_cond_drought_moderate: {
+    emergency_irrigation: { durationTurns: 2, effectPerTurn: { treasuryDelta: -26 } },
+    import_water: { durationTurns: 2, effectPerTurn: { treasuryDelta: -16 } },
+    pray_for_rain: { durationTurns: 2, effectPerTurn: { faithDelta: +1 } },
+  },
+  evt_exp_w2_monetary_crisis: {
+    borrow_from_the_merchants: { durationTurns: 4, effectPerTurn: { treasuryDelta: -4 } },
+    seize_the_old_hoards: { durationTurns: 3, effectPerTurn: { nobilitySatDelta: -1 } },
+  },
+  evt_exp_w2_mercenary_defection: {
+    brand_them_as_deserters: { durationTurns: 3, effectPerTurn: { militaryMoraleDelta: -1 } },
+    match_the_foreign_wages: { durationTurns: 4, effectPerTurn: { treasuryDelta: -8 } },
+    recruit_local_replacements: { durationTurns: 3, effectPerTurn: { militaryReadinessDelta: +1 } },
+  },
+  evt_exp_w2_food_riot_escalation: {
+    hang_the_ringleaders: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1 } },
+    open_the_royal_granaries: { durationTurns: 3, effectPerTurn: { foodDelta: -2 } },
+    post_guards_at_the_markets: { durationTurns: 3, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_w2_bonded_labor_revolt: {
+    crush_with_the_levy: { durationTurns: 3, effectPerTurn: { militaryMoraleDelta: -1 } },
+    grant_limited_emancipation: { durationTurns: 4, effectPerTurn: { nobilitySatDelta: -1 } },
+    negotiate_better_terms: { durationTurns: 3, effectPerTurn: { commonerSatDelta: +1 } },
+  },
+  evt_exp_w2_prophet_appears: {
+    confine_to_a_monastery: { durationTurns: 3, effectPerTurn: { heterodoxyDelta: +1 } },
+    denounce_as_false: { durationTurns: 3, effectPerTurn: { clergySatDelta: -1 } },
+    invite_to_the_cathedral: { durationTurns: 4, effectPerTurn: { faithDelta: +1 } },
+  },
+  evt_exp_w2_royal_illness: {
+    govern_through_the_sickness: { durationTurns: 4, effectPerTurn: { stabilityDelta: -1 } },
+    summon_foreign_physicians: { durationTurns: 3, effectPerTurn: { treasuryDelta: -6 } },
+    trust_the_cathedral_healers: { durationTurns: 4, effectPerTurn: { faithDelta: +1 } },
+  },
+  evt_exp_w2_bandit_lord_uprising: {
+    offer_the_lord_a_title: { durationTurns: 4, effectPerTurn: { nobilitySatDelta: -1 } },
+    pay_his_silence: { durationTurns: 3, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_exp_w2_drought_escalation: {
+    lead_a_rain_procession: { durationTurns: 3, effectPerTurn: { faithDelta: +1 } },
+    ration_water_strictly: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1 } },
+  },
+  evt_exp_w2_well_poisoning: {
+    blame_a_rival: { durationTurns: 3, effectPerTurn: { diplomacyDeltas: {} } },
+    hunt_the_saboteurs: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+    quietly_replace_the_wells: { durationTurns: 3, effectPerTurn: { treasuryDelta: -5 } },
+  },
+  evt_exp_w2_naval_disaster: {
+    blame_the_captain: { durationTurns: 2, effectPerTurn: { militaryMoraleDelta: -1 } },
+    fund_emergency_shipyard: { durationTurns: 4, effectPerTurn: { treasuryDelta: -6 } },
+    recall_merchant_vessels: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1 } },
+  },
+  evt_exp_w2_plague_variant: {
+    open_hospitals_for_all: { durationTurns: 4, effectPerTurn: { treasuryDelta: -4, commonerSatDelta: +1 } },
+    pray_and_wait: { durationTurns: 3, effectPerTurn: { faithDelta: +1 } },
   },
 };
