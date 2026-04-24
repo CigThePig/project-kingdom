@@ -1,5 +1,8 @@
 // Phase 1 — Procedural Naming System
 // Word banks for procedural kingdom, ruler, dynasty, region, and agent name generation.
+// Card-audit workstream Phase 6 also stores the class-supplicant stem library
+// at the bottom of this file (used as author-time prose snippets, not
+// substituted at runtime).
 // Pure data. No logic.
 
 // ============================================================
@@ -257,3 +260,45 @@ export const DEFAULT_CULTURE_BIAS: CultureBias = {
   rulerNameBoost: [],
   dynastyRootBoost: [],
 };
+
+// ============================================================
+// Class Supplicant Stems (Phase 6 — card-audit workstream)
+// ============================================================
+// Shared opening phrases indexed by family × class. Used at author time to
+// keep class-naming retexts coherent across the corpus instead of 331 bespoke
+// sentences. Stems embed class labels literally (so the scanner's literal-
+// match path resolves) and leave `{region}` / `{settlement}` tokens in place
+// for runtime substitution where a card's binding supplies them.
+//
+// Keys match the `family` values reported by the audit corpus.
+
+export const CLASS_SUPPLICANT_STEMS = {
+  petition: {
+    Nobility: 'A delegation of the Nobility has requested audience at court',
+    Clergy: 'A senior Clergy delegation has sought audience at court',
+    Merchants: 'Masters of the Merchant Guild have requested audience',
+    Commoners: 'Petitioners from the Commonfolk have gathered at the palace gates',
+    MilitaryCaste: 'Captains of the Military Caste have requested an audience',
+  },
+  crisis: {
+    Nobility: 'Word from the Nobility cuts through the court',
+    Clergy: 'The Clergy send urgent warning',
+    Merchants: 'The Merchant Guild rushes word to the throne',
+    Commoners: 'Unrest rises among the Commonfolk',
+    MilitaryCaste: 'The Military Caste sounds the alarm',
+  },
+  decree: {
+    Nobility: 'Before the assembled Nobility, the crown declares',
+    Clergy: 'To the Clergy of the realm, the crown declares',
+    Merchants: 'To the Merchant Guild, the crown decrees',
+    Commoners: 'To the Commonfolk of every province, the crown decrees',
+    MilitaryCaste: 'Before the Military Caste, the crown decrees',
+  },
+  notification: {
+    Nobility: 'A dispatch from the Nobility reaches the court',
+    Clergy: 'Word arrives from the Clergy',
+    Merchants: 'A report from the Merchant Guild reaches the court',
+    Commoners: 'A dispatch from the Commonfolk reaches the court',
+    MilitaryCaste: 'A report from the Military Caste reaches the court',
+  },
+} as const;

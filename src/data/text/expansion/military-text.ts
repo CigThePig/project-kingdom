@@ -6,7 +6,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_border_patrol_gaps: {
     title: 'Gaps in the Border Watch',
-    body: '{marshal_or_fallback} reports that patrol routes along the frontier have grown dangerously thin this {season}. With the force\'s morale {morale_tier} and equipment {equipment_condition_tier}, several outposts have gone unmanned for weeks, and local villages report unfamiliar riders passing unchallenged through Crown lands.',
+    body: '{marshal_or_fallback} reports that patrol routes along the frontier have grown dangerously thin this {season}. With the force\'s morale {morale_tier} and equipment {equipment_condition_tier}, several outposts have gone unmanned for weeks, and local villages report unfamiliar riders passing unchallenged through Crown lands. The {class_plural} await the crown\'s reply.',
     choices: {
       increase_patrol_frequency: 'Increase Patrol Frequency',
       recruit_local_militia: 'Recruit Local Militia',
@@ -19,7 +19,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_weapons_smithing: {
     title: 'The Smiths Seek Royal Patronage',
-    body: 'A delegation of master smiths has petitioned the throne for investment in new forges and workshops. They promise superior arms for a garrison whose equipment {marshal_or_fallback} himself concedes is {equipment_condition_tier}, but the nobility questions whether Crown funds — drawn from a treasury in {treasury_tier} condition — should flow to common tradesmen.',
+    body: 'A delegation of master smiths has petitioned the throne for investment in new forges and workshops. They promise superior arms for a garrison whose equipment {marshal_or_fallback} himself concedes is {equipment_condition_tier}, but the nobility questions whether Crown funds — drawn from a treasury in {treasury_tier} condition — should flow to common tradesmen. The {class_plural} await the crown\'s reply.',
     choices: {
       fund_royal_armory: 'Fund a Royal Armory',
       contract_guild_smiths: 'Contract Guild Smiths',
@@ -32,7 +32,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_cavalry_training: {
     title: 'Proposal for a Cavalry Academy',
-    body: "{marshal_or_fallback} argues that with the force's equipment only {equipment_condition_tier}, the kingdom's mounted forces lag badly behind those of {ruler_full}. The proposal: convert fertile pastureland into dedicated training grounds — a plan that would strengthen the cavalry but displease those who farm the land.",
+    body: "{marshal_or_fallback} argues that with the force's equipment only {equipment_condition_tier}, the kingdom's mounted forces lag badly behind those of {ruler_full}. The proposal: convert fertile pastureland into dedicated training grounds — a plan that would strengthen the cavalry but displease those who farm the land. The {class_plural} are watching every move of the court.",
     choices: {
       build_cavalry_academy: 'Build a Cavalry Academy',
       expand_existing_stables: 'Expand Existing Stables',
@@ -45,7 +45,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_siege_preparations: {
     title: '{neighbor} Masses Near the Border',
-    body: "{marshal_or_fallback} confirms that {ruler_full} has assembled siege engines and supply trains within striking distance of your southern fortifications this {season}, with the mood in {capital} reported as {rival_mood}. The generals urge immediate preparations, but full mobilization would strain a treasury in {treasury_tier} condition and alarm the populace.",
+    body: "{marshal_or_fallback} confirms that {ruler_full} has assembled siege engines and supply trains within striking distance of your southern fortifications this {season}, with the mood in {capital} reported as {rival_mood}. The generals urge immediate preparations, but full mobilization would strain a treasury in {treasury_tier} condition and alarm the populace. The {class_plural} are watching every move of the court.",
     choices: {
       full_siege_mobilization: 'Order Full Mobilization',
       reinforce_key_fortifications: 'Reinforce Key Fortifications',
@@ -97,7 +97,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_arms_deal: {
     title: '{neighbor} Offers Arms',
-    body: 'Envoys of {ruler_full} propose a shipment of crossbows and plate armor at favorable terms — welcome news with the royal force\'s equipment only {equipment_condition_tier}. The deal would strengthen your forces and deepen ties with {dynasty}, though rivals may view such an arrangement as a provocation.',
+    body: 'Envoys of {ruler_full} propose a shipment of crossbows and plate armor at favorable terms — welcome news with the royal force\'s equipment only {equipment_condition_tier}. The deal would strengthen your forces and deepen ties with {dynasty}, though rivals may view such an arrangement as a provocation. The {class_plural} are watching every move of the court.',
     choices: {
       accept_arms_shipment: 'Accept the Shipment',
       negotiate_mutual_pact: 'Negotiate a Mutual Pact',
@@ -123,7 +123,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_war_hero: {
     title: 'A Soldier\'s Valor',
-    body: 'Word has spread of a garrison commander who single-handedly held a border crossing against bandits for three days this {season}. The troops — whose morale had sat {morale_tier} before the tale reached them — speak of little else, and the common folk have begun calling the soldier by name in their prayers.',
+    body: 'Word has spread of a garrison commander who single-handedly held a border crossing against bandits for three days this {season}. The troops — whose morale had sat {morale_tier} before the tale reached them — speak of little else, and the common folk have begun calling the soldier by name in their prayers. The {class_plural} await the crown\'s reply.',
     choices: {
       public_ceremony: 'Hold a Public Ceremony',
       promote_to_officer: 'Promote to Officer Rank',
@@ -136,7 +136,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_court_martial: {
     title: 'An Officer Accused',
-    body: 'A ranking officer stands accused of selling military provisions on the black market and falsifying patrol reports. The evidence is damning, but the accused has powerful friends among the nobility and loyal subordinates who threaten to desert if he is punished.',
+    body: 'A ranking officer stands accused of selling military provisions on the black market and falsifying patrol reports. The evidence is damning, but the accused has powerful friends among the nobility and loyal subordinates who threaten to desert if he is punished. The {class_plural} are watching every move of the court.',
     choices: {
       public_tribunal: 'Convene a Public Tribunal',
       quiet_discharge: 'Arrange a Quiet Discharge',
@@ -175,7 +175,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_intel_report: {
     title: 'Whispers from the Border',
-    body: "{spymaster_or_fallback} presents a troubling intelligence briefing — the service's current reach on {neighbor} is {intel_tier}. {ruler_full} has been conducting nighttime patrols along disputed territory and stockpiling timber suitable for siege engines. The activity may be routine, or it may signal darker intentions from {capital}.",
+    body: "{spymaster_or_fallback} presents a troubling intelligence briefing — the service's current reach on {neighbor} is {intel_tier}. {ruler_full} has been conducting nighttime patrols along disputed territory and stockpiling timber suitable for siege engines. The activity may be routine, or it may signal darker intentions from {capital}. The {class_plural} await the crown's reply.",
     choices: {
       increase_border_watch: 'Increase the Border Watch',
       deploy_counter_intelligence: 'Deploy Counter-Intelligence',
@@ -188,7 +188,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_conscription_dispute: {
     title: 'The Levy Meets Resistance',
-    body: 'Village elders have refused to surrender their young men to this {season}\'s military levy, citing stores at a {stores_tier} mark and the kingdom\'s broken promises of fair compensation. Several conscription officers were turned away at spearpoint.',
+    body: 'Village elders have refused to surrender their young men to this {season}\'s military levy, citing stores at a {stores_tier} mark and the kingdom\'s broken promises of fair compensation. Several conscription officers were turned away at spearpoint. The {class_plural} await the crown\'s reply.',
     choices: {
       enforce_conscription_quotas: 'Enforce the Quotas',
       offer_volunteer_incentives: 'Offer Volunteer Incentives',
@@ -201,7 +201,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_war_preparations: {
     title: 'The Drums of War',
-    body: "Relations with {neighbor} have deteriorated beyond recovery. {marshal_or_fallback}'s war council convenes in grim assembly, laying out the costs and consequences of full mobilization against {ruler_full}. With the force's morale {morale_tier}, its equipment {equipment_condition_tier}, and the treasury in {treasury_tier} condition, every path forward demands sacrifice; the only question is what kind.",
+    body: "Relations with {neighbor} have deteriorated beyond recovery. {marshal_or_fallback}'s war council convenes in grim assembly, laying out the costs and consequences of full mobilization against {ruler_full}. With the force's morale {morale_tier}, its equipment {equipment_condition_tier}, and the treasury in {treasury_tier} condition, every path forward demands sacrifice; the only question is what kind. The {class_plural} are watching every move of the court.",
     choices: {
       full_war_mobilization: 'Order Full War Mobilization',
       defensive_preparations_only: 'Prepare Defenses Only',
@@ -240,7 +240,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_weapon_innovation: {
     title: 'A Curious New Design',
-    body: 'An ingenious craftsman has presented designs for a novel crossbow mechanism that could be loaded and fired twice as fast as current models. The prototype is promising but unproven, and the smithing guilds are skeptical of outsider innovations.',
+    body: 'An ingenious craftsman has presented designs for a novel crossbow mechanism that could be loaded and fired twice as fast as current models. The prototype is promising but unproven, and the smithing guilds are skeptical of outsider innovations. The {class_plural} await the crown\'s reply.',
     choices: {
       fund_prototype: 'Fund the Prototype',
       commission_field_trials: 'Commission Field Trials',
@@ -253,7 +253,7 @@ export const EXPANSION_MILITARY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_mil_naval_operations: {
     title: 'The Question of a Fleet',
-    body: 'Your coastal advisors argue that the kingdom\'s neglected harbors leave vital trade routes undefended. Commissioning warships would protect commerce and project power along the coast, but the expense would be considerable and the army views naval spending as a diversion.',
+    body: 'Your coastal advisors argue that the kingdom\'s neglected harbors leave vital trade routes undefended. Commissioning warships would protect commerce and project power along the coast, but the expense would be considerable and the army views naval spending as a diversion. The {class_plural} are watching every move of the court.',
     choices: {
       commission_war_galleys: 'Commission War Galleys',
       refit_merchant_vessels: 'Refit Merchant Vessels',

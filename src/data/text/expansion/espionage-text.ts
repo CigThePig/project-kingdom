@@ -22,7 +22,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_spy_equipment_advance: {
     title: 'Advances in Covert Craft',
-    body: "A guild of skilled artisans has developed improved tools for clandestine work — concealed writing implements, undetectable lock mechanisms, and disguises of remarkable quality. {spymaster_or_fallback} would gladly equip the crown's agents, though their services do not come cheaply.",
+    body: "A guild of skilled artisans has developed improved tools for clandestine work — concealed writing implements, undetectable lock mechanisms, and disguises of remarkable quality. {spymaster_or_fallback} would gladly equip the crown's agents, though their services do not come cheaply. The {class_plural} await the crown's reply.",
     choices: {
       commission_equipment: 'Commission the Equipment',
       acknowledge_progress: 'Acknowledge Their Work',
@@ -52,7 +52,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_blackmail_discovery: {
     title: 'Compromising Documents Uncovered',
-    body: "{spymaster_or_fallback}'s agents have discovered documents revealing that a prominent noble has been secretly corresponding with {ruler_full}, promising favors in exchange for personal enrichment. The evidence is damning, and how you wield it will shape the balance of power at court.",
+    body: "{spymaster_or_fallback}'s agents have discovered documents revealing that a prominent noble has been secretly corresponding with {ruler_full}, promising favors in exchange for personal enrichment. The evidence is damning, and how you wield it will shape the balance of power at court. The {class_plural} await the crown's reply.",
     choices: {
       confront_noble_privately: 'Confront Privately',
       use_leverage_quietly: 'Use as Leverage',
@@ -101,7 +101,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_counter_espionage_raid: {
     title: 'Counter-Espionage Operation',
-    body: "{spymaster_or_fallback} has pinpointed a safe house operated by {ruler_full} within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation's scale and diplomatic fallout require careful consideration.",
+    body: "{spymaster_or_fallback} has pinpointed a safe house operated by {ruler_full} within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation's scale and diplomatic fallout require careful consideration. The {class_plural} are watching every move of the court.",
     choices: {
       full_scale_raid: 'Launch Full Raid',
       surgical_strike: 'Conduct Surgical Strike',
@@ -150,7 +150,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_underground_resistance: {
     title: 'Underground Resistance Movement',
-    body: '{spymaster_or_fallback} warns of an organized resistance movement that has taken root among the common folk, operating through hidden cells and secret meeting places. Their grievances are real, but their methods — sabotage, intimidation, and covert recruitment — pose a grave threat to order, and the movement is growing rapidly.',
+    body: '{spymaster_or_fallback} warns of an organized resistance movement that has taken root among the commonfolk, operating through hidden cells and secret meeting places. Their grievances are real, but their methods — sabotage, intimidation, and covert recruitment — pose a grave threat to order, and the movement is growing rapidly.',
     choices: {
       infiltrate_resistance: 'Infiltrate the Movement',
       address_grievances: 'Address Their Grievances',
@@ -159,7 +159,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_military_secrets_stolen: {
     title: 'Military Secrets Stolen',
-    body: "A breach of devastating proportions has occurred: detailed plans for the kingdom's frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {capital}. Winter's cover aided the thieves, and by now the intelligence may already be in {ruler}'s hands.",
+    body: "A breach of devastating proportions has occurred: detailed plans for the kingdom's frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {capital}. Winter's cover aided the thieves, and by now the intelligence may already be in {ruler}'s hands. The {class_plural} are watching every move of the court.",
     choices: {
       change_all_plans: 'Overhaul All Defenses',
       hunt_the_thief: 'Hunt Down the Thief',

@@ -888,6 +888,53 @@ describe('substituteSmartPlaceholders', () => {
         .toBe(' — the nobles watch closely');
     });
 
+    // ---- class / class_plural ----------------------------------
+
+    it('{class} resolves to the singular CLASS_LABEL when classId is in context', () => {
+      const state = createDefaultScenario();
+      const cases: Array<[PopulationClass, string]> = [
+        [PopulationClass.Nobility, 'Nobility'],
+        [PopulationClass.Clergy, 'Clergy'],
+        [PopulationClass.Merchants, 'Merchant Guild'],
+        [PopulationClass.Commoners, 'Commonfolk'],
+        [PopulationClass.MilitaryCaste, 'Military Caste'],
+      ];
+      for (const [classId, expected] of cases) {
+        const ctx: SmartTextContext = { classId };
+        expect(substituteSmartPlaceholders('{class}', state, ctx)).toBe(expected);
+      }
+    });
+
+    it('{class_plural} resolves to the plural CLASS_PLURAL_LABEL when classId is in context', () => {
+      const state = createDefaultScenario();
+      const cases: Array<[PopulationClass, string]> = [
+        [PopulationClass.Nobility, 'Nobles'],
+        [PopulationClass.Clergy, 'Clergy Members'],
+        [PopulationClass.Merchants, 'Merchants'],
+        [PopulationClass.Commoners, 'Commoners'],
+        [PopulationClass.MilitaryCaste, 'Soldiers'],
+      ];
+      for (const [classId, expected] of cases) {
+        const ctx: SmartTextContext = { classId };
+        expect(substituteSmartPlaceholders('{class_plural}', state, ctx)).toBe(expected);
+      }
+    });
+
+    it('{class} falls back to the pressured class when classId is missing', () => {
+      const state = mutate(createDefaultScenario(), (s) => {
+        s.population[PopulationClass.Clergy].satisfaction = 18;
+        s.population[PopulationClass.Clergy].satisfactionDeltaLastTurn = 0;
+      });
+      expect(substituteSmartPlaceholders('{class}', state)).toBe('Clergy');
+      expect(substituteSmartPlaceholders('{class_plural}', state)).toBe('Clergy Members');
+    });
+
+    it('{class} uses generic populace fallback when no class is pressured and no context', () => {
+      const state = createDefaultScenario();
+      expect(substituteSmartPlaceholders('{class}', state)).toBe('the populace');
+      expect(substituteSmartPlaceholders('{class_plural}', state)).toBe('the people');
+    });
+
     // ---- storyline_arc_note ------------------------------------
 
     it('{storyline_arc_note} is empty when no storyline is active', () => {

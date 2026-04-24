@@ -4,7 +4,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 1. Provincial Autonomy Dispute ---
   evt_exp_reg_autonomy_dispute: {
     title: 'Provincial Demands for Autonomy',
-    body: 'The governor of {region} — where the folk are presently {loyalty_tier} under a posture of {posture} — has petitioned the crown for expanded powers of self-governance. Local lords echo the call, citing the particular needs and traditions of their {terrain} reaches. Yielding may preserve peace, yet it risks emboldening others to seek the same.{prior_decision_clause:tax}',
+    body: 'The governor of {region} — where the folk are presently {loyalty_tier} under a posture of {posture} — has petitioned the crown for expanded powers of self-governance. Local lords echo the call, citing the particular needs and traditions of their {terrain} reaches. Yielding may preserve peace, yet it risks emboldening others to seek the same.{prior_decision_clause:tax} The {class_plural} await the crown\'s reply.',
     choices: {
       grant_limited_autonomy: 'Grant Limited Autonomy',
       reassert_central_control: 'Reassert Central Control',
@@ -48,7 +48,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 5. Regional Festival ---
   evt_exp_reg_festival: {
     title: 'A Provincial Harvest Festival',
-    body: 'The folk of {region} have organized an elaborate {season} celebration that has drawn attention across our lands. The local population — presently {loyalty_tier} under a posture of {posture} — looks to the crown for recognition, and your response will be taken as a measure of royal regard for the provinces.',
+    body: 'The folk of {region} have organized an elaborate {season} celebration that has drawn attention across our lands. The local population — presently {loyalty_tier} under a posture of {posture} — looks to the crown for recognition, and your response will be taken as a measure of royal regard for the provinces. The {class_plural} await the crown\'s reply.',
     choices: {
       royal_patronage: 'Extend Royal Patronage',
       attend_personally: 'Attend in Person',
@@ -59,7 +59,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 6. Provincial Governor Corruption ---
   evt_exp_reg_governor_corruption: {
     title: 'A Governor\'s Misrule',
-    body: "Petitions from the common folk of {region} — where loyalty has slipped to {loyalty_tier} — paint a damning portrait of their governor's administration. Taxes collected never reach the crown's coffers, justice is sold to the highest bidder, and the governor's personal estates swell while the province withers.",
+    body: "Petitions from the common folk of {region} — where loyalty has slipped to {loyalty_tier} — paint a damning portrait of their governor's administration. Taxes collected never reach the crown's coffers, justice is sold to the highest bidder, and the governor's personal estates swell while the province withers. The {class_plural} are watching every move of the court.",
     choices: {
       remove_governor: 'Remove the Governor from Office',
       demand_restitution: 'Demand Restitution of Funds',
@@ -70,7 +70,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 7. Border Province Tensions ---
   evt_exp_reg_border_tensions: {
     title: 'Unrest in the Border Provinces',
-    body: '{region}, presently {loyalty_tier} under a posture of {posture}, has grown anxious as the borders thicken with rumor. Tales of foreign troop movements and diplomatic insults have reached the populace, and {marshal_or_fallback} reports that the garrison\'s morale is {morale_tier} without visible crown support. The border folk demand assurance.',
+    body: '{region}, presently {loyalty_tier} under a posture of {posture}, has grown anxious as the borders thicken with rumor. Tales of foreign troop movements and diplomatic insults have reached the populace, and {marshal_or_fallback} reports that the garrison\'s morale is {morale_tier} without visible crown support. The border folk demand assurance. The {class_plural} are watching every move of the court.',
     choices: {
       fortify_border: 'Fortify the Border Defenses',
       diplomatic_reassurance: 'Pursue Diplomatic Reassurance',
@@ -92,7 +92,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 9. Local Hero Emerges ---
   evt_exp_reg_local_hero: {
     title: 'A Hero of the Provinces',
-    body: 'Word reaches the capital of a commoner who has performed a remarkable deed in {region} — rescuing travelers from brigands, or perhaps organizing flood defenses that saved an entire village. The people celebrate this figure, and the court must decide how to respond.',
+    body: 'Word reaches the capital of a commoner who has performed a remarkable deed in {region} — rescuing travelers from brigands, or perhaps organizing flood defenses that saved an entire village. The people celebrate this figure, and the court must decide how to respond. The {class_plural} await the crown\'s reply.',
     choices: {
       honor_at_court: 'Honor Them at Court',
       appoint_local_office: 'Appoint to Local Office',
@@ -136,7 +136,7 @@ export const EXPANSION_REGION_TEXT: Record<string, EventTextEntry> = {
   // --- 11. Royal Tour ---
   evt_exp_reg_royal_tour: {
     title: 'A Tour of the Realm',
-    body: 'Your advisors suggest that a newly crowned sovereign should be seen by the people. A procession through the provinces would let you observe conditions firsthand \u2014 the state of roads and bridges, the health of the fields, the mood of the common folk. The local lords prepare their finest hospitality, but the people themselves watch with a harder question in their eyes: what manner of ruler have they gained?',
+    body: 'Your advisors suggest that a newly crowned sovereign should be seen by the people. A procession through the provinces would let you observe conditions firsthand \u2014 the state of roads and bridges, the health of the fields, the mood of the commonfolk. The local lords prepare their finest hospitality, but the people themselves watch with a harder question in their eyes: what manner of ruler have they gained?',
     choices: {
       invest_in_local_projects: 'Invest in Local Projects',
       hold_open_audience: 'Hold an Open Audience',

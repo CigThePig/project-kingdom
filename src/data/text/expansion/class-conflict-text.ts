@@ -6,7 +6,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_tax_burden_dispute: {
     title: 'Tax Burden Falls Unevenly',
-    body: 'Commoner petitioners have gathered at the castle gates, protesting that the kingdom\'s tax burden falls almost entirely upon those least able to bear it. The nobility\'s ancient exemptions, they argue, leave common folk crushed under levies that the wealthy never pay. Several noble houses have already dispatched envoys warning against any alteration of their chartered privileges.',
+    body: 'Commoner petitioners have gathered at the castle gates, protesting that the kingdom\'s tax burden falls almost entirely upon those least able to bear it. The nobility\'s ancient exemptions, they argue, leave commonfolk crushed under levies that the wealthy never pay. Several noble houses have already dispatched envoys warning against any alteration of their chartered privileges.',
     choices: {
       redistribute_tax_burden: 'Redistribute the Tax Burden',
       maintain_noble_exemptions: 'Maintain Noble Exemptions',
@@ -45,7 +45,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_interclass_marriage: {
     title: 'Inter-Class Marriage Stirs Debate',
-    body: 'A prominent noble heir has announced betrothal to a commoner of considerable reputation but no title. The match has become the talk of every court and tavern alike, with some hailing it as a sign of progress and others decrying it as an erosion of bloodline traditions.',
+    body: 'A prominent noble heir has announced betrothal to a commoner of considerable reputation but no title. The match has become the talk of every court and tavern alike, with some hailing it as a sign of progress and others decrying it as an erosion of bloodline traditions. The {class_plural} await the crown\'s reply.',
     choices: {
       bless_the_union: 'Bless the Union',
       discourage_precedent: 'Discourage the Precedent',
@@ -70,7 +70,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_commoner_envy: {
     title: 'Resentment of Merchant Wealth Grows',
-    body: 'As merchant houses erect ever-grander townhouses and host lavish feasts, common laborers who can barely afford bread have grown openly hostile. Incidents of vandalism against merchant properties are increasing, and pamphlets circulating in the lower quarters demand the crown address the widening gulf between rich and poor.',
+    body: 'As merchant houses erect ever-grander townhouses and host lavish feasts, common laborers who can barely afford bread have grown openly hostile. Incidents of vandalism against merchant properties are increasing, and pamphlets circulating in the lower quarters demand the crown address the widening gulf between rich and poor. The {class_plural} await the crown\'s reply.',
     choices: {
       impose_wealth_tithe: 'Impose a Wealth Tithe',
       fund_public_works: 'Fund Public Works',
@@ -96,7 +96,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_justice_inequality: {
     title: 'Commoners Decry Unequal Justice',
-    body: 'A commoner convicted of theft received a harsh public sentence, while a nobleman accused of a far graver offense was quietly pardoned by his peers in a closed tribunal. Word has spread quickly, and the disparity has become a rallying cry for those who believe the kingdom\'s courts serve only the privileged.',
+    body: 'A commoner convicted of theft received a harsh public sentence, while a nobleman accused of a far graver offense was quietly pardoned by his peers in a closed tribunal. Word has spread quickly, and the disparity has become a rallying cry for those who believe the kingdom\'s courts serve only the privileged. The {class_plural} await the crown\'s reply.',
     choices: {
       establish_equal_courts: 'Establish Equal Courts',
       uphold_traditional_courts: 'Uphold Traditional Courts',
@@ -109,7 +109,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_social_mobility_demands: {
     title: 'Demands for Social Advancement Escalate',
-    body: 'A coalition of commoner leaders, guild apprentices, and low-ranking soldiers has presented a manifesto demanding that birth no longer determine one\'s station. They call for merit-based appointments to all offices of consequence. The nobility and senior clergy have closed ranks, warning that such upheaval would throw our ancient order into chaos.',
+    body: 'A coalition of commoner leaders, guild apprentices, and low-ranking soldiers has presented a manifesto demanding that birth no longer determine one\'s station. They call for merit-based appointments to all offices of consequence. The nobility and senior clergy have closed ranks, warning that such upheaval would throw our ancient order into chaos. The {class_plural} are watching every move of the court.',
     choices: {
       open_ranks_to_merit: 'Open All Ranks to Merit',
       create_advancement_paths: 'Create Advancement Paths',
@@ -148,7 +148,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_labor_rights: {
     title: 'Labor Rights Movement Emerges',
-    body: 'Workers in the kingdom\'s towns and mines have begun organizing, demanding limits on working hours, fair wages, and protection from arbitrary dismissal by their noble and merchant employers. Sympathizers among the clergy speak of the dignity of labor, while landowners warn that concessions will breed idleness and ruin productivity.',
+    body: 'Workers in the kingdom\'s towns and mines have begun organizing, demanding limits on working hours, fair wages, and protection from arbitrary dismissal by their noble and merchant employers. Sympathizers among the clergy speak of the dignity of labor, while landowners warn that concessions will breed idleness and ruin productivity. The {class_plural} await the crown\'s reply.',
     choices: {
       grant_labor_protections: 'Grant Labor Protections',
       enforce_work_obligations: 'Enforce Work Obligations',
@@ -174,7 +174,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_harvest_tithe_resentment: {
     title: 'Harvest Tithes Draw Grumbling',
-    body: 'As the autumn harvest is gathered, peasant communities are voicing quiet but persistent resentment over the portion claimed by church and crown alike. With granaries not yet full from a modest season, every bushel surrendered to the tithe collector is felt keenly at the family table.',
+    body: 'As the autumn harvest is gathered, peasant communities are voicing quiet but persistent resentment over the portion claimed by church and crown alike. With granaries not yet full from a modest season, every bushel surrendered to the tithe collector is felt keenly at the family table. The {class_plural} await the crown\'s reply.',
     choices: {
       reduce_harvest_tithe: 'Reduce the Harvest Tithe',
       hold_tithe_steady: 'Hold the Tithe Steady',

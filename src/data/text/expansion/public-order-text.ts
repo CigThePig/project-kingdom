@@ -6,7 +6,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_market_riots: {
     title: 'Riots in the Market District',
-    body: 'A dispute over grain prices has erupted into full violence in the central market. Stalls are overturned, goods looted, and the watch has retreated behind barricades. The disorder spreads with each passing hour, and merchants fear for their livelihoods.',
+    body: 'A dispute over grain prices has erupted into full violence in the central market. Stalls are overturned, goods looted, and the watch has retreated behind barricades. The disorder spreads with each passing hour, and merchants fear for their livelihoods. The {class_plural} are watching every move of the court.',
     choices: {
       deploy_garrison: 'Deploy the Garrison',
       negotiate_with_ringleaders: 'Negotiate with Ringleaders',
@@ -19,7 +19,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_highway_banditry: {
     title: 'Highway Banditry Surge',
-    body: 'Trade caravans along the kingdom\'s main roads report a sharp increase in ambushes. Bandits operate with alarming coordination, striking at dawn and vanishing into the forests. Merchant guilds demand protection or threaten to reroute their traffic entirely.',
+    body: 'Trade caravans along the kingdom\'s main roads report a sharp increase in ambushes. Bandits operate with alarming coordination, striking at dawn and vanishing into the forests. Merchant guilds demand protection or threaten to reroute their traffic entirely. The {class_plural} await the crown\'s reply.',
     choices: {
       fund_bounty_hunters: 'Fund Bounty Hunters',
       establish_road_garrisons: 'Establish Road Garrisons',
@@ -32,7 +32,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_curfew_debate: {
     title: 'The Curfew Question',
-    body: 'Your advisors recommend a curfew to curb the recent disorder after dark. The night watch reports that most violent incidents occur between dusk and dawn. However, merchants and tavern keepers warn that restricting evening hours will strangle commerce.',
+    body: 'Your advisors recommend a curfew to curb the recent disorder after dark. The night watch reports that most violent incidents occur between dusk and dawn. However, merchants and tavern keepers warn that restricting evening hours will strangle commerce. The {class_plural} await the crown\'s reply.',
     choices: {
       impose_strict_curfew: 'Impose Strict Curfew',
       limited_evening_curfew: 'Limited Evening Curfew',
@@ -45,7 +45,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_crime_wave: {
     title: 'A Wave of Lawlessness',
-    body: 'Thefts, burglaries, and assaults have surged across the kingdom\'s towns. The city watch is overwhelmed and citizens bolt their doors at nightfall. Your constable warns that without decisive action, lawlessness will become the norm rather than the exception.',
+    body: 'Thefts, burglaries, and assaults have surged across the kingdom\'s towns. The city watch is overwhelmed and citizens bolt their doors at nightfall. Your constable warns that without decisive action, lawlessness will become the norm rather than the exception. The {class_plural} are watching every move of the court.',
     choices: {
       hire_additional_watchmen: 'Hire Additional Watchmen',
       public_executions: 'Order Public Executions',
@@ -71,7 +71,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_prison_overcrowding: {
     title: 'Prisons Bursting at the Seams',
-    body: 'The kingdom\'s dungeons and gaols hold three times their intended capacity. Disease festers in the overcrowded cells, and the jailers warn of imminent revolt among the prisoners. A solution must be found before the situation becomes uncontainable.',
+    body: 'The kingdom\'s dungeons and gaols hold three times their intended capacity. Disease festers in the overcrowded cells, and the jailers warn of imminent revolt among the prisoners. A solution must be found before the situation becomes uncontainable. The {class_plural} are watching every move of the court.',
     choices: {
       build_new_prison: 'Build a New Prison',
       release_minor_offenders: 'Release Minor Offenders',
@@ -84,7 +84,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_tax_resistance: {
     title: 'Tax Resistance Spreads',
-    body: 'Entire villages have barred their gates to the royal tax collectors. Petitions bearing hundreds of marks arrive at court, alleging unjust levies and corrupt assessors. The movement grows bolder each week, and other regions watch to see how the crown responds.',
+    body: 'Entire villages have barred their gates to the royal tax collectors. Petitions bearing hundreds of marks arrive at court, alleging unjust levies and corrupt assessors. The movement grows bolder each week, and other regions watch to see how the crown responds. The {class_plural} are watching every move of the court.',
     choices: {
       send_tax_collectors_with_guards: 'Send Collectors with Guards',
       temporarily_reduce_taxes: 'Temporarily Reduce Taxes',
@@ -97,7 +97,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_black_market: {
     title: 'The Shadow Bazaar',
-    body: 'With legitimate goods scarce and prices climbing, an underground market has taken root in the city\'s lower quarters. Stolen wares, smuggled foodstuffs, and untaxed luxuries change hands openly. Some see it as a lifeline; others see it as rot at the kingdom\'s core.',
+    body: 'With legitimate goods scarce and prices climbing, an underground market has taken root in the city\'s lower quarters. Stolen wares, smuggled foodstuffs, and untaxed luxuries change hands openly. Some see it as a lifeline; others see it as rot at the kingdom\'s core. The {class_plural} await the crown\'s reply.',
     choices: {
       raid_black_market: 'Raid the Black Market',
       tax_and_regulate: 'Tax and Regulate It',
@@ -110,7 +110,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_gang_warfare: {
     title: 'Gang War in the Streets',
-    body: 'Two warring gangs have turned the lower districts into a battlefield. Bodies appear in alleys each morning, and residents cower behind locked doors. The violence threatens to engulf entire districts if left unchecked, and the watch alone cannot contain it.',
+    body: 'Two warring gangs have turned the lower districts into a battlefield. Bodies appear in alleys each morning, and residents cower behind locked doors. The violence threatens to engulf entire districts if left unchecked, and the watch alone cannot contain it. The {class_plural} are watching every move of the court.',
     choices: {
       military_sweep: 'Order a Military Sweep',
       pit_gangs_against_each_other: 'Play the Gangs Against Each Other',
@@ -136,7 +136,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_drunkenness: {
     title: 'A Kingdom in Its Cups',
-    body: 'With granaries well-stocked, the taverns overflow and public drunkenness has become a daily spectacle. Brawls erupt at midday, workers stumble through their duties, and the clergy delivers stern sermons on the sin of excess. Your steward suggests intervention.',
+    body: 'With granaries well-stocked, the taverns overflow and public drunkenness has become a daily spectacle. Brawls erupt at midday, workers stumble through their duties, and the clergy delivers stern sermons on the sin of excess. Your steward suggests intervention. The {class_plural} await the crown\'s reply.',
     choices: {
       regulate_taverns: 'Regulate the Taverns',
       clergy_temperance_campaign: 'Launch a Temperance Campaign',
@@ -149,7 +149,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_refugee_influx: {
     title: 'Refugees at the Gates',
-    body: 'Columns of displaced families arrive at the kingdom\'s borders, fleeing conflict in neighboring lands. They bring little more than the clothes on their backs, and their numbers strain the capacity of border towns. Your people are divided between compassion and fear.',
+    body: 'Columns of displaced families arrive at the kingdom\'s borders, fleeing conflict in neighboring lands. They bring little more than the clothes on their backs, and their numbers strain the capacity of border towns. Your people are divided between compassion and fear. The {class_plural} are watching every move of the court.',
     choices: {
       welcome_and_settle: 'Welcome and Settle Them',
       temporary_camps: 'Establish Temporary Camps',
@@ -162,7 +162,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_vagrancy: {
     title: 'Vagrants Fill the Streets',
-    body: 'The kingdom\'s towns see a growing number of homeless wanderers begging at crossroads and sleeping in doorways. Many are dispossessed farmers or laborers who can find no work. The sight unsettles both merchants and the faithful, who call on the crown for a remedy.',
+    body: 'The kingdom\'s towns see a growing number of homeless wanderers begging at crossroads and sleeping in doorways. Many are dispossessed farmers or laborers who can find no work. The sight unsettles both merchants and the faithful, who call on the crown for a remedy. The {class_plural} await the crown\'s reply.',
     choices: {
       establish_poorhouses: 'Establish Poorhouses',
       conscript_vagrants: 'Conscript the Able-Bodied',
@@ -175,7 +175,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_labor_strike: {
     title: 'The Workers Lay Down Tools',
-    body: 'Laborers in the quarries and workshops have ceased all work, demanding higher wages and shorter hours. Major works grind to a halt and the nobility fumes at the disruption. The strikers have elected spokesmen and refuse to budge until the crown answers.',
+    body: 'Laborers in the quarries and workshops have ceased all work, demanding higher wages and shorter hours. Major works grind to a halt and the nobility fumes at the disruption. The strikers have elected spokesmen and refuse to budge until the crown answers. The {class_plural} await the crown\'s reply.',
     choices: {
       grant_wage_increase: 'Grant a Wage Increase',
       break_the_strike: 'Break the Strike by Force',
@@ -188,7 +188,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_mob_justice: {
     title: 'The Mob Passes Judgment',
-    body: 'An angry crowd has seized a suspected murderer from the custody of the watch and threatens to hang him from the city gates. The rule of law teeters on a knife\'s edge. If the crown does not act swiftly, the mob may decide that royal justice is no longer needed.',
+    body: 'An angry crowd has seized a suspected murderer from the custody of the watch and threatens to hang him from the city gates. The rule of law teeters on a knife\'s edge. If the crown does not act swiftly, the mob may decide that royal justice is no longer needed. The {class_plural} are watching every move of the court.',
     choices: {
       restore_order_by_force: 'Restore Order by Force',
       hold_public_trial: 'Hold a Public Trial',
@@ -214,7 +214,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_street_brawls: {
     title: 'Brawls in Every Quarter',
-    body: 'The summer heat has shortened tempers across the kingdom. Street fights break out daily over petty disputes, and the watch spends more time separating combatants than keeping the peace. Your marshal suggests channeling the aggression before someone is killed.',
+    body: 'The summer heat has shortened tempers across the kingdom. Street fights break out daily over petty disputes, and the watch spends more time separating combatants than keeping the peace. Your marshal suggests channeling the aggression before someone is killed. The {class_plural} await the crown\'s reply.',
     choices: {
       increase_watch_patrols: 'Increase Watch Patrols',
       organize_public_games: 'Organize Public Games',
@@ -227,7 +227,7 @@ export const EXPANSION_PUBLIC_ORDER_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_po_peoples_mood: {
     title: 'The People\'s Mood',
-    body: 'Your city watch captain reports on the state of the capital\'s streets. The transition of power has left the common folk uncertain \u2014 not hostile, but watchful. Some neighbourhoods hum with cautious optimism; others nurse old grievances that the change of crown has done nothing to ease. The captain awaits your direction on how to keep the peace during these early days.',
+    body: 'Your city watch captain reports on the state of the capital\'s streets. The transition of power has left the commonfolk uncertain \u2014 not hostile, but watchful. Some neighbourhoods hum with cautious optimism; others nurse old grievances that the change of crown has done nothing to ease. The captain awaits your direction on how to keep the peace during these early days.',
     choices: {
       increase_watch_presence: 'Increase the Watch Presence',
       address_grievances: 'Address the People\'s Grievances',
