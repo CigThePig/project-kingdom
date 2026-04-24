@@ -11,9 +11,9 @@ export const CONDITION_EVENT_EFFECTS: Record<string, Record<string, MechanicalEf
     dig_new_wells: { treasuryDelta: -40, foodDelta: +15 },
   },
   evt_cond_drought_moderate: {
-    emergency_irrigation: { treasuryDelta: -80, foodDelta: +25, commonerSatDelta: +2 },
-    import_water: { treasuryDelta: -50, foodDelta: +10, merchantSatDelta: +1 },
-    pray_for_rain: { faithDelta: +3, commonerSatDelta: -3 },
+    emergency_irrigation: { treasuryDelta: -80, foodDelta: +25, commonerSatDelta: +2, regionConditionDelta: +1 },
+    import_water: { treasuryDelta: -50, foodDelta: +10, merchantSatDelta: +1, regionConditionDelta: +1 },
+    pray_for_rain: { faithDelta: +3, commonerSatDelta: -3, regionConditionDelta: -1 },
   },
   evt_cond_drought_severe: {
     mass_relocation: { treasuryDelta: -60, commonerSatDelta: -5, stabilityDelta: -5, foodDelta: +15, regionDevelopmentDelta: -3, regionConditionDelta: +1 },
@@ -25,18 +25,18 @@ export const CONDITION_EVENT_EFFECTS: Record<string, Record<string, MechanicalEf
   // Flood
   // ============================================================
   evt_cond_flood_moderate: {
-    reinforce_levees: { treasuryDelta: -60, regionDevelopmentDelta: +3, stabilityDelta: +2, foodDelta: +3 },
-    evacuate_lowlands: { treasuryDelta: -30, commonerSatDelta: -3, stabilityDelta: +1, foodDelta: +2 },
-    let_floodwaters_pass: { foodDelta: -15, regionDevelopmentDelta: -3 },
+    reinforce_levees: { treasuryDelta: -60, regionDevelopmentDelta: +3, stabilityDelta: +2, foodDelta: +3, regionConditionDelta: +1 },
+    evacuate_lowlands: { treasuryDelta: -30, commonerSatDelta: -3, stabilityDelta: +1, foodDelta: +2, regionConditionDelta: +1 },
+    let_floodwaters_pass: { foodDelta: -15, regionDevelopmentDelta: -3, regionConditionDelta: -1 },
   },
 
   // ============================================================
   // Harsh Winter
   // ============================================================
   evt_cond_harshwinter_moderate: {
-    distribute_firewood: { treasuryDelta: -40, commonerSatDelta: +3, foodDelta: -5 },
-    open_shelters: { treasuryDelta: -25, commonerSatDelta: +2, faithDelta: +2 },
-    wait_for_thaw: { commonerSatDelta: -5, militaryMoraleDelta: -3 },
+    distribute_firewood: { treasuryDelta: -40, commonerSatDelta: +3, foodDelta: -5, regionConditionDelta: +1 },
+    open_shelters: { treasuryDelta: -25, commonerSatDelta: +2, faithDelta: +2, regionConditionDelta: +1 },
+    wait_for_thaw: { commonerSatDelta: -5, militaryMoraleDelta: -3, regionConditionDelta: -1 },
   },
 
   // ============================================================
@@ -52,9 +52,9 @@ export const CONDITION_EVENT_EFFECTS: Record<string, Record<string, MechanicalEf
   // Plague
   // ============================================================
   evt_cond_plague_mild: {
-    quarantine_district: { treasuryDelta: -30, commonerSatDelta: -2, stabilityDelta: +2 },
-    hire_healers: { treasuryDelta: -50, commonerSatDelta: +2 },
-    ignore_sickness: { commonerSatDelta: -5, stabilityDelta: -3 },
+    quarantine_district: { treasuryDelta: -30, commonerSatDelta: -2, stabilityDelta: +2, regionConditionDelta: +1 },
+    hire_healers: { treasuryDelta: -50, commonerSatDelta: +2, regionConditionDelta: +1 },
+    ignore_sickness: { commonerSatDelta: -5, stabilityDelta: -3, regionConditionDelta: -2 },
   },
   evt_cond_plague_moderate: {
     citywide_quarantine: { treasuryDelta: -80, commonerSatDelta: -5, merchantSatDelta: -5, stabilityDelta: +3, regionConditionDelta: +1 },

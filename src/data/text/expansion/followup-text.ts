@@ -955,4 +955,11 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
     body: 'Suing for peace produced an indemnity the treasury cannot bear — or the crown can reopen the war.',
     choices: { pay_the_indemnity: 'Pay the Indemnity', reopen_the_war: 'Reopen the War' },
   },
+
+  // --- Phase 9 Card Audit — Follow-up text (batch 9A: condition crises) ---
+  evt_fu_plague_mild_ignored: {
+    title: 'The Sickness Spreads Unchecked',
+    body: 'The fevers we ignored have leapt across the river. The healers report three times the cases. Commit to quarantine now, or accept the spread as the cost of doing nothing.',
+    choices: { commit_to_quarantine: 'Commit to Quarantine', accept_the_spread: 'Accept the Spread' },
+  },
 };

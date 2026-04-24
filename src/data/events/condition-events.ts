@@ -43,7 +43,10 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'pray_for_rain', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    // The condition system binds a region at injection time; the flag here
+    // aligns the scanner harness with real-play behavior (turn-resolution.ts
+    // sets affectedRegionId from the condition trigger).
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
@@ -91,7 +94,8 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'let_floodwaters_pass', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    // Condition injection binds the flooded region — align flag with reality.
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
@@ -115,7 +119,8 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'wait_for_thaw', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    // Condition injection binds the affected region — align flag with reality.
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
@@ -163,10 +168,14 @@ export const CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'ignore_sickness', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    // Condition injection binds the plague-stricken region — align flag.
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
+    followUpEvents: [
+      { triggerChoiceId: 'ignore_sickness', followUpDefinitionId: 'evt_fu_plague_mild_ignored', delayTurns: 3, probability: 0.75 },
+    ],
   },
   {
     id: 'evt_cond_plague_moderate',
