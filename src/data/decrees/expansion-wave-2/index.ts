@@ -44,7 +44,7 @@ export const EXPANSION_WAVE_2_DECREES: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Clergy, PopulationClass.Nobility],
     effectPreview:
-      'Grant a chartered university the right to teach the seven liberal arts. A long investment in scholars and statecraft.',
+      'Grant a chartered university the right to teach the seven liberal arts. A long investment in scholars and statecraft.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -68,7 +68,7 @@ export const EXPANSION_WAVE_2_DECREES: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Commoners],
     effectPreview:
-      'Commission a royal compilation of rulings and customs. Justice circuits will ride out more predictably; local judges lose discretion.',
+      'Commission a royal compilation of rulings and customs. Justice circuits will ride out more predictably; local judges lose discretion.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -108,7 +108,7 @@ export const EXPANSION_WAVE_2_DECREES: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
     effectPreview:
-      'Grant self-government to a tier of market towns in exchange for annual levies. Merchants love it; lords bristle.',
+      'Grant self-government to a tier of market towns in exchange for annual levies. Merchants love it; lords bristle.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -192,7 +192,7 @@ export const EXPANSION_WAVE_2_DECREES: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
     effectPreview:
-      'Commission a network of paved roads between the major settlements. Trade flows faster; corvée labor is unpopular.',
+      'Commission a network of paved roads between the major settlements. Trade flows faster; corvée labor is unpopular.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -236,7 +236,7 @@ export const EXPANSION_WAVE_2_DECREES: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.MilitaryCaste, PopulationClass.Nobility],
     effectPreview:
-      'Replace the old banner-levy system with a professional standing cadre. Expensive but reliable; old warlords lose influence.',
+      'Replace the old banner-levy system with a professional standing cadre. Expensive but reliable; old warlords lose influence.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
