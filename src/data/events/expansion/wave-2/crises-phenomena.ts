@@ -136,12 +136,14 @@ export const EXPANSION_WAVE_2_PHENOMENA_CRISIS_EFFECTS: Record<
       foodDelta: -10,
       commonerSatDelta: -4,
       stabilityDelta: -1,
+      regionConditionDelta: -1,
     },
     lead_a_rain_procession: {
       faithDelta: 3,
       clergySatDelta: 3,
       commonerSatDelta: 2,
       foodDelta: -5,
+      regionConditionDelta: +1,
     },
   },
   evt_exp_w2_explored_ruins: {

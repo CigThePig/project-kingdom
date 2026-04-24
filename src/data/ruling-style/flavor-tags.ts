@@ -2745,6 +2745,26 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     ignore_grumbling: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1 },
     increase_guard_presence: { [StyleAxis.Authority]: +1, [StyleAxis.Military]: -1 },
   },
+
+  // Phase 9 Card Audit batch 9A — the following ten cards' style tags live
+  // above (lines ~584–612 for condition variants; ~1405–1442 for social).
+  // evt_cond_plague_mild and evt_cond_plague_moderate / severe had no
+  // pre-existing entries and are authored below.
+  evt_cond_plague_mild: {
+    quarantine_district:  { [StyleAxis.Authority]: +2 },
+    hire_healers:         { [StyleAxis.Economy]: -1, [StyleAxis.Faith]: +1 },
+    ignore_sickness:      { [StyleAxis.Authority]: -1 },
+  },
+  evt_cond_plague_moderate: {
+    citywide_quarantine:    { [StyleAxis.Authority]: +3 },
+    burn_infected_quarters: { [StyleAxis.Authority]: +3, [StyleAxis.Military]: +1 },
+    pray_for_deliverance:   { [StyleAxis.Faith]: +3 },
+  },
+  evt_cond_plague_severe: {
+    seal_the_gates: { [StyleAxis.Authority]: +3 },
+    mass_exodus:    { [StyleAxis.Authority]: -1 },
+    accept_fate:    { [StyleAxis.Faith]: +2 },
+  },
 };
 
 // ============================================================

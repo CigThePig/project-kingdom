@@ -628,4 +628,10 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
     pay_the_indemnity: { treasuryDelta: -80, diplomacyDeltas: { neighbor_valdris: +4 }, regionConditionDelta: +1 },
     reopen_the_war:    { militaryReadinessDelta: -4, diplomacyDeltas: { neighbor_valdris: -6 }, regionConditionDelta: -2, treasuryDelta: -30 },
   },
+
+  // --- Phase 9 Card Audit — Follow-up effects (batch 9A: condition crises) ---
+  evt_fu_plague_mild_ignored: {
+    commit_to_quarantine: { treasuryDelta: -30, commonerSatDelta: +1, stabilityDelta: +1 },
+    accept_the_spread:    { commonerSatDelta: -4, stabilityDelta: -2 },
+  },
 };

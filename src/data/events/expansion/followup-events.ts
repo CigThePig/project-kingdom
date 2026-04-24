@@ -2383,4 +2383,24 @@ export const EXPANSION_FOLLOWUP_EVENTS: EventDefinition[] = [
     affectsClass: null, affectsRegion: true, affectsNeighbor: 'neighbor_valdris', relatedStorylineId: null,
     phase: 'any',
   },
+
+  // ============================================================
+  // Phase 9 Card Audit — Follow-up stubs (batch 9A: condition crises)
+  // Minimal Pattern A definitions so the scheduler resolves them.
+  // Full authoring lives in Phase 15.
+  // ============================================================
+  {
+    id: 'evt_fu_plague_mild_ignored',
+    severity: EventSeverity.Serious,
+    category: EventCategory.PublicOrder,
+    triggerConditions: [{ type: 'always' }],
+    weight: 1.0,
+    chainId: null, chainStep: null, chainNextDefinitionId: null,
+    choices: [
+      { choiceId: 'commit_to_quarantine', slotCost: 1, isFree: false },
+      { choiceId: 'accept_the_spread', slotCost: 0, isFree: true },
+    ],
+    affectsClass: PopulationClass.Commoners, affectsRegion: false, relatedStorylineId: null,
+    phase: 'any',
+  },
 ];

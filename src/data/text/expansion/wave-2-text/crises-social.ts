@@ -4,8 +4,8 @@ import type { EventTextEntry } from '../../events';
 
 export const EXPANSION_WAVE_2_CRISES_SOCIAL_TEXT: Record<string, EventTextEntry> = {
   evt_exp_w2_food_riot_escalation: {
-    title: 'Bread Riots Turn Violent',
-    body: 'The bread queues have become bread riots. In two market towns the granaries have been stormed; in a third the royal factor was beaten and left in the road. The city guard report that one more failed harvest will set the whole country alight. The {class_plural} are watching every move of the court.',
+    title: 'Bread Riots Turn Violent in {region}',
+    body: 'The bread queues of {region} have become bread riots. In {settlement} the granaries have been stormed; in two outlying market towns the royal factor was beaten and left in the road. The city guard report that one more failed harvest will set the whole country alight. The {class_plural} are watching every move of the court.',
     choices: {
       open_the_royal_granaries: 'Open the Royal Granaries',
       post_guards_at_the_markets: 'Post Guards at the Markets',
@@ -13,8 +13,8 @@ export const EXPANSION_WAVE_2_CRISES_SOCIAL_TEXT: Record<string, EventTextEntry>
     },
   },
   evt_exp_w2_bonded_labor_revolt: {
-    title: 'The Bonded Refuse the Harvest',
-    body: 'Bonded labourers on three of the great estates have downed their tools and begun to march toward the capital with a list of grievances. The lords demand the rebellion be broken; the reformers demand a hearing; both watch you closely. The {class_plural} are watching every move of the court.',
+    title: 'The Bonded of {region} Refuse the Harvest',
+    body: 'Bonded labourers on three of the great estates in {region} have downed their tools and begun to march toward {settlement} with a list of grievances. The lords demand the rebellion be broken; the reformers demand a hearing; both watch you closely. The {class_plural} are watching every move of the court.',
     choices: {
       crush_with_the_levy: 'Crush with the Levy',
       grant_limited_emancipation: 'Grant a Limited Emancipation',
@@ -22,8 +22,8 @@ export const EXPANSION_WAVE_2_CRISES_SOCIAL_TEXT: Record<string, EventTextEntry>
     },
   },
   evt_exp_w2_mercenary_defection: {
-    title: 'The Free Companies Are Tempted Away',
-    body: 'A neighbouring realm has offered twice the wage to the free companies on the frontier. Two captains have already struck their tents and ridden south. If the rest follow, the border is bare. The {class_plural} are watching every move of the court.',
+    title: '{neighbor} Tempts the Free Companies Away',
+    body: '{neighbor} has offered twice the wage to the free companies on the frontier. Two captains have already struck their tents and ridden for {capital}. If the rest follow, the border is bare. The {class_plural} are watching every move of the court.',
     choices: {
       match_the_foreign_wages: 'Match the Foreign Wages',
       brand_them_as_deserters: 'Brand Them as Deserters',
@@ -32,7 +32,7 @@ export const EXPANSION_WAVE_2_CRISES_SOCIAL_TEXT: Record<string, EventTextEntry>
   },
   evt_exp_w2_monetary_crisis: {
     title: 'The Coffers Ring Hollow',
-    body: 'The exchequer reports that, at the current rate of spending, the royal purse will not meet next month\'s obligations. The choice among debasement, borrowing, and seizure must be made this fortnight. The {class_plural} are watching every move of the court.',
+    body: 'The exchequer reports that, at the current rate of spending, the royal purse will not meet next month\'s obligations. The factors in {neighbor} have already noticed the silver shortfall. The choice among debasement, borrowing, and seizure must be made this fortnight. The {class_plural} are watching every move of the court.',
     choices: {
       debase_the_coinage: 'Debase the Coinage',
       borrow_from_the_merchants: 'Borrow from the Merchants',

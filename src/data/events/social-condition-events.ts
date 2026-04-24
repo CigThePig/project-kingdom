@@ -44,7 +44,8 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'fortify_trade_routes', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    // Social-fabric injection binds the banditry-stricken region.
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
@@ -129,7 +130,8 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'accept_status_quo', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    // Social-fabric injection binds the corruption-affected region.
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
@@ -214,7 +216,8 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'make_concessions', slotCost: 1, isFree: false },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    // Social-fabric injection binds the unrest-stricken region.
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,
@@ -299,7 +302,8 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
       { choiceId: 'tolerate_black_market', slotCost: 0, isFree: true },
     ],
     affectsClass: null,
-    affectsRegion: false,
+    // Social-fabric injection binds the syndicate-infested region.
+    affectsRegion: true,
     relatedStorylineId: null,
     phase: 'any',
     repeatable: true,

@@ -12,9 +12,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     ignore_bandits: { merchantSatDelta: -3, commonerSatDelta: -2, stabilityDelta: -2 },
   },
   evt_social_banditry_moderate: {
-    military_sweep: { treasuryDelta: -60, militaryReadinessDelta: -5, stabilityDelta: +3, commonerSatDelta: +2 },
-    negotiate_brigands: { treasuryDelta: -40, stabilityDelta: +1, nobilitySatDelta: -3 },
-    fortify_trade_routes: { treasuryDelta: -50, merchantSatDelta: +4, stabilityDelta: +1 },
+    military_sweep: { treasuryDelta: -60, militaryReadinessDelta: -5, stabilityDelta: +3, commonerSatDelta: +2, regionConditionDelta: +2 },
+    negotiate_brigands: { treasuryDelta: -40, stabilityDelta: +1, nobilitySatDelta: -3, regionConditionDelta: +1 },
+    fortify_trade_routes: { treasuryDelta: -50, merchantSatDelta: +4, stabilityDelta: +1, regionConditionDelta: +1 },
   },
   evt_social_banditry_severe: {
     marshal_campaign: { treasuryDelta: -80, militaryReadinessDelta: -8, stabilityDelta: +5, commonerSatDelta: +3, regionConditionDelta: +2 },
@@ -34,9 +34,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     tolerate_graft: { nobilitySatDelta: +2, commonerSatDelta: -2, stabilityDelta: -1, treasuryDelta: -5 },
   },
   evt_social_corruption_moderate: {
-    purge_corrupt_officials: { treasuryDelta: -50, nobilitySatDelta: -8, stabilityDelta: +3, commonerSatDelta: +3 },
-    reform_tax_collection: { treasuryDelta: +30, nobilitySatDelta: -4, stabilityDelta: +1 },
-    accept_status_quo: { nobilitySatDelta: +2, stabilityDelta: -3, commonerSatDelta: -3 },
+    purge_corrupt_officials: { treasuryDelta: -50, nobilitySatDelta: -8, stabilityDelta: +3, commonerSatDelta: +3, regionConditionDelta: +1 },
+    reform_tax_collection: { treasuryDelta: +30, nobilitySatDelta: -4, stabilityDelta: +1, regionConditionDelta: +1 },
+    accept_status_quo: { nobilitySatDelta: +2, stabilityDelta: -3, commonerSatDelta: -3, regionConditionDelta: -2 },
   },
   evt_social_corruption_severe: {
     royal_tribunal: { treasuryDelta: -70, nobilitySatDelta: -10, stabilityDelta: +5, commonerSatDelta: +5, regionDevelopmentDelta: +2 },
@@ -56,9 +56,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     ignore_grumbling: { commonerSatDelta: -3, stabilityDelta: -3, faithDelta: -1 },
   },
   evt_social_unrest_moderate: {
-    hold_public_festival: { treasuryDelta: -50, commonerSatDelta: +5, stabilityDelta: +2, faithDelta: +2 },
-    suppress_riots: { militaryReadinessDelta: -5, commonerSatDelta: -5, stabilityDelta: +3, nobilitySatDelta: +2 },
-    make_concessions: { treasuryDelta: -40, commonerSatDelta: +3, nobilitySatDelta: -3, stabilityDelta: +1 },
+    hold_public_festival: { treasuryDelta: -50, commonerSatDelta: +5, stabilityDelta: +2, faithDelta: +2, regionConditionDelta: +1 },
+    suppress_riots: { militaryReadinessDelta: -5, commonerSatDelta: -5, stabilityDelta: +3, nobilitySatDelta: +2, regionConditionDelta: +1 },
+    make_concessions: { treasuryDelta: -40, commonerSatDelta: +3, nobilitySatDelta: -3, stabilityDelta: +1, regionConditionDelta: +1 },
   },
   evt_social_unrest_severe: {
     declare_martial_law: { militaryReadinessDelta: -8, commonerSatDelta: -8, stabilityDelta: +5, nobilitySatDelta: +3, regionConditionDelta: -1 },
@@ -78,9 +78,9 @@ export const SOCIAL_CONDITION_EVENT_EFFECTS: Record<string, Record<string, Mecha
     look_the_other_way: { merchantSatDelta: +1, stabilityDelta: -2, treasuryDelta: -5 },
   },
   evt_social_criminal_moderate: {
-    crack_down_syndicates: { treasuryDelta: -60, espionageNetworkDelta: +8, stabilityDelta: +3, merchantSatDelta: -3 },
-    recruit_informants: { treasuryDelta: -30, espionageNetworkDelta: +10, merchantSatDelta: -1 },
-    tolerate_black_market: { merchantSatDelta: +3, stabilityDelta: -3, commonerSatDelta: -2, treasuryDelta: -10 },
+    crack_down_syndicates: { treasuryDelta: -60, espionageNetworkDelta: +8, stabilityDelta: +3, merchantSatDelta: -3, regionConditionDelta: +1 },
+    recruit_informants: { treasuryDelta: -30, espionageNetworkDelta: +10, merchantSatDelta: -1, regionConditionDelta: +1 },
+    tolerate_black_market: { merchantSatDelta: +3, stabilityDelta: -3, commonerSatDelta: -2, treasuryDelta: -10, regionConditionDelta: -1 },
   },
   evt_social_criminal_severe: {
     martial_purge: { treasuryDelta: -90, militaryReadinessDelta: -6, espionageNetworkDelta: +12, stabilityDelta: +5, commonerSatDelta: -3, regionConditionDelta: +2 },

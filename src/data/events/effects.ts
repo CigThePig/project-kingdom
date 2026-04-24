@@ -1247,4 +1247,48 @@ export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, Tem
     // Patronage yields cultural dividends but sustained expense
     patron_arts_sciences: { durationTurns: 5, effectPerTurn: { culturalCohesionDelta: +1, treasuryDelta: -5 } },
   },
+
+  // ============================================================
+  // Phase 9 Card Audit — Condition & social-condition crises (batch 9A)
+  // ============================================================
+  evt_cond_drought_moderate: {
+    emergency_irrigation: { durationTurns: 3, effectPerTurn: { treasuryDelta: -8 } },
+    import_water: { durationTurns: 3, effectPerTurn: { treasuryDelta: -10, merchantSatDelta: +1 } },
+    pray_for_rain: { durationTurns: 4, effectPerTurn: { faithDelta: +1, commonerSatDelta: -1 } },
+  },
+  evt_cond_flood_moderate: {
+    reinforce_levees: { durationTurns: 4, effectPerTurn: { stabilityDelta: +1 } },
+    evacuate_lowlands: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1 } },
+    let_floodwaters_pass: { durationTurns: 3, effectPerTurn: { foodDelta: -2 } },
+  },
+  evt_cond_harshwinter_moderate: {
+    distribute_firewood: { durationTurns: 3, effectPerTurn: { treasuryDelta: -5, commonerSatDelta: +1 } },
+    open_shelters: { durationTurns: 4, effectPerTurn: { treasuryDelta: -3, faithDelta: +1 } },
+    wait_for_thaw: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1, militaryMoraleDelta: -1 } },
+  },
+  evt_cond_plague_mild: {
+    quarantine_district: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1 } },
+    hire_healers: { durationTurns: 3, effectPerTurn: { treasuryDelta: -5 } },
+    // ignore_sickness uses a follow-up for distinctness; no temp mod by design.
+  },
+  evt_social_banditry_moderate: {
+    military_sweep: { durationTurns: 3, effectPerTurn: { militaryReadinessDelta: -1 } },
+    negotiate_brigands: { durationTurns: 4, effectPerTurn: { nobilitySatDelta: -1 } },
+    fortify_trade_routes: { durationTurns: 4, effectPerTurn: { treasuryDelta: -3, merchantSatDelta: +1 } },
+  },
+  evt_social_corruption_moderate: {
+    purge_corrupt_officials: { durationTurns: 3, effectPerTurn: { nobilitySatDelta: -1 } },
+    reform_tax_collection: { durationTurns: 4, effectPerTurn: { treasuryDelta: +3 } },
+    accept_status_quo: { durationTurns: 4, effectPerTurn: { commonerSatDelta: -1, stabilityDelta: -1 } },
+  },
+  evt_social_criminal_moderate: {
+    crack_down_syndicates: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+    recruit_informants: { durationTurns: 4, effectPerTurn: { espionageNetworkDelta: +1, treasuryDelta: -2 } },
+    tolerate_black_market: { durationTurns: 3, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_social_unrest_moderate: {
+    hold_public_festival: { durationTurns: 3, effectPerTurn: { commonerSatDelta: +1 } },
+    suppress_riots: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1 } },
+    make_concessions: { durationTurns: 4, effectPerTurn: { nobilitySatDelta: -1 } },
+  },
 };

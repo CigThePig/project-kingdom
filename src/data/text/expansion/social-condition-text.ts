@@ -14,8 +14,8 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_social_banditry_moderate: {
-    title: 'Brigand Plague',
-    body: 'What began as scattered robberies has grown into organized brigandage. Entire stretches of road are now controlled by bandit captains who demand tolls from all who pass. Villages bolt their gates at dusk, and trade has slowed to a trickle.',
+    title: 'Brigands Overrun {region}',
+    body: 'What began as scattered robberies in {region} has grown into organized brigandage. Entire stretches of road are now controlled by bandit captains who demand tolls from all who pass. Villages around {settlement} bolt their gates at dusk, and trade has slowed to a trickle.',
     choices: {
       military_sweep: 'Launch a Military Sweep',
       negotiate_brigands: 'Negotiate with the Brigand Captains',
@@ -23,8 +23,8 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_social_banditry_severe: {
-    title: 'The Brigand Kingdom',
-    body: 'The bandits have grown so bold they\'ve established their own courts and territories in the wilds. Entire regions have been cut off from the crown\'s protection. Some desperate commoners have joined the outlaws, seeing more safety in lawlessness than in the king\'s peace.',
+    title: 'The Brigand Courts of {region}',
+    body: 'The outlaws of {region} have grown so bold they\'ve established their own courts and territories in the {terrain}. The lands around {settlement} have been cut off from the crown\'s protection. Some desperate commoners have joined the bandits, seeing more safety in lawlessness than in the king\'s peace.',
     choices: {
       marshal_campaign: 'Marshal a Punitive Campaign',
       offer_amnesty: 'Offer General Amnesty',
@@ -52,8 +52,8 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_social_corruption_moderate: {
-    title: 'A Rot in the Court',
-    body: 'Corruption has sunk deep roots into the kingdom\'s administration. Officials sell appointments, judges accept bribes, and entire ledgers of collected silver vanish into private estates. The common folk seethe at the injustice, while the guilty nobles grow ever bolder.',
+    title: 'Rot in the {region} Administration',
+    body: 'Corruption has sunk deep roots into the administration of {region}. In {settlement}, officials sell appointments, judges accept bribes, and entire ledgers of collected silver vanish into private estates. The common folk seethe at the injustice, while the guilty nobles grow ever bolder.',
     choices: {
       purge_corrupt_officials: 'Purge the Corrupt Officials',
       reform_tax_collection: 'Reform Tax Collection',
@@ -61,8 +61,8 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_social_corruption_severe: {
-    title: 'Entrenched Corruption',
-    body: 'The corruption is no longer a disease — it is the system itself. Every office is bought and sold, every law has a price, and the treasury hemorrhages gold into noble coffers. The people have lost all hope that the crown can or will act. Only the most drastic measures can root out what has become entrenched.',
+    title: 'A Second Crown in {region}',
+    body: 'The graft rooted in {region} is no longer a disease — it is the system itself. In {settlement} every office is bought and sold, every law has a price, and the treasury hemorrhages gold into noble coffers. The people have lost all hope that the crown can or will act. Only the most drastic measures can root out what has become entrenched.',
     choices: {
       royal_tribunal: 'Convene a Royal Tribunal',
       co_opt_corrupt_lords: 'Co-opt the Corrupt Lords',
@@ -90,8 +90,8 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_social_unrest_moderate: {
-    title: 'Riots in the Streets',
-    body: 'The discontent has boiled over into open violence. Mobs clash with the city guard, market stalls are overturned, and angry crowds gather before the castle gates demanding change. Workshops have fallen idle as laborers join the unrest. The kingdom teeters on a knife\'s edge.',
+    title: 'Riots in {region}',
+    body: 'The long-simmering discontent in {region} has boiled over into open violence. Mobs clash with the guard in {settlement}, market stalls are overturned, and angry crowds gather before the castle gates demanding change. Workshops have fallen idle as laborers take to the barricades. The province teeters on a knife\'s edge.',
     choices: {
       hold_public_festival: 'Hold a Public Festival',
       suppress_riots: 'Suppress the Riots by Force',
@@ -99,8 +99,8 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_social_unrest_severe: {
-    title: 'Rebellion Brewing',
-    body: 'What began as scattered protests has crystallized into organized resistance. Self-proclaimed leaders rally the disaffected under banners of their own, demanding the overthrow of the current order. Barricades block city streets, and parts of the countryside have declared themselves beyond the crown\'s authority.',
+    title: 'Rebellion Brewing in {region}',
+    body: 'What began as scattered protests in {region} has crystallized into organized resistance. Self-proclaimed leaders rally the disaffected around {settlement} under banners of their own, demanding the overthrow of the current order. Barricades block city streets, and parts of the {terrain} have declared themselves beyond the crown\'s authority.',
     choices: {
       declare_martial_law: 'Declare Martial Law',
       negotiate_rebel_leaders: 'Negotiate with Rebel Leaders',
@@ -128,8 +128,8 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_social_criminal_moderate: {
-    title: 'The Syndicate Grows',
-    body: 'The criminal underworld has organized into powerful syndicates that match the crown\'s own intelligence network. They control black markets, run protection rackets, and have even begun to corrupt the city guard. Counter-intelligence operations are compromised, and the treasury bleeds from a thousand small cuts.',
+    title: 'Syndicates Rise in {region}',
+    body: 'The criminal underworld of {region} has organized into powerful syndicates that match the crown\'s own intelligence network. From {settlement} they control black markets, run protection rackets, and have even begun to corrupt the city guard. Counter-intelligence operations are compromised, and the treasury bleeds from a thousand small cuts.',
     choices: {
       crack_down_syndicates: 'Crack Down on the Syndicates',
       recruit_informants: 'Recruit Criminal Informants',
@@ -137,8 +137,8 @@ export const SOCIAL_CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_social_criminal_severe: {
-    title: 'A Kingdom Beneath the Kingdom',
-    body: 'The syndicates no longer skulk in shadow — they parade through the docks with their own sigils. Customs officers answer to their paymasters before the crown, judges find silver pressed into their palms before verdicts are rendered, and whole harbors run on smuggled tonnage. The kingdom has, in all but name, a second sovereign.',
+    title: 'A Second Sovereign in {region}',
+    body: 'The syndicates of {region} no longer skulk in shadow — they parade through the docks of {settlement} with their own sigils. Customs officers answer to their paymasters before the crown, judges find silver pressed into their palms before verdicts are rendered, and whole harbors run on smuggled tonnage. The region has, in all but name, a second sovereign.',
     choices: {
       martial_purge: 'Order a Martial Purge',
       bribe_the_bosses: 'Buy the Bosses\' Cooperation',
