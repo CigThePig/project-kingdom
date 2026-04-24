@@ -681,7 +681,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Clergy, PopulationClass.Commoners, PopulationClass.Nobility],
     effectPreview:
-      'Mandate a single orthodox faith across the entire kingdom, outlawing all heterodox practices. Eliminates heterodoxy but inflicts severe damage on commoner satisfaction and risks widespread unrest.',
+      'Mandate a single orthodox faith across the entire kingdom, outlawing all heterodox practices. Eliminates heterodoxy but inflicts severe damage on commoner satisfaction and risks widespread unrest.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -745,7 +745,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Merchants, PopulationClass.Clergy],
     effectPreview:
-      'Position the kingdom as the dominant diplomatic power in the region, hosting international summits and arbitrating disputes. Brings immense prestige but creates expectations of neutrality.',
+      'Position the kingdom as the dominant diplomatic power in the region, hosting international summits and arbitrating disputes. Brings immense prestige but creates expectations of neutrality.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -789,7 +789,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Clergy],
     effectPreview:
-      'Forge a dynastic bond with a foreign ruling house. Significantly improves diplomatic relations but commits the crown to a long-term alliance.',
+      'Forge a dynastic bond with a foreign ruling house. Significantly improves diplomatic relations but commits the crown to a long-term alliance.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -829,7 +829,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Clergy, PopulationClass.Merchants],
     effectPreview:
-      'Propose a formal confederation of allied kingdoms under crown leadership. The pinnacle of diplomatic achievement, granting enormous influence but requiring the kingdom to bear the costs of collective governance.',
+      'Propose a formal confederation of allied kingdoms under crown leadership. The pinnacle of diplomatic achievement, granting enormous influence but requiring the kingdom to bear the costs of collective governance.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -893,7 +893,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Commoners, PopulationClass.Merchants, PopulationClass.Clergy],
     effectPreview:
-      'Guarantee food security for every subject through a comprehensive national program. Eliminates hunger as a political threat but requires permanent resource commitment.',
+      'Guarantee food security for every subject through a comprehensive national program. Eliminates hunger as a political threat but requires permanent resource commitment.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -957,7 +957,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: [],
     affectedClasses: [PopulationClass.Merchants, PopulationClass.Commoners],
     effectPreview:
-      'Establish formal food trade agreements with neighboring kingdoms. Provides a reliable food supplement at ongoing treasury cost, but strengthens merchant ties and diplomatic bonds.',
+      'Establish formal food trade agreements with neighboring kingdoms. Provides a reliable food supplement at ongoing treasury cost, but strengthens merchant ties and diplomatic bonds.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -1054,7 +1054,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
       PopulationClass.Clergy,
     ],
     effectPreview:
-      'Codify fundamental rights and obligations for all classes, creating a formal social compact. A transformative decree that redefines the kingdom\'s social order, elevating commoners at the cost of traditional hierarchies.',
+      'Codify fundamental rights and obligations for all classes, creating a formal social compact. A transformative decree that redefines the kingdom\'s social order, elevating commoners at the cost of traditional hierarchies.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -1082,7 +1082,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
       PopulationClass.Clergy,
     ],
     effectPreview:
-      'Redistribute portions of noble and clerical estates to commoners. Dramatically improves commoner outlook but severely damages noble and clerical satisfaction.',
+      'Redistribute portions of noble and clerical estates to commoners. Dramatically improves commoner outlook but severely damages noble and clerical satisfaction.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: null,
     isRepeatable: false,
@@ -1229,7 +1229,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: ['Civic Administration milestone 2'],
     affectedClasses: [PopulationClass.Nobility, PopulationClass.Commoners],
     effectPreview:
-      'Create formal provincial administration structures, reducing the crown\'s dependence on local noble governance. Improves stability and regional development at the cost of noble influence.',
+      'Create formal provincial administration structures, reducing the crown\'s dependence on local noble governance. Improves stability and regional development at the cost of noble influence.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: {
       branch: KnowledgeBranch.Civic,
@@ -1379,7 +1379,7 @@ export const DECREE_POOL: DecreeDefinition[] = [
     prerequisites: ['Natural Philosophy milestone 2'],
     affectedClasses: [PopulationClass.Commoners, PopulationClass.Clergy],
     effectPreview:
-      'Implement systematic medical practices based on natural philosophy research. Improves population health, reduces plague impact, and enhances clergy healing capacity.',
+      'Implement systematic medical practices based on natural philosophy research. Improves population health, reduces plague impact, and enhances clergy healing capacity.{ruling_style_note}{recent_causal}',
     isHighImpact: true,
     knowledgePrerequisite: {
       branch: KnowledgeBranch.NaturalPhilosophy,
