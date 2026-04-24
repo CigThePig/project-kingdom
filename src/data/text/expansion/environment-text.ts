@@ -3,7 +3,7 @@ import type { EventTextEntry } from '../events';
 export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   evt_exp_env_spring_thaw_floods: {
     title: 'Spring Thaw Flooding',
-    body: 'The winter snows have melted with unusual speed as {month_name} opens, swelling rivers beyond their banks. Lowland settlements in {region} report rising waters threatening homes and stored grain — with kingdom stores already at a {stores_tier} mark, any loss matters. The crown must decide how to respond before the flood peaks.',
+    body: 'The winter snows have melted with unusual speed as {month_name} opens, swelling rivers beyond their banks. Lowland settlements in {region} report rising waters threatening homes and stored grain — with kingdom stores already at a {stores_tier} mark, any loss matters. The crown must decide how to respond before the flood peaks. The {class_plural} await the crown\'s reply.',
     choices: {
       build_emergency_levees: 'Build Emergency Levees',
       evacuate_lowlands: 'Evacuate the Lowlands',
@@ -20,7 +20,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_new_spring_growth: {
     title: 'Vigorous Spring Growth',
-    body: 'An unusually warm and wet {season} has produced explosive growth across the {terrain} reaches of {region}. Untamed vegetation encroaches on roads and settlements, but also signals fertile conditions for new farmland.',
+    body: 'An unusually warm and wet {season} has produced explosive growth across the {terrain} reaches of {region}. Untamed vegetation encroaches on roads and settlements, but also signals fertile conditions for new farmland. The {class_plural} await the crown\'s reply.',
     choices: {
       clear_new_fields: 'Clear Land for New Fields',
       preserve_the_woodlands: 'Preserve the Woodlands',
@@ -28,7 +28,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_forest_fire: {
     title: 'Wildfire in the Royal Forests',
-    body: 'A devastating fire has erupted in the kingdom\'s central forest belt this {season}, driven by dry winds across the {terrain} country of {region}. Timber reserves, charcoal burners\' camps, and several outlying villages are directly threatened. Smoke is visible from the capital.',
+    body: 'A devastating fire has erupted in the kingdom\'s central forest belt this {season}, driven by dry winds across the {terrain} country of {region}. Timber reserves, charcoal burners\' camps, and several outlying villages are directly threatened. Smoke is visible from the capital. The {class_plural} are watching every move of the court.',
     choices: {
       mobilize_firefighting_brigades: 'Mobilize Firefighting Brigades',
       create_firebreaks: 'Create Firebreaks',
@@ -37,7 +37,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_locust_swarm: {
     title: 'Locust Swarm Descends',
-    body: 'A vast swarm of locusts has descended upon the fields of {region} this {season}. Fields that were green at dawn are stripped bare by midday. Farmers watch helplessly as the insects consume everything in their path — and with kingdom stores already at a {stores_tier} mark, every lost acre is a calamity.',
+    body: 'A vast swarm of locusts has descended upon the fields of {region} this {season}. Fields that were green at dawn are stripped bare by midday. Farmers watch helplessly as the insects consume everything in their path — and with kingdom stores already at a {stores_tier} mark, every lost acre is a calamity. The {class_plural} are watching every move of the court.',
     choices: {
       organize_pest_drives: 'Organize Pest Drives',
       burn_afflicted_fields: 'Burn Afflicted Fields',
@@ -46,7 +46,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_river_pollution: {
     title: 'River Fouled by Industry',
-    body: 'The kingdom\'s main river has become visibly tainted. Tanneries, dye works, and slaughterhouses upstream have turned the water dark and foul-smelling. Downstream communities report illness among those who drink from it.',
+    body: 'The kingdom\'s main river has become visibly tainted. Tanneries, dye works, and slaughterhouses upstream have turned the water dark and foul-smelling. Downstream communities report illness among those who drink from it. The {class_plural} await the crown\'s reply.',
     choices: {
       regulate_tanneries: 'Regulate the Tanneries',
       relocate_workshops: 'Relocate Workshops Downstream',
@@ -55,7 +55,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_soil_exhaustion: {
     title: 'Exhausted Farmland',
-    body: 'Harvests have dwindled in {region}, the kingdom\'s oldest agricultural ground. Years of continuous planting without rest have stripped the {terrain} soil of its vitality, and with stores at a {stores_tier} mark the shortfall is felt keenly. Farmers report that even well-tended fields yield only a fraction of their former bounty.',
+    body: 'Harvests have dwindled in {region}, the kingdom\'s oldest agricultural ground. Years of continuous planting without rest have stripped the {terrain} soil of its vitality, and with stores at a {stores_tier} mark the shortfall is felt keenly. Farmers report that even well-tended fields yield only a fraction of their former bounty. The {class_plural} await the crown\'s reply.',
     choices: {
       implement_field_rotation: 'Implement Field Rotation',
       import_fertile_soil: 'Import Fertile Soil',
@@ -82,7 +82,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_deforestation_crisis: {
     title: 'Forests Stripped Bare',
-    body: 'The kingdom\'s growing population has consumed timber at an alarming rate. Hillsides once thick with ancient oak now stand barren across the {terrain} country of {region}, causing erosion, flooding, and a shortage of building materials. Charcoal burners and shipwrights compete for what remains.',
+    body: 'The kingdom\'s growing population has consumed timber at an alarming rate. Hillsides once thick with ancient oak now stand barren across the {terrain} country of {region}, causing erosion, flooding, and a shortage of building materials. Charcoal burners and shipwrights compete for what remains. The {class_plural} are watching every move of the court.',
     choices: {
       establish_royal_forest_reserves: 'Establish Royal Forest Reserves',
       tax_lumber_operations: 'Tax Lumber Operations',
@@ -91,7 +91,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_coastal_erosion: {
     title: 'The Sea Claims the Shore',
-    body: 'Storms in {season} have accelerated the erosion of the kingdom\'s coastline. Several fishing villages in {region} report that the sea has advanced dramatically, swallowing fields and undermining structures. The coastal folk petition the crown for aid — with the treasury in {treasury_tier} condition, the scale of relief is an open question.',
+    body: 'Storms in {season} have accelerated the erosion of the kingdom\'s coastline. Several fishing villages in {region} report that the sea has advanced dramatically, swallowing fields and undermining structures. The coastal folk petition the crown for aid — with the treasury in {treasury_tier} condition, the scale of relief is an open question. The {class_plural} await the crown\'s reply.',
     choices: {
       build_sea_walls: 'Build Sea Walls',
       relocate_coastal_villages: 'Relocate Coastal Villages',
@@ -109,7 +109,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_mine_contamination: {
     title: 'Mining Waste Poisons the Land',
-    body: 'Runoff from the kingdom\'s mining operations has seeped into the surrounding soil and waterways. Livestock sicken, crops wither, and the communities downhill from the mines report a growing toll of illness among their children.',
+    body: 'Runoff from the kingdom\'s mining operations has seeped into the surrounding soil and waterways. Livestock sicken, crops wither, and the communities downhill from the mines report a growing toll of illness among their children. The {class_plural} are watching every move of the court.',
     choices: {
       shut_down_mine: 'Shut Down the Mine',
       invest_in_drainage: 'Invest in Drainage Systems',
@@ -118,7 +118,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_harsh_winter_early: {
     title: 'Winter Arrives Early',
-    body: 'The first snows have fallen weeks ahead of schedule in {month_name}, catching farmers mid-harvest and travelers on open roads. If this cold persists, the kingdom — with stores at a {stores_tier} mark — faces a longer and harder winter than anyone anticipated.',
+    body: 'The first snows have fallen weeks ahead of schedule in {month_name}, catching farmers mid-harvest and travelers on open roads. If this cold persists, the kingdom — with stores at a {stores_tier} mark — faces a longer and harder winter than anyone anticipated. The {class_plural} are watching every move of the court.',
     choices: {
       accelerate_harvest: 'Accelerate the Harvest',
       open_emergency_stores: 'Open Emergency Stores',
@@ -144,7 +144,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_summer_heat_wave: {
     title: 'Scorching Heat Wave',
-    body: 'An oppressive heat has settled over the kingdom as {month_name} drags on. Wells run dry, crops wilt in the fields of {region}, and the elderly and young suffer most. The capital\'s fountains have stopped flowing, and tempers grow as short as water supplies — with stores already at a {stores_tier} mark, the pressure on rations grows daily.',
+    body: 'An oppressive heat has settled over the kingdom as {month_name} drags on. Wells run dry, crops wilt in the fields of {region}, and the elderly and young suffer most. The capital\'s fountains have stopped flowing, and tempers grow as short as water supplies — with stores already at a {stores_tier} mark, the pressure on rations grows daily. The {class_plural} await the crown\'s reply.',
     choices: {
       ration_water_supplies: 'Ration Water Supplies',
       dig_new_wells: 'Commission New Wells',

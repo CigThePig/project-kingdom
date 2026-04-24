@@ -6,7 +6,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_corruption_discovery: {
     title: 'Whispers of Corruption',
-    body: 'A trusted clerk has brought disturbing evidence to the crown — treasury ledgers that do not balance, payments to phantom suppliers, and suspiciously wealthy officials. The rot may go deeper than anyone suspects.',
+    body: 'A trusted clerk has brought disturbing evidence to the crown — treasury ledgers that do not balance, payments to phantom suppliers, and suspiciously wealthy officials. The rot may go deeper than anyone suspects. The {class_plural} await the crown\'s reply.',
     choices: {
       launch_quiet_investigation: 'Launch a Quiet Investigation',
       confront_suspects_publicly: 'Confront Suspects Publicly',
@@ -15,7 +15,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_corruption_investigation: {
     title: 'The Investigation Deepens',
-    body: 'The investigation has revealed a network of corruption reaching into the highest levels of the administration. Several noble families are implicated, and the evidence grows more damning by the day. The kingdom holds its breath.',
+    body: 'The investigation has revealed a network of corruption reaching into the highest levels of the administration. Several noble families are implicated, and the evidence grows more damning by the day. The kingdom holds its breath. The {class_plural} are watching every move of the court.',
     choices: {
       expand_investigation: 'Expand the Investigation',
       offer_amnesty_for_testimony: 'Offer Amnesty for Testimony',
@@ -24,7 +24,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_corruption_scandal: {
     title: 'The Great Corruption Scandal',
-    body: 'The full scale of the corruption is now undeniable. Fortunes have been stolen from the crown, trust has been shattered, and the people demand justice. How the crown resolves this will define its legacy.',
+    body: 'The full scale of the corruption is now undeniable. Fortunes have been stolen from the crown, trust has been shattered, and the people demand justice. How the crown resolves this will define its legacy. The {class_plural} are watching every move of the court.',
     choices: {
       public_trial_and_punishment: 'Public Trial and Punishment',
       quiet_exile_of_guilty: 'Quiet Exile of the Guilty',
@@ -37,7 +37,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_drought_spring: {
     title: 'Spring Rains Fail to Come',
-    body: 'The spring rains have not arrived. Wells are drawing low, streams thin to trickles, and farmers eye the cloudless sky with growing dread. If moisture does not come soon, the planting season will be compromised.',
+    body: 'The spring rains have not arrived. Wells are drawing low, streams thin to trickles, and farmers eye the cloudless sky with growing dread. If moisture does not come soon, the planting season will be compromised. The {class_plural} await the crown\'s reply.',
     choices: {
       dig_emergency_wells: 'Dig Emergency Wells',
       pray_for_rain: 'Pray for Rain',
@@ -46,7 +46,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_drought_summer: {
     title: 'The Drought Worsens',
-    body: 'Summer has brought no relief. The drought has deepened into crisis as crops wither in the fields and livestock perish at dried-up watering holes. The kingdom faces a stark choice between costly intervention and devastating loss.',
+    body: 'Summer has brought no relief. The drought has deepened into crisis as crops wither in the fields and livestock perish at dried-up watering holes. The kingdom faces a stark choice between costly intervention and devastating loss. The {class_plural} are watching every move of the court.',
     choices: {
       import_water_by_caravan: 'Import Water by Caravan',
       abandon_worst_fields: 'Abandon the Worst Fields',
@@ -77,7 +77,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_border_war_mobilization: {
     title: 'War Preparations Intensify',
-    body: 'The situation at the border has deteriorated beyond mere skirmishing. Both sides are mobilizing forces, and war now seems inevitable unless extraordinary measures are taken. The kingdom must decide how far it is willing to go.',
+    body: 'The situation at the border has deteriorated beyond mere skirmishing. Both sides are mobilizing forces, and war now seems inevitable unless extraordinary measures are taken. The kingdom must decide how far it is willing to go. The {class_plural} are watching every move of the court.',
     choices: {
       full_mobilization: 'Order Full Mobilization',
       defensive_posture: 'Adopt Defensive Posture',
@@ -130,7 +130,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_guild_rev_alliance: {
     title: 'Guild Alliance Forms',
-    body: 'An unprecedented accord has formed between merchant guilds and commoner labor associations. United by shared grievances against noble privileges, they demand a voice in governance. The nobility watches with alarm.',
+    body: 'An unprecedented accord has formed between merchant guilds and commoner labor associations. United by shared grievances against noble privileges, they demand a voice in governance. The nobility watches with alarm. The {class_plural} await the crown\'s reply.',
     choices: {
       meet_with_guild_leaders: 'Meet with Guild Leaders',
       ban_cross_class_meetings: 'Ban Cross-Class Meetings',
@@ -139,7 +139,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_guild_rev_council: {
     title: 'The Workers\' Council Demands Power',
-    body: 'The guild coalition has organized itself into a formal workers\' council, presenting the crown with a charter of demands. They seek permanent representation in governance — a radical break with tradition that the nobility fiercely opposes.',
+    body: 'The guild coalition has organized itself into a formal workers\' council, presenting the crown with a charter of demands. They seek permanent representation in governance — a radical break with tradition that the nobility fiercely opposes. The {class_plural} are watching every move of the court.',
     choices: {
       grant_council_representation: 'Grant Council Representation',
       arrest_ringleaders: 'Arrest the Ringleaders',
@@ -161,7 +161,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_renaissance_spark: {
     title: 'Spark of Intellectual Revival',
-    body: 'A circle of scholars has produced a remarkable body of work — treatises on natural philosophy, translations of ancient texts, and innovative approaches to agriculture and medicine. The kingdom stands at the threshold of an intellectual awakening.',
+    body: 'A circle of scholars has produced a remarkable body of work — treatises on natural philosophy, translations of ancient texts, and innovative approaches to agriculture and medicine. The kingdom stands at the threshold of an intellectual awakening. The {class_plural} await the crown\'s reply.',
     choices: {
       fund_the_scholars: 'Fund the Scholars',
       encourage_but_dont_fund: 'Encourage Without Funding',
@@ -222,7 +222,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_chain_rebellion_unrest: {
     title: 'Provincial Unrest Grows',
-    body: 'Reports from the provinces indicate growing discontent. Local leaders complain of neglect, overtaxation, and the capital\'s indifference to regional concerns. The unrest has not yet turned violent, but the trajectory is troubling.',
+    body: 'Reports from the provinces indicate growing discontent. Local leaders complain of neglect, overtaxation, and the capital\'s indifference to regional concerns. The unrest has not yet turned violent, but the trajectory is troubling. The {class_plural} await the crown\'s reply.',
     choices: {
       send_governor_to_negotiate: 'Send a Governor to Negotiate',
       deploy_peacekeeping_force: 'Deploy a Peacekeeping Force',
@@ -231,7 +231,7 @@ export const EXPANSION_CHAIN_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_chain_rebellion_separatist: {
     title: 'Separatist Movement Emerges',
-    body: 'Provincial discontent has crystallized into an organized separatist movement. Local leaders have formed a council of their own and are collecting taxes independently. If the crown does not act decisively, the movement will only grow stronger.',
+    body: 'Provincial discontent has crystallized into an organized separatist movement. Local leaders have formed a council of their own and are collecting taxes independently. If the crown does not act decisively, the movement will only grow stronger. The {class_plural} are watching every move of the court.',
     choices: {
       grant_limited_autonomy: 'Grant Limited Autonomy',
       martial_law_in_province: 'Impose Martial Law',

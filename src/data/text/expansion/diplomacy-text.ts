@@ -9,7 +9,7 @@ import type { EventTextEntry } from '../events';
 export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   evt_exp_dip_foreign_emissary_arrives: {
     title: 'Foreign Emissary at the Gates',
-    body: 'An emissary of {ruler_full} has arrived at the capital from {capital} this {season}, bearing letters of introduction and requesting an audience. The nature of their mission is unclear — though with the mood in {capital} reported as {rival_mood}, the gesture carries weight — and it suggests a desire for dialogue.',
+    body: 'An emissary of {ruler_full} has arrived at the capital from {capital} this {season}, bearing letters of introduction and requesting an audience. The nature of their mission is unclear — though with the mood in {capital} reported as {rival_mood}, the gesture carries weight — and it suggests a desire for dialogue. The {class_plural} await the crown\'s reply.',
     choices: {
       welcome_with_feast: 'Welcome with a Feast',
       formal_audience_only: 'Grant a Formal Audience',
@@ -34,7 +34,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_diplomatic_incident: {
     title: 'Diplomatic Incident with {neighbor}',
-    body: "A clash between our border guards and {neighbor_short}'s patrol has escalated into a serious diplomatic incident this {season}. Relations between the courts presently stand at {diplomatic_posture}; {ruler}'s ambassador demands satisfaction, and failure to respond could poison them for years to come.",
+    body: "A clash between our border guards and {neighbor_short}'s patrol has escalated into a serious diplomatic incident this {season}. Relations between the courts presently stand at {diplomatic_posture}; {ruler}'s ambassador demands satisfaction, and failure to respond could poison them for years to come. The {class_plural} are watching every move of the court.",
     choices: {
       issue_formal_apology: 'Issue a Formal Apology',
       demand_reciprocal_apology: 'Demand They Apologize First',
@@ -43,7 +43,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_refugee_plea: {
     title: 'Refugees Seek Asylum',
-    body: "A stream of refugees from {neighbor} has appeared at the kingdom's borders this {season}, pleading for sanctuary. They bring little but their labor and their desperation, and the troubles that drove them from {ruler}'s realm — where {spymaster_or_fallback} reports the populace as {rival_mood} — are only half-told. The court debates whether charity or caution should prevail.",
+    body: "A stream of refugees from {neighbor} has appeared at the kingdom's borders this {season}, pleading for sanctuary. They bring little but their labor and their desperation, and the troubles that drove them from {ruler}'s realm — where {spymaster_or_fallback} reports the populace as {rival_mood} — are only half-told. The court debates whether charity or caution should prevail. The {class_plural} await the crown's reply.",
     choices: {
       welcome_refugees: 'Welcome the Refugees',
       limited_asylum: 'Grant Limited Asylum',
@@ -106,7 +106,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_border_dispute_escalation: {
     title: 'Border Dispute Escalates',
-    body: 'The long-simmering dispute over the borderlands with {neighbor} has erupted into open confrontation, with relations now at {diplomatic_posture}. {ruler_full} has moved troops to the contested region this {season}, and a single miscalculation could trigger armed conflict.',
+    body: 'The long-simmering dispute over the borderlands with {neighbor} has erupted into open confrontation, with relations now at {diplomatic_posture}. {ruler_full} has moved troops to the contested region this {season}, and a single miscalculation could trigger armed conflict. The {class_plural} are watching every move of the court.',
     choices: {
       show_of_force: 'Show of Force',
       propose_border_commission: 'Propose a Border Commission',
@@ -115,7 +115,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_peace_conference: {
     title: 'Regional Peace Conference',
-    body: '{ruler_full} and other neighboring crowns have expressed interest in a formal peace conference, to be hosted at {capital} or elsewhere. Hosting such a gathering would be expensive but could establish the kingdom as a diplomatic leader in the region.',
+    body: '{ruler_full} and other neighboring crowns have expressed interest in a formal peace conference, to be hosted at {capital} or elsewhere. Hosting such a gathering would be expensive but could establish the kingdom as a diplomatic leader in the region. The {class_plural} await the crown\'s reply.',
     choices: {
       host_the_conference: 'Host the Conference',
       attend_as_participant: 'Attend as Participant',
@@ -152,7 +152,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_visiting_dignitary: {
     title: 'Visiting Dignitary',
-    body: 'A dignitary of modest rank but considerable influence has arrived from {capital} this {season}, sent in {ruler}\'s name. The visit — welcome in light of {intel_tier} current intelligence on {neighbor} — offers an opportunity to strengthen informal ties and gather what {spymaster_or_fallback} cannot otherwise reach.',
+    body: 'A dignitary of modest rank but considerable influence has arrived from {capital} this {season}, sent in {ruler}\'s name. The visit — welcome in light of {intel_tier} current intelligence on {neighbor} — offers an opportunity to strengthen informal ties and gather what {spymaster_or_fallback} cannot otherwise reach. The {class_plural} await the crown\'s reply.',
     choices: {
       grand_welcome: 'Arrange a Grand Welcome',
       standard_reception: 'Standard Reception',
@@ -195,7 +195,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_joint_military_exercise: {
     title: 'Joint Military Exercise Proposed',
-    body: '{ruler_full} proposes joint military exercises along the shared border — a show of unity that would strengthen both armies and deter potential aggressors. Participation would demonstrate commitment to the alliance with {dynasty}.',
+    body: '{ruler_full} proposes joint military exercises along the shared border — a show of unity that would strengthen both armies and deter potential aggressors. Participation would demonstrate commitment to the alliance with {dynasty}. The {class_plural} await the crown\'s reply.',
     choices: {
       participate_fully: 'Participate Fully',
       send_observers_only: 'Send Observers Only',

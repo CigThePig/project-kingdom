@@ -26,7 +26,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 3. Religious Order Expansion ---
   evt_exp_rel_order_expansion: {
     title: 'A Religious Order Seeks to Grow',
-    body: 'The leaders of a prominent order of the {faith_tradition} have petitioned the crown for permission to establish new chapters throughout the provinces. Their monasteries bring learning and charity, but also considerable influence that does not always align with royal interests.',
+    body: 'The leaders of a prominent order of the {faith_tradition} have petitioned the crown for permission to establish new chapters throughout the provinces. Their monasteries bring learning and charity, but also considerable influence that does not always align with royal interests. The {class_plural} await the crown\'s reply.',
     choices: {
       grant_charter: 'Grant an Expansion Charter',
       limit_expansion: 'Limit Their Expansion',
@@ -59,7 +59,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 6. Pilgrimage Season ---
   evt_exp_rel_pilgrimage_season: {
     title: 'The Season of Pilgrimage',
-    body: 'With the arrival of {season}, the faithful of the {faith_tradition} take to the roads in great numbers, journeying to holy sites throughout the kingdom. The pilgrims bring coin and devotion, but also strain upon the roads and the communities along their path.',
+    body: 'With the arrival of {season}, the faithful of the {faith_tradition} take to the roads in great numbers, journeying to holy sites throughout the kingdom. The pilgrims bring coin and devotion, but also strain upon the roads and the communities along their path. The {class_plural} await the crown\'s reply.',
     choices: {
       provide_escorts: 'Provide Royal Escorts',
       tax_pilgrims: 'Tax the Pilgrim Routes',
@@ -81,7 +81,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 8. Clerical Corruption ---
   evt_exp_rel_clerical_corruption: {
     title: 'Corruption Within the Clergy',
-    body: 'Common folk bring accusations of clerical misconduct before the crown. Certain priests of the {faith_tradition} are said to sell blessings, hoard tithes for personal enrichment, and live in luxury while their congregations suffer. The faithful grow disillusioned, and the pious grow angry.',
+    body: 'Common folk bring accusations of clerical misconduct before the crown. Certain priests of the {faith_tradition} are said to sell blessings, hoard tithes for personal enrichment, and live in luxury while their congregations suffer. The faithful grow disillusioned, and the pious grow angry. The {class_plural} are watching every move of the court.',
     choices: {
       royal_inquisition: 'Launch a Royal Inquisition',
       internal_reform: 'Demand Internal Reform',
@@ -92,7 +92,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 9. Religious Holiday Observance ---
   evt_exp_rel_holiday_observance: {
     title: 'The Great Winter Observance',
-    body: 'The principal holiday of the {faith_tradition} approaches with the deep of {season}. The clergy petition for crown sponsorship of the sacred rites, arguing that visible royal piety strengthens the tie between throne and altar. Others suggest a treasury in {treasury_tier} condition can ill afford elaborate ceremony.',
+    body: 'The principal holiday of the {faith_tradition} approaches with the deep of {season}. The clergy petition for crown sponsorship of the sacred rites, arguing that visible royal piety strengthens the tie between throne and altar. Others suggest a treasury in {treasury_tier} condition can ill afford elaborate ceremony. The {class_plural} await the crown\'s reply.',
     choices: {
       crown_sponsored_rites: 'Sponsor the Sacred Rites',
       permit_observance: 'Permit Simple Observance',
@@ -103,7 +103,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 10. Monastery Funding ---
   evt_exp_rel_monastery_funding: {
     title: 'A Monastery Seeks the Crown\'s Aid',
-    body: 'The abbot of an ancient and respected monastery of the {faith_tradition} has appealed to the crown for financial support. The monastery\'s scriptorium preserves invaluable texts, and its monks provide charity to the surrounding province, yet its coffers have run dry and its stonework erodes — much like a treasury now in {treasury_tier} condition.',
+    body: 'The abbot of an ancient and respected monastery of the {faith_tradition} has appealed to the crown for financial support. The monastery\'s scriptorium preserves invaluable texts, and its monks provide charity to the surrounding province, yet its coffers have run dry and its stonework erodes — much like a treasury now in {treasury_tier} condition. The {class_plural} await the crown\'s reply.',
     choices: {
       generous_endowment: 'Grant a Generous Endowment',
       conditional_funding: 'Provide Conditional Funding',
@@ -125,7 +125,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 12. Faith Healing Movement ---
   evt_exp_rel_faith_healing: {
     title: 'Rise of the Faith Healers',
-    body: 'A movement of lay healers claiming divine inspiration has spread through the towns and villages. The common folk turn to them for cures when physicians are scarce, and some report genuine recoveries. The established clergy view these unlicensed practitioners with suspicion.',
+    body: 'A movement of lay healers claiming divine inspiration has spread through the towns and villages. The commonfolk turn to them for cures when physicians are scarce, and some report genuine recoveries. The established clergy view these unlicensed practitioners with suspicion.',
     choices: {
       support_movement: 'Support the Movement',
       regulate_practices: 'Regulate Their Practices',

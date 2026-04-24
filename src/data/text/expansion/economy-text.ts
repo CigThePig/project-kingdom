@@ -19,7 +19,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_currency_debasement: {
     title: 'The Coin Grows Thin',
-    body: 'The royal mint master presents a grim accounting: with the treasury in {treasury_tier} condition and our economy in {economic_phase_lc}, the Crown cannot meet its obligations at the current rate of expenditure. He proposes mixing base metals into the Crown\'s silver coins, a practice that would stretch the mint\'s stocks but risk shattering merchant confidence in our currency.',
+    body: 'The royal mint master presents a grim accounting: with the treasury in {treasury_tier} condition and our economy in {economic_phase_lc}, the Crown cannot meet its obligations at the current rate of expenditure. He proposes mixing base metals into the Crown\'s silver coins, a practice that would stretch the mint\'s stocks but risk shattering merchant confidence in our currency. The {class_plural} are watching every move of the court.',
     choices: {
       debase_the_coinage: 'Debase the Coinage',
       raise_emergency_tax: 'Raise an Emergency Tax',
@@ -32,7 +32,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_tax_dispute: {
     title: 'Tax Collectors Turned Away',
-    body: 'Crown tax collectors have been met with barred doors and angry crowds in the outlying villages. The common folk claim the assessments are unjust — unreasonable in a year of {economic_phase_lc} — and demand relief, while {chancellor_or_fallback} insists the levies are lawful and a treasury in {treasury_tier} condition cannot afford leniency.',
+    body: 'Crown tax collectors have been met with barred doors and angry crowds in the outlying villages. The commonfolk claim the assessments are unjust — unreasonable in a year of {economic_phase_lc} — and demand relief, while {chancellor_or_fallback} insists the levies are lawful and a treasury in {treasury_tier} condition cannot afford leniency.',
     choices: {
       enforce_full_collection: 'Enforce Full Collection',
       grant_partial_amnesty: 'Grant Partial Amnesty',
@@ -84,7 +84,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_inflation_crisis: {
     title: 'The Price of Everything Rises',
-    body: 'A loaf of bread now costs what a chicken did last {season}. The kingdom\'s currency buys less with each passing week — the economy has tipped into {economic_phase_lc} — and panic buying has emptied market stalls across every province. {chancellor_or_fallback} warns that without decisive action, trade will collapse entirely.',
+    body: 'A loaf of bread now costs what a chicken did last {season}. The kingdom\'s currency buys less with each passing week — the economy has tipped into {economic_phase_lc} — and panic buying has emptied market stalls across every province. {chancellor_or_fallback} warns that without decisive action, trade will collapse entirely. The {class_plural} are watching every move of the court.',
     choices: {
       mint_new_currency: 'Mint an Entirely New Currency',
       freeze_all_prices: 'Freeze All Prices by Decree',
@@ -110,7 +110,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_mining_revenue: {
     title: 'Silver Veins Discovered',
-    body: 'Prospectors in the highland regions report the discovery of rich silver deposits beneath Crown lands. With the treasury in {treasury_tier} condition, the find could fill your coffers handsomely, though mining expansion would require labourers drawn from the fields — and with stores at a {stores_tier} mark, displacing farming communities is no small decision.',
+    body: 'Prospectors in the highland regions report the discovery of rich silver deposits beneath Crown lands. With the treasury in {treasury_tier} condition, the find could fill your coffers handsomely, though mining expansion would require labourers drawn from the fields — and with stores at a {stores_tier} mark, displacing farming communities is no small decision. The {class_plural} await the crown\'s reply.',
     choices: {
       expand_mining_operations: 'Expand Mining Operations',
       claim_royal_share: 'Claim the Royal Share',
@@ -149,7 +149,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_debt_crisis: {
     title: 'The Crown Cannot Pay',
-    body: '{chancellor_or_fallback} kneels before the throne with an admission that chills the court: with the treasury in {treasury_tier} condition and the country mired in {economic_phase_lc}, the Crown\'s debts exceed its capacity to repay. Foreign creditors grow impatient, domestic lenders withhold further coin, and the Crown teeters on the edge of financial ruin.',
+    body: '{chancellor_or_fallback} kneels before the throne with an admission that chills the court: with the treasury in {treasury_tier} condition and the country mired in {economic_phase_lc}, the Crown\'s debts exceed its capacity to repay. Foreign creditors grow impatient, domestic lenders withhold further coin, and the Crown teeters on the edge of financial ruin. The {class_plural} are watching every move of the court.',
     choices: {
       default_on_debts: 'Default on All Debts',
       negotiate_with_creditors: 'Negotiate with Creditors',
@@ -188,7 +188,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_smuggling: {
     title: 'Contraband on the Border',
-    body: '{spymaster_or_fallback} brings reports of organized smuggling rings operating along the Valdris border, moving untaxed goods in both directions while the treasury sits in {treasury_tier} condition. The smugglers bribe local officials and employ armed escorts, making them as much a security concern as a fiscal one.',
+    body: '{spymaster_or_fallback} brings reports of organized smuggling rings operating along the Valdris border, moving untaxed goods in both directions while the treasury sits in {treasury_tier} condition. The smugglers bribe local officials and employ armed escorts, making them as much a security concern as a fiscal one. The {class_plural} are watching every move of the court.',
     choices: {
       deploy_border_patrols: 'Deploy Border Patrols',
       bribe_smuggler_captains: 'Bribe the Smuggler Captains',
@@ -201,7 +201,7 @@ export const EXPANSION_ECONOMY_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_eco_artisan_demands: {
     title: 'The Artisans Demand Recognition',
-    body: 'Master craftsmen — weavers, tanners, potters, and carpenters — have united to petition the throne for a formal charter granting them collective rights. They seek fair wages and protection from merchant exploitation, arguing that in this {economic_phase_lc} their labour holds the country together, but the trading houses warn that guild power will inflate costs for all.',
+    body: 'Master craftsmen — weavers, tanners, potters, and carpenters — have united to petition the throne for a formal charter granting them collective rights. They seek fair wages and protection from merchant exploitation, arguing that in this {economic_phase_lc} their labour holds the country together, but the trading houses warn that guild power will inflate costs for all. The {class_plural} await the crown\'s reply.',
     choices: {
       grant_guild_charter: 'Grant a Guild Charter',
       offer_tax_relief: 'Offer Tax Relief Instead',

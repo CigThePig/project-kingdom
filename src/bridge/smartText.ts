@@ -54,6 +54,7 @@ import {
   CONDITION_TYPE_LABELS,
   CONDITION_SEVERITY_ARTICLE,
   BOND_KIND_LABELS,
+  CLASS_LABELS,
   CLASS_PLURAL_LABELS,
 } from '../data/text/labels';
 import { THEMATIC_MONTH_NAMES } from '../data/text/month-names';
@@ -198,6 +199,14 @@ const DISPATCH: Record<string, Resolver> = {
     if (!ctx.settlementId) return 'the settlement';
     return getSettlementDisplayName(ctx.settlementId, state);
   },
+
+  // ---- §3.1 Identity — population class ----
+  // `{class}` resolves to the singular label of the bound class (e.g. "Merchant
+  // Guild"); `{class_plural}` to the plural form ("Merchants"). When `classId`
+  // is absent, falls back to the most-pressured class so the token never leaks
+  // raw to the player.
+  class: (state, ctx) => classLabel(state, ctx, 'singular'),
+  class_plural: (state, ctx) => classLabel(state, ctx, 'plural'),
 
   // ---- §3.1 Identity — council seats ----
   chancellor: (state) => getAdvisorName(CouncilSeat.Chancellor, state),
@@ -777,6 +786,17 @@ function watchingFactionClause(state: GameState, ctx: SmartTextContext): string 
   if (!target) return '';
   const label = (CLASS_PLURAL_LABELS[target] ?? String(target)).toLowerCase();
   return ` — the ${label} watch closely`;
+}
+
+function classLabel(
+  state: GameState,
+  ctx: SmartTextContext,
+  form: 'singular' | 'plural',
+): string {
+  const target = ctx.classId ?? findPressuredClass(state);
+  if (!target) return form === 'plural' ? 'the people' : 'the populace';
+  const table = form === 'plural' ? CLASS_PLURAL_LABELS : CLASS_LABELS;
+  return table[target] ?? String(target);
 }
 
 function findPressuredClass(state: GameState): PopulationClass | null {

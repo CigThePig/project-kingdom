@@ -15,7 +15,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 2. Succession Question ---
   evt_exp_kgd_succession_question: {
     title: 'Whispers of Succession',
-    body: 'Certain great lords have raised the matter of succession with unseemly urgency. Their concern, though perhaps premature, is not without foundation — an unresolved line invites ambition. The manner in which you address this question shall echo through every noble hall.',
+    body: 'Certain great lords have raised the matter of succession with unseemly urgency. Their concern, though perhaps premature, is not without foundation — an unresolved line invites ambition. The manner in which you address this question shall echo through every noble hall. The {class_plural} await the crown\'s reply.',
     choices: {
       name_heir_publicly: 'Name an Heir Publicly',
       establish_council_regency: 'Establish a Council of Regency',
@@ -48,7 +48,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 5. National Celebration Demand ---
   evt_exp_kgd_national_celebration: {
     title: 'Demand for National Celebration',
-    body: 'With summer upon our lands and the population grown prosperous, voices rise from every quarter calling for a great national celebration. The commons desire feasting and merriment, though your stewards note that such gatherings are costly endeavors.',
+    body: 'With summer upon our lands and the population grown prosperous, voices rise from every quarter calling for a great national celebration. The commons desire feasting and merriment, though your stewards note that such gatherings are costly endeavors. The {class_plural} await the crown\'s reply.',
     choices: {
       grand_royal_festival: 'Proclaim a Grand Royal Festival',
       modest_observance: 'Permit a Modest Observance',
@@ -81,7 +81,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 8. Power Consolidation ---
   evt_exp_kgd_power_consolidation: {
     title: 'An Opportunity to Consolidate',
-    body: 'Our lands enjoy a season of unusual stability, and the military stands firmly behind the crown. Your advisors suggest this may be an opportune moment to reshape the balance of power — though they disagree sharply on which direction the scales should tip.',
+    body: 'Our lands enjoy a season of unusual stability, and the military stands firmly behind the crown. Your advisors suggest this may be an opportune moment to reshape the balance of power — though they disagree sharply on which direction the scales should tip. The {class_plural} are watching every move of the court.',
     choices: {
       centralize_authority: 'Centralize Authority Under the Crown',
       delegate_to_governors: 'Delegate Power to Provincial Governors',
@@ -114,7 +114,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 11. Corruption Investigation ---
   evt_exp_kgd_corruption_investigation: {
     title: 'Corruption in the Realm',
-    body: 'Evidence has surfaced implicating several high-ranking officials in a web of bribery, embezzlement, and abuse of office. The rot appears to reach into the highest circles of administration. How the crown responds will define its commitment to justice — or its tolerance for convenience.',
+    body: 'Evidence has surfaced implicating several high-ranking officials in a web of bribery, embezzlement, and abuse of office. The rot appears to reach into the highest circles of administration. How the crown responds will define its commitment to justice — or its tolerance for convenience. The {class_plural} are watching every move of the court.',
     choices: {
       public_tribunal: 'Convene a Public Tribunal',
       private_purge: 'Conduct a Private Purge',
@@ -136,7 +136,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 13. Crown Land Management ---
   evt_exp_kgd_crown_land: {
     title: 'The Question of Crown Lands',
-    body: 'With food stores dwindling as spring arrives, attention turns to the vast tracts of royal demesne that lie fallow. The commons petition to work these lands, while the nobility see opportunity for profitable leases. The crown must decide the fate of its own domain.',
+    body: 'With food stores dwindling as spring arrives, attention turns to the vast tracts of royal demesne that lie fallow. The commons petition to work these lands, while the nobility see opportunity for profitable leases. The crown must decide the fate of its own domain. The {class_plural} await the crown\'s reply.',
     choices: {
       open_crown_lands: 'Open Crown Lands to the Commons',
       lease_to_nobility: 'Lease Lands to the Nobility',

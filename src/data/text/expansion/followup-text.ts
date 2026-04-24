@@ -14,7 +14,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_eco_guild_resentment: {
     title: 'Guild Resentment Simmers',
-    body: 'The guild members who lost the dispute continue to grumble. Their resentment has begun to affect trade, as they slow-walk contracts and withhold cooperation. A gesture of goodwill might restore productivity.',
+    body: 'The guild members who lost the dispute continue to grumble. Their resentment has begun to affect trade, as they slow-walk contracts and withhold cooperation. A gesture of goodwill might restore productivity. The {class_plural} await the crown\'s reply.',
     choices: {
       offer_concessions_to_new_guild: 'Offer Concessions',
       maintain_current_stance: 'Maintain Current Stance',
@@ -30,7 +30,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_eco_tax_compromise_fallout: {
     title: 'Tax Compromise Under Review',
-    body: 'The tax compromise negotiated during the revolt has taken effect. Revenue has stabilized, though some officials question whether the concessions were too generous. The agreement could be revisited.',
+    body: 'The tax compromise negotiated during the revolt has taken effect. Revenue has stabilized, though some officials question whether the concessions were too generous. The agreement could be revisited. The {class_plural} take note of the dispatch.',
     choices: {
       honor_the_agreement: 'Honor the Agreement',
       renegotiate_terms: 'Renegotiate the Terms',
@@ -38,7 +38,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_eco_bailout_resentment: {
     title: 'Public Anger Over Bailout',
-    body: 'Word of the lender bailout has spread among the common folk. They see wealthy money-changers rescued by the crown while ordinary people struggle. Protests have begun in the market squares.',
+    body: 'Word of the lender bailout has spread among the commonfolk. They see wealthy money-changers rescued by the crown while ordinary people struggle. Protests have begun in the market squares.',
     choices: {
       address_public_anger: 'Address Public Anger',
       defend_the_decision: 'Defend the Decision',
@@ -50,7 +50,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fu_food_granary_shortage: {
     title: 'Granary Reserves Dangerously Low',
-    body: 'The destruction of contaminated grain stores has left reserves at critically low levels. With the next harvest still months away, the kingdom faces a difficult period of scarcity unless supplies are secured from abroad.',
+    body: 'The destruction of contaminated grain stores has left reserves at critically low levels. With the next harvest still months away, the kingdom faces a difficult period of scarcity unless supplies are secured from abroad. The {class_plural} await the crown\'s reply.',
     choices: {
       import_emergency_grain: 'Import Emergency Grain',
       tighten_rationing: 'Tighten Rationing',
@@ -58,7 +58,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_food_overfishing: {
     title: 'Coastal Waters Depleted',
-    body: 'The fishing boom has been too successful. Fishermen report dwindling catches and smaller fish, suggesting the coastal waters are being overfished. Unless limits are imposed, the fishery may collapse entirely.',
+    body: 'The fishing boom has been too successful. Fishermen report dwindling catches and smaller fish, suggesting the coastal waters are being overfished. Unless limits are imposed, the fishery may collapse entirely. The {class_plural} await the crown\'s reply.',
     choices: {
       impose_fishing_limits: 'Impose Fishing Limits',
       continue_unrestricted: 'Continue Unrestricted',
@@ -92,7 +92,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_mil_arms_breakthrough: {
     title: 'Weapons Research Bears Fruit',
-    body: 'The investment in superior weapons has yielded a breakthrough — new alloys that produce stronger blades and more resilient armor. The question now is whether to produce these weapons en masse or keep them as an elite advantage.',
+    body: 'The investment in superior weapons has yielded a breakthrough — new alloys that produce stronger blades and more resilient armor. The question now is whether to produce these weapons en masse or keep them as an elite advantage. The {class_plural} await the crown\'s reply.',
     choices: {
       mass_produce_weapons: 'Mass Produce the New Weapons',
       keep_as_elite_reserve: 'Keep as Elite Reserve',
@@ -100,7 +100,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_mil_fortress_garrison: {
     title: 'Border Fortresses Manned',
-    body: 'The newly constructed border fortresses have been garrisoned and provisioned. Their presence has already deterred several incursions, and local villages report feeling safer than they have in years.',
+    body: 'The newly constructed border fortresses have been garrisoned and provisioned. Their presence has already deterred several incursions, and local villages report feeling safer than they have in years. The {class_plural} take note of the dispatch.',
     choices: {
       acknowledge: 'Acknowledge the Report',
     },
@@ -115,7 +115,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_mil_parade_recruitment: {
     title: 'Recruitment Surge After Parade',
-    body: 'The grand military review has inspired a wave of young recruits eager to serve. Recruiting stations report their highest numbers in years, and morale throughout the ranks is lifted.',
+    body: 'The grand military review has inspired a wave of young recruits eager to serve. Recruiting stations report their highest numbers in years, and morale throughout the ranks is lifted. The {class_plural} take note of the dispatch.',
     choices: {
       acknowledge: 'Acknowledge the Report',
     },
@@ -126,7 +126,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fu_dip_trade_profits: {
     title: 'Trade Agreement Yields Profits',
-    body: 'The trade agreement with Valdris has begun to generate returns. Merchant caravans move freely along the new routes, and tariff revenues have exceeded expectations. The treasury benefits.',
+    body: 'The trade agreement with Valdris has begun to generate returns. Merchant caravans move freely along the new routes, and tariff revenues have exceeded expectations. The treasury benefits. The {class_plural} take note of the dispatch.',
     choices: {
       acknowledge: 'Acknowledge the Profits',
     },
@@ -141,7 +141,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_dip_refugee_integration: {
     title: 'Refugees Seek Permanent Settlement',
-    body: 'The refugees welcomed into the kingdom are settling in and beginning to establish themselves. Some locals grumble about competition for work and housing, while others appreciate the newcomers\' industriousness.',
+    body: 'The refugees welcomed into the kingdom are settling in and beginning to establish themselves. Some locals grumble about competition for work and housing, while others appreciate the newcomers\' industriousness. The {class_plural} await the crown\'s reply.',
     choices: {
       provide_settlement_aid: 'Provide Settlement Aid',
       let_refugees_self_organize: 'Let Refugees Self-Organize',
@@ -186,7 +186,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_env_mine_reopening: {
     title: 'Mine Ready to Reopen',
-    body: 'Safety improvements at the collapsed mine are complete, and the engineers have declared the site ready for operations. The workers are eager to return, though some families still fear another collapse.',
+    body: 'Safety improvements at the collapsed mine are complete, and the engineers have declared the site ready for operations. The workers are eager to return, though some families still fear another collapse. The {class_plural} await the crown\'s reply.',
     choices: {
       resume_full_operations: 'Resume Full Operations',
       maintain_reduced_output: 'Maintain Reduced Output',
@@ -194,7 +194,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_env_logging_ban_impact: {
     title: 'Logging Ban Hits Livelihoods',
-    body: 'The logging ban has protected the forests, but the loggers and their families are suffering. Unemployment has risen in timber-dependent villages, and there are calls for compensation or alternative employment.',
+    body: 'The logging ban has protected the forests, but the loggers and their families are suffering. Unemployment has risen in timber-dependent villages, and there are calls for compensation or alternative employment. The {class_plural} await the crown\'s reply.',
     choices: {
       compensate_loggers: 'Compensate the Loggers',
       hold_firm_on_ban: 'Hold Firm on the Ban',
@@ -213,7 +213,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fu_po_gang_driven_underground: {
     title: 'Gangs Driven Underground',
-    body: 'The city watch deployment has pushed the street gangs underground, but they have not been eliminated. Criminal activity continues in the shadows, and the watch commander requests continued funding to maintain pressure.',
+    body: 'The city watch deployment has pushed the street gangs underground, but they have not been eliminated. Criminal activity continues in the shadows, and the watch commander requests continued funding to maintain pressure. The {class_plural} await the crown\'s reply.',
     choices: {
       maintain_patrols: 'Maintain the Patrols',
       declare_victory: 'Declare Victory and Stand Down',
@@ -228,7 +228,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_po_militia_overreach: {
     title: 'Citizen Militia Oversteps',
-    body: 'The legalized citizen militia has begun exceeding its mandate. Reports of rough justice, settling of personal grudges, and intimidation of merchants have reached the crown. The militia\'s supporters defend their actions as necessary.',
+    body: 'The legalized citizen militia has begun exceeding its mandate. Reports of rough justice, settling of personal grudges, and intimidation of merchants have reached the crown. The militia\'s supporters defend their actions as necessary. The {class_plural} await the crown\'s reply.',
     choices: {
       rein_in_militia: 'Rein in the Militia',
       look_the_other_way: 'Look the Other Way',
@@ -236,7 +236,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_po_martial_law_tension: {
     title: 'Martial Law Wears Thin',
-    body: 'The martial law imposed after the riots has restored order, but the population grows increasingly restive under military rule. Soldiers patrol the streets, a curfew remains in effect, and resentment swells daily.',
+    body: 'The martial law imposed after the riots has restored order, but the population grows increasingly restive under military rule. Soldiers patrol the streets, a curfew remains in effect, and resentment swells daily. The {class_plural} await the crown\'s reply.',
     choices: {
       lift_martial_law: 'Lift Martial Law',
       extend_martial_law: 'Extend Martial Law',
@@ -244,7 +244,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_po_purge_aftermath: {
     title: 'Vacancies After the Purge',
-    body: 'The corruption purge has left numerous positions in the administration vacant. The crown must decide whether to fill them with reform-minded newcomers or restore the chastened old guard who know the systems best.',
+    body: 'The corruption purge has left numerous positions in the administration vacant. The crown must decide whether to fill them with reform-minded newcomers or restore the chastened old guard who know the systems best. The {class_plural} await the crown\'s reply.',
     choices: {
       appoint_reformers: 'Appoint Reformers',
       restore_old_officials: 'Restore Old Officials',
@@ -256,7 +256,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fu_rel_pilgrimage_boom: {
     title: 'Pilgrims Flood the Kingdom',
-    body: 'The crown\'s endorsement of the miracle has triggered an influx of pilgrims. Roads are crowded, inns are overflowing, and local merchants are thriving — but the infrastructure is straining under the demand.',
+    body: 'The crown\'s endorsement of the miracle has triggered an influx of pilgrims. Roads are crowded, inns are overflowing, and local merchants are thriving — but the infrastructure is straining under the demand. The {class_plural} await the crown\'s reply.',
     choices: {
       build_pilgrim_infrastructure: 'Build Pilgrim Infrastructure',
       let_pilgrims_come_naturally: 'Let Pilgrims Come Naturally',
@@ -264,7 +264,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_rel_underground_copies: {
     title: 'Heretical Texts Circulate Underground',
-    body: 'Despite the suppression order, copies of the heretical texts have been found circulating in secret among scholars and curious commoners. The ideas contained within are spreading beyond the crown\'s ability to control.',
+    body: 'Despite the suppression order, copies of the heretical texts have been found circulating in secret among scholars and curious commoners. The ideas contained within are spreading beyond the crown\'s ability to control. The {class_plural} await the crown\'s reply.',
     choices: {
       intensify_censorship: 'Intensify Censorship',
       accept_inevitable_spread: 'Accept the Inevitable Spread',
@@ -314,7 +314,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_cul_underground_theater: {
     title: 'Underground Performances Continue',
-    body: 'The banned theatrical performance has found a second life in secret venues. Audiences gather in cellars and private homes, and the forbidden show has become more popular than ever. The ban may be doing more harm than good.',
+    body: 'The banned theatrical performance has found a second life in secret venues. Audiences gather in cellars and private homes, and the forbidden show has become more popular than ever. The ban may be doing more harm than good. The {class_plural} await the crown\'s reply.',
     choices: {
       crack_down_on_gatherings: 'Crack Down on Secret Gatherings',
       reverse_the_ban: 'Reverse the Ban',
@@ -322,7 +322,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_cul_language_resistance: {
     title: 'Resistance to Language Policy',
-    body: 'The decree enforcing a single official language has met fierce resistance in regions with their own linguistic traditions. Petitions and protests demand recognition of local tongues, and compliance has been poor.',
+    body: 'The decree enforcing a single official language has met fierce resistance in regions with their own linguistic traditions. Petitions and protests demand recognition of local tongues, and compliance has been poor. The {class_plural} await the crown\'s reply.',
     choices: {
       offer_bilingual_compromise: 'Offer a Bilingual Compromise',
       enforce_compliance: 'Enforce Strict Compliance',
@@ -350,7 +350,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_esp_conspiracy_trial: {
     title: 'Conspirators Await Judgment',
-    body: 'The arrested assassination conspirators sit in the dungeons awaiting the crown\'s judgment. Their trial — and its outcome — will send a powerful message about the consequences of plotting against the throne.',
+    body: 'The arrested assassination conspirators sit in the dungeons awaiting the crown\'s judgment. Their trial — and its outcome — will send a powerful message about the consequences of plotting against the throne. The {class_plural} await the crown\'s reply.',
     choices: {
       public_execution: 'Public Execution',
       exile_the_conspirators: 'Exile the Conspirators',
@@ -386,7 +386,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_kno_printed_pamphlets: {
     title: 'Printed Pamphlets Proliferate',
-    body: 'The subsidized printing press has unleashed a flood of printed pamphlets across the kingdom. Some spread useful knowledge; others contain political commentary, religious debate, and social criticism. The clergy demands regulation.',
+    body: 'The subsidized printing press has unleashed a flood of printed pamphlets across the kingdom. Some spread useful knowledge; others contain political commentary, religious debate, and social criticism. The clergy demands regulation. The {class_plural} await the crown\'s reply.',
     choices: {
       encourage_free_press: 'Encourage Free Press',
       regulate_publications: 'Regulate Publications',
@@ -414,7 +414,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_cc_grievance_reforms: {
     title: 'Time to Deliver on Promises',
-    body: 'The grievances addressed during the peasant uprising now require concrete action. The reforms promised must be implemented, or the crown\'s credibility with the common folk will be shattered.',
+    body: 'The grievances addressed during the peasant uprising now require concrete action. The reforms promised must be implemented, or the crown\'s credibility with the commonfolk will be shattered.',
     choices: {
       implement_reforms: 'Implement the Reforms',
       delay_reforms: 'Delay the Reforms',
@@ -422,14 +422,14 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_cc_strike_settlement: {
     title: 'Guild Strike Settled',
-    body: 'The negotiations with the striking guild workers have concluded successfully. Both sides have made concessions, and work has resumed in the workshops and markets. The settlement may serve as a model for future disputes.',
+    body: 'The negotiations with the striking guild workers have concluded successfully. Both sides have made concessions, and work has resumed in the workshops and markets. The settlement may serve as a model for future disputes. The {class_plural} take note of the dispatch.',
     choices: {
       acknowledge: 'Acknowledge the Settlement',
     },
   },
   evt_exp_fu_cc_new_merchant_class: {
     title: 'A New Merchant Class Emerges',
-    body: 'The policies encouraging social mobility have produced visible results. Former commoners have risen to prominence in trade and commerce, creating a new merchant class that bridges the old divide between common folk and established traders.',
+    body: 'The policies encouraging social mobility have produced visible results. Former commoners have risen to prominence in trade and commerce, creating a new merchant class that bridges the old divide between common folk and established traders. The {class_plural} take note of the dispatch.',
     choices: {
       acknowledge: 'Acknowledge the Development',
     },
@@ -474,7 +474,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fu_kgd_reform_resistance: {
     title: 'Nobles Resist Governance Reforms',
-    body: 'The governance reforms enacted by the crown have provoked fierce resistance from noble families who stand to lose privileges. They lobby, petition, and threaten to withdraw cooperation unless the reforms are softened.',
+    body: 'The governance reforms enacted by the crown have provoked fierce resistance from noble families who stand to lose privileges. They lobby, petition, and threaten to withdraw cooperation unless the reforms are softened. The {class_plural} await the crown\'s reply.',
     choices: {
       push_through_resistance: 'Push Through the Resistance',
       compromise_on_reforms: 'Compromise on Reforms',
@@ -482,7 +482,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_kgd_audit_results: {
     title: 'Treasury Audit Reveals Irregularities',
-    body: 'The comprehensive treasury audit has uncovered significant irregularities — misallocated funds, phantom expenditures, and suspicious transfers to noble accounts. The evidence demands a response.',
+    body: 'The comprehensive treasury audit has uncovered significant irregularities — misallocated funds, phantom expenditures, and suspicious transfers to noble accounts. The evidence demands a response. The {class_plural} await the crown\'s reply.',
     choices: {
       prosecute_offenders: 'Prosecute the Offenders',
       quiet_reform: 'Quiet Reform of Procedures',
@@ -497,7 +497,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_fu_kgd_centralization_tension: {
     title: 'Provinces Resist Centralization',
-    body: 'The administrative centralization has produced efficiency gains in the capital, but provincial leaders chafe under the loss of autonomy. Several regions threaten non-cooperation unless some measure of local governance is restored.',
+    body: 'The administrative centralization has produced efficiency gains in the capital, but provincial leaders chafe under the loss of autonomy. Several regions threaten non-cooperation unless some measure of local governance is restored. The {class_plural} await the crown\'s reply.',
     choices: {
       press_centralization: 'Press Forward with Centralization',
       allow_provincial_autonomy: 'Allow Some Provincial Autonomy',
@@ -509,7 +509,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fu_chain_corruption_aftermath: {
     title: 'Aftermath of the Corruption Scandal',
-    body: 'The public trials have concluded, and the guilty have been punished. But the corruption scandal has exposed systemic weaknesses in the kingdom\'s administration. The question now is whether to establish permanent oversight or let the system heal on its own.',
+    body: 'The public trials have concluded, and the guilty have been punished. But the corruption scandal has exposed systemic weaknesses in the kingdom\'s administration. The question now is whether to establish permanent oversight or let the system heal on its own. The {class_plural} await the crown\'s reply.',
     choices: {
       establish_oversight_body: 'Establish an Oversight Body',
       return_to_normal: 'Return to Normal Operations',
@@ -543,7 +543,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_merchant_water_reprisal: {
     title: 'Merchant Guild Demands Redress',
-    body: 'The seized water rights have bled merchant trust. A delegation demands compensation for the commandeered stores before trade resumes.',
+    body: 'The seized water rights have bled merchant trust. A delegation demands compensation for the commandeered stores before trade resumes. The {class_plural} are watching every move of the court.',
     choices: { pay_compensation: 'Pay Compensation', dismiss_claims: 'Dismiss the Claims' },
   },
   evt_fu_burned_quarters_rebuild: {
@@ -553,7 +553,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_plague_worsens: {
     title: 'The Sickness Deepens',
-    body: 'Prayer has not stayed the plague. Fresh reports speak of whole villages fallen silent. The crown must act.',
+    body: 'Prayer has not stayed the plague. Fresh reports speak of whole villages fallen silent. The crown must act. The {class_plural} are watching every move of the court.',
     choices: { mobilize_healers: 'Mobilize Royal Healers', pray_and_wait: 'Pray and Wait' },
   },
   evt_fu_plague_wasteland: {
@@ -563,7 +563,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_exodus_refugee_crisis: {
     title: 'Refugees at the Gates',
-    body: 'The plague exodus has massed at the borders of safer provinces. We must house them or turn them away.',
+    body: 'The plague exodus has massed at the borders of safer provinces. We must house them or turn them away. The {class_plural} are watching every move of the court.',
     choices: { open_refugee_camps: 'Open Refugee Camps', turn_them_back: 'Turn Them Back' },
   },
   evt_fu_martial_law_aftermath: {
@@ -573,12 +573,12 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_famine_ration_riot: {
     title: 'Rationing Triggers Riot',
-    body: 'Strict rationing has broken down. Crowds storm the granaries.',
+    body: 'Strict rationing has broken down. Crowds storm the granaries. The {class_plural} are watching every move of the court.',
     choices: { distribute_reserves: 'Distribute the Reserves', clamp_down: 'Clamp Down' },
   },
   evt_fu_grain_debt_called: {
     title: 'The Grain Debt Comes Due',
-    body: 'The foreign lenders who shipped grain now send collectors. Terms were generous; the repayment is not.',
+    body: 'The foreign lenders who shipped grain now send collectors. Terms were generous; the repayment is not. The {class_plural} are watching every move of the court.',
     choices: { pay_the_debt: 'Pay the Debt in Full', renegotiate_terms: 'Renegotiate Terms' },
   },
 
@@ -595,7 +595,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_coopted_lords_demand_more: {
     title: 'The Co-opted Lords Ask for More',
-    body: 'Grown fat on royal favor, the lords we bought return for a second helping. Refusal will be taken as betrayal.',
+    body: 'Grown fat on royal favor, the lords we bought return for a second helping. Refusal will be taken as betrayal. The {class_plural} are watching every move of the court.',
     choices: { grant_new_privileges: 'Grant New Privileges', draw_the_line: 'Draw the Line' },
   },
   evt_fu_corruption_entrenched: {
@@ -605,7 +605,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_martial_law_backlash: {
     title: 'Martial Law Breeds Its Enemies',
-    body: 'Dissenters have coalesced against the occupation. The streets are quieter, but quieter is not peaceful.',
+    body: 'Dissenters have coalesced against the occupation. The streets are quieter, but quieter is not peaceful. The {class_plural} are watching every move of the court.',
     choices: { withdraw_troops: 'Withdraw Troops', arrest_dissenters: 'Arrest Dissenters' },
   },
   evt_fu_rebel_accord_unravels: {
@@ -637,12 +637,12 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_token_concessions_backfire: {
     title: 'Token Concessions Spark Larger Demands',
-    body: 'The small reforms proved the crown could bend. Now the commons want the crown to bend further.',
+    body: 'The small reforms proved the crown could bend. Now the commons want the crown to bend further. The {class_plural} are watching every move of the court.',
     choices: { offer_real_reforms: 'Offer Real Reforms', revoke_concessions: 'Revoke the Concessions' },
   },
   evt_fu_reform_martyrs: {
     title: 'The Reformers Have Their Martyrs',
-    body: 'Suppressing the reform movement cost lives the people now name. Acknowledging or denying those dead will shape the next months.',
+    body: 'Suppressing the reform movement cost lives the people now name. Acknowledging or denying those dead will shape the next months. The {class_plural} are watching every move of the court.',
     choices: { acknowledge_wrongs: 'Acknowledge the Wrongs', deny_the_dead: 'Deny the Dead' },
   },
   evt_fu_cultural_drift_backlash: {
@@ -652,7 +652,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_suppression_diaspora_unrest: {
     title: 'The Diaspora Demands Refuge',
-    body: 'Those we suppressed flee to sympathetic neighbours and sympathetic hills. The refuge terms will decide whether they come home.',
+    body: 'Those we suppressed flee to sympathetic neighbours and sympathetic hills. The refuge terms will decide whether they come home. The {class_plural} are watching every move of the court.',
     choices: { offer_refuge_terms: 'Offer Refuge Terms', double_down_on_suppression: 'Double Down on Suppression' },
   },
   evt_fu_assimilation_standoff: {
@@ -667,49 +667,49 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_price_freeze_shortages: {
     title: 'Price Freeze Yields Shortages',
-    body: 'The freeze holds — and so do the empty shelves. Enforcement or repeal, either answer costs.',
+    body: 'The freeze holds — and so do the empty shelves. Enforcement or repeal, either answer costs. The {class_plural} are watching every move of the court.',
     choices: { lift_the_freeze: 'Lift the Freeze', enforce_by_patrol: 'Enforce by Patrol' },
   },
   evt_fu_market_crash_bread_riots: {
     title: 'The Markets Crash, Bread Riots Begin',
-    body: 'Letting the market correct has corrected us. The bread queues are now bread riots.',
+    body: 'Letting the market correct has corrected us. The bread queues are now bread riots. The {class_plural} are watching every move of the court.',
     choices: { distribute_emergency_food: 'Distribute Emergency Food', call_the_city_watch: 'Call the City Watch' },
   },
   evt_fu_counterfeit_underground_revenge: {
     title: 'The Counterfeit Ring Returns',
-    body: 'Those we executed left heirs. Underground mints stamp new coin in the old shapes.',
+    body: 'Those we executed left heirs. Underground mints stamp new coin in the old shapes. The {class_plural} are watching every move of the court.',
     choices: { hunt_the_remnants: 'Hunt the Remnants', offer_amnesty_for_names: 'Offer Amnesty for Names' },
   },
   evt_fu_royal_stamp_fraud: {
     title: 'Royal Stamps, Forged',
-    body: 'The stamps we issued now travel on false coin too. The forgers work from inside the mint.',
+    body: 'The stamps we issued now travel on false coin too. The forgers work from inside the mint. The {class_plural} are watching every move of the court.',
     choices: { replace_the_stamps: 'Replace the Stamps', prosecute_the_ring: 'Prosecute the Ring' },
   },
 
   // --- Phase 2 Card Audit — Stub follow-up text (batch 4: religion/schism) ---
   evt_fu_dual_practice_schism: {
     title: 'Dual Practice Hardens Into Schism',
-    body: 'What we called tolerance has congealed into two churches. Either we force a single rite or watch the split become permanent.',
+    body: 'What we called tolerance has congealed into two churches. Either we force a single rite or watch the split become permanent. The {class_plural} are watching every move of the court.',
     choices: { unify_rite: 'Unify the Rite', let_the_rites_split: 'Let the Rites Split' },
   },
   evt_fu_underground_reformers: {
     title: 'Underground Reformers',
-    body: 'Tradition restored from the pulpit; heresy restored in basements. The reformers have not gone — only gone dark.',
+    body: 'Tradition restored from the pulpit; heresy restored in basements. The reformers have not gone — only gone dark. The {class_plural} are watching every move of the court.',
     choices: { hunt_and_punish: 'Hunt and Punish', meet_them_halfway: 'Meet Them Halfway' },
   },
   evt_fu_schism_reformer_revolt: {
     title: 'Reformer Revolt',
-    body: 'Backing orthodoxy sent the reformers to arms. Their council meets in the open air and names itself sovereign.',
+    body: 'Backing orthodoxy sent the reformers to arms. Their council meets in the open air and names itself sovereign. The {class_plural} are watching every move of the court.',
     choices: { convene_mediation: 'Convene Mediation', back_orthodoxy_fully: 'Back Orthodoxy Fully' },
   },
   evt_fu_schism_parallel_churches: {
     title: 'Parallel Churches',
-    body: 'Recognising both confessions has made two churches. They now levy tithes in the same villages.',
+    body: 'Recognising both confessions has made two churches. They now levy tithes in the same villages. The {class_plural} are watching every move of the court.',
     choices: { formalize_both: 'Formalise Both', force_unity: 'Force Unity' },
   },
   evt_fu_doctrine_enforcement_blowback: {
     title: 'The State Doctrine Meets Resistance',
-    body: 'Priests refuse the edict; some bishops refuse their oaths. The crown must soften or prosecute.',
+    body: 'Priests refuse the edict; some bishops refuse their oaths. The crown must soften or prosecute. The {class_plural} are watching every move of the court.',
     choices: { soften_the_edict: 'Soften the Edict', prosecute_resisters: 'Prosecute the Resisters' },
   },
   evt_fu_coexistence_fractures: {
@@ -734,19 +734,19 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_comet_heresy_spreads: {
     title: 'Comet Heresy Spreads',
-    body: 'Forbidden speculation went where forbidden speech goes — underground, and out through every backroom. A new sect names the comet its prophet.',
+    body: 'Forbidden speculation went where forbidden speech goes — underground, and out through every backroom. A new sect names the comet its prophet. The {class_plural} are watching every move of the court.',
     choices: { authorize_suppression: 'Authorise Suppression', engage_in_debate: 'Engage in Debate' },
   },
 
   // --- Phase 2 Card Audit — Stub follow-up text (batch 5: succession/authority) ---
   evt_fu_marriage_dynastic_friction: {
     title: 'Dynastic Friction',
-    body: 'The dynastic marriage is stable on paper and tense at court. The in-laws pressure for real power.',
+    body: 'The dynastic marriage is stable on paper and tense at court. The in-laws pressure for real power. The {class_plural} are watching every move of the court.',
     choices: { formalize_joint_rule: 'Formalise Joint Rule', exile_the_in_laws: 'Exile the In-laws' },
   },
   evt_fu_exiled_pretender_returns: {
     title: 'The Pretender Returns',
-    body: 'The pension ran out — or was never the point. The pretender is back, with new allies.',
+    body: 'The pension ran out — or was never the point. The pretender is back, with new allies. The {class_plural} are watching every move of the court.',
     choices: { meet_with_sword: 'Meet With the Sword', offer_a_settlement: 'Offer a Settlement' },
   },
   evt_fu_succession_factions_war: {
@@ -756,7 +756,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_merit_heir_noble_backlash: {
     title: 'Noble Backlash to the Merit Heir',
-    body: 'Merit chose the heir. Blood objects. The lords demand concessions or a reversal.',
+    body: 'Merit chose the heir. Blood objects. The lords demand concessions or a reversal. The {class_plural} are watching every move of the court.',
     choices: { grant_noble_concession: 'Grant a Noble Concession', hold_the_merit_line: 'Hold the Merit Line' },
   },
   evt_fu_authority_rebellion: {
@@ -771,34 +771,34 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_purge_court_paralysis: {
     title: 'Purged Court, Paralysed Court',
-    body: 'With the inner circle gone, decisions wait for seats to be filled. Recall exiles or elevate loyalists.',
+    body: 'With the inner circle gone, decisions wait for seats to be filled. Recall exiles or elevate loyalists. The {class_plural} are watching every move of the court.',
     choices: { recall_trusted_exiles: 'Recall Trusted Exiles', fill_seats_with_loyalists: 'Fill Seats With Loyalists' },
   },
   evt_fu_mercy_emboldens_plot: {
     title: 'Mercy Emboldens a Second Plot',
-    body: 'The pardoned conspirators did not repent. A second plot stirs in the same rooms.',
+    body: 'The pardoned conspirators did not repent. A second plot stirs in the same rooms. The {class_plural} are watching every move of the court.',
     choices: { arrest_the_cell: 'Arrest the Cell', ignore_the_rumors: 'Ignore the Rumours' },
   },
 
   // --- Phase 2 Card Audit — Stub follow-up text (batch 6: military/mutiny) ---
   evt_fu_purge_officer_shortage: {
     title: 'Officer Shortage After the Purge',
-    body: 'The conspirators are gone and so are most of the experienced commanders. Ranks need filling, fast.',
+    body: 'The conspirators are gone and so are most of the experienced commanders. Ranks need filling, fast. The {class_plural} are watching every move of the court.',
     choices: { promote_from_ranks: 'Promote From the Ranks', recruit_mercenaries: 'Recruit Mercenaries' },
   },
   evt_fu_bribed_officers_ask_more: {
     title: 'The Bribed Officers Ask for More',
-    body: 'The officer corps we bought now presents a larger bill. Either the purse grows or the loyalty breaks.',
+    body: 'The officer corps we bought now presents a larger bill. Either the purse grows or the loyalty breaks. The {class_plural} are watching every move of the court.',
     choices: { raise_the_purse: 'Raise the Purse', hold_the_line: 'Hold the Line' },
   },
   evt_fu_ringleader_martyrs: {
     title: 'Ringleaders, Martyred',
-    body: 'Isolated and executed, the ringleaders have become the stuff of ballads. Posthumous pardons, or a harder narrative?',
+    body: 'Isolated and executed, the ringleaders have become the stuff of ballads. Posthumous pardons, or a harder narrative? The {class_plural} are watching every move of the court.',
     choices: { grant_posthumous_pardons: 'Grant Posthumous Pardons', reinforce_the_narrative: 'Reinforce the Narrative' },
   },
   evt_fu_officer_cabal: {
     title: 'An Officer Cabal',
-    body: 'Negotiation with the officers produced a quiet cabal — loyal on paper, loyal to themselves in practice.',
+    body: 'Negotiation with the officers produced a quiet cabal — loyal on paper, loyal to themselves in practice. The {class_plural} are watching every move of the court.',
     choices: { infiltrate_the_cabal: 'Infiltrate the Cabal', confront_them_openly: 'Confront Them Openly' },
   },
   evt_fu_merchant_boycott: {
@@ -808,34 +808,34 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_starving_garrison: {
     title: 'A Garrison Starves',
-    body: 'Rationing to breaking point, a garrison now eats its horses. Relief or retreat.',
+    body: 'Rationing to breaking point, a garrison now eats its horses. Relief or retreat. The {class_plural} are watching every move of the court.',
     choices: { airlift_rations: 'Airlift Rations', abandon_the_post: 'Abandon the Post' },
   },
   evt_fu_field_equipment_catastrophe: {
     title: 'Field Equipment Catastrophe',
-    body: 'Pushing through with failing gear has cost a company its arms. The armoury must answer — or the unit dissolves.',
+    body: 'Pushing through with failing gear has cost a company its arms. The armoury must answer — or the unit dissolves. The {class_plural} are watching every move of the court.',
     choices: { emergency_armory_orders: 'Emergency Armoury Orders', let_the_unit_dissolve: 'Let the Unit Dissolve' },
   },
   evt_fu_estate_seizure_lawsuit: {
     title: 'Estate Seizure Lawsuit',
-    body: 'The requisitioned estate\'s heir has sued in the high court. The crown must pay or quash.',
+    body: 'The requisitioned estate\'s heir has sued in the high court. The crown must pay or quash. The {class_plural} are watching every move of the court.',
     choices: { pay_the_indemnity: 'Pay the Indemnity', quash_the_suit: 'Quash the Suit' },
   },
   evt_fu_seized_granaries_noble_revolt: {
     title: 'Noble Revolt Over Seized Granaries',
-    body: 'The granaries we opened without their leave have made the lords revolt. Return the stores, or stand firm.',
+    body: 'The granaries we opened without their leave have made the lords revolt. Return the stores, or stand firm. The {class_plural} are watching every move of the court.',
     choices: { return_the_stores: 'Return the Stores', confront_the_lords: 'Confront the Lords' },
   },
   evt_fu_famine_descends_into_riot: {
     title: 'Famine Tips Into Riot',
-    body: 'Appeals for calm fed only hunger. The riot has come.',
+    body: 'Appeals for calm fed only hunger. The riot has come. The {class_plural} are watching every move of the court.',
     choices: { distribute_reserves: 'Distribute Reserves', deploy_the_guard: 'Deploy the Guard' },
   },
 
   // --- Phase 2 Card Audit — Stub follow-up text (batch 7: public order) ---
   evt_fu_noble_contribution_resistance: {
     title: 'Nobles Refuse the Levy',
-    body: 'The contribution we demanded has been refused in council. Seize it or waive it.',
+    body: 'The contribution we demanded has been refused in council. Seize it or waive it. The {class_plural} are watching every move of the court.',
     choices: { seize_the_levy: 'Seize the Levy', waive_the_demand: 'Waive the Demand' },
   },
   evt_fu_neglected_works_collapse: {
@@ -845,7 +845,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_arrests_purge_pushback: {
     title: 'Purge Arrests Trigger Pushback',
-    body: 'The preemptive arrests have produced a noble faction demanding releases. Halve the list — or double it.',
+    body: 'The preemptive arrests have produced a noble faction demanding releases. Halve the list — or double it. The {class_plural} are watching every move of the court.',
     choices: { release_half_the_held: 'Release Half the Held', double_the_arrests: 'Double the Arrests' },
   },
   evt_fu_double_agent_compromised: {
@@ -855,7 +855,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_closed_border_smuggling: {
     title: 'Closed Border, Open Smuggling',
-    body: 'The border closure has bred professional smugglers. Legitimise controlled exits, or harden the patrols.',
+    body: 'The border closure has bred professional smugglers. Legitimise controlled exits, or harden the patrols. The {class_plural} are watching every move of the court.',
     choices: { legalize_controlled_exits: 'Legalise Controlled Exits', crack_down_on_runners: 'Crack Down on Runners' },
   },
   evt_fu_exodus_brain_drain: {
@@ -865,54 +865,54 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_curfew_mass_defiance: {
     title: 'Mass Defiance of the Curfew',
-    body: 'The curfew produced crowds that deliberately break it. Either it ends, or it is enforced with blood.',
+    body: 'The curfew produced crowds that deliberately break it. Either it ends, or it is enforced with blood. The {class_plural} are watching every move of the court.',
     choices: { lift_the_curfew: 'Lift the Curfew', enforce_with_blood: 'Enforce With Blood' },
   },
   evt_fu_peacekeeper_overreach: {
     title: 'Peacekeeper Overreach',
-    body: 'Patrols deployed for order have crossed into brutality. Court-martial the officers, or defend the guards.',
+    body: 'Patrols deployed for order have crossed into brutality. Court-martial the officers, or defend the guards. The {class_plural} are watching every move of the court.',
     choices: { court_martial_the_officers: 'Court-martial the Officers', defend_the_guards: 'Defend the Guards' },
   },
   evt_fu_patrol_brutality_complaint: {
     title: 'Patrol Brutality Complaint',
-    body: 'A commoner delegation brings a register of patrol abuses. Reassign or dismiss.',
+    body: 'A commoner delegation brings a register of patrol abuses. Reassign or dismiss. The {class_plural} are watching every move of the court.',
     choices: { reassign_the_unit: 'Reassign the Unit', dismiss_the_complaint: 'Dismiss the Complaint' },
   },
   evt_fu_labor_reform_backlash: {
     title: 'Labour Reform, Backlash',
-    body: 'The reforms pleased few. Broaden them, or soften them.',
+    body: 'The reforms pleased few. Broaden them, or soften them. The {class_plural} are watching every move of the court.',
     choices: { broaden_the_reform: 'Broaden the Reform', soften_the_edict: 'Soften the Edict' },
   },
 
   // --- Phase 2 Card Audit — Stub follow-up text (batch 8: misc) ---
   evt_fu_crushed_movement_underground: {
     title: 'The Crushed Movement Goes Underground',
-    body: 'Crushed above ground, the revolutionary guild moves below. Hunt or amnesty.',
+    body: 'Crushed above ground, the revolutionary guild moves below. Hunt or amnesty. The {class_plural} are watching every move of the court.',
     choices: { hunt_the_cells: 'Hunt the Cells', offer_amnesty: 'Offer Amnesty' },
   },
   evt_fu_guild_compromise_drift: {
     title: 'The Guild Compromise Drifts',
-    body: 'The compromise text grows unrecognisable as each side rereads it. Honor or revise.',
+    body: 'The compromise text grows unrecognisable as each side rereads it. Honor or revise. The {class_plural} are watching every move of the court.',
     choices: { honor_the_accord: 'Honor the Accord', revise_the_terms: 'Revise the Terms' },
   },
   evt_fu_commandeered_stores_noble_strike: {
     title: 'Noble Strike Over Commandeered Stores',
-    body: 'The lords refuse to sit council until the grain is returned. Return it, or seize more.',
+    body: 'The lords refuse to sit council until the grain is returned. Return it, or seize more. The {class_plural} are watching every move of the court.',
     choices: { return_the_grain: 'Return the Grain', seize_more_estates: 'Seize More Estates' },
   },
   evt_fu_spoiled_grain_sickness: {
     title: 'Spoiled Grain Spreads Sickness',
-    body: 'The remains we distributed are making the poor sick. Healers are needed; quarantine too.',
+    body: 'The remains we distributed are making the poor sick. Healers are needed; quarantine too. The {class_plural} are watching every move of the court.',
     choices: { deploy_healers: 'Deploy Healers', quarantine_the_villages: 'Quarantine the Villages' },
   },
   evt_fu_noble_estate_razed: {
     title: 'A Noble Estate Razed',
-    body: 'Crushing the uprising cost an estate and a line. The survivors want compensation; the commoners want land.',
+    body: 'Crushing the uprising cost an estate and a line. The survivors want compensation; the commoners want land. The {class_plural} are watching every move of the court.',
     choices: { compensate_the_survivors: 'Compensate the Survivors', redistribute_the_holdings: 'Redistribute the Holdings' },
   },
   evt_fu_amnesty_cabal_reforms: {
     title: 'The Amnestied Cabal Pushes Reforms',
-    body: 'Those we pardoned return with a parchment. They want the concessions codified; the court wants them silenced.',
+    body: 'Those we pardoned return with a parchment. They want the concessions codified; the court wants them silenced. The {class_plural} are watching every move of the court.',
     choices: { codify_the_concessions: 'Codify the Concessions', revoke_the_amnesty: 'Revoke the Amnesty' },
   },
   evt_fu_force_crackdown_legacy: {
@@ -922,7 +922,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_mob_rule_spreads: {
     title: 'Mob Rule Spreads',
-    body: 'Letting the mob decide has spread the habit. Other quarters hold their own tribunals now. Crush or codify.',
+    body: 'Letting the mob decide has spread the habit. Other quarters hold their own tribunals now. Crush or codify. The {class_plural} are watching every move of the court.',
     choices: { crush_the_mob_courts: 'Crush the Mob Courts', formalize_tribunals: 'Formalise Tribunals' },
   },
   evt_fu_civilian_authority_falters: {
@@ -932,7 +932,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_pardon_emboldens_graft: {
     title: 'Pardons Embolden Graft',
-    body: 'The pardoned grafters now regard the tribunal as a formality. Launch a fresh one, or legalise the fees.',
+    body: 'The pardoned grafters now regard the tribunal as a formality. Launch a fresh one, or legalise the fees. The {class_plural} are watching every move of the court.',
     choices: { launch_fresh_tribunal: 'Launch Fresh Tribunal', legalize_graft_fees: 'Legalise Graft Fees' },
   },
   evt_fu_press_smuggled_in: {
@@ -947,7 +947,7 @@ export const EXPANSION_FOLLOWUP_TEXT: Record<string, EventTextEntry> = {
   },
   evt_fu_scorched_earth_famine: {
     title: 'Famine After Scorched Earth',
-    body: 'Our own borderlanders are starving in the scorched districts. Import, or leave them to the winter.',
+    body: 'Our own borderlanders are starving in the scorched districts. Import, or leave them to the winter. The {class_plural} are watching every move of the court.',
     choices: { import_emergency_grain: 'Import Emergency Grain', let_the_borderlands_starve: 'Let the Borderlands Starve' },
   },
   evt_fu_surrender_terms_harsh: {

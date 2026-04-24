@@ -4,7 +4,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 1. Foreign Artistic Troupe (Informational, opening) ---
   evt_exp_cul_foreign_troupe: {
     title: 'Foreign Artistic Troupe at the Gates',
-    body: 'A troupe of performers from distant lands has arrived at the capital, requesting permission to stage their exotic productions. Their arts are unlike anything the court has witnessed, though some advisors warn that foreign spectacles may unsettle the common folk.',
+    body: 'A troupe of performers from distant lands has arrived at the capital, requesting permission to stage their exotic productions. Their arts are unlike anything the court has witnessed, though some advisors warn that foreign spectacles may unsettle the commonfolk.',
     choices: {
       welcome_performers: 'Welcome the Performers',
       politely_decline: 'Decline Their Entry',
@@ -25,7 +25,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 3. Dialect Tensions (Serious, established) ---
   evt_exp_cul_dialect_tensions: {
     title: 'Dialect Tensions Among the Provinces',
-    body: 'The kingdom\'s outlying provinces have begun resisting the use of the capital\'s tongue in official matters. Regional dialects carry deep ancestral significance, yet the lack of a common language hampers governance and trade across borders.',
+    body: 'The kingdom\'s outlying provinces have begun resisting the use of the capital\'s tongue in official matters. Regional dialects carry deep ancestral significance, yet the lack of a common language hampers governance and trade across borders. The {class_plural} are watching every move of the court.',
     choices: {
       enforce_common_tongue: 'Enforce the Common Tongue',
       protect_regional_dialects: 'Protect Regional Dialects',
@@ -36,7 +36,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 4. Harvest Festival Tradition (Informational, any) ---
   evt_exp_cul_harvest_festival: {
     title: 'The Autumn Harvest Festival',
-    body: 'As the harvest season draws to a close, the people look to the crown for blessing upon their annual festival. A well-funded celebration would lift spirits and honor tradition, though the folk are content enough to celebrate on their own.',
+    body: 'As the harvest season draws to a close, the people look to the crown for blessing upon their annual festival. A well-funded celebration would lift spirits and honor tradition, though the folk are content enough to celebrate on their own. The {class_plural} await the crown\'s reply.',
     choices: {
       fund_grand_celebration: 'Fund a Grand Celebration',
       let_folk_celebrate: 'Let the Folk Celebrate Freely',
@@ -57,7 +57,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 6. Arts Patronage Request (Notable, developing) ---
   evt_exp_cul_arts_patronage: {
     title: 'The Nobility Seeks Royal Patronage',
-    body: 'Several noble houses have petitioned the crown to endow a royal arts guild, arguing that great kingdoms are remembered for their cultural achievements. The alternative of sponsoring traveling artists would spread culture more broadly, though with less prestige for the court.',
+    body: 'Several noble houses have petitioned the crown to endow a royal arts guild, arguing that great kingdoms are remembered for their cultural achievements. The alternative of sponsoring traveling artists would spread culture more broadly, though with less prestige for the court. The {class_plural} await the crown\'s reply.',
     choices: {
       fund_royal_arts_guild: 'Fund a Royal Arts Guild',
       sponsor_traveling_artists: 'Sponsor Traveling Artists',
@@ -68,7 +68,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 7. Folk Tradition Revival (Informational, any) ---
   evt_exp_cul_folk_revival: {
     title: 'Revival of Old Folk Traditions',
-    body: 'The common folk have begun reviving half-forgotten customs from their grandparents\' era: ancient dances, seasonal rites, and craft techniques long thought lost. A royal endorsement would strengthen these traditions, though some nobles view such rustic displays as beneath the crown\'s dignity.',
+    body: 'The commonfolk have begun reviving half-forgotten customs from their grandparents\' era: ancient dances, seasonal rites, and craft techniques long thought lost. A royal endorsement would strengthen these traditions, though some nobles view such rustic displays as beneath the crown\'s dignity.',
     choices: {
       endorse_revival: 'Endorse the Revival',
       observe_from_afar: 'Observe From Afar',
@@ -100,7 +100,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 10. Oral History Keeper (Serious, established) ---
   evt_exp_cul_oral_history_keeper: {
     title: 'The Last Keeper of Oral Histories',
-    body: 'The kingdom\'s eldest oral historian grows frail, and with them fades generations of unwritten lore. Without action, centuries of ancestral knowledge will perish within a season. The question is whether to formalize this role at court or undertake a broader effort to commit the spoken word to parchment.',
+    body: 'The kingdom\'s eldest oral historian grows frail, and with them fades generations of unwritten lore. Without action, centuries of ancestral knowledge will perish within a season. The question is whether to formalize this role at court or undertake a broader effort to commit the spoken word to parchment. The {class_plural} are watching every move of the court.',
     choices: {
       appoint_royal_chronicler: 'Appoint a Royal Chronicler',
       transcribe_oral_traditions: 'Transcribe the Oral Traditions',
@@ -176,7 +176,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 17. Merchant Cultural Investment (Notable, any) ---
   evt_exp_cul_merchant_investment: {
     title: 'Merchants Offer Cultural Investment',
-    body: 'The merchant guilds, flush with profits from recent trade, propose to fund cultural endeavors in exchange for naming rights and influence over civic institutions. Their coin would enrich the kingdom\'s cultural life, though the nobility bristle at commerce dictating matters of art and tradition.',
+    body: 'The merchant guilds, flush with profits from recent trade, propose to fund cultural endeavors in exchange for naming rights and influence over civic institutions. Their coin would enrich the kingdom\'s cultural life, though the nobility bristle at commerce dictating matters of art and tradition. The {class_plural} await the crown\'s reply.',
     choices: {
       accept_merchant_patronage: 'Accept Merchant Patronage',
       redirect_to_public_works: 'Redirect Funds to Public Works',

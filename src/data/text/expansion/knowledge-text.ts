@@ -6,7 +6,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_scholar_dispute: {
     title: 'Scholar Dispute at the Royal Academy',
-    body: 'Two opposing factions within the Royal Academy have brought their quarrel before the throne. The traditionalists insist that ancient texts hold all wisdom worth pursuing, while a younger cohort of reformers advocates for empirical methods that challenge established doctrine. Both sides demand the Crown\'s endorsement.',
+    body: 'Two opposing factions within the Royal Academy have brought their quarrel before the throne. The traditionalists insist that ancient texts hold all wisdom worth pursuing, while a younger cohort of reformers advocates for empirical methods that challenge established doctrine. Both sides demand the Crown\'s endorsement. The {class_plural} await the crown\'s reply.',
     choices: {
       side_with_traditionalists: 'Uphold Tradition',
       side_with_reformers: 'Champion the Reformers',
@@ -31,7 +31,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_alchemist_discovery: {
     title: 'The Alchemist\'s Volatile Discovery',
-    body: 'A court alchemist has produced a compound of terrible potency — a black powder that detonates with devastating force. The military sees an instrument of war; civilian engineers envision quarrying and mining applications. The clergy warns of tampering with forces best left undisturbed.',
+    body: 'A court alchemist has produced a compound of terrible potency — a black powder that detonates with devastating force. The military sees an instrument of war; civilian engineers envision quarrying and mining applications. The clergy warns of tampering with forces best left undisturbed. The {class_plural} are watching every move of the court.',
     choices: {
       fund_military_application: 'Develop for Military Use',
       restrict_to_civilian_use: 'Restrict to Civilian Uses',
@@ -44,7 +44,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_library_fire: {
     title: 'Fire Engulfs the Royal Archives',
-    body: 'Flames have broken out in the kingdom\'s great library, threatening centuries of accumulated knowledge. The fire spreads with alarming speed through the dry summer air, and the archivists plead for immediate action. Much of what burns can never be recovered.',
+    body: 'Flames have broken out in the kingdom\'s great library, threatening centuries of accumulated knowledge. The fire spreads with alarming speed through the dry summer air, and the archivists plead for immediate action. Much of what burns can never be recovered. The {class_plural} are watching every move of the court.',
     choices: {
       emergency_salvage_operation: 'Mount Full Salvage Effort',
       protect_rarest_volumes: 'Save Only the Rarest Works',
@@ -57,7 +57,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_student_uprising: {
     title: 'Student Uprising at the Academy',
-    body: 'Students at the kingdom\'s foremost academy have barricaded themselves within the lecture halls, demanding reduced tuition fees and the dismissal of several harsh masters. The unrest threatens to spill into the surrounding quarter, and the nobility view the disruption with open contempt.',
+    body: 'Students at the kingdom\'s foremost academy have barricaded themselves within the lecture halls, demanding reduced tuition fees and the dismissal of several harsh masters. The unrest threatens to spill into the surrounding quarter, and the nobility view the disruption with open contempt. The {class_plural} are watching every move of the court.',
     choices: {
       negotiate_with_students: 'Negotiate Concessions',
       disperse_by_force: 'Send in the Guard',
@@ -83,7 +83,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_aqueduct_design: {
     title: 'Aqueduct Engineering Breakthrough',
-    body: 'The kingdom\'s master engineers have completed designs for a system of stone aqueducts capable of channeling fresh water from highland springs to the lowland settlements. The project would dramatically improve sanitation and agricultural yields, but the construction costs are considerable.',
+    body: 'The kingdom\'s master engineers have completed designs for a system of stone aqueducts capable of channeling fresh water from highland springs to the lowland settlements. The project would dramatically improve sanitation and agricultural yields, but the construction costs are considerable. The {class_plural} await the crown\'s reply.',
     choices: {
       fund_construction: 'Fund Full Construction',
       limited_trial: 'Build a Trial Section',
@@ -96,7 +96,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_plague_remedy: {
     title: 'Herbalist Claims a Plague Remedy',
-    body: 'A rural herbalist has arrived at court bearing a tincture she claims can halt the spread of the wasting sickness. Preliminary accounts from her village suggest genuine efficacy, but the clergy dismiss her methods as superstition, and the costs of mass production would strain the treasury.',
+    body: 'A rural herbalist has arrived at court bearing a tincture she claims can halt the spread of the wasting sickness. Preliminary accounts from her village suggest genuine efficacy, but the clergy dismiss her methods as superstition, and the costs of mass production would strain the treasury. The {class_plural} are watching every move of the court.',
     choices: {
       mass_produce_remedy: 'Produce the Remedy at Scale',
       test_on_volunteers: 'Conduct Formal Trials',
