@@ -76,7 +76,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Food (2) ---
   evt_harvest_blight: {
     title: 'Blight Threatens the Harvest',
-    body: 'A persistent blight has spread across the kingdom\'s central farmlands. Crop yields are falling sharply, and agricultural laborers report entire fields lost to the affliction. Without intervention, the coming months will bring severe shortages.{prior_decision_clause:conscription} The {class_plural} are watching every move of the court.',
+    body: 'A persistent blight has spread across the kingdom\'s central farmlands. Crop yields are falling sharply, and agricultural laborers report entire fields lost to the affliction. Without intervention, the coming months will bring severe shortages.{prior_decision_clause:conscription} The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       quarantine_affected_fields: 'Quarantine Affected Fields',
       redirect_labor_to_salvage: 'Redirect Labor to Salvage',
@@ -212,7 +212,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_tension_escalation: {
     title: 'Border Tensions Escalate',
-    body: "Incidents along the kingdom's border have intensified. Disputed territorial claims, coupled with provocative military posturing by {ruler_full}, have raised the prospect of open conflict. The court awaits the crown's judgment.",
+    body: "Incidents along the kingdom's border have intensified. Disputed territorial claims, coupled with provocative military posturing by {ruler_full}, have raised the prospect of open conflict. The court awaits the crown's judgment. Dispatches from {region} corroborate what first reached the court through {neighbor}.",
     choices: {
       reinforce_border_garrisons: 'Reinforce Border Garrisons',
       dispatch_diplomatic_envoy: 'Dispatch a Diplomatic Envoy',
@@ -232,7 +232,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_spring_flooding: {
     title: 'Spring Flooding Devastates Lowlands',
-    body: 'Unusually heavy rains and rapid snowmelt have caused widespread flooding in the kingdom\'s lowland regions. Farmland is submerged, roads are impassable, and several communities have been displaced. Recovery will require sustained effort. The {class_plural} are watching every move of the court.',
+    body: 'Unusually heavy rains and rapid snowmelt have caused widespread flooding in the kingdom\'s lowland regions. Farmland is submerged, roads are impassable, and several communities have been displaced. Recovery will require sustained effort. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       organize_relief_effort: 'Organize Relief Effort',
       redirect_military_engineers: 'Deploy Military Engineers',
@@ -252,7 +252,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_popular_unrest: {
     title: 'Popular Unrest Threatens Order',
-    body: 'Deep dissatisfaction among the common population has erupted into open disorder. Crowds gather in marketplaces demanding relief, and several districts report organized resistance to royal authority. Stability itself is at stake. The {class_plural} are watching every move of the court.',
+    body: 'Deep dissatisfaction among the common population has erupted into open disorder. Crowds gather in marketplaces demanding relief, and several districts report organized resistance to royal authority. Stability itself is at stake. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       address_grievances_publicly: 'Address Grievances Publicly',
       deploy_peacekeepers: 'Deploy Peacekeepers',
@@ -272,7 +272,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_schism_crisis: {
     title: 'Schism Divides the Faithful',
-    body: 'The growing divide within the kingdom\'s religious community has reached a breaking point. Two factions of the clergy now preach competing doctrines, and the faithful are forced to choose sides. The schism threatens to fracture the spiritual unity that binds our people.',
+    body: 'The growing divide within the kingdom\'s religious community has reached a breaking point. Two factions of the clergy now preach competing doctrines, and the faithful are forced to choose sides. The schism threatens to fracture the spiritual unity that binds our people. Word comes most urgently from {region}.',
     choices: {
       convene_ecclesiastical_council: 'Convene an Ecclesiastical Council',
       enforce_state_doctrine: 'Enforce State Doctrine',
@@ -372,7 +372,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_regional_unrest: {
     title: 'Regional Unrest Intensifies',
-    body: 'Discontent in a peripheral region has intensified to the point of organized resistance. Local officials report that royal authority is being openly questioned, and the population demands relief from conditions they consider intolerable. The {class_plural} are watching every move of the court.',
+    body: 'Discontent in a peripheral region has intensified to the point of organized resistance. Local officials report that royal authority is being openly questioned, and the population demands relief from conditions they consider intolerable. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       dispatch_relief_and_reforms: 'Dispatch Relief and Reforms',
       send_peacekeeping_force: 'Send Peacekeeping Force',
@@ -418,7 +418,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_noble_land_seizure: {
     title: 'Noble Land Seizures Reported',
-    body: 'Emboldened by their standing at court, several noble houses have begun seizing common lands, displacing tenant farmers and consolidating their holdings. The commoners affected have petitioned the crown for redress, while the nobles claim ancient prerogatives.',
+    body: 'Emboldened by their standing at court, several noble houses have begun seizing common lands, displacing tenant farmers and consolidating their holdings. The commoners affected have petitioned the crown for redress, while the nobles claim ancient prerogatives. Word comes most urgently from {region}.',
     choices: {
       reverse_seizures: 'Order Seizures Reversed',
       impose_compensation: 'Impose Compensation',
@@ -487,7 +487,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- CLASS-SPECIFIC: Commoners (3) ---
   evt_commoner_plague_outbreak: {
     title: 'Plague Outbreak in the Commons',
-    body: 'A virulent illness has broken out in the kingdom\'s most densely populated districts. The disease spreads rapidly through cramped quarters and compromised nutrition. Without decisive intervention, the outbreak could devastate the common population and spread to other classes. The {class_plural} are watching every move of the court.',
+    body: 'A virulent illness has broken out in the kingdom\'s most densely populated districts. The disease spreads rapidly through cramped quarters and compromised nutrition. Without decisive intervention, the outbreak could devastate the common population and spread to other classes. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       quarantine_affected_districts: 'Quarantine Affected Districts',
       mobilize_clergy_healers: 'Mobilize Clergy Healers',
@@ -565,7 +565,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- SEASONAL: Summer (2) ---
   evt_summer_drought: {
     title: 'Summer Drought Grips the Kingdom',
-    body: 'A prolonged period without rainfall has dried wells, withered crops, and strained the kingdom\'s water supplies. Agricultural production is falling sharply, and commoners in several regions report water shortages. The drought shows no sign of breaking.',
+    body: 'A prolonged period without rainfall has dried wells, withered crops, and strained the kingdom\'s water supplies. Agricultural production is falling sharply, and commoners in several regions report water shortages. The drought shows no sign of breaking. Word comes most urgently from {region}.',
     choices: {
       ration_water_supplies: 'Ration Water Supplies',
       dig_emergency_wells: 'Dig Emergency Wells',
@@ -605,7 +605,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- SEASONAL: Winter (2) ---
   evt_winter_blizzard: {
     title: 'Severe Blizzard Strikes',
-    body: 'A devastating blizzard has swept across the kingdom, burying roads in snow and isolating entire communities. Temperatures have plummeted, and the most vulnerable face exposure and starvation if relief does not reach them. The storm shows no sign of abating. The {class_plural} are watching every move of the court.',
+    body: 'A devastating blizzard has swept across the kingdom, burying roads in snow and isolating entire communities. Temperatures have plummeted, and the most vulnerable face exposure and starvation if relief does not reach them. The storm shows no sign of abating. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       open_warming_shelters: 'Open Warming Shelters',
       distribute_fuel_and_blankets: 'Distribute Fuel and Blankets',
@@ -625,7 +625,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- REGIONAL (6) ---
   evt_region_mine_collapse: {
     title: 'Mine Collapse in Resource Region',
-    body: 'A major mine collapse has trapped workers and halted extraction in one of the kingdom\'s resource-producing regions. The disaster has shocked the community and disrupted the supply of critical materials. Rescue and recovery operations require immediate decision. The {class_plural} are watching every move of the court.',
+    body: 'A major mine collapse has trapped workers and halted extraction in one of the kingdom\'s resource-producing regions. The disaster has shocked the community and disrupted the supply of critical materials. Rescue and recovery operations require immediate decision. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       launch_rescue_operation: 'Launch Rescue Operation',
       hire_foreign_engineers: 'Hire Foreign Engineers',
@@ -662,7 +662,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_region_separatist_sentiment: {
     title: 'Separatist Sentiment Grows',
-    body: 'A peripheral region, long neglected and suffering from poor conditions, has seen the emergence of open separatist sentiment. Local leaders speak publicly of autonomy, and some have begun collecting their own taxes. The situation demands a response before it becomes a formal rebellion. The {class_plural} are watching every move of the court.',
+    body: 'A peripheral region, long neglected and suffering from poor conditions, has seen the emergence of open separatist sentiment. Local leaders speak publicly of autonomy, and some have begun collecting their own taxes. The situation demands a response before it becomes a formal rebellion. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       negotiate_autonomy_terms: 'Negotiate Autonomy Terms',
       dispatch_royal_governor: 'Dispatch a Royal Governor',
@@ -673,7 +673,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- ESCALATION (6) ---
   evt_escalation_famine_panic: {
     title: 'Famine Panic Grips the Kingdom',
-    body: 'With food reserves perilously low and stability crumbling, panic has seized the population. Crowds storm markets and granaries, hoarding has become rampant, and violent confrontations over food are reported daily. The kingdom stands on the brink of collapse. The {class_plural} are watching every move of the court.',
+    body: 'With food reserves perilously low and stability crumbling, panic has seized the population. Crowds storm markets and granaries, hoarding has become rampant, and violent confrontations over food are reported daily. The kingdom stands on the brink of collapse. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       seize_noble_granaries: 'Seize Noble Granaries',
       enforce_martial_rationing: 'Enforce Martial Rationing',
@@ -682,7 +682,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_escalation_treasury_crisis: {
     title: 'Treasury Crisis Demands Action',
-    body: 'The kingdom\'s treasury is nearly empty. Creditors demand payment, military wages are overdue, and essential services face suspension. Without immediate and drastic measures to restore solvency, the crown\'s authority and the kingdom\'s functioning are in jeopardy.',
+    body: 'The kingdom\'s treasury is nearly empty. Creditors demand payment, military wages are overdue, and essential services face suspension. Without immediate and drastic measures to restore solvency, the crown\'s authority and the kingdom\'s functioning are in jeopardy. Word comes most urgently from {region}.',
     choices: {
       emergency_asset_sales: 'Sell Crown Assets',
       demand_noble_contributions: 'Demand Noble Contributions',
@@ -691,7 +691,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_escalation_faith_collapse: {
     title: 'Faith Crisis Threatens the Realm',
-    body: 'The kingdom\'s religious unity has shattered. Heterodox movements have gained dominant influence in several regions, the orthodox clergy is demoralized, and the common people are spiritually adrift. Without a decisive response, the social fabric woven by faith will unravel entirely.',
+    body: 'The kingdom\'s religious unity has shattered. Heterodox movements have gained dominant influence in several regions, the orthodox clergy is demoralized, and the common people are spiritually adrift. Without a decisive response, the social fabric woven by faith will unravel entirely. Word comes most urgently from {region}.',
     choices: {
       call_grand_synod: 'Call a Grand Synod',
       impose_state_religion: 'Impose State Religion',
@@ -700,7 +700,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_escalation_military_mutiny: {
     title: 'Military Forces Threaten Mutiny',
-    body: 'The kingdom\'s armed forces have reached a breaking point. Officers report that soldiers are organizing, refusing orders, and making collective demands. Without immediate concessions or decisive action, the military could turn against the crown itself.',
+    body: 'The kingdom\'s armed forces have reached a breaking point. Officers report that soldiers are organizing, refusing orders, and making collective demands. Without immediate concessions or decisive action, the military could turn against the crown itself. Word comes most urgently from {region}.',
     choices: {
       meet_mutiny_demands: 'Meet the Demands',
       isolate_ringleaders: 'Isolate the Ringleaders',
@@ -709,7 +709,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_escalation_noble_conspiracy: {
     title: 'Noble Conspiracy Against the Crown',
-    body: 'Intelligence has uncovered a serious conspiracy among the nobility to depose the ruling house. The plotters have financial backing, military contacts, and foreign support. The conspiracy is advanced and the threat is existential. The crown must act decisively.',
+    body: 'Intelligence has uncovered a serious conspiracy among the nobility to depose the ruling house. The plotters have financial backing, military contacts, and foreign support. The conspiracy is advanced and the threat is existential. The crown must act decisively. Word comes most urgently from {region}.',
     choices: {
       preemptive_arrests: 'Order Preemptive Arrests',
       offer_reconciliation: 'Offer Reconciliation',
@@ -718,7 +718,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_escalation_mass_exodus: {
     title: 'Mass Exodus Threatens the Kingdom',
-    body: 'Conditions in the kingdom have deteriorated to the point that significant numbers of commoners are fleeing across the borders. Entire villages are being abandoned, fields left fallow, and the population base — the foundation of all the kingdom\'s systems — is eroding rapidly.',
+    body: 'Conditions in the kingdom have deteriorated to the point that significant numbers of commoners are fleeing across the borders. Entire villages are being abandoned, fields left fallow, and the population base — the foundation of all the kingdom\'s systems — is eroding rapidly. Word comes most urgently from {region}.',
     choices: {
       promise_sweeping_reforms: 'Promise Sweeping Reforms',
       close_borders: 'Close the Borders',
@@ -864,7 +864,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_commoner_uprising_neglect: {
     title: 'Commoner Uprising',
-    body: 'Neglected and hungry, the commonfolk have taken to the streets in organized demonstrations that border on open revolt. Market squares have become gathering points for angry crowds, and several royal officials have been driven from their posts. The situation demands an immediate response before order collapses entirely.',
+    body: 'Neglected and hungry, the commonfolk have taken to the streets in organized demonstrations that border on open revolt. Market squares have become gathering points for angry crowds, and several royal officials have been driven from their posts. The situation demands an immediate response before order collapses entirely. Word comes most urgently from {region}.',
     choices: {
       emergency_food_distribution: 'Distribute Emergency Food',
       deploy_military_patrols: 'Deploy Military Patrols',
@@ -882,7 +882,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_military_coup_threat: {
     title: 'Conspiracy in the Barracks',
-    body: 'Intelligence reports have uncovered a conspiracy among senior military officers to seize power from the crown. The plotters command significant loyalty within the ranks and have secured access to key armories. The conspiracy is well-advanced, and delay will only strengthen their position. The {class_plural} are watching every move of the court.',
+    body: 'Intelligence reports have uncovered a conspiracy among senior military officers to seize power from the crown. The plotters command significant loyalty within the ranks and have secured access to key armories. The conspiracy is well-advanced, and delay will only strengthen their position. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       purge_conspirators: 'Purge the Conspirators',
       bribe_officer_corps: 'Buy the Officers\' Loyalty',
@@ -895,7 +895,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_plague_outbreak: {
     title: 'Plague Strikes',
-    body: 'Disease has appeared in the outer districts. Reports describe a swift and virulent illness that overwhelms the afflicted within days. The contagion spreads through close contact, and the crowded conditions of the lower quarters provide fertile ground. Without immediate action, the plague will reach the inner city.',
+    body: 'Disease has appeared in the outer districts. Reports describe a swift and virulent illness that overwhelms the afflicted within days. The contagion spreads through close contact, and the crowded conditions of the lower quarters provide fertile ground. Without immediate action, the plague will reach the inner city. Word comes most urgently from {region}.',
     choices: {
       immediate_quarantine: 'Impose Immediate Quarantine',
       mobilize_healers: 'Mobilize the Healers',
@@ -904,7 +904,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_plague_spread: {
     title: 'Plague Spreads',
-    body: 'The contagion has breached the inner city despite earlier efforts. Merchant houses are shuttered, laborers refuse to work, and the dead accumulate faster than they can be buried. The kingdom\'s economy and social order are buckling under the weight of the pestilence. Drastic measures are now the only options remaining.',
+    body: 'The contagion has breached the inner city despite earlier efforts. Merchant houses are shuttered, laborers refuse to work, and the dead accumulate faster than they can be buried. The kingdom\'s economy and social order are buckling under the weight of the pestilence. Drastic measures are now the only options remaining. Word comes most urgently from {region}.',
     choices: {
       strict_lockdown: 'Enforce Strict Lockdown',
       burn_infected_quarters: 'Burn the Infected Quarters',
@@ -913,7 +913,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_plague_aftermath: {
     title: 'Plague\'s End',
-    body: 'The worst has passed. The contagion has burned through the population and finally subsided, leaving behind empty homes, grieving communities, and a kingdom forever changed. Recovery will be long, but the survivors look to the crown for direction. How the country rebuilds will define its character for a generation.',
+    body: 'The worst has passed. The contagion has burned through the population and finally subsided, leaving behind empty homes, grieving communities, and a kingdom forever changed. Recovery will be long, but the survivors look to the crown for direction. How the country rebuilds will define its character for a generation. Word comes most urgently from {region}.',
     choices: {
       rebuild_and_memorialize: 'Rebuild and Memorialize',
       impose_sanitation_laws: 'Impose Sanitation Laws',
@@ -966,7 +966,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_succession_factions: {
     title: 'Factions Emerge',
-    body: 'The succession question has fractured the court into opposing factions, each rallying behind a different claimant. Noble houses are choosing sides, and the competition for influence has grown fierce. The kingdom\'s stability depends on whether this contest can be managed or whether it will consume the ruling class entirely.',
+    body: 'The succession question has fractured the court into opposing factions, each rallying behind a different claimant. Noble houses are choosing sides, and the competition for influence has grown fierce. The kingdom\'s stability depends on whether this contest can be managed or whether it will consume the ruling class entirely. Word comes most urgently from {region}.',
     choices: {
       back_eldest_claim: 'Back the Eldest Claim',
       support_merit_candidate: 'Support a Merit Candidate',
@@ -997,7 +997,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_famine_crisis: {
     title: 'Famine Grips the Kingdom',
-    body: 'The food shortage has become a full crisis. People go hungry in the streets, and desperation drives the weakest to beg at the gates of noble estates and church granaries. Reports of food-related violence grow daily. The crown must act decisively or face the complete unraveling of civil order. The {class_plural} are watching every move of the court.',
+    body: 'The food shortage has become a full crisis. People go hungry in the streets, and desperation drives the weakest to beg at the gates of noble estates and church granaries. Reports of food-related violence grow daily. The crown must act decisively or face the complete unraveling of civil order. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       open_royal_granaries: 'Open the Royal Granaries',
       commandeer_noble_stores: 'Commandeer Noble Stores',
@@ -1068,7 +1068,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_equipment_failure_field: {
     title: 'Equipment Fails in the Field',
-    body: 'Neglected arms and deteriorating supply lines have produced the worst possible outcome: critical equipment failures during active operations. Weapons break, armor fails, and soldiers find themselves exposed at the moment of greatest need. The military command demands an immediate accounting and a decision on how to proceed.',
+    body: 'Neglected arms and deteriorating supply lines have produced the worst possible outcome: critical equipment failures during active operations. Weapons break, armor fails, and soldiers find themselves exposed at the moment of greatest need. The military command demands an immediate accounting and a decision on how to proceed. Word comes most urgently from {region}.',
     choices: {
       emergency_field_repair: 'Order Emergency Field Repairs',
       retreat_and_regroup: 'Retreat and Regroup',
@@ -1090,7 +1090,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_assassination_attempt: {
     title: 'The Poisoned Cup',
-    body: 'An attempt on the royal life has been narrowly averted. The method — poison concealed in the evening wine — suggests the involvement of someone with intimate access to the court. The kingdom holds its breath as the investigation begins. Trust within the inner circle has been shattered, and the crown must decide how to respond.',
+    body: 'An attempt on the royal life has been narrowly averted. The method — poison concealed in the evening wine — suggests the involvement of someone with intimate access to the court. The kingdom holds its breath as the investigation begins. Trust within the inner circle has been shattered, and the crown must decide how to respond. Word comes most urgently from {region}.',
     choices: {
       purge_inner_circle: 'Purge the Inner Circle',
       increase_royal_guard: 'Increase the Royal Guard',
@@ -1137,7 +1137,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_infra_bridge_collapse: {
     title: 'Bridge Collapse Disrupts Supply Lines',
-    body: 'A key bridge on the kingdom\'s primary trade and supply route has collapsed, sending a loaded grain cart into the river below. The failure was entirely predictable — engineers had warned of the deterioration months ago. Food shipments are disrupted, and the crown must act immediately to restore the connection. The {class_plural} are watching every move of the court.',
+    body: 'A key bridge on the kingdom\'s primary trade and supply route has collapsed, sending a loaded grain cart into the river below. The failure was entirely predictable — engineers had warned of the deterioration months ago. Food shipments are disrupted, and the crown must act immediately to restore the connection. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       emergency_rebuild: 'Order Emergency Rebuild',
       reroute_supply_lines: 'Reroute Supply Lines',
@@ -1208,7 +1208,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_grain_import_spoiled: {
     title: 'Imported Grain Spoiled',
-    body: 'Disaster has struck — nearly half the imported grain was spoiled, either through poor storage during transport or deliberate fraud by the suppliers. The food stores that were meant to see the kingdom through winter are now critically insufficient. The crown must act immediately. The {class_plural} are watching every move of the court.',
+    body: 'Disaster has struck — nearly half the imported grain was spoiled, either through poor storage during transport or deliberate fraud by the suppliers. The food stores that were meant to see the kingdom through winter are now critically insufficient. The crown must act immediately. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       demand_replacement: 'Demand Replacement Shipment',
       emergency_local_harvest: 'Emergency Local Harvest',
@@ -1236,7 +1236,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_grain_noble_uprising: {
     title: 'Armed Noble Uprising',
-    body: 'The arrests have backfired catastrophically. Loyal noble retainers have taken up arms, and an armed uprising has erupted in the provinces. Fortified estates have become strongholds of resistance, and the kingdom\'s military — already stretched thin — faces an internal war it can ill afford. The {class_plural} are watching every move of the court.',
+    body: 'The arrests have backfired catastrophically. Loyal noble retainers have taken up arms, and an armed uprising has erupted in the provinces. Fortified estates have become strongholds of resistance, and the kingdom\'s military — already stretched thin — faces an internal war it can ill afford. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       crush_uprising: 'Crush the Uprising',
       negotiate_surrender: 'Negotiate a Surrender',
@@ -1297,7 +1297,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_schism_reform_schism_deep: {
     title: 'Two Competing Religious Authorities',
-    body: 'The kingdom now has two competing religious authorities — the orthodox hierarchy and a reformist council, each claiming legitimacy, each demanding the crown\'s exclusive recognition. Congregations are split, families are divided, and the question of which doctrine the kingdom officially follows has become unavoidable. The {class_plural} are watching every move of the court.',
+    body: 'The kingdom now has two competing religious authorities — the orthodox hierarchy and a reformist council, each claiming legitimacy, each demanding the crown\'s exclusive recognition. Congregations are split, families are divided, and the question of which doctrine the kingdom officially follows has become unavoidable. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       recognize_both_authorities: 'Recognize Both Authorities',
       enforce_single_doctrine: 'Enforce a Single Doctrine',
@@ -1325,7 +1325,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_schism_underground_martyr: {
     title: 'Crackdown Creates a Martyr',
-    body: 'The crackdown on underground worship has created a martyr. A charismatic worship leader was killed during the raids, and their death has electrified the underground movement. Songs are sung in their memory, their words are copied and distributed, and what was once a scattered resistance has found its unifying symbol. The {class_plural} are watching every move of the court.',
+    body: 'The crackdown on underground worship has created a martyr. A charismatic worship leader was killed during the raids, and their death has electrified the underground movement. Songs are sung in their memory, their words are copied and distributed, and what was once a scattered resistance has found its unifying symbol. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       honor_martyr: 'Honor the Martyr',
       discredit_martyr: 'Discredit the Martyr',
@@ -1336,7 +1336,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Chain 5: Plague Outbreak ---
   evt_plague_outbreak_root: {
     title: 'Plague Strikes the Kingdom',
-    body: 'Disease has broken out in the densely populated districts. The affliction spreads rapidly through crowded quarters, and the death toll climbs daily. The court\'s physicians warn that without decisive action, the plague will reach every corner of the kingdom. The question is not whether to act, but who will be saved.',
+    body: 'Disease has broken out in the densely populated districts. The affliction spreads rapidly through crowded quarters, and the death toll climbs daily. The court\'s physicians warn that without decisive action, the plague will reach every corner of the kingdom. The question is not whether to act, but who will be saved. Word comes most urgently from {region}.',
     choices: {
       quarantine_districts: 'Quarantine Affected Districts',
       prioritize_nobility: 'Prioritize Treating the Nobility',
@@ -1350,7 +1350,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_plague_quarantine_breaks: {
     title: 'Quarantine Collapses',
-    body: 'The quarantine has collapsed. Desperate residents broke through the barriers, carrying the disease into previously clean districts. The plague is now spreading unchecked, and the kingdom\'s health infrastructure is overwhelmed. The original containment strategy has failed. The {class_plural} are watching every move of the court.',
+    body: 'The quarantine has collapsed. Desperate residents broke through the barriers, carrying the disease into previously clean districts. The plague is now spreading unchecked, and the kingdom\'s health infrastructure is overwhelmed. The original containment strategy has failed. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       military_enforcement: 'Enforce with Military',
       expand_treatment: 'Expand Treatment Centers',
@@ -1367,7 +1367,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_plague_class_anger: {
     title: 'Class Riots over Treatment',
-    body: 'The decision to prioritize noble treatment has ignited fury among the common people. Riots have erupted in multiple districts, with crowds demanding equal access to medicine and physicians. The class divide, always present, has been exposed in the starkest possible terms: who lives and who dies is being decided by birth, not need. The {class_plural} are watching every move of the court.',
+    body: 'The decision to prioritize noble treatment has ignited fury among the common people. Riots have erupted in multiple districts, with crowds demanding equal access to medicine and physicians. The class divide, always present, has been exposed in the starkest possible terms: who lives and who dies is being decided by birth, not need. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       extend_treatment_to_all: 'Extend Treatment to All',
       suppress_riots: 'Suppress the Riots',
@@ -1411,7 +1411,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Chain 2: Border Incursion ---
   evt_border_incursion_root: {
     title: 'Border Incursion',
-    body: "Raiders bearing {dynasty}'s colors have crossed the border in force. Villages near the frontier report burned farms, stolen livestock, and displaced families. The incursion is too organized to be mere banditry — this bears the hallmarks of state-sanctioned aggression by {ruler_full}. The court demands a response.",
+    body: "Raiders bearing {dynasty}'s colors have crossed the border in force. Villages near the frontier report burned farms, stolen livestock, and displaced families. The incursion is too organized to be mere banditry — this bears the hallmarks of state-sanctioned aggression by {ruler_full}. The court demands a response. Word reaches the court via {neighbor}.",
     choices: {
       retaliate_with_force: 'Retaliate with Force',
       send_diplomatic_envoy: 'Send a Diplomatic Envoy',
@@ -1433,7 +1433,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_campaign_defeat: {
     title: 'Campaign Defeated',
-    body: 'The retaliatory campaign has failed catastrophically. The kingdom\'s forces were outmaneuvered and decisively beaten. The enemy is advancing into the kingdom\'s territory, and the remaining defenders are in disarray. The crown faces the gravest military crisis in a generation.',
+    body: 'The retaliatory campaign has failed catastrophically. The kingdom\'s forces were outmaneuvered and decisively beaten. The enemy is advancing into the kingdom\'s territory, and the remaining defenders are in disarray. The crown faces the gravest military crisis in a generation. Dispatches from {region} corroborate what first reached the court through {neighbor}.',
     choices: {
       rally_defense: 'Rally a Last Defense',
       sue_for_peace: 'Sue for Peace',
@@ -1447,7 +1447,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_envoy_hostage: {
     title: 'Envoy Taken Hostage',
-    body: "The diplomatic mission has ended in disaster — the envoy has been taken hostage on {ruler}'s order. Ransom demands have arrived at court from {capital}, and the hostage-takers threaten harm if their conditions are not met. The kingdom's honor and the envoy's life hang in the balance.",
+    body: "The diplomatic mission has ended in disaster — the envoy has been taken hostage on {ruler}'s order. Ransom demands have arrived at court from {capital}, and the hostage-takers threaten harm if their conditions are not met. The kingdom's honor and the envoy's life hang in the balance. Word reaches the court via {neighbor}.",
     choices: {
       pay_ransom: 'Pay the Ransom',
       rescue_mission: 'Launch a Rescue Mission',
@@ -1469,7 +1469,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_fortify_famine: {
     title: 'Border Losses Trigger Shortages',
-    body: 'The damage absorbed during the border incursion has triggered food shortages across the frontier provinces. Burned farms, disrupted supply lines, and displaced farmers have combined to create a growing hunger crisis. The fortification strategy preserved territory but not the people\'s food supply. The {class_plural} are watching every move of the court.',
+    body: 'The damage absorbed during the border incursion has triggered food shortages across the frontier provinces. Burned farms, disrupted supply lines, and displaced farmers have combined to create a growing hunger crisis. The fortification strategy preserved territory but not the people\'s food supply. The {class_plural} are watching every move of the court. Word reaches the court via {neighbor}.',
     choices: {
       emergency_food_imports: 'Import Emergency Food Supplies',
       redistribute_reserves: 'Redistribute Existing Reserves',
@@ -1502,7 +1502,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_trade_escort_ambush: {
     title: 'Escort Force Ambushed',
-    body: 'The military escort was ambushed on the trade route by a well-organized force. Casualties are significant, goods have been seized, and the survivors report that the attackers had detailed knowledge of the escort\'s route and composition. This was not a random attack — it was planned. The {class_plural} are watching every move of the court.',
+    body: 'The military escort was ambushed on the trade route by a well-organized force. Casualties are significant, goods have been seized, and the survivors report that the attackers had detailed knowledge of the escort\'s route and composition. This was not a random attack — it was planned. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       send_reinforcements: 'Send Reinforcements',
       negotiate_ransom: 'Negotiate for Return of Goods',
@@ -1556,7 +1556,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Chain 6: Military Mutiny ---
   evt_military_mutiny_root: {
     title: 'Military Mutiny',
-    body: 'Unpaid and overworked soldiers have begun to organize. The barracks are restless, officers report insubordination, and a delegation of senior sergeants has delivered an ultimatum to the crown: address their grievances or face the consequences. The military, the kingdom\'s shield, is turning inward.',
+    body: 'Unpaid and overworked soldiers have begun to organize. The barracks are restless, officers report insubordination, and a delegation of senior sergeants has delivered an ultimatum to the crown: address their grievances or face the consequences. The military, the kingdom\'s shield, is turning inward. Word comes most urgently from {region}.',
     choices: {
       pay_back_wages: 'Pay Back Wages Immediately',
       promise_reform: 'Promise Reform',
@@ -1584,7 +1584,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_mutiny_reform_betrayal: {
     title: 'Soldiers March on the Capital',
-    body: 'The promised reforms never came. The soldiers, feeling betrayed by empty promises, have mobilized and are marching on the capital. This is no longer a mutiny — it is an insurrection. The crown has hours, not days, to respond before the army reaches the palace gates.',
+    body: 'The promised reforms never came. The soldiers, feeling betrayed by empty promises, have mobilized and are marching on the capital. This is no longer a mutiny — it is an insurrection. The crown has hours, not days, to respond before the army reaches the palace gates. Word comes most urgently from {region}.',
     choices: {
       meet_soldiers_personally: 'Meet the Soldiers Personally',
       call_loyal_units: 'Call Loyal Units',
@@ -1603,7 +1603,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_mutiny_execute_revenge: {
     title: 'Fortification Sabotaged',
-    body: 'Loyalists of the executed soldiers have struck back with devastating precision. A key fortification on the kingdom\'s border has been sabotaged — walls weakened, supplies contaminated, and defensive positions compromised. The sabotage was an inside job, carried out by soldiers still serving.',
+    body: 'Loyalists of the executed soldiers have struck back with devastating precision. A key fortification on the kingdom\'s border has been sabotaged — walls weakened, supplies contaminated, and defensive positions compromised. The sabotage was an inside job, carried out by soldiers still serving. Word comes most urgently from {region}.',
     choices: {
       investigate_sabotage: 'Investigate the Sabotage',
       rebuild_fortification: 'Rebuild the Fortification',
@@ -1688,7 +1688,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Chain 11: Commoner Uprising ---
   evt_commoner_uprising_root: {
     title: 'Organized Commoner Resistance',
-    body: 'Years of accumulated grievance have crystallized into organized resistance. This is not a riot — it is a movement, with leaders, demands, and growing support across the townships. The commoners have presented a formal list of grievances and warn that their patience has reached its limit.',
+    body: 'Years of accumulated grievance have crystallized into organized resistance. This is not a riot — it is a movement, with leaders, demands, and growing support across the townships. The commoners have presented a formal list of grievances and warn that their patience has reached its limit. Word comes most urgently from {region}.',
     choices: {
       meet_demands: 'Meet Their Demands',
       suppress_by_force: 'Suppress by Force',
@@ -1711,7 +1711,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_uprising_guerrilla: {
     title: 'Guerrilla Attacks',
-    body: 'The suppressed commoner movement has gone underground and turned violent. Supply wagons are ambushed on rural roads, tax collectors are attacked, and noble estates outside the capital face arson. The military struggles to fight an enemy that melts back into the population after each strike. The {class_plural} are watching every move of the court.',
+    body: 'The suppressed commoner movement has gone underground and turned violent. Supply wagons are ambushed on rural roads, tax collectors are attacked, and noble estates outside the capital face arson. The military struggles to fight an enemy that melts back into the population after each strike. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       hunt_insurgents: 'Hunt the Insurgents',
       offer_amnesty: 'Offer Amnesty',
@@ -1837,7 +1837,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_ambassador_counter_rejected: {
     title: 'Counter-Proposal Rejected',
-    body: "{ruler_full} has rejected the kingdom's counter-proposal with barely concealed displeasure. The ambassador warns that {dynasty}'s patience is not infinite and that continued resistance will have consequences. The court must decide how to proceed in the face of external pressure.",
+    body: "{ruler_full} has rejected the kingdom's counter-proposal with barely concealed displeasure. The ambassador warns that {dynasty}'s patience is not infinite and that continued resistance will have consequences. The court must decide how to proceed in the face of external pressure. Word reaches the court via {neighbor}.",
     choices: {
       concede_to_terms: 'Concede to Their Terms',
       stand_firm: 'Stand Firm',

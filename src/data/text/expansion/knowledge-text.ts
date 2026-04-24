@@ -44,7 +44,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_library_fire: {
     title: 'Fire Engulfs the Royal Archives',
-    body: 'Flames have broken out in the kingdom\'s great library, threatening centuries of accumulated knowledge. The fire spreads with alarming speed through the dry summer air, and the archivists plead for immediate action. Much of what burns can never be recovered. The {class_plural} are watching every move of the court.',
+    body: 'Flames have broken out in the kingdom\'s great library, threatening centuries of accumulated knowledge. The fire spreads with alarming speed through the dry summer air, and the archivists plead for immediate action. Much of what burns can never be recovered. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       emergency_salvage_operation: 'Mount Full Salvage Effort',
       protect_rarest_volumes: 'Save Only the Rarest Works',
@@ -135,7 +135,7 @@ export const EXPANSION_KNOWLEDGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_kno_printing_press: {
     title: 'The Printing Press Prototype',
-    body: 'A brilliant artificer has constructed a device capable of pressing inked type onto parchment with extraordinary speed, producing identical copies of any text in hours rather than months. The implications are profound — knowledge could spread beyond the control of scribe and clergy alike, reshaping the balance of power in the realm.',
+    body: 'A brilliant artificer has constructed a device capable of pressing inked type onto parchment with extraordinary speed, producing identical copies of any text in hours rather than months. The implications are profound — knowledge could spread beyond the control of scribe and clergy alike, reshaping the balance of power in the realm. Word comes most urgently from {region}.',
     choices: {
       fund_mass_production: 'Fund Public Production',
       restrict_to_crown: 'Restrict to Crown Use',

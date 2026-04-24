@@ -58,7 +58,7 @@ export const EXPANSION_FOOD_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_fod_livestock_plague: {
     title: 'Plague Sweeps the Herds',
-    body: 'A terrible sickness has fallen upon the kingdom\'s cattle and sheep. Animals collapse in the pastures this {season}, and the disease passes from herd to herd faster than quarantine lines can be drawn. Your people — with stores already at a {stores_tier} mark — face not only the loss of meat and milk but the draught animals upon which ploughing depends. The {class_plural} are watching every move of the court.',
+    body: 'A terrible sickness has fallen upon the kingdom\'s cattle and sheep. Animals collapse in the pastures this {season}, and the disease passes from herd to herd faster than quarantine lines can be drawn. Your people — with stores already at a {stores_tier} mark — face not only the loss of meat and milk but the draught animals upon which ploughing depends. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       cull_all_sick_animals: 'Cull All Sick Animals',
       import_healthy_stock: 'Import Healthy Stock',

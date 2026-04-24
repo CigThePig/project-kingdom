@@ -37,10 +37,7 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISES: EventDefinition[] = [
     id: 'evt_exp_w2_royal_illness',
     severity: EventSeverity.Serious,
     category: EventCategory.Kingdom,
-    triggerConditions: [
-      { type: 'turn_range', minTurn: 8 },
-      { type: 'random_chance', probability: 0.1 },
-    ],
+    triggerConditions: [{ type: 'always' }, { type: 'stability_below', threshold: 60 }],
     weight: 0.8,
     chainId: null,
     chainStep: null,

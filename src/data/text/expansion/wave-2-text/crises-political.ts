@@ -23,7 +23,7 @@ export const EXPANSION_WAVE_2_CRISES_POLITICAL_TEXT: Record<string, EventTextEnt
   },
   evt_exp_w2_dynastic_challenge: {
     title: 'A Pretender Raises a Banner',
-    body: 'A distant cousin, long thought safely landless abroad, has appeared in the marches with a modest retinue and a claim to the throne. The claim is thin in law but thick in sympathy among the border lords. Left unanswered it will only grow. The {class_plural} are watching every move of the court.',
+    body: 'A distant cousin, long thought safely landless abroad, has appeared in the marches with a modest retinue and a claim to the throne. The claim is thin in law but thick in sympathy among the border lords. Left unanswered it will only grow. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       crush_the_pretender: 'Crush the Pretender',
       marry_into_their_line: 'Marry into Their Line',
@@ -32,7 +32,7 @@ export const EXPANSION_WAVE_2_CRISES_POLITICAL_TEXT: Record<string, EventTextEnt
   },
   evt_exp_w2_foreign_assassination: {
     title: 'A Foreign Prince Is Slain',
-    body: 'A neighbouring prince has been killed — by a knife, in his own hall, by hands not yet named. The court of that realm demands public mourning or public answers. Your own spymaster is studiously looking elsewhere. The {class_plural} are watching every move of the court.',
+    body: 'A neighbouring prince has been killed — by a knife, in his own hall, by hands not yet named. The court of that realm demands public mourning or public answers. Your own spymaster is studiously looking elsewhere. The {class_plural} are watching every move of the court. Word reaches the court via {neighbor}.',
     choices: {
       condemn_publicly_and_mourn: 'Condemn Publicly and Mourn',
       offer_the_network_quietly: 'Offer Our Network Quietly',
@@ -41,7 +41,7 @@ export const EXPANSION_WAVE_2_CRISES_POLITICAL_TEXT: Record<string, EventTextEnt
   },
   evt_exp_w2_bandit_lord_uprising: {
     title: 'A Bandit Lord Raises the Country',
-    body: 'In the hill country a hedge-knight has gathered a small army from discontented tenants and deserters. He styles himself a champion of the commons and is said to have taken three manor houses already. The march captains await orders. The {class_plural} are watching every move of the court.',
+    body: 'In the hill country a hedge-knight has gathered a small army from discontented tenants and deserters. He styles himself a champion of the commons and is said to have taken three manor houses already. The march captains await orders. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       send_a_punitive_column: 'Send a Punitive Column',
       offer_the_lord_a_title: 'Offer Him a Title',

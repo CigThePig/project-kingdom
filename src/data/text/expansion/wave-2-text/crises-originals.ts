@@ -10,7 +10,7 @@ import type { EventTextEntry } from '../../events';
 export const EXPANSION_WAVE_2_CRISES_ORIGINAL_TEXT: Record<string, EventTextEntry> = {
   evt_exp_w2_comet_sighting: {
     title: 'A Great Comet Burns the Sky',
-    body: 'For a full week a great burning star has hung over the capital at dusk. The bishops whisper of omens; the commonfolk crowd the cathedral steps; the astronomers debate in quiet rooms. Every observer asks the same question: is this a sign of favour, or of judgement?',
+    body: 'For a full week a great burning star has hung over the capital at dusk. The bishops whisper of omens; the commonfolk crowd the cathedral steps; the astronomers debate in quiet rooms. Reports from {region} echo the capital\'s unease. Every observer asks the same question: is this a sign of favour, or of judgement?',
     choices: {
       declare_omen_of_renewal: 'Declare an Omen of Renewal',
       order_ritual_purification: 'Order Ritual Purification',

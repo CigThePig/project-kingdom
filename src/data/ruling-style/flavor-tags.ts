@@ -138,12 +138,11 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     acknowledge_achievement: { [StyleAxis.Authority]: +1 },
   },
   evt_library_fire: {
-    launch_restoration_effort: { [StyleAxis.Faith]: -1 },
-    investigate_cause:         { [StyleAxis.Authority]: 1 },
-    accept_and_rebuild:        { [StyleAxis.Economy]: -1 },
+    launch_restoration_effort: { [StyleAxis.Economy]: -2, [StyleAxis.Faith]: +1 },
+    investigate_cause: { [StyleAxis.Authority]: 1 },
+    accept_and_rebuild: { [StyleAxis.Economy]: -1, [StyleAxis.Authority]: -1 },
   },
-
-  // ---- Class Conflict Events (continued) ----
+// ---- Class Conflict Events (continued) ----
   evt_noble_merchant_rivalry: {
     broker_compromise: { [StyleAxis.Authority]: +1 },
     uphold_noble_privileges: { [StyleAxis.Authority]: 2, [StyleAxis.Economy]: -1 },
@@ -208,12 +207,11 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     discourage_travel:    { [StyleAxis.Faith]: -2, [StyleAxis.Authority]: 1 },
   },
   evt_clergy_prophecy_claim: {
-    investigate_prophecy:    { [StyleAxis.Faith]: -1, [StyleAxis.Authority]: 1 },
+    investigate_prophecy: { [StyleAxis.Authority]: +1, [StyleAxis.Faith]: -2 },
     endorse_as_divine_sign: { [StyleAxis.Faith]: 4 },
-    dismiss_as_superstition: { [StyleAxis.Faith]: -3, [StyleAxis.Authority]: +1 },
+    dismiss_as_superstition: { [StyleAxis.Authority]: +1, [StyleAxis.Faith]: -1, [StyleAxis.Economy]: +1 },
   },
-
-  // ---- Merchant Events ----
+// ---- Merchant Events ----
   evt_merchant_guild_formation: {
     grant_guild_charter:    { [StyleAxis.Economy]: 2, [StyleAxis.Authority]: -1 },
     impose_royal_oversight: { [StyleAxis.Authority]: 2, [StyleAxis.Economy]: 1, [StyleAxis.Military]: +1 },
@@ -389,10 +387,10 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   },
   evt_merchant_underground_economy: {
     raid_smuggling_networks: { [StyleAxis.Authority]: 3 },
-    legitimize_shadow_trade: { [StyleAxis.Economy]: 2, [StyleAxis.Authority]: -2 },
-    increase_enforcement: { [StyleAxis.Authority]: 2, [StyleAxis.Economy]: +1 },
+    legitimize_shadow_trade: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: -2 },
+    increase_enforcement: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
   },
-  evt_noble_backlash_labor: {
+evt_noble_backlash_labor: {
     appease_nobles:  { [StyleAxis.Authority]: 1, [StyleAxis.Economy]: 1 },
     stand_firm: { [StyleAxis.Economy]: -2, [StyleAxis.Authority]: -1, [StyleAxis.Military]: +1 },
     offer_compromise: {},
@@ -540,12 +538,11 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
 
   // ---- Merchant Follow-up ----
   evt_merchant_permanent_concessions: {
-    grant_permanent_charter: { [StyleAxis.Economy]: 3, [StyleAxis.Authority]: -1 },
+    grant_permanent_charter: { [StyleAxis.Economy]: +3, [StyleAxis.Authority]: -2 },
     reject_demands: { [StyleAxis.Authority]: 2, [StyleAxis.Economy]: -1, [StyleAxis.Military]: +1 },
-    offer_limited_concession: { [StyleAxis.Economy]: 1 },
+    offer_limited_concession: { [StyleAxis.Economy]: +1, [StyleAxis.Faith]: -1 },
   },
-
-  // ---- Heresy Follow-up ----
+// ---- Heresy Follow-up ----
   evt_underground_heretical_movement: {
     infiltrate_movement:       { [StyleAxis.Authority]: 2 },
     public_amnesty:            { [StyleAxis.Faith]: -2, [StyleAxis.Authority]: -2 },
@@ -648,11 +645,11 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     endure_and_hope: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1 },
   },
   evt_exp_chain_guild_rev_council: {
-    grant_council_representation: { [StyleAxis.Authority]: -1 },
-    arrest_ringleaders: { [StyleAxis.Authority]: +2, [StyleAxis.Economy]: +1 },
+    grant_council_representation: { [StyleAxis.Authority]: -2, [StyleAxis.Economy]: +1 },
+    arrest_ringleaders: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
     offer_economic_concessions: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1, [StyleAxis.Military]: +1 },
   },
-  evt_exp_chain_guild_rev_shift: {
+evt_exp_chain_guild_rev_shift: {
     embrace_new_order: { [StyleAxis.Authority]: +1 },
     crush_the_movement: { [StyleAxis.Authority]: +3, [StyleAxis.Economy]: +1 },
     negotiate_compromise: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1, [StyleAxis.Military]: +1 },
@@ -725,12 +722,11 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     reaffirm_social_order: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1, [StyleAxis.Military]: +1 },
   },
   evt_exp_cc_tax_burden_dispute: {
-    redistribute_tax_burden: { [StyleAxis.Economy]: +2 },
+    redistribute_tax_burden: { [StyleAxis.Economy]: -2, [StyleAxis.Faith]: +1 },
     maintain_noble_exemptions: { [StyleAxis.Authority]: +1 },
-    commission_tax_review: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: +1 },
+    commission_tax_review: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1 },
   },
-
-  // ---- Crisis: expansion/culture-events.ts (Culture) ----
+// ---- Crisis: expansion/culture-events.ts (Culture) ----
   evt_exp_cul_architectural_ambition: {
     build_great_cathedral: { [StyleAxis.Faith]: +1 },
     construct_public_amphitheater: { [StyleAxis.Faith]: +1, [StyleAxis.Authority]: +1 },
@@ -752,11 +748,11 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     convene_clergy_tribunal: { [StyleAxis.Authority]: +2, [StyleAxis.Faith]: +1 },
   },
   evt_exp_cul_identity_crisis: {
-    reassert_national_identity: { [StyleAxis.Authority]: +2 },
-    forge_new_cultural_synthesis: { [StyleAxis.Faith]: +1 },
+    reassert_national_identity: { [StyleAxis.Authority]: +2, [StyleAxis.Faith]: +1 },
+    forge_new_cultural_synthesis: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1 },
     allow_regional_autonomy: { [StyleAxis.Authority]: -1, [StyleAxis.Faith]: -1 },
   },
-  evt_exp_cul_military_ceremony: {
+evt_exp_cul_military_ceremony: {
     grand_military_parade: { [StyleAxis.Military]: +1 },
     solemn_remembrance: { [StyleAxis.Faith]: +1 },
     skip_ceremony: { [StyleAxis.Faith]: +1, [StyleAxis.Authority]: +1 },
@@ -779,17 +775,17 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     cede_disputed_territory: { [StyleAxis.Military]: +1, [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1 },
   },
   evt_exp_dip_spy_scandal: {
-    deny_involvement: { [StyleAxis.Authority]: +1 },
+    deny_involvement: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
     expel_foreign_diplomats: { [StyleAxis.Military]: -1 },
-    offer_intelligence_sharing: { [StyleAxis.Military]: +1, [StyleAxis.Authority]: +1 },
+    offer_intelligence_sharing: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1 },
   },
   evt_exp_dip_trade_embargo_threat: {
-    negotiate_compromise: { [StyleAxis.Authority]: -1 },
+    negotiate_compromise: { [StyleAxis.Economy]: +1, [StyleAxis.Military]: -1 },
     counter_embargo: { [StyleAxis.Military]: +1 },
-    seek_alternative_markets: { [StyleAxis.Economy]: +2 },
+    seek_alternative_markets: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: +1 },
     accept_the_embargo: { [StyleAxis.Authority]: -1, [StyleAxis.Military]: -1 },
   },
-  evt_exp_dip_treaty_violation: {
+evt_exp_dip_treaty_violation: {
     demand_reparations: { [StyleAxis.Authority]: +2 },
     military_posturing: { [StyleAxis.Military]: +1 },
     seek_mediation: { [StyleAxis.Military]: +1, [StyleAxis.Authority]: +1 },
@@ -809,11 +805,11 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
 
   // ---- Crisis: expansion/economy-events.ts (Economy) ----
   evt_exp_eco_black_market: {
-    crack_down_harshly: { [StyleAxis.Authority]: +2 },
-    infiltrate_and_tax: { [StyleAxis.Economy]: +2 },
+    crack_down_harshly: { [StyleAxis.Authority]: +3, [StyleAxis.Military]: +1 },
+    infiltrate_and_tax: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +2 },
     tolerate_for_now: { [StyleAxis.Authority]: -2, [StyleAxis.Economy]: -1 },
   },
-  evt_exp_eco_counterfeit_coins: {
+evt_exp_eco_counterfeit_coins: {
     execute_counterfeiters: { [StyleAxis.Authority]: +3 },
     recall_all_coinage: { [StyleAxis.Economy]: +1 },
     issue_royal_stamps: { [StyleAxis.Economy]: +1, [StyleAxis.Authority]: +1 },
@@ -894,10 +890,10 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   },
   evt_exp_esp_military_secrets_stolen: {
     change_all_plans: { [StyleAxis.Authority]: +1 },
-    hunt_the_thief: { [StyleAxis.Authority]: +2, [StyleAxis.Economy]: +1 },
-    feed_false_plans: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1, [StyleAxis.Military]: +1 },
+    hunt_the_thief: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
+    feed_false_plans: { [StyleAxis.Authority]: +1, [StyleAxis.Faith]: -1 },
   },
-  evt_exp_esp_poisoning_attempt: {
+evt_exp_esp_poisoning_attempt: {
     purge_kitchen_staff: { [StyleAxis.Authority]: +1 },
     hire_royal_taster: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1 },
     trace_poison_source: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1, [StyleAxis.Military]: +1 },
@@ -953,10 +949,10 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   },
   evt_exp_kgd_governance_reform: {
     accept_reforms: { [StyleAxis.Authority]: -1 },
-    partial_concessions: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1 },
-    reject_reforms: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1, [StyleAxis.Military]: +1 },
+    partial_concessions: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1 },
+    reject_reforms: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
   },
-  evt_exp_kgd_power_consolidation: {
+evt_exp_kgd_power_consolidation: {
     centralize_authority: { [StyleAxis.Authority]: +1 },
     delegate_to_governors: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1 },
     maintain_balance: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1, [StyleAxis.Military]: +1 },
@@ -1089,11 +1085,10 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   },
   evt_exp_po_tax_resistance: {
     send_tax_collectors_with_guards: { [StyleAxis.Economy]: +2 },
-    temporarily_reduce_taxes: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: +1 },
-    address_grievances_at_court: { [StyleAxis.Authority]: +1 },
+    temporarily_reduce_taxes: { [StyleAxis.Economy]: -2, [StyleAxis.Authority]: -1 },
+    address_grievances_at_court: { [StyleAxis.Authority]: -1, [StyleAxis.Faith]: +1 },
   },
-
-  // ---- Crisis: expansion/religion-events.ts (Religion) ----
+// ---- Crisis: expansion/religion-events.ts (Religion) ----
   evt_exp_rel_clerical_corruption: {
     royal_inquisition: { [StyleAxis.Authority]: +2, [StyleAxis.Faith]: +1 },
     internal_reform: { [StyleAxis.Authority]: -1 },
@@ -1204,21 +1199,21 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     offer_trade_concession: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1 },
   },
   evt_ambassador_trade_embargo: {
-    seek_alternative_partners: { [StyleAxis.Military]: +1 },
-    retaliate_economically: { [StyleAxis.Military]: +1, [StyleAxis.Authority]: +1 },
+    seek_alternative_partners: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: +1 },
+    retaliate_economically: { [StyleAxis.Economy]: +1, [StyleAxis.Military]: +2 },
     accept_embargo: { [StyleAxis.Authority]: -1 },
   },
-  evt_audit_corruption_found: {
+evt_audit_corruption_found: {
     prosecute_officials: { [StyleAxis.Economy]: +1 },
     demand_restitution: { [StyleAxis.Authority]: +2 },
     cover_up_findings: { [StyleAxis.Economy]: +1, [StyleAxis.Authority]: +1 },
   },
   evt_audit_embezzlement: {
     launch_crackdown: { [StyleAxis.Authority]: +2 },
-    reform_treasury_oversight: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1 },
+    reform_treasury_oversight: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1, [StyleAxis.Faith]: +1 },
     ignore_and_absorb: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1, [StyleAxis.Military]: +1 },
   },
-  evt_border_campaign_defeat: {
+evt_border_campaign_defeat: {
     rally_defense: { [StyleAxis.Military]: +1 },
     sue_for_peace: { [StyleAxis.Military]: -1, [StyleAxis.Authority]: +1 },
     scorched_earth: { [StyleAxis.Military]: +1, [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1 },
@@ -1265,10 +1260,10 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   },
   evt_merchant_boycott: {
     break_boycott_by_force: { [StyleAxis.Economy]: +1 },
-    negotiate_end: { [StyleAxis.Authority]: -1 },
-    wait_out_boycott: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1 },
+    negotiate_end: { [StyleAxis.Economy]: +1, [StyleAxis.Authority]: -1 },
+    wait_out_boycott: { [StyleAxis.Economy]: -1, [StyleAxis.Military]: +1 },
   },
-  evt_merchant_council_overreach: {
+evt_merchant_council_overreach: {
     dissolve_council: { [StyleAxis.Authority]: +2 },
     limit_council_powers: { [StyleAxis.Economy]: +1 },
     side_with_merchants: { [StyleAxis.Economy]: +1, [StyleAxis.Authority]: +1 },
@@ -1315,10 +1310,10 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   },
   evt_schism_inquisition: {
     authorize_inquisition: { [StyleAxis.Authority]: +2, [StyleAxis.Faith]: +1 },
-    limit_scope: { [StyleAxis.Faith]: +1 },
-    refuse_inquisition: { [StyleAxis.Authority]: +2, [StyleAxis.Faith]: +1, [StyleAxis.Economy]: +1 },
+    limit_scope: { [StyleAxis.Faith]: +1, [StyleAxis.Authority]: +1 },
+    refuse_inquisition: { [StyleAxis.Faith]: -2, [StyleAxis.Economy]: -1 },
   },
-  evt_schism_reform_backlash: {
+evt_schism_reform_backlash: {
     stand_with_reformists: { [StyleAxis.Authority]: -1 },
     appease_clergy: { [StyleAxis.Authority]: -2, [StyleAxis.Faith]: +1 },
     impose_silence: { [StyleAxis.Faith]: +1 },
@@ -1365,20 +1360,20 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
   },
   evt_trade_negotiate_betrayal: {
     military_response: { [StyleAxis.Military]: +2 },
-    demand_compensation: { [StyleAxis.Authority]: +2 },
-    write_off_losses: { [StyleAxis.Economy]: +1 },
+    demand_compensation: { [StyleAxis.Economy]: +1, [StyleAxis.Authority]: +2 },
+    write_off_losses: { [StyleAxis.Economy]: -1, [StyleAxis.Faith]: +1 },
   },
-  evt_uprising_guerrilla: {
+evt_uprising_guerrilla: {
     hunt_insurgents: { [StyleAxis.Authority]: +2 },
     offer_amnesty: { [StyleAxis.Authority]: -2, [StyleAxis.Economy]: -1 },
     fortify_key_positions: { [StyleAxis.Military]: +2 },
   },
   evt_uprising_noble_backlash: {
-    appease_nobility: { [StyleAxis.Authority]: -2 },
+    appease_nobility: { [StyleAxis.Authority]: -1, [StyleAxis.Faith]: +1 },
     stand_with_commoners: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: +1 },
-    find_compromise: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1, [StyleAxis.Military]: +1 },
+    find_compromise: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1, [StyleAxis.Faith]: +1 },
   },
-  evt_uprising_reform_resistance: {
+evt_uprising_reform_resistance: {
     override_nobility: { [StyleAxis.Authority]: +2 },
     compromise_on_reforms: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1 },
     abandon_reforms: { [StyleAxis.Authority]: +2, [StyleAxis.Economy]: +1, [StyleAxis.Military]: +1 },
@@ -2744,6 +2739,66 @@ export const EVENT_CHOICE_STYLE_TAGS: Record<string, Record<string, AxisDeltas>>
     address_grievances: { [StyleAxis.Authority]: +1 },
     ignore_grumbling: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +1 },
     increase_guard_presence: { [StyleAxis.Authority]: +1, [StyleAxis.Military]: -1 },
+  },
+  evt_cond_plague_mild: {
+    quarantine_district: { [StyleAxis.Authority]: +2 },
+    hire_healers: { [StyleAxis.Economy]: -1, [StyleAxis.Faith]: -1 },
+    ignore_sickness: { [StyleAxis.Authority]: -2, [StyleAxis.Military]: +1 },
+  },
+  evt_exp_env_earthquake: {
+    launch_rescue_operations: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -2 },
+    prioritize_infrastructure: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: +1 },
+    call_for_prayer_and_calm: { [StyleAxis.Faith]: +2, [StyleAxis.Authority]: +1 },
+  },
+  evt_exp_env_great_storm: {
+    emergency_fortification: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
+    distribute_emergency_supplies: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -2 },
+    shelter_in_place: { [StyleAxis.Authority]: -2, [StyleAxis.Faith]: +1 },
+  },
+  evt_exp_env_mine_contamination: {
+    shut_down_mine: { [StyleAxis.Economy]: -2, [StyleAxis.Authority]: +1 },
+    invest_in_drainage: { [StyleAxis.Economy]: +1, [StyleAxis.Authority]: -1 },
+    continue_operations: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: +2 },
+  },
+  evt_fu_factions_see_through: {
+    publicly_reconcile: { [StyleAxis.Authority]: -2, [StyleAxis.Faith]: +1 },
+    disavow_both_sides: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
+  },
+  evt_fu_noble_contribution_resistance: {
+    seize_the_levy: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
+    waive_the_demand: { [StyleAxis.Authority]: -2, [StyleAxis.Economy]: -1 },
+  },
+  evt_fu_peacekeeper_overreach: {
+    court_martial_the_officers: { [StyleAxis.Authority]: -1, [StyleAxis.Military]: -2 },
+    defend_the_guards: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +1 },
+  },
+  evt_fu_ringleader_martyrs: {
+    grant_posthumous_pardons: { [StyleAxis.Authority]: -2, [StyleAxis.Faith]: +1 },
+    reinforce_the_narrative: { [StyleAxis.Authority]: +2, [StyleAxis.Faith]: -1 },
+  },
+  evt_fu_state_religion_persecution: {
+    halt_the_purges: { [StyleAxis.Faith]: -2, [StyleAxis.Authority]: -1 },
+    deepen_the_inquiry: { [StyleAxis.Faith]: +2, [StyleAxis.Authority]: +2 },
+  },
+  evt_exp_reg_border_tensions: {
+    fortify_border: { [StyleAxis.Military]: +2, [StyleAxis.Authority]: +1 },
+    diplomatic_reassurance: { [StyleAxis.Military]: -1, [StyleAxis.Authority]: -1 },
+    increase_patrols: { [StyleAxis.Military]: +1, [StyleAxis.Authority]: +2 },
+  },
+  evt_exp_reg_governor_corruption: {
+    remove_governor: { [StyleAxis.Authority]: +2, [StyleAxis.Economy]: +1 },
+    demand_restitution: { [StyleAxis.Authority]: +1, [StyleAxis.Economy]: +2 },
+    issue_warning: { [StyleAxis.Authority]: -1, [StyleAxis.Economy]: -1 },
+  },
+  evt_exp_reg_separatist_threat: {
+    negotiate_concessions: { [StyleAxis.Authority]: -2, [StyleAxis.Economy]: -1 },
+    military_presence: { [StyleAxis.Authority]: +2, [StyleAxis.Military]: +2 },
+    grant_autonomy: { [StyleAxis.Authority]: -3, [StyleAxis.Faith]: +1 },
+  },
+  evt_exp_reg_trade_disruption: {
+    military_escort: { [StyleAxis.Military]: +2, [StyleAxis.Economy]: +1 },
+    negotiate_safe_passage: { [StyleAxis.Military]: -1, [StyleAxis.Economy]: +1 },
+    reroute_trade: { [StyleAxis.Economy]: +2, [StyleAxis.Authority]: +1 },
   },
 };
 

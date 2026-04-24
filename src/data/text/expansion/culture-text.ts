@@ -25,7 +25,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 3. Dialect Tensions (Serious, established) ---
   evt_exp_cul_dialect_tensions: {
     title: 'Dialect Tensions Among the Provinces',
-    body: 'The kingdom\'s outlying provinces have begun resisting the use of the capital\'s tongue in official matters. Regional dialects carry deep ancestral significance, yet the lack of a common language hampers governance and trade across borders. The {class_plural} are watching every move of the court.',
+    body: 'The kingdom\'s outlying provinces have begun resisting the use of the capital\'s tongue in official matters. Regional dialects carry deep ancestral significance, yet the lack of a common language hampers governance and trade across borders. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       enforce_common_tongue: 'Enforce the Common Tongue',
       protect_regional_dialects: 'Protect Regional Dialects',
@@ -46,7 +46,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 5. Cultural Preservation Crisis (Critical, established) ---
   evt_exp_cul_preservation_crisis: {
     title: 'Cultural Preservation in Peril',
-    body: 'A growing tide of foreign customs threatens to erode the kingdom\'s ancestral traditions beyond recovery. The elders plead for intervention, while merchants argue that cultural exchange brings prosperity. The crown must decide what our identity shall become.',
+    body: 'A growing tide of foreign customs threatens to erode the kingdom\'s ancestral traditions beyond recovery. The elders plead for intervention, while merchants argue that cultural exchange brings prosperity. The crown must decide what our identity shall become. Word comes most urgently from {region}.',
     choices: {
       establish_preservation_council: 'Establish a Preservation Council',
       embrace_cultural_change: 'Embrace Cultural Change',
@@ -121,7 +121,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 12. Assimilation Pressure (Critical, established) ---
   evt_exp_cul_assimilation_pressure: {
     title: 'The Southern Empire Demands Cultural Conformity',
-    body: 'Emissaries from the Southern Empire have made it plain that continued antagonism will persist unless the kingdom adopts their customs and courtly protocols. Resistance will be costly but preserves sovereignty, while accommodation risks our very identity.',
+    body: 'Emissaries from the Southern Empire have made it plain that continued antagonism will persist unless the kingdom adopts their customs and courtly protocols. Resistance will be costly but preserves sovereignty, while accommodation risks our very identity. Dispatches from {region} corroborate what first reached the court through {neighbor}.',
     choices: {
       resist_cultural_pressure: 'Resist at All Costs',
       negotiate_cultural_treaty: 'Negotiate a Cultural Treaty',
@@ -132,7 +132,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 13. Architectural Ambition (Serious, developing) ---
   evt_exp_cul_architectural_ambition: {
     title: 'Grand Architectural Ambitions',
-    body: 'With the treasury well-stocked, the master builders present three proposals: a great cathedral to glorify the faith, a public amphitheater to elevate the arts, or improved housing for the common folk. Each would reshape the capital\'s skyline and the kingdom\'s character.',
+    body: 'With the treasury well-stocked, the master builders present three proposals: a great cathedral to glorify the faith, a public amphitheater to elevate the arts, or improved housing for the common folk. Each would reshape the capital\'s skyline and the kingdom\'s character. Word comes most urgently from {region}.',
     choices: {
       build_great_cathedral: 'Build a Great Cathedral',
       construct_public_amphitheater: 'Construct a Public Amphitheater',
@@ -165,7 +165,7 @@ export const EXPANSION_CULTURE_TEXT: Record<string, EventTextEntry> = {
   // --- 16. Cultural Identity Crisis (Critical, established) ---
   evt_exp_cul_identity_crisis: {
     title: 'The Kingdom\'s Identity in Question',
-    body: 'Years of external pressure and internal discord have fractured our sense of shared identity. The northern border provinces lean toward foreign customs, while the heartland clings to ancestral ways. Without decisive action, the kingdom may splinter not by sword, but by the slow erosion of common purpose.',
+    body: 'Years of external pressure and internal discord have fractured our sense of shared identity. The northern border provinces lean toward foreign customs, while the heartland clings to ancestral ways. Without decisive action, the kingdom may splinter not by sword, but by the slow erosion of common purpose. Word comes most urgently from {region}.',
     choices: {
       reassert_national_identity: 'Reassert National Identity',
       forge_new_cultural_synthesis: 'Forge a New Cultural Synthesis',

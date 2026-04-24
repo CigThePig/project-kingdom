@@ -97,7 +97,7 @@ export const POPULATION_EVENT_POOL: EventDefinition[] = [
     id: 'evt_pop_overcrowding_crisis',
     severity: EventSeverity.Serious,
     category: EventCategory.PublicOrder,
-    triggerConditions: [{ type: 'always' }],
+    triggerConditions: [{ type: 'always' }, { type: 'stability_below', threshold: 55 }],
     weight: 1.0,
     chainId: null,
     chainStep: null,

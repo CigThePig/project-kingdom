@@ -5,7 +5,7 @@ import type { EventTextEntry } from '../../events';
 export const EXPANSION_WAVE_2_CRISES_SOCIAL_TEXT: Record<string, EventTextEntry> = {
   evt_exp_w2_food_riot_escalation: {
     title: 'Bread Riots Turn Violent',
-    body: 'The bread queues have become bread riots. In two market towns the granaries have been stormed; in a third the royal factor was beaten and left in the road. The city guard report that one more failed harvest will set the whole country alight. The {class_plural} are watching every move of the court.',
+    body: 'The bread queues have become bread riots. In two market towns the granaries have been stormed; in a third the royal factor was beaten and left in the road. The city guard report that one more failed harvest will set the whole country alight. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       open_the_royal_granaries: 'Open the Royal Granaries',
       post_guards_at_the_markets: 'Post Guards at the Markets',
@@ -14,7 +14,7 @@ export const EXPANSION_WAVE_2_CRISES_SOCIAL_TEXT: Record<string, EventTextEntry>
   },
   evt_exp_w2_bonded_labor_revolt: {
     title: 'The Bonded Refuse the Harvest',
-    body: 'Bonded labourers on three of the great estates have downed their tools and begun to march toward the capital with a list of grievances. The lords demand the rebellion be broken; the reformers demand a hearing; both watch you closely. The {class_plural} are watching every move of the court.',
+    body: 'Bonded labourers on three of the great estates have downed their tools and begun to march toward the capital with a list of grievances. The lords demand the rebellion be broken; the reformers demand a hearing; both watch you closely. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       crush_with_the_levy: 'Crush with the Levy',
       grant_limited_emancipation: 'Grant a Limited Emancipation',

@@ -203,7 +203,7 @@ export const SOCIAL_CONDITION_EVENT_POOL: EventDefinition[] = [
     id: 'evt_social_unrest_moderate',
     severity: EventSeverity.Serious,
     category: EventCategory.PublicOrder,
-    triggerConditions: [{ type: 'always' }],
+    triggerConditions: [{ type: 'always' }, { type: 'stability_below', threshold: 60 }],
     weight: 1.0,
     chainId: null,
     chainStep: null,

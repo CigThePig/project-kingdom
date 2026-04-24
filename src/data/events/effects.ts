@@ -1247,4 +1247,108 @@ export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, Tem
     // Patronage yields cultural dividends but sustained expense
     patron_arts_sciences: { durationTurns: 5, effectPerTurn: { culturalCohesionDelta: +1, treasuryDelta: -5 } },
   },
+  evt_uprising_noble_backlash: {
+    find_compromise: { durationTurns: 3, effectPerTurn: { nobilitySatDelta: +1, commonerSatDelta: +1 } },
+  },
+  evt_trade_negotiate_betrayal: {
+    demand_compensation: { durationTurns: 3, effectPerTurn: { treasuryDelta: +2 } },
+  },
+  evt_schism_inquisition: {
+    limit_scope: { durationTurns: 3, effectPerTurn: { heterodoxyDelta: -1 } },
+  },
+  evt_merchant_underground_economy: {
+    legitimize_shadow_trade: { durationTurns: 3, effectPerTurn: { treasuryDelta: +4, heterodoxyDelta: +1 } },
+  },
+  evt_merchant_permanent_concessions: {
+    offer_limited_concession: { durationTurns: 4, effectPerTurn: { treasuryDelta: -3, merchantSatDelta: +1 } },
+  },
+  evt_merchant_boycott: {
+    wait_out_boycott: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1 } },
+  },
+  evt_library_fire: {
+    launch_restoration_effort: { durationTurns: 4, effectPerTurn: { treasuryDelta: -5, culturalCohesionDelta: +1 } },
+  },
+  evt_clergy_prophecy_claim: {
+    investigate_prophecy: { durationTurns: 3, effectPerTurn: { clergySatDelta: -1 } },
+  },
+  evt_audit_embezzlement: {
+    reform_treasury_oversight: { durationTurns: 4, effectPerTurn: { treasuryDelta: -4 } },
+  },
+  evt_ambassador_trade_embargo: {
+    retaliate_economically: { durationTurns: 3, effectPerTurn: { treasuryDelta: -6, merchantSatDelta: -1 } },
+  },
+  evt_exp_reg_trade_disruption: {
+    military_escort: { durationTurns: 3, effectPerTurn: { treasuryDelta: -4 } },
+    reroute_trade: { durationTurns: 4, effectPerTurn: { merchantSatDelta: -1 } },
+  },
+  evt_exp_reg_separatist_threat: {
+    negotiate_concessions: { durationTurns: 4, effectPerTurn: { treasuryDelta: -4 } },
+    military_presence: { durationTurns: 3, effectPerTurn: { treasuryDelta: -6, militaryMoraleDelta: +1 } },
+  },
+  evt_exp_reg_governor_corruption: {
+    demand_restitution: { durationTurns: 3, effectPerTurn: { treasuryDelta: +4 } },
+    issue_warning: { durationTurns: 2, effectPerTurn: { stabilityDelta: -1 } },
+  },
+  evt_exp_reg_border_tensions: {
+    fortify_border: { durationTurns: 4, effectPerTurn: { treasuryDelta: -4 } },
+    increase_patrols: { durationTurns: 3, effectPerTurn: { militaryMoraleDelta: +1 } },
+  },
+  evt_exp_po_tax_resistance: {
+    temporarily_reduce_taxes: { durationTurns: 3, effectPerTurn: { treasuryDelta: -8 } },
+  },
+  evt_exp_kgd_governance_reform: {
+    partial_concessions: { durationTurns: 4, effectPerTurn: { stabilityDelta: +1, treasuryDelta: -2 } },
+  },
+  evt_fu_state_religion_persecution: {
+    deepen_the_inquiry: { durationTurns: 4, effectPerTurn: { heterodoxyDelta: -1, culturalCohesionDelta: -1 } },
+  },
+  evt_fu_ringleader_martyrs: {
+    reinforce_the_narrative: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1 } },
+  },
+  evt_fu_peacekeeper_overreach: {
+    court_martial_the_officers: { durationTurns: 3, effectPerTurn: { militaryMoraleDelta: -1 } },
+  },
+  evt_fu_noble_contribution_resistance: {
+    seize_the_levy: { durationTurns: 3, effectPerTurn: { nobilitySatDelta: -1, treasuryDelta: +5 } },
+  },
+  evt_fu_factions_see_through: {
+    publicly_reconcile: { durationTurns: 3, effectPerTurn: { stabilityDelta: +1 } },
+  },
+  evt_exp_esp_military_secrets_stolen: {
+    feed_false_plans: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+  },
+  evt_exp_env_mine_contamination: {
+    invest_in_drainage: { durationTurns: 4, effectPerTurn: { treasuryDelta: -6 } },
+    continue_operations: { durationTurns: 3, effectPerTurn: { commonerSatDelta: -1, treasuryDelta: +4 } },
+  },
+  evt_exp_env_great_storm: {
+    emergency_fortification: { durationTurns: 3, effectPerTurn: { treasuryDelta: -5 } },
+    distribute_emergency_supplies: { durationTurns: 2, effectPerTurn: { foodDelta: -4 } },
+  },
+  evt_exp_env_earthquake: {
+    launch_rescue_operations: { durationTurns: 3, effectPerTurn: { treasuryDelta: -6 } },
+    prioritize_infrastructure: { durationTurns: 4, effectPerTurn: { regionDevelopmentDelta: +1 } },
+  },
+  evt_exp_eco_black_market: {
+    infiltrate_and_tax: { durationTurns: 3, effectPerTurn: { treasuryDelta: +6, espionageNetworkDelta: -1 } },
+  },
+  evt_exp_dip_trade_embargo_threat: {
+    seek_alternative_markets: { durationTurns: 4, effectPerTurn: { treasuryDelta: +4, merchantSatDelta: +1 } },
+  },
+  evt_exp_dip_spy_scandal: {
+    offer_intelligence_sharing: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: -1 } },
+  },
+  evt_exp_cul_identity_crisis: {
+    forge_new_cultural_synthesis: { durationTurns: 4, effectPerTurn: { culturalCohesionDelta: +1, treasuryDelta: -3 } },
+  },
+  evt_exp_cc_tax_burden_dispute: {
+    commission_tax_review: { durationTurns: 3, effectPerTurn: { treasuryDelta: -4 } },
+  },
+  evt_exp_chain_guild_rev_council: {
+    grant_council_representation: { durationTurns: 4, effectPerTurn: { nobilitySatDelta: -1, merchantSatDelta: +1 } },
+  },
+  evt_cond_plague_mild: {
+    quarantine_district: { durationTurns: 3, effectPerTurn: { merchantSatDelta: -1, treasuryDelta: -5 } },
+    hire_healers: { durationTurns: 2, effectPerTurn: { treasuryDelta: -8 } },
+  },
 };

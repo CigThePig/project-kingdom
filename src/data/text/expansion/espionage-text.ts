@@ -92,7 +92,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_assassination_plot: {
     title: 'Assassination Plot Uncovered',
-    body: "{spymaster_or_fallback} has uncovered a plot against the royal person — a conspiracy involving disaffected nobles and possibly agents of {ruler_full}. The plotters have already procured poison and suborned members of the household guard. Swift action is required, though the scope of the conspiracy remains unclear.",
+    body: "{spymaster_or_fallback} has uncovered a plot against the royal person — a conspiracy involving disaffected nobles and possibly agents of {ruler_full}. The plotters have already procured poison and suborned members of the household guard. Swift action is required, though the scope of the conspiracy remains unclear. Word reaches the court via {neighbor}.",
     choices: {
       preemptive_arrests: 'Order Preemptive Arrests',
       double_royal_guard: 'Double the Royal Guard',
@@ -101,7 +101,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_counter_espionage_raid: {
     title: 'Counter-Espionage Operation',
-    body: "{spymaster_or_fallback} has pinpointed a safe house operated by {ruler_full} within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation's scale and diplomatic fallout require careful consideration. The {class_plural} are watching every move of the court.",
+    body: "{spymaster_or_fallback} has pinpointed a safe house operated by {ruler_full} within your border regions, serving as a hub for enemy agents and stolen documents. Your military commanders propose a raid, but the operation's scale and diplomatic fallout require careful consideration. The {class_plural} are watching every move of the court. Dispatches from {region} corroborate what first reached the court through {neighbor}.",
     choices: {
       full_scale_raid: 'Launch Full Raid',
       surgical_strike: 'Conduct Surgical Strike',
@@ -119,7 +119,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_intelligence_failure: {
     title: 'A Catastrophic Intelligence Failure',
-    body: 'A major operation has ended in disaster — your agents abroad have been exposed and captured, safe houses compromised, and a year\'s worth of carefully cultivated intelligence networks dismantled. The kingdom\'s eyes and ears beyond its borders have gone dark at the worst possible time.',
+    body: 'A major operation has ended in disaster — your agents abroad have been exposed and captured, safe houses compromised, and a year\'s worth of carefully cultivated intelligence networks dismantled. The kingdom\'s eyes and ears beyond its borders have gone dark at the worst possible time. Word reaches the court via {neighbor}.',
     choices: {
       rebuild_network: 'Rebuild from Scratch',
       scapegoat_spymaster: 'Replace the Spymaster',
@@ -141,7 +141,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_enemy_infiltration: {
     title: 'Deep Enemy Infiltration',
-    body: "The unthinkable has been confirmed: operatives loyal to {ruler_full} have penetrated the highest levels of the kingdom's administration. Critical military plans, treasury figures, and diplomatic correspondence have been flowing to {capital} for months. The rot runs deep, and excising it will be painful.",
+    body: "The unthinkable has been confirmed: operatives loyal to {ruler_full} have penetrated the highest levels of the kingdom's administration. Critical military plans, treasury figures, and diplomatic correspondence have been flowing to {capital} for months. The rot runs deep, and excising it will be painful. Dispatches from {region} corroborate what first reached the court through {neighbor}.",
     choices: {
       martial_law_purge: 'Declare Martial Law and Purge',
       targeted_counter_ops: 'Targeted Counter-Operations',
@@ -150,7 +150,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_underground_resistance: {
     title: 'Underground Resistance Movement',
-    body: '{spymaster_or_fallback} warns of an organized resistance movement that has taken root among the commonfolk, operating through hidden cells and secret meeting places. Their grievances are real, but their methods — sabotage, intimidation, and covert recruitment — pose a grave threat to order, and the movement is growing rapidly.',
+    body: '{spymaster_or_fallback} warns of an organized resistance movement that has taken root among the commonfolk, operating through hidden cells and secret meeting places. Their grievances are real, but their methods — sabotage, intimidation, and covert recruitment — pose a grave threat to order, and the movement is growing rapidly. Word comes most urgently from {region}.',
     choices: {
       infiltrate_resistance: 'Infiltrate the Movement',
       address_grievances: 'Address Their Grievances',
@@ -159,7 +159,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_esp_military_secrets_stolen: {
     title: 'Military Secrets Stolen',
-    body: "A breach of devastating proportions has occurred: detailed plans for the kingdom's frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {capital}. Winter's cover aided the thieves, and by now the intelligence may already be in {ruler}'s hands. The {class_plural} are watching every move of the court.",
+    body: "A breach of devastating proportions has occurred: detailed plans for the kingdom's frontier fortifications, garrison strengths, and defensive strategies have been stolen and smuggled to {capital}. Winter's cover aided the thieves, and by now the intelligence may already be in {ruler}'s hands. The {class_plural} are watching every move of the court. Word reaches the court via {neighbor}.",
     choices: {
       change_all_plans: 'Overhaul All Defenses',
       hunt_the_thief: 'Hunt Down the Thief',

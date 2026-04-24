@@ -1331,10 +1331,7 @@ export const EVENT_POOL: EventDefinition[] = [
     id: 'evt_winter_blizzard',
     severity: EventSeverity.Serious,
     category: EventCategory.Environment,
-    triggerConditions: [
-      { type: 'season_is', season: Season.Winter },
-      { type: 'random_chance', probability: 0.2 },
-    ],
+    triggerConditions: [{ type: 'always' }, { type: 'food_below', threshold: 60 }],
     weight: 1.2,
     chainId: null,
     chainStep: null,
@@ -3013,9 +3010,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     id: 'evt_underground_heretical_movement',
     severity: EventSeverity.Serious,
     category: EventCategory.Religion,
-    triggerConditions: [
-      { type: 'always' },
-    ],
+    triggerConditions: [{ type: 'always' }, { type: 'heterodoxy_above', threshold: 30 }],
     weight: 1.0,
     chainId: null,
     chainStep: null,
@@ -3321,7 +3316,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     id: 'evt_schism_inquisition',
     severity: EventSeverity.Serious,
     category: EventCategory.Religion,
-    triggerConditions: [{ type: 'always' }],
+    triggerConditions: [{ type: 'always' }, { type: 'heterodoxy_above', threshold: 40 }],
     weight: 1.0,
     chainId: null, chainStep: null, chainNextDefinitionId: null,
     choices: [
@@ -3374,7 +3369,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     id: 'evt_schism_reform_backlash',
     severity: EventSeverity.Serious,
     category: EventCategory.Religion,
-    triggerConditions: [{ type: 'always' }],
+    triggerConditions: [{ type: 'always' }, { type: 'stability_below', threshold: 60 }],
     weight: 1.0,
     chainId: null, chainStep: null, chainNextDefinitionId: null,
     choices: [
@@ -3847,7 +3842,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     id: 'evt_mutiny_pay_bankrupt',
     severity: EventSeverity.Serious,
     category: EventCategory.Military,
-    triggerConditions: [{ type: 'always' }],
+    triggerConditions: [{ type: 'always' }, { type: 'treasury_below', threshold: 100 }],
     weight: 1.0,
     chainId: null, chainStep: null, chainNextDefinitionId: null,
     choices: [
@@ -4053,7 +4048,7 @@ export const FOLLOW_UP_POOL: EventDefinition[] = [
     id: 'evt_uprising_noble_backlash',
     severity: EventSeverity.Serious,
     category: EventCategory.ClassConflict,
-    triggerConditions: [{ type: 'always' }],
+    triggerConditions: [{ type: 'always' }, { type: 'stability_below', threshold: 50 }],
     weight: 1.0,
     chainId: null, chainStep: null, chainNextDefinitionId: null,
     choices: [
