@@ -378,8 +378,17 @@ function tickHostage(state: GameState, bond: HostageBond): GameState {
 
 /** Vassalage: overlord receives tribute; vassal's expansionist pressure dampens. */
 function tickVassalage(state: GameState, bond: VassalageBond): GameState {
+  // Tribute moves the player's treasury only when the player is a party.
+  // Inter-rival vassalage (e.g. a SubjugateAVassal overture granted between
+  // two neighbours) leaves player treasury alone — the bond is still queryable
+  // as a structural marker and dampens the vassal's expansionist pressure.
   const playerIsOverlord = bond.overlord === 'player';
-  const tributeDelta = playerIsOverlord ? bond.tributePerTurn : -bond.tributePerTurn;
+  const playerIsVassal = bond.participants.includes('player');
+  const tributeDelta = playerIsOverlord
+    ? bond.tributePerTurn
+    : playerIsVassal
+      ? -bond.tributePerTurn
+      : 0;
 
   const neighbors = state.diplomacy.neighbors.map((n) => {
     if (!bond.participants.includes(n.id) || n.id === bond.overlord) return n;

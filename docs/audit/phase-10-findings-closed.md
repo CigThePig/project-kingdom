@@ -354,3 +354,61 @@ relationship + memory deltas. Wiring overture grants into bond
 construction is a Phase 10.5 follow-up or an overflow into
 Phase 17 (consequence-tag reader expansion) — not in this slab's
 scope.
+
+## Phase 10.5 — closed
+
+The deferred item above is closed. Note: only `SubjugateAVassal`
+exists as a `RivalAgenda` enum value; the original "Vassalize" mention
+was imprecise — that agenda does not exist. The single deferred row
+mapped to a single agenda.
+
+### Change
+
+`applyOvertureDecision` in
+`src/engine/resolution/apply-action-effects.ts` now branches on
+`agenda === RivalAgenda.SubjugateAVassal` inside the existing agenda
+side-effect switch. On the grant path it constructs a `vassalage` bond
+between the source rival (overlord) and the rival's resolved
+`agenda.targetEntityId` (vassal), with `tributePerTurn: 25` matching
+the negotiation pipeline default at
+`src/bridge/directEffectApplier.ts:254-260`. The relationship-score
+nudge and `favor` memory write layer on top — they are not replaced.
+
+### Necessary correctness fix
+
+`tickVassalage` in `src/engine/systems/bonds.ts` previously assumed
+the player was always a participant: any non-player overlord caused
+the player's treasury to lose `tributePerTurn` each tick. With the
+new inter-rival bond path, that path was suddenly reachable. The tick
+now zeroes the player tribute delta when neither overlord nor any
+participant is `'player'`, leaving the bond's vassal-side
+expansionist-pressure dampening intact.
+
+### Tests
+
+Three new tests in `src/__tests__/bonds.test.ts`:
+- Grant materialises a `vassalage` bond with the source rival as
+  overlord and `agenda.targetEntityId` as participant.
+- Deny path leaves no bond on state.
+- Inter-rival vassalage tick does not move the player's treasury
+  (regression guard for the `tickVassalage` fix above).
+
+### Acceptance
+
+- `npm test`: 914 pass (was 911; +3 new tests).
+- `npm run lint`: clean.
+- `npm run build`: dist emitted.
+- `npm run audit -- --fail-on=major`: full corpus delta unchanged
+  (this is a structural fix, not a text fix; no scanner-visible
+  finding count moves).
+- Save-compat: no `GameState` shape change, no version bump required.
+  Bonds are appended to the existing `state.diplomacy.bonds` array.
+
+### Files touched
+
+- `src/engine/resolution/apply-action-effects.ts` — added
+  `createVassalageBond` import; new `SubjugateAVassal` case in
+  `applyOvertureDecision`'s agenda switch.
+- `src/engine/systems/bonds.ts` — `tickVassalage` no-ops player-side
+  tribute when the player is uninvolved.
+- `src/__tests__/bonds.test.ts` — three new tests.

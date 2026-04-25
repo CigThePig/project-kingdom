@@ -1,7 +1,14 @@
 // Phase 13 — Tests for the diplomatic bond system.
 
 import { describe, expect, it } from 'vitest';
-import type { Bond, GameState, MarriageBond, TradeLeagueBond } from '../engine/types';
+import type {
+  Bond,
+  GameState,
+  MarriageBond,
+  TradeLeagueBond,
+  VassalageBond,
+} from '../engine/types';
+import { ActionType, RivalAgenda } from '../engine/types';
 import {
   applyBondTickEffects,
   breakBond,
@@ -18,6 +25,7 @@ import {
   hasBondOfKind,
   tickBondExpiry,
 } from '../engine/systems/bonds';
+import { applyActionEffects } from '../engine/resolution/apply-action-effects';
 import { createDefaultScenario } from '../data/scenarios/default';
 
 function stateWithBonds(bonds: Bond[]): GameState {
@@ -252,5 +260,87 @@ describe('evaluateCounterProposalAcceptance', () => {
     });
     expect(extreme).toBeGreaterThanOrEqual(0.02);
     expect(gift).toBeLessThanOrEqual(0.98);
+  });
+});
+
+// Phase 10.5 — Vassalage bond materialises when a SubjugateAVassal overture is
+// granted, mirroring the negotiation pipeline's payment_tribute → vassalage
+// construction so the consequence is queryable rather than a one-turn nudge.
+describe('overture grant — SubjugateAVassal vassalage materialization', () => {
+  function seedSubjugateOverture(grant: boolean): {
+    state: GameState;
+    sourceId: string;
+    targetId: string;
+  } {
+    const base = createDefaultScenario();
+    const sourceId = base.diplomacy.neighbors[0]!.id;
+    const targetId = base.diplomacy.neighbors[1]!.id;
+    const turn = base.turn.turnNumber;
+
+    const state: GameState = {
+      ...base,
+      diplomacy: {
+        ...base.diplomacy,
+        neighbors: base.diplomacy.neighbors.map((n) =>
+          n.id === sourceId
+            ? {
+                ...n,
+                agenda: {
+                  current: RivalAgenda.SubjugateAVassal,
+                  targetEntityId: targetId,
+                  progressValue: 60,
+                  turnsActive: 4,
+                },
+              }
+            : n,
+        ),
+      },
+    };
+
+    const eventId = `overture_${sourceId}_SubjugateAVassal_t${turn}`;
+    const choiceId = `${eventId}${grant ? '_grant' : '_deny'}`;
+
+    const next = applyActionEffects(state, [
+      {
+        id: 'phase-10.5-test',
+        type: ActionType.CrisisResponse,
+        actionDefinitionId: eventId,
+        slotCost: 1,
+        isFree: false,
+        targetRegionId: null,
+        targetNeighborId: null,
+        parameters: { eventId, choiceId },
+      },
+    ]);
+
+    return { state: next, sourceId, targetId };
+  }
+
+  it('grant materialises a vassalage bond with the source rival as overlord', () => {
+    const { state, sourceId, targetId } = seedSubjugateOverture(true);
+    const bonds = (state.diplomacy.bonds ?? []).filter(
+      (b) => b.kind === 'vassalage',
+    ) as VassalageBond[];
+    expect(bonds).toHaveLength(1);
+    expect(bonds[0].overlord).toBe(sourceId);
+    expect(bonds[0].participants).toEqual([targetId]);
+    expect(bonds[0].tributePerTurn).toBeGreaterThan(0);
+  });
+
+  it('deny path leaves no vassalage bond on state', () => {
+    const { state } = seedSubjugateOverture(false);
+    const bonds = (state.diplomacy.bonds ?? []).filter((b) => b.kind === 'vassalage');
+    expect(bonds).toHaveLength(0);
+  });
+
+  it('inter-rival vassalage tick does not move the player treasury', () => {
+    // Ensures the tickVassalage tribute branch correctly no-ops when neither
+    // overlord nor any participant is the player. Without this guard, granting
+    // a SubjugateAVassal overture would silently drain the player's treasury
+    // by tributePerTurn each tick.
+    const { state } = seedSubjugateOverture(true);
+    const before = state.treasury.balance;
+    const after = applyBondTickEffects(state).treasury.balance;
+    expect(after).toBe(before);
   });
 });

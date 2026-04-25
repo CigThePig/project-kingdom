@@ -61,6 +61,7 @@ import {
   createTradeLeagueBond,
   createCulturalExchangeBond,
   createCoalitionBond,
+  createVassalageBond,
 } from '../systems/bonds';
 import { applyEventChoiceEffects, applyStorylineBranchEffects, applyMechanicalEffectDelta } from '../events/apply-event-effects';
 import { DECREE_EFFECTS as DECREE_PREVIEW_EFFECTS } from '../../data/decrees/effects';
@@ -1037,6 +1038,30 @@ function applyOvertureDecision(
           balance: Math.max(0, next.treasury.balance + (grant ? -15 : +5)),
         },
       };
+      break;
+    }
+    case RivalAgenda.SubjugateAVassal: {
+      // Granting materialises a vassalage bond between the source rival
+      // (overlord) and their resolved target (vassal). Mirrors the
+      // negotiation pipeline's payment_tribute → vassalage construction
+      // (src/bridge/directEffectApplier.ts buildBondForKind), so the
+      // arrangement is queryable by future cards rather than vanishing
+      // after the relationship-score nudge.
+      if (grant) {
+        const source = state.diplomacy.neighbors.find((n) => n.id === neighborId);
+        const targetId = source?.agenda?.targetEntityId;
+        if (targetId && targetId !== neighborId) {
+          next = appendBondToState(
+            next,
+            createVassalageBond({
+              participants: [targetId],
+              turn,
+              overlord: neighborId,
+              tributePerTurn: 25,
+            }),
+          );
+        }
+      }
       break;
     }
     default:
