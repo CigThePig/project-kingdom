@@ -22,6 +22,7 @@ import { getNeighborDisplayName } from './nameResolver';
 import { OVERTURE_TEXT } from '../data/text/overtures';
 import { WAVE_2_OVERTURES } from '../data/overtures/wave-2';
 import { substituteSmartPlaceholders, type SmartTextContext } from './smartText';
+import { generateSpouseName } from '../data/text/name-generation';
 
 const PROGRESS_THRESHOLD = 40;
 
@@ -164,6 +165,25 @@ function buildSpec(
   return candidates[Math.abs(seed) % candidates.length];
 }
 
+/** Phase 10 — resolves the contested region for a RestoreTheOldBorders
+ *  overture. Prefers the agenda's targetEntityId when it points at a region;
+ *  falls back to the rival's most recent territorial_loss memory anchor;
+ *  finally falls back to the kingdom's first region so the body still names
+ *  somewhere concrete instead of a generic "the disputed territory." */
+function pickClaimedRegionId(state: GameState, neighbor: NeighborState): string | undefined {
+  const targetId = neighbor.agenda?.targetEntityId;
+  if (targetId && targetId.startsWith('region_')) {
+    if (state.regions.some((r) => r.id === targetId)) return targetId;
+  }
+  const memoryRegion = neighbor.memory?.find(
+    (m) => m.type === 'territorial_loss' && m.regionId,
+  )?.regionId;
+  if (memoryRegion && state.regions.some((r) => r.id === memoryRegion)) {
+    return memoryRegion;
+  }
+  return state.regions[0]?.id;
+}
+
 function hashNeighborId(id: string): number {
   let h = 0;
   for (let i = 0; i < id.length; i++) {
@@ -192,6 +212,17 @@ export function generateOvertureCards(state: GameState): PetitionCardData[] {
     if (!rawSpec) continue;
 
     const ctx: SmartTextContext = { neighborId: neighbor.id };
+    // Phase 10 — agenda-keyed context so the body can name what's actually
+    // at stake: the contested region for RestoreTheOldBorders, and the
+    // generated spouse name for DynasticAlliance (the same name the
+    // marriage-bond materializer in directEffectApplier will use on accept).
+    if (neighbor.agenda?.current === RivalAgenda.RestoreTheOldBorders) {
+      const claimedRegionId = pickClaimedRegionId(state, neighbor);
+      if (claimedRegionId) ctx.regionId = claimedRegionId;
+    }
+    if (neighbor.agenda?.current === RivalAgenda.DynasticAlliance) {
+      ctx.spouseName = generateSpouseName(neighbor.id);
+    }
     const spec: OvertureSpec = {
       ...rawSpec,
       title: substituteSmartPlaceholders(rawSpec.title, state, ctx),

@@ -29,6 +29,7 @@ import {
   createVassalageBond,
 } from '../engine/systems/bonds';
 import { TERM_ID_TO_BOND_KIND } from './negotiationBondMap';
+import { generateSpouseName } from '../data/text/name-generation';
 
 /**
  * Resolves __NEIGHBOR__ placeholders in diplomacyDeltas.
@@ -240,7 +241,7 @@ function buildBondForKind(
       return createMarriageBond({
         participants,
         turn,
-        spouseName: 'consort', // display names come from procgen at dossier time
+        spouseName: generateSpouseName(participants[0]),
         dynastyId: `dyn_${participants[0]}`,
       });
     case 'hostage_exchange':

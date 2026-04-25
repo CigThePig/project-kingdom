@@ -34,7 +34,7 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_esp_double_agent_dilemma: {
     title: 'The Double Agent\'s Dilemma',
-    body: "{spymaster_or_fallback} presents a delicate situation: one of your agents embedded in {ruler}'s court has been approached to serve as a double agent. The opportunity could yield extraordinary intelligence, but the risks of exposure and disinformation are considerable.",
+    body: "{spymaster_or_fallback} presents a delicate situation: one of your agents embedded in {ruler}'s court at {neighbor} has been approached to serve as a double agent. The opportunity could yield extraordinary intelligence, but the risks of exposure and disinformation are considerable.",
     choices: {
       turn_agent_double: 'Accept the Double Role',
       extract_and_debrief: 'Extract and Debrief',
@@ -60,8 +60,8 @@ export const EXPANSION_ESPIONAGE_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_exp_esp_intercepted_dispatches: {
-    title: 'Intercepted Diplomatic Dispatches',
-    body: "{spymaster_or_fallback}'s agents have intercepted sealed dispatches from {capital} to a minor border principality, detailing plans by {ruler_full} that could threaten regional trade routes. The contents are valuable to multiple parties, and how you share — or withhold — this intelligence will have diplomatic consequences.",
+    title: 'Intercepted Diplomatic Dispatches from {neighbor}',
+    body: "{spymaster_or_fallback}'s agents have intercepted sealed dispatches from {capital} to a minor border principality, detailing plans by {ruler_full} of {neighbor} that could threaten regional trade routes. The contents are valuable to multiple parties, and how you share — or withhold — this intelligence will have diplomatic consequences.",
     choices: {
       share_with_arenthal: 'Share with Arenthal',
       confront_valdris: 'Confront Valdris Directly',

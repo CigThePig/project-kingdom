@@ -98,7 +98,11 @@ export function generateAssessmentPhaseData(
     .sort((a, b) => b.relationshipScore - a.relationshipScore);
   const resolvedNeighborId = peaceful[0]?.id ?? neighbors[0]?.id ?? undefined;
 
-  const smartCtx = resolvedNeighborId ? { neighborId: resolvedNeighborId } : {};
+  const confidenceLevel = deriveConfidenceLevel(selected);
+  const smartCtx = {
+    ...(resolvedNeighborId ? { neighborId: resolvedNeighborId } : {}),
+    confidenceLevel,
+  };
 
   // Build crisis card (assessment card)
   const crisisCard: CrisisCardData = {
@@ -133,7 +137,7 @@ export function generateAssessmentPhaseData(
 
   return {
     crisisData: { crisisCard, responses },
-    confidenceLevel: deriveConfidenceLevel(selected),
+    confidenceLevel,
     resolvedNeighborId,
   };
 }

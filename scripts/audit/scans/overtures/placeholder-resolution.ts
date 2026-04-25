@@ -40,6 +40,12 @@ const KNOWN_TOKENS = new Set<string>([
   'marshal_or_fallback',
   'chamberlain_or_fallback',
   'spymaster_or_fallback',
+  // Phase 10 — agenda-keyed thematic tokens. The overture generator binds
+  // ctx.regionId for RestoreTheOldBorders and ctx.spouseName for
+  // DynasticAlliance before substituteSmartPlaceholders runs, so both resolve
+  // at render time rather than rendering raw.
+  'region',
+  'spouse_name',
 ]);
 
 // Tokens that carry an argument after `:`.
