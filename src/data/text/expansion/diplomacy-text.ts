@@ -69,8 +69,8 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_exp_dip_cultural_envoy: {
-    title: 'Cultural Envoy Arrives',
-    body: "A troupe of scholars and artists has arrived from {capital}, sent by {ruler_full} to share knowledge and artistic traditions. Their visit could enrich the kingdom's cultural life, though some view foreign influence with suspicion.",
+    title: 'Cultural Envoy Arrives from {neighbor}',
+    body: "A troupe of scholars and artists has arrived from {capital}, sent by {ruler_full} of {neighbor} to share knowledge and artistic traditions. Their visit could enrich the kingdom's cultural life, though some view foreign influence with suspicion.",
     choices: {
       host_cultural_exchange: 'Host a Cultural Exchange',
       polite_reception: 'Offer a Polite Reception',
@@ -133,8 +133,8 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
     },
   },
   evt_exp_dip_diplomatic_gift: {
-    title: 'Generous Diplomatic Gift',
-    body: '{ruler_full} has sent a lavish gift from {capital} — fine textiles, rare spices, and a beautifully illuminated manuscript bearing the seal of {dynasty}. The gesture speaks of genuine goodwill, though diplomacy rarely comes without expectation.',
+    title: 'Generous Diplomatic Gift from {neighbor}',
+    body: '{ruler_full} of {neighbor} has sent a lavish gift from {capital} — fine textiles, rare spices, and a beautifully illuminated manuscript bearing the seal of {dynasty}. The gesture speaks of genuine goodwill, though diplomacy rarely comes without expectation.',
     choices: {
       accept_graciously: 'Accept Graciously',
       reciprocate_generously: 'Reciprocate Generously',

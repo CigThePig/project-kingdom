@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
-  "startedAt": "2026-04-24T20:08:21.436Z",
-  "durationMs": 4006,
+  "startedAt": "2026-04-25T00:41:02.997Z",
+  "durationMs": 4135,
   "scansRun": [
     "wiring.missing-text",
     "wiring.choice-label-coverage",
@@ -60,12 +60,12 @@
   ],
   "counts": {
     "CRITICAL": 0,
-    "MAJOR": 140,
+    "MAJOR": 134,
     "MINOR": 0,
     "POLISH": 0
   },
   "countsByConfidence": {
-    "DETERMINISTIC": 133,
+    "DETERMINISTIC": 127,
     "RUNTIME_GROUNDED": 0,
     "HEURISTIC": 7,
     "ENGINE_MISMATCH": 0
@@ -303,90 +303,6 @@
         "actualTypes": [
           "always"
         ]
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "overture",
-      "scanId": "text.smart-card-coverage",
-      "code": "SMART_CARD_COVERAGE_NEIGHBOR",
-      "cardId": "evt_exp_dip_cultural_envoy",
-      "filePath": "src/data/events/expansion/diplomacy-events.ts",
-      "message": "evt_exp_dip_cultural_envoy: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token).",
-      "confidence": "DETERMINISTIC",
-      "details": {
-        "dimension": "neighbor",
-        "affectsNeighbor": "__ANY__"
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "overture",
-      "scanId": "text.smart-card-coverage",
-      "code": "SMART_CARD_COVERAGE_NEIGHBOR",
-      "cardId": "evt_exp_dip_diplomatic_gift",
-      "filePath": "src/data/events/expansion/diplomacy-events.ts",
-      "message": "evt_exp_dip_diplomatic_gift: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token).",
-      "confidence": "DETERMINISTIC",
-      "details": {
-        "dimension": "neighbor",
-        "affectsNeighbor": "__FRIENDLY__"
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "overture",
-      "scanId": "text.smart-card-coverage",
-      "code": "SMART_CARD_COVERAGE_NEIGHBOR",
-      "cardId": "evt_exp_esp_double_agent_dilemma",
-      "filePath": "src/data/events/expansion/espionage-events.ts",
-      "message": "evt_exp_esp_double_agent_dilemma: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token).",
-      "confidence": "DETERMINISTIC",
-      "details": {
-        "dimension": "neighbor",
-        "affectsNeighbor": "__HOSTILE__"
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "overture",
-      "scanId": "text.smart-card-coverage",
-      "code": "SMART_CARD_COVERAGE_NEIGHBOR",
-      "cardId": "evt_exp_esp_intercepted_dispatches",
-      "filePath": "src/data/events/expansion/espionage-events.ts",
-      "message": "evt_exp_esp_intercepted_dispatches: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token).",
-      "confidence": "DETERMINISTIC",
-      "details": {
-        "dimension": "neighbor",
-        "affectsNeighbor": "neighbor_valdris"
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "overture",
-      "scanId": "text.smart-card-coverage",
-      "code": "SMART_CARD_COVERAGE_NEIGHBOR",
-      "cardId": "evt_border_envoy_terms",
-      "filePath": "src/data/events/index.ts",
-      "message": "evt_border_envoy_terms: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token).",
-      "confidence": "DETERMINISTIC",
-      "details": {
-        "dimension": "neighbor",
-        "affectsNeighbor": "__HOSTILE__"
-      }
-    },
-    {
-      "severity": "MAJOR",
-      "family": "overture",
-      "scanId": "text.smart-card-coverage",
-      "code": "SMART_CARD_COVERAGE_NEIGHBOR",
-      "cardId": "evt_foreign_cultural_influx",
-      "filePath": "src/data/events/index.ts",
-      "message": "evt_foreign_cultural_influx: `affectsNeighbor` is set but body does not reference the neighbor (no {neighbor}, {rival}, or {neighbor_*} token).",
-      "confidence": "DETERMINISTIC",
-      "details": {
-        "dimension": "neighbor",
-        "affectsNeighbor": "__ANY__"
       }
     },
     {

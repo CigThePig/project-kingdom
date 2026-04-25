@@ -53,6 +53,7 @@ import {
 import { recordMemory } from '../systems/rival-memory';
 import { STORYLINE_CHOICE_EFFECTS } from '../../data/storylines/effects';
 import { STORYLINE_POOL } from '../../data/storylines/index';
+import { generateSpouseName } from '../../data/text/name-generation';
 import { applyDiplomaticActionEffect as applyNeighborRelDelta } from '../systems/diplomacy';
 import type { Bond } from '../types';
 import {
@@ -380,7 +381,7 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
     return appendBondToState(s, createMarriageBond({
       participants: [targetId],
       turn: s.turn.turnNumber,
-      spouseName: 'consort',
+      spouseName: generateSpouseName(targetId),
       dynastyId: `dyn_${targetId}`,
     }));
   }],
@@ -393,7 +394,7 @@ export const DECREE_EFFECT_REGISTRY = new Map<string, DecreeEffectFn>([
     return appendBondToState(s, createMarriageBond({
       participants: [secondId],
       turn: s.turn.turnNumber,
-      spouseName: 'consort',
+      spouseName: generateSpouseName(secondId),
       dynastyId: `dyn_${secondId}`,
     }));
   }],

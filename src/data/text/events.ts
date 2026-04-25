@@ -283,7 +283,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   // --- Culture (2) ---
   evt_foreign_cultural_influx: {
     title: 'Foreign Cultural Influences Arrive',
-    body: 'Trade routes have brought more than goods — foreign customs, artistic traditions, and social practices are spreading through the kingdom\'s market towns. Some welcome the enrichment; others see a threat to the realm\'s cultural identity.',
+    body: 'Trade routes from {neighbor} have brought more than goods — foreign customs, artistic traditions, and social practices are spreading through the kingdom\'s market towns. Some welcome the enrichment; others see a threat to the realm\'s cultural identity.',
     choices: {
       embrace_exchange: 'Embrace Cultural Exchange',
       regulate_foreign_practices: 'Regulate Foreign Practices',
@@ -1456,7 +1456,7 @@ export const EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_border_envoy_terms: {
     title: 'Unfavorable Peace Terms Offered',
-    body: "{ruler_full} has offered peace terms, but they are unfavorable — territorial concessions, trade advantages, and a public acknowledgment of the kingdom's \"provocation.\" The terms are humiliating but would end the immediate crisis and prevent further bloodshed.",
+    body: "{ruler_full} of {neighbor} has offered peace terms, but they are unfavorable — territorial concessions, trade advantages, and a public acknowledgment of the kingdom's \"provocation.\" The terms are humiliating but would end the immediate crisis and prevent further bloodshed.",
     choices: {
       accept_unfavorable_terms: 'Accept the Terms',
       reject_terms: 'Reject the Terms',

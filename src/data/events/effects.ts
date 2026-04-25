@@ -1943,4 +1943,35 @@ export const EVENT_CHOICE_TEMPORARY_MODIFIERS: Record<string, Record<string, Tem
     open_hospitals_for_all: { durationTurns: 4, effectPerTurn: { treasuryDelta: -4, commonerSatDelta: +1 } },
     pray_and_wait: { durationTurns: 3, effectPerTurn: { faithDelta: +1 } },
   },
+
+  // Phase 10 — assessment substance (§2): every paid investigation choice on
+  // the surface-only assessments leaves a 3-turn ongoing footprint so the
+  // decision lingers in the simulation rather than evaporating at resolution.
+  // Common tier expectation per CARD_AUDIT_RULES.md is met by a temp-mod alone.
+  assess_border_movement: {
+    investigate_border_movement: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+    reinforce_preemptively: { durationTurns: 3, effectPerTurn: { treasuryDelta: -3, militaryReadinessDelta: +1 } },
+  },
+  assess_spy_report_unverified: {
+    verify_intelligence: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+  },
+  assess_internal_unrest_rumor: {
+    investigate_unrest_rumor: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+    preemptive_concession: { durationTurns: 3, effectPerTurn: { commonerSatDelta: +1, nobilitySatDelta: -1 } },
+  },
+  assess_merchant_caravan_disappearance: {
+    fund_investigation: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+    increase_road_patrols: { durationTurns: 3, effectPerTurn: { treasuryDelta: -3, merchantSatDelta: +1 } },
+  },
+  assess_noble_faction_meeting: {
+    infiltrate_meeting: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+  },
+  assess_coastal_vessel_sighting: {
+    send_naval_scouts: { durationTurns: 3, effectPerTurn: { espionageNetworkDelta: +1 } },
+    fortify_harbor: { durationTurns: 3, effectPerTurn: { treasuryDelta: -3, militaryReadinessDelta: +1 } },
+  },
+  assess_strange_illness_outbreak: {
+    quarantine_affected_area: { durationTurns: 3, effectPerTurn: { stabilityDelta: +1, merchantSatDelta: -1 } },
+    investigate_cause: { durationTurns: 3, effectPerTurn: { treasuryDelta: -3, stabilityDelta: +1 } },
+  },
 };

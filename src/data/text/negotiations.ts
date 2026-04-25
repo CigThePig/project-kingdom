@@ -25,7 +25,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
       },
       bulk_pricing_agreement: {
         title: 'Bulk Pricing Agreement',
-        description: 'Negotiate volume discounts on imported goods. Commoners benefit from lower prices, but domestic merchants lose pricing power.',
+        description: 'Negotiate volume discounts on goods imported from {neighbor_short}. Commoners benefit from lower prices, but domestic merchants lose pricing power.',
       },
       port_rights_concession: {
         title: 'Port Rights Concession',
@@ -46,39 +46,39 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
       },
       trade_corridor_rights: {
         title: 'Trade Corridor Rights',
-        description: 'Establish a protected trade route between kingdoms. Commerce flourishes, though commoners along the route bear the burden of foreign traffic.',
+        description: 'Establish a protected trade route to {neighbor_short}. Commerce flourishes, though commoners along the corridor bear the burden of foreign traffic.',
       },
       border_access_agreement: {
         title: 'Border Access Agreement',
-        description: 'Permit free movement across borders. Improves diplomatic ties but compromises espionage operations and border defenses.',
+        description: 'Permit free movement across the border with {neighbor_short}. Improves diplomatic ties but compromises espionage operations and border defenses.',
       },
     },
     rejectLabel: 'Decline the Treaty',
   },
 
   neg_peace_terms: {
-    title: 'Peace Negotiations',
-    body: 'After prolonged conflict, both sides have agreed to negotiate. The terms on the table are steep, but continued warfare may cost more than concessions. Each term demands a sacrifice.',
+    title: 'Settlement Talks with {neighbor}',
+    body: 'With the kingdom strained and standing toward {neighbor} grown {posture}, envoys from {capital} arrive to talk settlement. The terms on the table are steep, but the alternative is letting the breach fester.{neighbor_memory_clause} Each term demands a sacrifice.',
     contextLabel: 'DIPLOMATIC NEGOTIATION',
     terms: {
       war_reparations: {
-        title: 'Pay War Reparations',
-        description: 'The treasury bears the cost of reconciliation — a heavy payment to compensate for the damage of war. The people will feel the burden.',
+        title: 'Pay {neighbor_short} Reparations',
+        description: 'Bear the cost of reconciliation — a heavy payment to {neighbor_short} for past grievances. The treasury empties and the common people will feel the burden.',
       },
       prisoner_exchange: {
         title: 'Prisoner Exchange',
-        description: 'Return captured soldiers to their homeland. Restores military morale and earns goodwill, though some captured officers held intelligence value.',
+        description: 'Return captives held by both sides. Restores military morale and earns goodwill from {neighbor_short}, though some captured officers held intelligence value.',
       },
       territorial_concession: {
         title: 'Territorial Concession',
-        description: 'Cede disputed border lands. Ends the territorial conflict but diminishes the kingdom and enrages the nobility who held those estates.',
+        description: 'Cede disputed border lands to {neighbor_short}. Ends the territorial dispute but diminishes the kingdom and enrages the nobility who held those estates.',
       },
       trade_normalization: {
         title: 'Normalize Trade Relations',
-        description: 'Reopen markets closed by wartime embargo. Merchants welcome the commerce, and the treasury benefits from resumed tariff income.',
+        description: 'Reopen markets between the realms. Merchants welcome the commerce with {neighbor_short}, and the treasury benefits from resumed tariff income.',
       },
     },
-    rejectLabel: 'Reject Peace and Continue Fighting',
+    rejectLabel: 'Reject the Terms and Hold the Line',
   },
 
   neg_alliance_pact: {
@@ -92,7 +92,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
       },
       shared_intelligence: {
         title: 'Shared Intelligence',
-        description: 'Exchange espionage networks and intelligence reports. Strengthens both kingdoms\' spy capabilities but requires treasury investment in joint operations.',
+        description: 'Exchange espionage networks and intelligence reports with {neighbor_short}. Strengthens both kingdoms\' spy capabilities but requires treasury investment in joint operations.',
       },
       trade_exclusivity: {
         title: 'Trade Exclusivity',
@@ -128,7 +128,7 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
 
   neg_merchant_guild_charter: {
     title: 'Merchant Guild Seeks Charter Privileges',
-    body: 'The leading merchant guild has petitioned the crown for a formal charter granting commercial privileges. Their growing wealth makes them a force to be reckoned with — their terms reflect that confidence.',
+    body: 'The leading merchant guild has petitioned the crown for a formal charter granting commercial privileges. Their growing wealth makes them a force to be reckoned with — their terms reflect that confidence{watching_faction}{prior_decision_clause:guild}.',
     contextLabel: 'INTERNAL NEGOTIATION',
     terms: {
       monopoly_rights: {
@@ -261,16 +261,16 @@ export const NEGOTIATION_TEXT: Record<string, NegotiationTextEntry> = {
 
   neg_marriage_alliance: {
     title: 'Marriage Alliance Proposed by {neighbor}',
-    body: "{ruler_full} proposes a dynastic marriage to bind the two kingdoms together, knitting our bloodline to {dynasty}. The alliance would bring lasting peace and cooperation, but the terms of the union involve significant concessions — each one a permanent commitment that reshapes the kingdom's future.",
+    body: "{ruler_full} proposes a dynastic marriage to bind the two kingdoms together, knitting our bloodline to {dynasty}. Standing toward {neighbor_short} is currently {posture}, and the alliance would shift it lastingly — but the terms of the union involve significant concessions, each one a permanent commitment that reshapes the kingdom's future.{neighbor_memory_clause}",
     contextLabel: 'DIPLOMATIC NEGOTIATION',
     terms: {
       royal_dowry: {
         title: 'Royal Dowry',
-        description: 'Provide a lavish dowry befitting a royal union. Cements the alliance and pleases the nobility who value dynastic tradition, but the treasury takes a devastating blow.',
+        description: 'Provide a lavish dowry to {dynasty} befitting a royal union. Cements the alliance and pleases the nobility who value dynastic tradition, but the treasury takes a devastating blow.',
       },
       land_gift: {
         title: 'Gift of Border Lands',
-        description: 'Cede border territories as a wedding gift. Strengthens the diplomatic bond but permanently reduces the kingdom\'s development potential and enrages nobles who held estates there.',
+        description: 'Cede border territories to {neighbor_short} as a wedding gift. Strengthens the diplomatic bond but permanently reduces the kingdom\'s development potential and enrages nobles who held estates there.',
       },
       faith_concessions: {
         title: 'Religious Accommodation',

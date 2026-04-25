@@ -7,9 +7,9 @@ import type { EventTextEntry } from './events';
 export const ASSESSMENT_TEXT: Record<string, EventTextEntry> = {
   assess_border_movement: {
     title: 'Unusual Border Activity',
-    body: 'Scouts report unusual movement along the border — troop formations shifting, supply carts on unfamiliar roads, and campfires where none have been before. The activity could be routine exercises, seasonal repositioning, or preparation for something far more serious. The intelligence is inconclusive.',
+    body: '{intel_grade}: troop formations are shifting along the border, supply carts are on unfamiliar roads, and campfires are burning where none have been before. The activity could be routine exercises, seasonal repositioning, or preparation for something far more serious — and at this grade of intelligence, the picture will not resolve on its own.',
     choices: {
-      investigate_border_movement: 'Send Scouts to Investigate',
+      investigate_border_movement: 'Run Down the Source',
       reinforce_preemptively: 'Reinforce Border Positions',
       dismiss_border_reports: 'Dismiss the Reports',
     },
@@ -27,19 +27,19 @@ export const ASSESSMENT_TEXT: Record<string, EventTextEntry> = {
 
   assess_diplomatic_signal: {
     title: 'Subtle Diplomatic Overture',
-    body: 'A neighboring kingdom has made a series of subtle gestures — a visiting scholar here, an unusually generous trade offer there. The signals could indicate genuine interest in closer relations, or they could be a prelude to manipulation. The intent remains unclear.',
+    body: '{intel_grade}: {neighbor} has made a series of subtle gestures — a visiting scholar here, an unusually generous trade offer there. {ruler_full} sends nothing in writing. The signals could indicate genuine interest in closer relations, or they could be a prelude to manipulation, and the source material is not strong enough to tell which.',
     choices: {
       reciprocate_overture: 'Reciprocate the Overture',
-      investigate_intent: 'Investigate Their Intent',
+      investigate_intent: 'Corroborate Through Other Courts',
       ignore_signal: 'Ignore the Signals',
     },
   },
 
   assess_internal_unrest_rumor: {
     title: 'Rumors of Internal Unrest',
-    body: 'Whispers reach the court of growing discontent among the populace. Market gossip speaks of secret meetings, inflammatory pamphlets, and rising tension in the lower quarters. The rumors may be exaggerated — idle tongues feed on discontent. Or they may signal something more dangerous taking root.',
+    body: '{intel_grade}: whispers reach the court of growing discontent among the populace. Market gossip speaks of secret meetings, inflammatory pamphlets, and rising tension in the lower quarters. The rumors may be exaggerated — idle tongues feed on discontent — or they may signal something more dangerous taking root, and the watch cannot tell which from gossip alone.',
     choices: {
-      investigate_unrest_rumor: 'Investigate the Rumors',
+      investigate_unrest_rumor: 'Verify Through Watch Informants',
       preemptive_concession: 'Make Preemptive Concessions',
       monitor_quietly: 'Monitor Quietly',
     },
@@ -57,9 +57,9 @@ export const ASSESSMENT_TEXT: Record<string, EventTextEntry> = {
 
   assess_religious_movement: {
     title: 'New Religious Movement Reported',
-    body: 'Reports emerge of a new religious movement gaining followers in the countryside. Its teachings diverge from established doctrine, drawing both the curious and the discontented. The clergy views it with alarm, but the movement has not yet broken any laws. Whether it represents renewal or heresy remains to be seen.',
+    body: '{intel_grade}: a new religious movement is gaining followers in the countryside. Its teachings diverge from established doctrine, drawing both the curious and the discontented. The clergy views it with alarm, but the movement has not yet broken any laws — and at this grade of intelligence, neither renewal nor heresy can be ruled out.',
     choices: {
-      investigate_movement: 'Investigate the Movement',
+      investigate_movement: 'Send Observers to the Conventicles',
       suppress_early: 'Suppress It Early',
       allow_to_grow: 'Allow It to Grow',
     },
@@ -107,7 +107,7 @@ export const ASSESSMENT_TEXT: Record<string, EventTextEntry> = {
 
   assess_coastal_vessel_sighting: {
     title: 'Unknown Vessels Sighted Off Coast',
-    body: 'Coastal watchmen report unfamiliar vessels spotted on the horizon. The ships fly no recognizable banners and have made no attempt to enter port. They could be explorers charting new trade routes, a diplomatic advance party, or scouts for a less welcome purpose. Their intent is unknown.',
+    body: '{intel_grade}: coastal watchmen have spotted unfamiliar vessels on the horizon. The ships fly no recognizable banners and have made no attempt to enter port. They could be explorers charting new trade routes, a diplomatic advance party, or scouts for a less welcome purpose — and at this grade, intent cannot be deduced from the silhouette alone.',
     choices: {
       send_naval_scouts: 'Send Naval Scouts',
       fortify_harbor: 'Fortify the Harbor',
@@ -117,7 +117,7 @@ export const ASSESSMENT_TEXT: Record<string, EventTextEntry> = {
 
   assess_strange_illness_outbreak: {
     title: 'Reports of Strange Illness',
-    body: 'Healers in the lower quarters report a cluster of cases involving an unfamiliar illness — high fever, weakness, and confusion. The cases may be isolated and seasonal, or they may be the first signs of something more dangerous spreading through the crowded districts. The cause is unknown.',
+    body: '{intel_grade}: healers in the lower quarters describe a cluster of cases involving an unfamiliar illness — high fever, weakness, and confusion. The cases may be isolated and seasonal, or they may be the first signs of something more dangerous spreading through the crowded districts, and the cause cannot be named from what little has reached court so far.',
     choices: {
       quarantine_affected_area: 'Quarantine the Affected Area',
       investigate_cause: 'Investigate the Cause',

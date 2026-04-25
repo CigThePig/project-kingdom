@@ -240,6 +240,20 @@ export function generateRegionName(seed: string, terrain: TerrainType): string {
 }
 
 /**
+ * Generates a deterministic spouse first name for a dynastic-marriage bond.
+ * Phase 10 — used by both the DynasticAlliance overture body (`{spouse_name}`)
+ * and the marriage-bond materializer in `directEffectApplier`. The seed must
+ * be turn-stable so the body and the bond agree on the same name; we key on
+ * neighborId only.
+ */
+export function generateSpouseName(neighborId: string, gender?: 'M' | 'F'): string {
+  const rng = seededRandom(`spouse:${neighborId}`);
+  const finalGender: 'M' | 'F' = gender ?? (rng() < 0.5 ? 'M' : 'F');
+  const namePool = finalGender === 'M' ? MASCULINE_NAMES : FEMININE_NAMES;
+  return pickWeighted(rng, namePool);
+}
+
+/**
  * Generates an agent codename like "the Magpie" or "Black Owl."
  */
 export function generateAgentCodename(seed: string): string {

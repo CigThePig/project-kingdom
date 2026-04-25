@@ -14,6 +14,7 @@
 // call sites that had no event context keep their current behavior.
 
 import type { GameState, KingdomCondition } from '../engine/types';
+import type { ConfidenceLevel } from '../ui/types';
 import {
   CouncilSeat,
   Season,
@@ -81,6 +82,10 @@ export interface SmartTextContext {
   worldEventDefId?: string;
   /** Phase D — biases `{recent_causal}` and `{watching_faction}` selection. */
   eventCategory?: EventCategory;
+  /** Phase 10 — drives `{intel_grade}` clauses on assessment cards. */
+  confidenceLevel?: ConfidenceLevel;
+  /** Phase 10 — supplies the `{spouse_name}` token on DynasticAlliance overtures. */
+  spouseName?: string;
 }
 
 // ============================================================
@@ -134,6 +139,12 @@ type Resolver = (
 // Re-exported from advisorNameResolver so legacy callers (`petitionCardGenerator`)
 // keep their existing import surface after Phase F's resolver extraction.
 export { SEAT_FALLBACK_LABEL };
+
+const INTEL_GRADE_CLAUSES: Record<ConfidenceLevel, string> = {
+  low: 'Reports remain unverified',
+  moderate: 'Credible reports indicate',
+  high: 'Reliable sources confirm',
+};
 
 const REGIONAL_POSTURE_LABELS: Record<RegionalPosture, string> = {
   [RegionalPosture.Develop]: 'Develop',
@@ -255,6 +266,11 @@ const DISPATCH: Record<string, Resolver> = {
     const tier = getIntelLevel(state.espionage.networkStrength ?? 0);
     return tier === 'none' ? 'no intel' : tier;
   },
+  // Phase 10 — short opener clause for assessment bodies. Reads
+  // `ctx.confidenceLevel` (set by assessmentCardGenerator from the trigger
+  // density) and emits a one-clause framing so the body's tone matches the
+  // confidence the engine has actually assigned to the intelligence product.
+  intel_grade: (_state, ctx) => INTEL_GRADE_CLAUSES[ctx.confidenceLevel ?? 'low'],
 
   // ---- §3.2 Situational — geography & posture ----
   terrain: (state, ctx) => {
@@ -334,6 +350,12 @@ const DISPATCH: Record<string, Resolver> = {
     if (!ctx.bondId) return 'the bond';
     return getBondDescriptor(ctx.bondId, state);
   },
+
+  // Phase 10 — DynasticAlliance overtures generate a deterministic spouse name
+  // that must thread through both the overture body and the resulting marriage
+  // bond. Falls back to a neutral noun when context is missing so the literal
+  // never leaks to the player.
+  spouse_name: (_state, ctx) => ctx.spouseName ?? 'a royal consort',
 
   // ---- §3.4 Stakes — rival-scoped (Phase C) ----
   // Prefer the arg form `{rival_mood:neighbor_a}`; fall back to ctx.neighborId.

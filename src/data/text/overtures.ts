@@ -20,7 +20,7 @@ export interface OvertureTextEntry {
 export const OVERTURE_TEXT: Partial<Record<RivalAgenda, OvertureTextEntry>> = {
   [RivalAgenda.DynasticAlliance]: {
     title: '{ruler_full} proposes a dynastic union',
-    body: 'Envoys of {ruler_full} arrive from {capital} bearing a formal proposal of marriage between your houses. The match would knit {dynasty} to your own line and reshape the map for a generation.{neighbor_memory_clause}',
+    body: 'Envoys of {ruler_full} arrive from {capital} bearing a formal proposal: {spouse_name} of {dynasty} to be wedded to your own line. The match would reshape the map for a generation.{neighbor_memory_clause}',
     grantTitle: 'Accept the match',
     denyTitle: 'Decline with courtesies',
   },
@@ -34,8 +34,8 @@ export const OVERTURE_TEXT: Partial<Record<RivalAgenda, OvertureTextEntry>> = {
 
   [RivalAgenda.RestoreTheOldBorders]: {
     title: '{ruler_full} demands the old lands',
-    body: '{ruler_full} formally revives ancient claims from the throne in {capital}, demanding you cede the disputed territory. {dynasty} will not let the refusal pass quietly.{neighbor_memory_clause}{ruling_style_note}',
-    grantTitle: 'Negotiate a quiet concession',
+    body: '{ruler_full} formally revives ancient claims from the throne in {capital}, demanding you cede {region}. {dynasty} will not let the refusal pass quietly.{neighbor_memory_clause}{ruling_style_note}',
+    grantTitle: 'Cede {region}',
     denyTitle: 'Reject the claim outright',
   },
 
