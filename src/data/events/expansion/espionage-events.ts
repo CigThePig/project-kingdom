@@ -50,7 +50,7 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
   {
     id: 'evt_exp_esp_spy_equipment_advance',
@@ -153,7 +153,7 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__HOSTILE__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_esp_intercepted_dispatches',
@@ -200,7 +200,7 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_esp_defector_opportunity',
@@ -328,7 +328,7 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__HOSTILE__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'rebuild_network', followUpDefinitionId: 'evt_exp_fu_esp_network_rebuilt', delayTurns: 3, probability: 0.7 },
     ],
@@ -405,7 +405,7 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_esp_military_secrets_stolen',
@@ -429,7 +429,7 @@ export const EXPANSION_ESPIONAGE_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: 'neighbor_arenthal',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================

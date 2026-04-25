@@ -234,7 +234,7 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
 
   // ============================================================
@@ -344,7 +344,7 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -370,7 +370,7 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
 
   // ============================================================
@@ -425,7 +425,7 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'deploy_border_patrols', followUpDefinitionId: 'evt_exp_fu_eco_smuggler_revenge', delayTurns: 2, probability: 0.6 },
     ],
@@ -481,7 +481,7 @@ export const EXPANSION_ECONOMY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================

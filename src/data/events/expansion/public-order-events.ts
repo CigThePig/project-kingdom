@@ -108,7 +108,7 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'hire_additional_watchmen', followUpDefinitionId: 'evt_exp_fu_po_purge_aftermath', delayTurns: 3, probability: 0.6 },
     ],
@@ -276,7 +276,7 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -331,7 +331,7 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -383,7 +383,7 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -439,7 +439,7 @@ export const EXPANSION_PUBLIC_ORDER_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'declare_martial_law', followUpDefinitionId: 'evt_exp_fu_po_martial_law_tension', delayTurns: 2, probability: 0.7 },
       { triggerChoiceId: 'trust_civilian_authority', followUpDefinitionId: 'evt_fu_civilian_authority_falters', delayTurns: 3, probability: 0.6 },

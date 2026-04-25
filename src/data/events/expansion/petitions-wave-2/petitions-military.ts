@@ -31,7 +31,7 @@ export const EXPANSION_WAVE_2_MILITARY_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_knightly_order_grant',
@@ -51,7 +51,7 @@ export const EXPANSION_WAVE_2_MILITARY_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 

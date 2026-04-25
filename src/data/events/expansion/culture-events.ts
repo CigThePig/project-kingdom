@@ -106,7 +106,7 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
     repeatable: true,
   },
 
@@ -188,7 +188,7 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
     followUpEvents: [
       { triggerChoiceId: 'endorse_revival', followUpDefinitionId: 'evt_exp_fu_cul_folk_festival', delayTurns: 3, probability: 0.7 },
     ],
@@ -289,7 +289,7 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
     repeatable: true,
   },
 
@@ -368,7 +368,7 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // --- 15. Heretical Art Scandal (Serious, established) ---
@@ -447,7 +447,7 @@ export const EXPANSION_CULTURE_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // --- 18. Military Tradition Ceremony (Serious, opening) ---

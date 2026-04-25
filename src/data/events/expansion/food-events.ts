@@ -208,7 +208,7 @@ export const EXPANSION_FOOD_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'establish_food_reserves', followUpDefinitionId: 'evt_exp_fu_food_feast_aftermath', delayTurns: 2, probability: 0.8 },
     ],
@@ -238,7 +238,7 @@ export const EXPANSION_FOOD_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -292,6 +292,6 @@ export const EXPANSION_FOOD_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 ];

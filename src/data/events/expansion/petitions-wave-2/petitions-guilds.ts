@@ -30,7 +30,7 @@ export const EXPANSION_WAVE_2_GUILD_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_miners_charter',
@@ -51,7 +51,7 @@ export const EXPANSION_WAVE_2_GUILD_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_fishermens_protection',
@@ -72,7 +72,7 @@ export const EXPANSION_WAVE_2_GUILD_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_carpenters_price_cap',
@@ -92,7 +92,7 @@ export const EXPANSION_WAVE_2_GUILD_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_millers_tax_relief',
@@ -112,7 +112,7 @@ export const EXPANSION_WAVE_2_GUILD_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_goldsmiths_seal',
@@ -133,7 +133,7 @@ export const EXPANSION_WAVE_2_GUILD_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 

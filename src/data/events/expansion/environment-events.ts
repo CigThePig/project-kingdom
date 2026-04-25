@@ -347,7 +347,7 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_env_bountiful_rainfall',
@@ -368,7 +368,7 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
   {
     id: 'evt_exp_env_medicinal_springs',
@@ -390,7 +390,7 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'build_healing_baths', followUpDefinitionId: 'evt_exp_fu_env_mining_wealth', delayTurns: 3, probability: 0.7 },
     ],
@@ -415,7 +415,7 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_env_animal_migration',
@@ -439,6 +439,6 @@ export const EXPANSION_ENVIRONMENT_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
 ];

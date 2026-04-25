@@ -33,7 +33,7 @@ export const EXPANSION_WAVE_2_PHENOMENA_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_drought_escalation',
@@ -56,7 +56,7 @@ export const EXPANSION_WAVE_2_PHENOMENA_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_explored_ruins',
@@ -78,7 +78,7 @@ export const EXPANSION_WAVE_2_PHENOMENA_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_vassal_succession',
@@ -100,7 +100,7 @@ export const EXPANSION_WAVE_2_PHENOMENA_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 

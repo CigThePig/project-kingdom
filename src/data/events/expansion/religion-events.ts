@@ -236,7 +236,7 @@ export const EXPANSION_RELIGION_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
 
   // --- 10. Monastery Funding (established) ---
@@ -309,7 +309,7 @@ export const EXPANSION_RELIGION_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // --- 13. Religious Education Reform (any) ---
@@ -336,7 +336,7 @@ export const EXPANSION_RELIGION_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // --- 14. Court Chaplain's Blessing (opening) ---

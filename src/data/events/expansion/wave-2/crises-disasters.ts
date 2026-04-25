@@ -33,7 +33,7 @@ export const EXPANSION_WAVE_2_DISASTER_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_w2_naval_disaster',
@@ -55,7 +55,7 @@ export const EXPANSION_WAVE_2_DISASTER_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_w2_library_fire',
@@ -77,7 +77,7 @@ export const EXPANSION_WAVE_2_DISASTER_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_well_poisoning',
@@ -100,7 +100,7 @@ export const EXPANSION_WAVE_2_DISASTER_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_salt_shortage',
@@ -122,7 +122,7 @@ export const EXPANSION_WAVE_2_DISASTER_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 

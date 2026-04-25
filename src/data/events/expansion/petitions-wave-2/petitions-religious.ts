@@ -30,7 +30,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_militant_brotherhood',
@@ -51,7 +51,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_pilgrim_road_petition',
@@ -71,7 +71,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_abbey_tax_exemption',
@@ -91,7 +91,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 

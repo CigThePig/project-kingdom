@@ -31,7 +31,7 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_bonded_labor_revolt',
@@ -53,7 +53,7 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_mercenary_defection',
@@ -75,7 +75,7 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_monetary_crisis',
@@ -97,7 +97,7 @@ export const EXPANSION_WAVE_2_SOCIAL_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 
