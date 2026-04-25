@@ -58,36 +58,23 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
       if (!isEffectDeltaNonEmpty(delta)) continue; // covered by empty-effects
 
       // Runtime-grounded path: if the IR has a fingerprint for this choice,
-      // trust it over the table heuristics. This catches hand/decree/assessment
-      // /negotiation/overture paths whose effects are wired through inline
-      // apply or direct-effect pipelines the tables don't fully describe.
+      // check whether it touches any structural class. If so we're done.
+      // If not, we still fall through to the table markers — the harness's
+      // event-resolution path applies only the raw mechanical delta via
+      // `applyEventChoiceEffects` and skips the `applyCrisisResponseEffect`
+      // tail (temp-modifier scheduling, kingdom-feature registration,
+      // follow-up queueing). Those three channels are the §2 "strong
+      // markers" and must be consulted from the tables when the runtime
+      // diff stops short.
       const fp = findChoiceFingerprint(auditCard, c.choiceId);
       if (fp) {
         if (fp.noOp) continue; // owned by no-op-apply / empty-effects scans
         if (fp.classes.some((cls) => STRUCTURAL_TOUCH_CLASSES.has(cls))) continue;
-
-        out.push({
-          severity: 'MAJOR',
-          family: familyOf(corpus, ev.id),
-          scanId: SCAN_ID,
-          code: 'SURFACE_ONLY',
-          cardId: ev.id,
-          choiceId: c.choiceId,
-          filePath: fileOf(corpus, ev.id),
-          message: `Choice ${ev.id}:${c.choiceId} runtime diff shows only surface touches (${fp.touches.join(', ') || '(none)'}).`,
-          confidence: 'RUNTIME_GROUNDED',
-          details: {
-            fixtureId: fp.fixtureId,
-            touches: fp.touches,
-            classes: fp.classes,
-          },
-        });
-        continue;
       }
 
-      // Fallback table heuristics — used for event-family cards whose runtime
-      // path the harness doesn't yet support (event-resolution, world-event-
-      // resolution) or when the CLI was run without fingerprint attachment.
+      // Table heuristics — always consulted when the runtime diff did not
+      // settle the question (either no fingerprint, or fingerprint only
+      // touched surface classes).
 
       // Marker 1: temp modifier.
       const hasTempMod = !!corpus.tempModifiers[ev.id]?.[c.choiceId];
@@ -125,6 +112,10 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
       const verdict = structuralVerdict(ev.severity, markers);
 
       if (!verdict.ok) {
+        // When a fingerprint exists and is surface-only, the finding is
+        // RUNTIME_GROUNDED — the runtime confirmed no structural touch AND
+        // the table heuristic confirmed no structural marker. Fall back to
+        // HEURISTIC only when no fingerprint was available at all.
         out.push({
           severity: 'MAJOR',
           family: familyOf(corpus, ev.id),
@@ -133,13 +124,24 @@ export const scan: Scan = (corpus: Corpus): Finding[] => {
           cardId: ev.id,
           choiceId: c.choiceId,
           filePath: fileOf(corpus, ev.id),
-          message: `Choice ${ev.id}:${c.choiceId} only nudges sliders — ${verdict.reason}.`,
-          confidence: 'HEURISTIC',
-          details: {
-            severity: ev.severity,
-            verdictReason: verdict.reason,
-            checked: markers,
-          },
+          message: fp
+            ? `Choice ${ev.id}:${c.choiceId} runtime diff shows only surface touches (${fp.touches.join(', ') || '(none)'}) and no structural table marker — ${verdict.reason}.`
+            : `Choice ${ev.id}:${c.choiceId} only nudges sliders — ${verdict.reason}.`,
+          confidence: fp ? 'RUNTIME_GROUNDED' : 'HEURISTIC',
+          details: fp
+            ? {
+                fixtureId: fp.fixtureId,
+                touches: fp.touches,
+                classes: fp.classes,
+                severity: ev.severity,
+                verdictReason: verdict.reason,
+                checked: markers,
+              }
+            : {
+                severity: ev.severity,
+                verdictReason: verdict.reason,
+                checked: markers,
+              },
         });
       }
     }

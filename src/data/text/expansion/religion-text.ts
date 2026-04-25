@@ -114,7 +114,7 @@ export const EXPANSION_RELIGION_TEXT: Record<string, EventTextEntry> = {
   // --- 11. Sacred Site Desecration ---
   evt_exp_rel_sacred_desecration: {
     title: 'Desecration of a Sacred Site',
-    body: 'A holy site of the {faith_tradition}, of great significance to our people, has been desecrated — its altars defaced, its relics scattered, its sanctity violated. The clergy cry for vengeance, the faithful weep with outrage, and the perpetrators remain unknown. The kingdom\'s response will echo through generations of worship.',
+    body: 'A holy site of the {faith_tradition}, of great significance to our people, has been desecrated — its altars defaced, its relics scattered, its sanctity violated. The clergy cry for vengeance, the faithful weep with outrage, and the perpetrators remain unknown. The kingdom\'s response will echo through generations of worship. Word comes most urgently from {region}.',
     choices: {
       hunt_perpetrators: 'Hunt Down the Perpetrators',
       consecrate_and_restore: 'Consecrate and Restore the Site',

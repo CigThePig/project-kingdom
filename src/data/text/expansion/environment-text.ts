@@ -64,7 +64,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_earthquake: {
     title: 'Earthquake Strikes the Kingdom',
-    body: 'The earth itself has turned against the crown this {season}. A powerful tremor has shaken the kingdom, collapsing walls, cracking foundations, and sending citizens fleeing into the streets. Reports of casualties and structural damage pour in from every quarter — with the treasury in {treasury_tier} condition, the reconstruction will test the Crown.',
+    body: 'The earth itself has turned against the crown this {season}. A powerful tremor has shaken the kingdom, collapsing walls, cracking foundations, and sending citizens fleeing into the streets. Reports of casualties and structural damage pour in from every quarter — with the treasury in {treasury_tier} condition, the reconstruction will test the Crown. Word comes most urgently from {region}.',
     choices: {
       launch_rescue_operations: 'Launch Rescue Operations',
       prioritize_infrastructure: 'Prioritize Infrastructure Repair',
@@ -73,7 +73,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_volcanic_ash_cloud: {
     title: 'Ash Cloud Darkens the Skies',
-    body: 'A distant volcanic eruption has sent a vast cloud of ash drifting over the kingdom this {season}. The sun is dimmed, crops wilt under the grey pall, and citizens cough in the acrid air. Scholars warn the effects may persist for weeks, and with stores already at a {stores_tier} mark {chancellor_or_fallback} counsels quick action.',
+    body: 'A distant volcanic eruption has sent a vast cloud of ash drifting over the kingdom this {season}. The sun is dimmed, crops wilt under the grey pall, and citizens cough in the acrid air. Scholars warn the effects may persist for weeks, and with stores already at a {stores_tier} mark {chancellor_or_fallback} counsels quick action. Word comes most urgently from {region}.',
     choices: {
       seal_granaries_and_ration: 'Seal Granaries and Ration Food',
       organize_mass_shelter: 'Organize Mass Shelter',
@@ -100,7 +100,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_great_storm: {
     title: 'The Great Storm',
-    body: 'A storm of unprecedented fury has struck the kingdom in the midst of {season}. Howling winds tear roofs from buildings, torrential rain floods valleys, and lightning ignites fires across the countryside. This is no ordinary tempest — with stores at a {stores_tier} mark and the treasury in {treasury_tier} condition, it threatens the very fabric of our commonwealth.',
+    body: 'A storm of unprecedented fury has struck the kingdom in the midst of {season}. Howling winds tear roofs from buildings, torrential rain floods valleys, and lightning ignites fires across the countryside. This is no ordinary tempest — with stores at a {stores_tier} mark and the treasury in {treasury_tier} condition, it threatens the very fabric of our commonwealth. Word comes most urgently from {region}.',
     choices: {
       emergency_fortification: 'Emergency Fortification',
       distribute_emergency_supplies: 'Distribute Emergency Supplies',
@@ -109,7 +109,7 @@ export const EXPANSION_ENVIRONMENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_env_mine_contamination: {
     title: 'Mining Waste Poisons the Land',
-    body: 'Runoff from the kingdom\'s mining operations has seeped into the surrounding soil and waterways. Livestock sicken, crops wither, and the communities downhill from the mines report a growing toll of illness among their children. The {class_plural} are watching every move of the court.',
+    body: 'Runoff from the kingdom\'s mining operations has seeped into the surrounding soil and waterways. Livestock sicken, crops wither, and the communities downhill from the mines report a growing toll of illness among their children. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       shut_down_mine: 'Shut Down the Mine',
       invest_in_drainage: 'Invest in Drainage Systems',

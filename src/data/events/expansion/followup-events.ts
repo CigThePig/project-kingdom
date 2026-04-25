@@ -1665,7 +1665,7 @@ export const EXPANSION_FOLLOWUP_EVENTS: EventDefinition[] = [
     id: 'evt_fu_underground_reformers',
     severity: EventSeverity.Serious,
     category: EventCategory.Religion,
-    triggerConditions: [{ type: 'always' }],
+    triggerConditions: [{ type: 'always' }, { type: 'heterodoxy_above', threshold: 30 }],
     weight: 1.0,
     chainId: null, chainStep: null, chainNextDefinitionId: null,
     choices: [
@@ -2359,7 +2359,7 @@ export const EXPANSION_FOLLOWUP_EVENTS: EventDefinition[] = [
     id: 'evt_fu_scorched_earth_famine',
     severity: EventSeverity.Serious,
     category: EventCategory.Food,
-    triggerConditions: [{ type: 'always' }],
+    triggerConditions: [{ type: 'always' }, { type: 'food_below', threshold: 50 }],
     weight: 1.0,
     chainId: null, chainStep: null, chainNextDefinitionId: null,
     choices: [

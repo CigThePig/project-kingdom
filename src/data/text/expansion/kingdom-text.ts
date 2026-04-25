@@ -70,7 +70,7 @@ export const EXPANSION_KINGDOM_TEXT: Record<string, EventTextEntry> = {
   // --- 7. Constitutional Crisis ---
   evt_exp_kgd_constitutional_crisis: {
     title: 'A Crisis of Authority',
-    body: 'The kingdom stands upon a precipice. Multiple factions claim legitimacy for their competing visions of governance, and the streets grow restless with uncertainty. Without decisive action, the very foundations of royal authority may fracture beyond repair.',
+    body: 'The kingdom stands upon a precipice. Multiple factions claim legitimacy for their competing visions of governance, and the streets grow restless with uncertainty. Without decisive action, the very foundations of royal authority may fracture beyond repair. Word comes most urgently from {region}.',
     choices: {
       convene_emergency_council: 'Convene an Emergency Grand Council',
       assert_royal_authority: 'Assert Royal Authority by Force',

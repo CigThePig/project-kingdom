@@ -14,7 +14,7 @@ export const EXPANSION_WAVE_2_CRISES_PHENOMENA_TEXT: Record<string, EventTextEnt
   },
   evt_exp_w2_drought_escalation: {
     title: 'The Long Drought Deepens',
-    body: 'The summer has brought no rain. The rivers run low; the great mill-wheels stand still; the cattle are driven further each day to find water. The commons look to the sky and then to the palace. The {class_plural} are watching every move of the court.',
+    body: 'The summer has brought no rain. The rivers run low; the great mill-wheels stand still; the cattle are driven further each day to find water. The commons look to the sky and then to the palace. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       dig_emergency_wells: 'Dig Emergency Wells',
       ration_water_strictly: 'Ration Water Strictly',

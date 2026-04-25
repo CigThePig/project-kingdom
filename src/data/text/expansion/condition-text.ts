@@ -23,7 +23,7 @@ export const CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_cond_drought_severe: {
     title: 'The Great Drought',
-    body: 'The earth is cracked and barren. Entire villages have been abandoned as their wells ran dry. What little water remains is fought over in the streets. The kingdom faces a crisis of survival.',
+    body: 'The earth is cracked and barren. Entire villages have been abandoned as their wells ran dry. What little water remains is fought over in the streets. {region} bears the worst of it, and the kingdom faces a crisis of survival.',
     choices: {
       mass_relocation: 'Relocate Inland Settlements',
       seize_merchant_water: 'Seize Merchant Water Reserves',
@@ -84,7 +84,7 @@ export const CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_cond_plague_moderate: {
     title: 'Plague Ravages the Kingdom',
-    body: 'The disease has spread beyond any hope of containment. Market squares stand empty, churches overflow with the dying, and the stench of sickness hangs over every settlement. The kingdom reels under the weight of the pestilence.',
+    body: 'The disease has spread beyond any hope of containment. Market squares stand empty, churches overflow with the dying, and the stench of sickness hangs over every settlement. {region} is hardest hit, and the kingdom reels under the weight of the pestilence.',
     choices: {
       citywide_quarantine: 'Enforce Citywide Quarantine',
       burn_infected_quarters: 'Burn the Infected Quarters',
@@ -93,7 +93,7 @@ export const CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_cond_plague_severe: {
     title: 'The Great Plague',
-    body: 'Death stalks every corner of our lands. Entire villages have been wiped out, trade has ground to a halt, and the living struggle to bury the dead. Panic and despair threaten to tear apart what the plague does not claim.',
+    body: 'Death stalks every corner of our lands. Entire villages have been wiped out, trade has ground to a halt, and the living struggle to bury the dead. {region} has become a charnel ground, and panic and despair threaten to tear apart what the plague does not claim.',
     choices: {
       seal_the_gates: 'Seal the City Gates',
       mass_exodus: 'Order Mass Exodus to Clean Lands',
@@ -102,7 +102,7 @@ export const CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   },
   evt_cond_plague_escalation: {
     title: 'The Plague Worsens',
-    body: 'Despite all efforts, the plague intensifies. What was once containable has mutated into something far deadlier. Physicians report new symptoms, higher mortality, and faster transmission. Drastic action may be the only recourse.',
+    body: 'Despite all efforts, the plague intensifies. What was once containable has mutated into something far deadlier. Physicians report new symptoms from {region}, higher mortality, and faster transmission. Drastic action may be the only recourse.',
     choices: {
       martial_law: 'Declare Martial Law',
       appeal_to_clergy: 'Appeal to the Clergy for Aid',
@@ -114,7 +114,7 @@ export const CONDITION_EVENT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_cond_famine_moderate: {
     title: 'Famine Grips the Kingdom',
-    body: 'Hunger has become the constant companion of the common folk. Granaries are nearly bare, bread prices have soared beyond reach, and desperate families scour the countryside for anything edible. Without intervention, starvation will claim many lives.',
+    body: 'Hunger has become the constant companion of the common folk. Granaries are nearly bare across {region}, bread prices have soared beyond reach, and desperate families scour the countryside for anything edible. Without intervention, starvation will claim many lives.',
     choices: {
       emergency_rationing: 'Impose Emergency Rationing',
       import_foreign_grain: 'Import Foreign Grain',

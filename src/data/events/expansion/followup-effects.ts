@@ -357,8 +357,8 @@ export const EXPANSION_FOLLOWUP_EFFECTS: Record<string, Record<string, Mechanica
     break_the_racket: { treasuryDelta: -20, espionageNetworkDelta: +4, regionConditionDelta: +1 },
   },
   evt_fu_criminal_shadow_state: {
-    reassert_authority:           { treasuryDelta: -50, militaryReadinessDelta: -3, regionConditionDelta: +2 },
-    formalize_the_arrangement:    { merchantSatDelta: +2, stabilityDelta: -2, regionConditionDelta: -1 },
+    reassert_authority:           { treasuryDelta: -50, militaryReadinessDelta: -3, espionageNetworkDelta: +3, regionConditionDelta: +2 },
+    formalize_the_arrangement:    { merchantSatDelta: +2, stabilityDelta: -2, espionageNetworkDelta: -3, regionConditionDelta: -1 },
   },
 
   // --- Phase 2 Card Audit — Stub follow-up effects (batch 3) ---

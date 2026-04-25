@@ -57,7 +57,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_guild_noble_power_struggle: {
     title: 'Guild Masters Challenge Noble Authority',
-    body: 'The wealthiest guild masters have begun openly defying noble prerogatives, refusing to pay traditional levies and demanding seats on the royal council. They command enough coin to hire their own guards and enough trade influence to cripple entire provinces. The nobility warns that yielding to merchants will unravel the very fabric of our governance.',
+    body: 'The wealthiest guild masters have begun openly defying noble prerogatives, refusing to pay traditional levies and demanding seats on the royal council. They command enough coin to hire their own guards and enough trade influence to cripple entire provinces. The nobility warns that yielding to merchants will unravel the very fabric of our governance. Word comes most urgently from {region}.',
     choices: {
       curtail_guild_influence: 'Curtail Guild Influence',
       formalize_guild_seats: 'Formalize Guild Council Seats',
@@ -83,7 +83,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_clerical_overreach: {
     title: 'Church Claims Expanded Tithe Rights',
-    body: 'Emboldened by rising piety across our lands, the high clergy have announced that church tithes will henceforth apply to lands previously held exempt by secular tradition. Commoner farmers and lesser nobles alike protest that the church already holds vast estates and should not be permitted to extract yet more from those who work the soil.',
+    body: 'Emboldened by rising piety across our lands, the high clergy have announced that church tithes will henceforth apply to lands previously held exempt by secular tradition. Commoner farmers and lesser nobles alike protest that the church already holds vast estates and should not be permitted to extract yet more from those who work the soil. Word comes most urgently from {region}.',
     choices: {
       limit_church_holdings: 'Limit Church Holdings',
       sanction_expanded_tithes: 'Sanction Expanded Tithes',
@@ -109,7 +109,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_social_mobility_demands: {
     title: 'Demands for Social Advancement Escalate',
-    body: 'A coalition of commoner leaders, guild apprentices, and low-ranking soldiers has presented a manifesto demanding that birth no longer determine one\'s station. They call for merit-based appointments to all offices of consequence. The nobility and senior clergy have closed ranks, warning that such upheaval would throw our ancient order into chaos. The {class_plural} are watching every move of the court.',
+    body: 'A coalition of commoner leaders, guild apprentices, and low-ranking soldiers has presented a manifesto demanding that birth no longer determine one\'s station. They call for merit-based appointments to all offices of consequence. The nobility and senior clergy have closed ranks, warning that such upheaval would throw our ancient order into chaos. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       open_ranks_to_merit: 'Open All Ranks to Merit',
       create_advancement_paths: 'Create Advancement Paths',
@@ -122,7 +122,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_land_ownership_dispute: {
     title: 'Disputed Land Claims Threaten Peace',
-    body: 'Several noble houses have invoked ancient charters to claim common grazing lands that village communities have used for generations. The commoners possess no written deeds but point to unbroken tradition. With planting season approaching, the matter cannot wait — whoever controls the land will control the harvest.',
+    body: 'Several noble houses have invoked ancient charters to claim common grazing lands that village communities have used for generations. The commoners possess no written deeds but point to unbroken tradition. With planting season approaching, the matter cannot wait — whoever controls the land will control the harvest. Word comes most urgently from {region}.',
     choices: {
       redistribute_crown_lands: 'Redistribute Crown Lands',
       enforce_existing_deeds: 'Enforce Existing Deeds',
@@ -161,7 +161,7 @@ export const EXPANSION_CLASS_CONFLICT_TEXT: Record<string, EventTextEntry> = {
   // ============================================================
   evt_exp_cc_privilege_reform: {
     title: 'Mass Petition Demands Privilege Reform',
-    body: 'Thousands of commoners have signed a petition delivered to the throne, demanding the abolition of hereditary exemptions from taxation, military service, and judicial accountability. The document names specific noble and clerical privileges it considers unjust. The country holds its breath, for the crown\'s response will define a generation.',
+    body: 'Thousands of commoners have signed a petition delivered to the throne, demanding the abolition of hereditary exemptions from taxation, military service, and judicial accountability. The document names specific noble and clerical privileges it considers unjust. The country holds its breath, for the crown\'s response will define a generation. Word comes most urgently from {region}.',
     choices: {
       enact_sweeping_reforms: 'Enact Sweeping Reforms',
       offer_token_concessions: 'Offer Token Concessions',

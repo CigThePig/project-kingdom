@@ -106,7 +106,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_border_dispute_escalation: {
     title: 'Border Dispute Escalates',
-    body: 'The long-simmering dispute over the borderlands with {neighbor} has erupted into open confrontation, with relations now at {diplomatic_posture}. {ruler_full} has moved troops to the contested region this {season}, and a single miscalculation could trigger armed conflict. The {class_plural} are watching every move of the court.',
+    body: 'The long-simmering dispute over the borderlands with {neighbor} has erupted into open confrontation, with relations now at {diplomatic_posture}. {ruler_full} has moved troops to the contested region this {season}, and a single miscalculation could trigger armed conflict. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       show_of_force: 'Show of Force',
       propose_border_commission: 'Propose a Border Commission',
@@ -142,7 +142,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_war_reparations_demand: {
     title: 'War Reparations Demanded',
-    body: '{ruler_full} has issued a formal demand for war reparations, citing damages from past border conflicts. The sum is staggering, and refusal would almost certainly lead to military confrontation — yet paying from a treasury in {treasury_tier} condition would cripple the kingdom.',
+    body: '{ruler_full} has issued a formal demand for war reparations, citing damages from past border conflicts. The sum is staggering, and refusal would almost certainly lead to military confrontation — yet paying from a treasury in {treasury_tier} condition would cripple the kingdom. Word reaches the court via {neighbor}.',
     choices: {
       pay_reparations: 'Pay the Reparations',
       refuse_and_mobilize: 'Refuse and Mobilize',
@@ -178,7 +178,7 @@ export const EXPANSION_DIPLOMACY_TEXT: Record<string, EventTextEntry> = {
   },
   evt_exp_dip_tribute_request: {
     title: 'Tribute Demanded by {neighbor}',
-    body: '{ruler_full} has sent envoys demanding annual tribute as a condition for continued peace between {capital} and our throne, presently at {diplomatic_posture}. The demand is humiliating, but with our treasury in {treasury_tier} condition and military morale {morale_tier}, our position leaves us vulnerable should diplomacy fail.',
+    body: '{ruler_full} has sent envoys demanding annual tribute as a condition for continued peace between {capital} and our throne, presently at {diplomatic_posture}. The demand is humiliating, but with our treasury in {treasury_tier} condition and military morale {morale_tier}, our position leaves us vulnerable should diplomacy fail. Word reaches the court via {neighbor}.',
     choices: {
       pay_the_tribute: 'Pay the Tribute',
       refuse_defiantly: 'Refuse Defiantly',

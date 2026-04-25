@@ -5,7 +5,7 @@ import type { EventTextEntry } from '../../events';
 export const EXPANSION_WAVE_2_CRISES_RELIGIOUS_TEXT: Record<string, EventTextEntry> = {
   evt_exp_w2_religious_schism: {
     title: 'The Church Splits in Two',
-    body: 'Bishops of the northern sees have declared themselves no longer in communion with the primate, citing unreformed abuses. A dozen churches have changed the wording of the liturgy; a dozen more still wait to see which way the Crown falls. The {class_plural} are watching every move of the court.',
+    body: 'Bishops of the northern sees have declared themselves no longer in communion with the primate, citing unreformed abuses. A dozen churches have changed the wording of the liturgy; a dozen more still wait to see which way the Crown falls. The {class_plural} are watching every move of the court. Word comes most urgently from {region}.',
     choices: {
       back_the_orthodox_hierarchy: 'Back the Orthodox Hierarchy',
       recognize_both_confessions: 'Recognize Both Confessions',
