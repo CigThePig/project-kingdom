@@ -311,7 +311,7 @@ export const EXPANSION_REGION_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // --- 11. Royal Tour (opening) ---

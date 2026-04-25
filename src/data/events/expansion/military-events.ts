@@ -202,7 +202,7 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -294,7 +294,7 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
     followUpEvents: [
       { triggerChoiceId: 'public_ceremony', followUpDefinitionId: 'evt_exp_fu_mil_parade_recruitment', delayTurns: 2, probability: 0.7 },
     ],
@@ -350,7 +350,7 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'enforce_strict_discipline', followUpDefinitionId: 'evt_exp_fu_mil_amnesty_returns', delayTurns: 3, probability: 0.6 },
     ],
@@ -379,7 +379,7 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'requisition_from_merchants', followUpDefinitionId: 'evt_fu_merchant_boycott', delayTurns: 3, probability: 0.7 },
       { triggerChoiceId: 'ration_existing_supplies', followUpDefinitionId: 'evt_fu_starving_garrison', delayTurns: 3, probability: 0.7 },
@@ -500,7 +500,7 @@ export const EXPANSION_MILITARY_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================

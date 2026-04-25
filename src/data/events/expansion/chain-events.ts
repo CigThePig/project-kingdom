@@ -51,7 +51,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_chain_corruption_scandal',
@@ -70,7 +70,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'public_trial_and_punishment', followUpDefinitionId: 'evt_exp_fu_chain_corruption_aftermath', delayTurns: 3, probability: 0.7 },
       { triggerChoiceId: 'pardon_in_exchange_for_restitution', followUpDefinitionId: 'evt_fu_pardon_emboldens_graft', delayTurns: 3, probability: 0.7 },
@@ -121,7 +121,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_chain_drought_autumn',
@@ -140,7 +140,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -187,7 +187,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_chain_border_war_resolution',
@@ -206,7 +206,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'negotiate_ceasefire', followUpDefinitionId: 'evt_exp_fu_chain_ceasefire_holds', delayTurns: 3, probability: 0.7 },
     ],
@@ -256,7 +256,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_chain_reformation_doctrine',
@@ -275,7 +275,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'allow_dual_practice', followUpDefinitionId: 'evt_fu_dual_practice_schism', delayTurns: 4, probability: 0.7 },
       { triggerChoiceId: 'reaffirm_tradition', followUpDefinitionId: 'evt_fu_underground_reformers', delayTurns: 3, probability: 0.7 },
@@ -326,7 +326,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_chain_guild_rev_shift',
@@ -345,7 +345,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'crush_the_movement', followUpDefinitionId: 'evt_fu_crushed_movement_underground', delayTurns: 4, probability: 0.7 },
       { triggerChoiceId: 'negotiate_compromise', followUpDefinitionId: 'evt_fu_guild_compromise_drift', delayTurns: 3, probability: 0.6 },
@@ -395,7 +395,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_chain_renaissance_golden',
@@ -414,7 +414,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'declare_golden_age', followUpDefinitionId: 'evt_exp_fu_chain_golden_age_legacy', delayTurns: 2, probability: 0.8 },
     ],
@@ -463,7 +463,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_chain_spy_war_resolution',
@@ -482,7 +482,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -529,7 +529,7 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_chain_rebellion_crisis',
@@ -548,6 +548,6 @@ export const EXPANSION_CHAIN_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 ];

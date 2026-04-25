@@ -31,7 +31,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'back_the_orthodox_hierarchy', followUpDefinitionId: 'evt_fu_schism_reformer_revolt', delayTurns: 3, probability: 0.7 },
       { triggerChoiceId: 'recognize_both_confessions', followUpDefinitionId: 'evt_fu_schism_parallel_churches', delayTurns: 4, probability: 0.7 },
@@ -58,7 +58,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_prophet_appears',
@@ -80,7 +80,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_saints_succession',
@@ -102,7 +102,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_witch_trial',
@@ -125,7 +125,7 @@ export const EXPANSION_WAVE_2_RELIGIOUS_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 

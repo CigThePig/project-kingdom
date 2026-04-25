@@ -263,7 +263,7 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // --- 11. Corruption Investigation (established) ---
@@ -312,7 +312,7 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'comprehensive_restructuring', followUpDefinitionId: 'evt_exp_fu_kgd_centralization_tension', delayTurns: 3, probability: 0.6 },
     ],
@@ -339,7 +339,7 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // --- 14. Royal Legacy (any) ---
@@ -364,7 +364,7 @@ export const EXPANSION_KINGDOM_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // --- 15. Royal Steward's Ledger (opening) ---

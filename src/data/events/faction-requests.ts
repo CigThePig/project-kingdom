@@ -32,7 +32,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_nobility_court_privileges',
@@ -53,7 +53,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_nobility_academy',
@@ -73,7 +73,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -98,7 +98,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_clergy_temple_funding',
@@ -119,7 +119,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_clergy_religious_festival',
@@ -139,7 +139,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -163,7 +163,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_merchant_market_expansion',
@@ -184,7 +184,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_merchant_foreign_mission',
@@ -204,7 +204,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -228,7 +228,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_commoner_labor_reforms',
@@ -249,7 +249,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_commoner_public_works',
@@ -269,7 +269,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -293,7 +293,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_military_training_grounds',
@@ -314,7 +314,7 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_military_border_fortification',
@@ -334,6 +334,6 @@ export const FACTION_REQUEST_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];

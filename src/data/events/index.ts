@@ -53,7 +53,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'offer_tax_relief', followUpDefinitionId: 'evt_merchant_permanent_concessions', delayTurns: 3, probability: 0.7 },
     ],
@@ -147,7 +147,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'invest_in_granary_expansion', followUpDefinitionId: 'evt_granary_expansion_complete', delayTurns: 3, probability: 0.8 },
       { triggerChoiceId: 'organize_food_trade_caravans', followUpDefinitionId: 'evt_trade_caravan_returns', delayTurns: 2, probability: 0.7 },
@@ -197,7 +197,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_foreign_grain_offer',
@@ -220,7 +220,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__ANY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
     followUpEvents: [
       { triggerChoiceId: 'negotiate_ongoing_supply', followUpDefinitionId: 'evt_supply_agreement_renewal', delayTurns: 4, probability: 0.6 },
     ],
@@ -245,7 +245,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_spring_planting_expansion',
@@ -268,7 +268,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_commoner_agricultural_petition',
@@ -291,7 +291,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
 
   // ============================================================
@@ -318,7 +318,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'defer_to_next_month', followUpDefinitionId: 'evt_equipment_failure_field', delayTurns: 2, probability: 0.6 },
     ],
@@ -342,7 +342,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -369,7 +369,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__FRIENDLY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_border_tension_escalation',
@@ -464,7 +464,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_popular_unrest',
@@ -486,7 +486,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'deploy_peacekeepers', followUpDefinitionId: 'evt_fu_peacekeeper_overreach', delayTurns: 3, probability: 0.6 },
       { triggerChoiceId: 'impose_curfew', followUpDefinitionId: 'evt_fu_curfew_mass_defiance', delayTurns: 3, probability: 0.7 },
@@ -515,7 +515,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'suppress_immediately', followUpDefinitionId: 'evt_underground_heretical_movement', delayTurns: 3, probability: 0.5 },
     ],
@@ -539,7 +539,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'enforce_state_doctrine', followUpDefinitionId: 'evt_fu_doctrine_enforcement_blowback', delayTurns: 3, probability: 0.7 },
       { triggerChoiceId: 'allow_coexistence', followUpDefinitionId: 'evt_fu_coexistence_fractures', delayTurns: 4, probability: 0.6 },
@@ -570,7 +570,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__ANY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_cultural_festival_proposal',
@@ -618,7 +618,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__HOSTILE__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_noble_intrigue_discovered',
@@ -686,7 +686,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -804,7 +804,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     classification: 'notification',
   },
   {
@@ -827,7 +827,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -992,7 +992,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_merchant_smuggling_ring',
@@ -1014,7 +1014,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_merchant_foreign_traders',
@@ -1063,7 +1063,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_commoner_folk_hero',
@@ -1107,7 +1107,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -1154,7 +1154,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_military_honor_dispute',
@@ -1392,7 +1392,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_region_trade_route_disruption',
@@ -1458,7 +1458,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_region_separatist_sentiment',
@@ -1670,7 +1670,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 2. Scholarly Breakthrough → Apply Practical Findings
@@ -1696,7 +1696,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 3. Merchant Capital Flight → Offer Tax Relief
@@ -1723,7 +1723,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 4. Merchant Capital Flight → Enforce Capital Controls
@@ -1749,7 +1749,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 5. Commoner Labor Dispute → Side with Laborers
@@ -1776,7 +1776,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 6. Commoner Labor Dispute → Enforce Existing Contracts
@@ -1802,7 +1802,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 7. Heresy Emergence → Permit Theological Debate
@@ -1829,7 +1829,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // 8. Noble Intrigue Discovered → Launch Counter Intelligence
@@ -1855,7 +1855,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // 9. Harvest Blight → Purchase Foreign Grain
@@ -1882,7 +1882,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: true,
     affectsNeighbor: '__ANY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 10. Region Resource Discovery → Fund Extraction
@@ -1908,7 +1908,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 11. Commoner Plague Outbreak → Mobilize Clergy Healers
@@ -1934,7 +1934,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // 12. Military Desertion Crisis → Increase Military Pay
@@ -1960,7 +1960,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -2106,7 +2106,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_plague_aftermath',
@@ -2127,7 +2127,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -2154,7 +2154,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__HOSTILE__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_trade_war_escalation',
@@ -2175,7 +2175,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_trade_war_resolution',
@@ -2196,7 +2196,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -2223,7 +2223,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_succession_factions',
@@ -2244,7 +2244,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'play_factions', followUpDefinitionId: 'evt_fu_succession_factions_war', delayTurns: 3, probability: 0.8 },
       { triggerChoiceId: 'support_merit_candidate', followUpDefinitionId: 'evt_fu_merit_heir_noble_backlash', delayTurns: 3, probability: 0.6 },
@@ -2269,7 +2269,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -2316,7 +2316,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'commandeer_noble_stores', followUpDefinitionId: 'evt_fu_commandeered_stores_noble_strike', delayTurns: 3, probability: 0.7 },
     ],
@@ -2340,7 +2340,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -2387,7 +2387,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_schism_resolution',
@@ -2408,7 +2408,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -2439,7 +2439,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -2466,7 +2466,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'purge_inner_circle', followUpDefinitionId: 'evt_fu_purge_court_paralysis', delayTurns: 3, probability: 0.7 },
       { triggerChoiceId: 'show_mercy', followUpDefinitionId: 'evt_fu_mercy_emboldens_plot', delayTurns: 4, probability: 0.7 },
@@ -2493,7 +2493,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__HOSTILE__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
 
   // ============================================================
@@ -2522,7 +2522,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'fund_emergency_repairs', followUpDefinitionId: 'evt_infra_repair_success', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'treasury_above', threshold: 20 }], exclusiveGroupId: 'excl_infra_repair' },
       { triggerChoiceId: 'fund_emergency_repairs', followUpDefinitionId: 'evt_infra_repair_cost_overrun', delayTurns: 3, probability: 1.0, stateConditions: [{ type: 'treasury_below', threshold: 15 }], exclusiveGroupId: 'excl_infra_repair' },
@@ -2551,7 +2551,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       // Branch A — Rationing Aftermath
       { triggerChoiceId: 'ration_strictly', followUpDefinitionId: 'evt_grain_ration_compliance', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'stability_above', threshold: 50 }], exclusiveGroupId: 'excl_grain_ration' },
@@ -2586,7 +2586,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'back_orthodox', followUpDefinitionId: 'evt_schism_inquisition', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'heterodoxy_above', threshold: 30 }], exclusiveGroupId: 'excl_schism_orthodox' },
       { triggerChoiceId: 'back_orthodox', followUpDefinitionId: 'evt_schism_orthodox_peace', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'faith_above', threshold: 50 }], exclusiveGroupId: 'excl_schism_orthodox' },
@@ -2619,7 +2619,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'quarantine_districts', followUpDefinitionId: 'evt_plague_quarantine_holds', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'stability_above', threshold: 40 }, { type: 'food_above', threshold: 30 }], exclusiveGroupId: 'excl_plague_quarantine' },
       { triggerChoiceId: 'quarantine_districts', followUpDefinitionId: 'evt_plague_quarantine_breaks', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'stability_below', threshold: 30 }], exclusiveGroupId: 'excl_plague_quarantine' },
@@ -2653,7 +2653,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__HOSTILE__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'retaliate_with_force', followUpDefinitionId: 'evt_border_campaign_victory', delayTurns: 3, probability: 1.0, stateConditions: [{ type: 'military_readiness_above', threshold: 60 }], exclusiveGroupId: 'excl_border_military' },
       { triggerChoiceId: 'retaliate_with_force', followUpDefinitionId: 'evt_border_campaign_stalemate', delayTurns: 3, probability: 1.0, stateConditions: [{ type: 'military_readiness_below', threshold: 60 }, { type: 'stability_above', threshold: 30 }], exclusiveGroupId: 'excl_border_military' },
@@ -2686,7 +2686,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'send_military_escorts', followUpDefinitionId: 'evt_trade_escort_success', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'military_readiness_above', threshold: 50 }], exclusiveGroupId: 'excl_trade_military' },
       { triggerChoiceId: 'send_military_escorts', followUpDefinitionId: 'evt_trade_escort_ambush', delayTurns: 2, probability: 0.5, stateConditions: [{ type: 'military_readiness_below', threshold: 40 }], exclusiveGroupId: 'excl_trade_military' },
@@ -2718,7 +2718,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'pay_back_wages', followUpDefinitionId: 'evt_mutiny_pay_loyalty', delayTurns: 1, probability: 1.0, stateConditions: [{ type: 'treasury_above', threshold: 20 }], exclusiveGroupId: 'excl_mutiny_pay' },
       { triggerChoiceId: 'pay_back_wages', followUpDefinitionId: 'evt_mutiny_pay_bankrupt', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'treasury_below', threshold: 10 }], exclusiveGroupId: 'excl_mutiny_pay' },
@@ -2750,7 +2750,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'name_heir_publicly', followUpDefinitionId: 'evt_succession_heir_accepted', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'stability_above', threshold: 50 }], exclusiveGroupId: 'excl_succession_heir' },
       { triggerChoiceId: 'name_heir_publicly', followUpDefinitionId: 'evt_succession_heir_challenged', delayTurns: 3, probability: 1.0, stateConditions: [{ type: 'class_satisfaction_below', classTarget: PopulationClass.Nobility, threshold: 30 }], exclusiveGroupId: 'excl_succession_heir' },
@@ -2782,7 +2782,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'meet_demands', followUpDefinitionId: 'evt_uprising_noble_backlash', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'class_satisfaction_below', classTarget: PopulationClass.Nobility, threshold: 25 }], exclusiveGroupId: 'excl_uprising_demands' },
       { triggerChoiceId: 'meet_demands', followUpDefinitionId: 'evt_uprising_peace', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'stability_above', threshold: 40 }], exclusiveGroupId: 'excl_uprising_demands' },
@@ -2815,7 +2815,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'grant_council_seat', followUpDefinitionId: 'evt_merchant_council_effective', delayTurns: 3, probability: 1.0, stateConditions: [{ type: 'stability_above', threshold: 40 }], exclusiveGroupId: 'excl_merchant_council' },
       { triggerChoiceId: 'grant_council_seat', followUpDefinitionId: 'evt_merchant_council_overreach', delayTurns: 3, probability: 1.0, stateConditions: [{ type: 'class_satisfaction_below', classTarget: PopulationClass.Nobility, threshold: 25 }], exclusiveGroupId: 'excl_merchant_council' },
@@ -2849,7 +2849,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__ANY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'accept_proposal', followUpDefinitionId: 'evt_ambassador_alliance_benefit', delayTurns: 2, probability: 1.0, stateConditions: [{ type: 'stability_above', threshold: 40 }], exclusiveGroupId: 'excl_ambassador_accept' },
       { triggerChoiceId: 'accept_proposal', followUpDefinitionId: 'evt_ambassador_dependency', delayTurns: 3, probability: 1.0, stateConditions: [{ type: 'treasury_below', threshold: 30 }], exclusiveGroupId: 'excl_ambassador_accept' },
@@ -2880,7 +2880,7 @@ export const EVENT_POOL: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     followUpEvents: [
       { triggerChoiceId: 'conduct_full_investigation', followUpDefinitionId: 'evt_audit_corruption_found', delayTurns: 2, probability: 1.0, exclusiveGroupId: 'excl_audit_investigate' },
       { triggerChoiceId: 'conduct_full_investigation', followUpDefinitionId: 'evt_audit_clean', delayTurns: 2, probability: 0.3, stateConditions: [{ type: 'stability_above', threshold: 50 }], exclusiveGroupId: 'excl_audit_investigate' },

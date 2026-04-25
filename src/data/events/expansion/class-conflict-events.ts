@@ -280,7 +280,7 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -306,7 +306,7 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -362,7 +362,7 @@ export const EXPANSION_CLASS_CONFLICT_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'offer_token_concessions', followUpDefinitionId: 'evt_fu_token_concessions_backfire', delayTurns: 3, probability: 0.7 },
       { triggerChoiceId: 'suppress_reform_movement', followUpDefinitionId: 'evt_fu_reform_martyrs', delayTurns: 3, probability: 0.7 },

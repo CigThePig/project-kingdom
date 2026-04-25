@@ -228,7 +228,7 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -336,7 +336,7 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -389,7 +389,7 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     affectsClass: PopulationClass.Merchants,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 
   // ============================================================
@@ -446,6 +446,6 @@ export const EXPANSION_KNOWLEDGE_EVENTS: EventDefinition[] = [
     affectsClass: null,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
 ];

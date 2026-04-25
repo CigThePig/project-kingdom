@@ -31,7 +31,7 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_w2_royal_illness',
@@ -50,7 +50,7 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
   },
   {
     id: 'evt_exp_w2_dynastic_challenge',
@@ -72,7 +72,7 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'established',
     followUpEvents: [
       { triggerChoiceId: 'marry_into_their_line', followUpDefinitionId: 'evt_fu_marriage_dynastic_friction', delayTurns: 3, probability: 0.6 },
       { triggerChoiceId: 'exile_with_a_pension', followUpDefinitionId: 'evt_fu_exiled_pretender_returns', delayTurns: 4, probability: 0.7 },
@@ -99,7 +99,7 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISES: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__ANY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_w2_bandit_lord_uprising',
@@ -122,7 +122,7 @@ export const EXPANSION_WAVE_2_POLITICAL_CRISES: EventDefinition[] = [
     affectsClass: PopulationClass.MilitaryCaste,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 

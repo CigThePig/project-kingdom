@@ -30,7 +30,7 @@ export const EXPANSION_WAVE_2_CIVIC_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Clergy,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_regional_lords_road',
@@ -50,7 +50,7 @@ export const EXPANSION_WAVE_2_CIVIC_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_displaced_peasants',
@@ -70,7 +70,7 @@ export const EXPANSION_WAVE_2_CIVIC_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_foreign_envoy',
@@ -91,7 +91,7 @@ export const EXPANSION_WAVE_2_CIVIC_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_imprisoned_nobles',
@@ -111,7 +111,7 @@ export const EXPANSION_WAVE_2_CIVIC_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Nobility,
     affectsRegion: false,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'faction_req_w2_bridge_petition',
@@ -131,7 +131,7 @@ export const EXPANSION_WAVE_2_CIVIC_PETITIONS: EventDefinition[] = [
     affectsClass: PopulationClass.Commoners,
     affectsRegion: true,
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
 ];
 

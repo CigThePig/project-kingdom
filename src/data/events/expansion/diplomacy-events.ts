@@ -378,7 +378,7 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__ANY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'opening',
   },
   {
     id: 'evt_exp_dip_foreign_merchant_dispute',
@@ -401,7 +401,7 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__ANY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_dip_border_patrol_contact',
@@ -424,7 +424,7 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: true,
     affectsNeighbor: '__ANY__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
   },
   {
     id: 'evt_exp_dip_tribute_request',
@@ -499,7 +499,7 @@ export const EXPANSION_DIPLOMACY_EVENTS: EventDefinition[] = [
     affectsRegion: false,
     affectsNeighbor: '__IN_CRISIS__',
     relatedStorylineId: null,
-    phase: 'any',
+    phase: 'developing',
     classification: 'notification',
     repeatable: true,
   },
